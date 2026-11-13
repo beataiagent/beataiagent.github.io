@@ -500,8 +500,14 @@
     .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
     .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
     .s-what .tiles-6 { grid-template-columns: repeat(6, 1fr); gap: 14px 14px; }
+    .s-what .tiles-c3 { grid-template-columns: repeat(3, 1fr); gap: 18px 22px; }
+    .s-what .tiles-c4 { grid-template-columns: repeat(4, 1fr); gap: 18px; }
+    .s-what .tiles-c3 figcaption, .s-what .tiles-c4 figcaption { font-size: 15px; padding: 6px 12px; left: 10px; bottom: 10px; }
+    .s-what .tiles-c3 .live-tag, .s-what .tiles-c4 .live-tag { font-size: 13px; padding: 5px 9px; right: 10px; top: 10px; }
+    .s-what .tiles-c3 .tiles-key, .s-what .tiles-c4 .tiles-key { font-size: 16px; padding-left: 10px; }
+    .s-what .tiles-c3 .tiles-key span, .s-what .tiles-c4 .tiles-key span { font-size: 14px; }
     .s-what .tiles-6 figcaption { font-size: 11.5px; padding: 4px 8px; left: 6px; bottom: 6px; }
-    .s-what .tiles-6 figure.live { border-color: var(--g-green); box-shadow: 0 0 0 3px var(--g-green); }
+    .s-what .tiles figure.live { border-color: var(--g-green); box-shadow: 0 0 0 3px var(--g-green); }
     .s-what .live-tag { position: absolute; right: 6px; top: 6px; font: 700 10.5px/1 var(--sans); padding: 4px 7px; border-radius: 999px; background: var(--g-green); color: #fff; }
     .s-what .tiles-key { align-self: center; font: 400 13px/1.9 var(--mono); }
     .s-what .tiles-key span { font: 700 11.5px/1 var(--sans); padding: 4px 8px; border-radius: 999px; }
@@ -858,21 +864,16 @@
               <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
             </div>
           </div>
-          <div class="tcols">
-            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""></figure>
-              <div class="pc green"><b>Text Classifier</b>Positive or negative? Sort reviews &amp; chats<em>0.8 – 26 MB</em></div></div>
-            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""></figure>
-              <div class="pc green"><b>Text Embedder</b>Sentence → vector to compare meaning<em>6.1 MB</em></div></div>
-            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""></figure>
-              <div class="pc green"><b>Language Detector</b>Which of 110 languages is this text?<em>0.3 MB</em></div></div>
-            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_proofreader.svg" alt=""></figure>
-              <div class="pc yellow"><b>Text Proofreader</b>Fix grammar &amp; spelling, edit by edit<em>118 MB · Gemma</em><span class="noweb">No Web yet</span></div></div>
-            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_summarizer.svg" alt=""></figure>
-              <div class="pc yellow"><b>Text Summarizer</b>TL;DR or key points from long text<em>118 MB · Gemma</em><span class="noweb">No Web yet</span></div></div>
+          <div class="tiles tiles-c4">
+            <figure class="live"><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""><figcaption>Text Classifier</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live"><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""><figcaption>Text Embedder</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live"><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""><figcaption>Language Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure><img src="images/mediapipe-slides/loops/text_proofreader.svg" alt=""><figcaption>Text Proofreader</figcaption></figure>
+            <figure><img src="images/mediapipe-slides/loops/text_summarizer.svg" alt=""><figcaption>Text Summarizer</figcaption></figure>
+            <div class="tiles-key"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
           </div>
-          <p class="tcols-foot"><span class="dot green"></span>Live demos next &nbsp;·&nbsp; <span class="dot yellow"></span>GenAI (Gemma 200M): Android · iOS · Python · Flutter</p>
         </div>
-        <aside class="notes">ภาพรวมหมวด Text 5 tasks • สีเขียว 3 ตัวโมเดลเล็ก รันบนเว็บได้ มี live demo ในหน้าถัดไป: Text Classifier (บวก/ลบ), Text Embedder (เทียบความหมายประโยค), Language Detector (บอกภาษา 110 ภาษา) • สีเหลือง 2 ตัวเป็น GenAI ใช้โมเดล Gemma 200M ขนาด 118 MB: Text Proofreader แก้คำผิด/ไวยากรณ์พร้อมบอกจุดที่แก้, Text Summarizer สรุปเป็น TL;DR หรือ key points • สองตัวนี้ยังไม่รองรับ Web มีบน Android, iOS, Python, Flutter จึงไม่มี demo ในวันนี้</aside>
+        <aside class="notes">ภาพรวมหมวด Text 5 tasks • กรอบเขียวมีป้าย Live demo 3 ตัว โมเดลเล็ก รันบนเว็บได้ มี live demo ในหน้าถัดไป: Text Classifier (บวก/ลบ), Text Embedder (เทียบความหมายประโยค), Language Detector (บอกภาษา 110 ภาษา) • อีก 2 ตัว (ดูแค่ภาพรวม) เป็น GenAI ใช้โมเดล Gemma 200M ขนาด 118 MB: Text Proofreader แก้คำผิด/ไวยากรณ์พร้อมบอกจุดที่แก้, Text Summarizer สรุปเป็น TL;DR หรือ key points • สองตัวนี้ยังไม่รองรับ Web มีบน Android, iOS, Python, Flutter จึงไม่มี demo ในวันนี้</aside>
       </section>
 
       <!-- ===== Task deep-dives (content + diagrams from developers.google.com/edge/mediapipe/solutions) ===== -->
@@ -1034,17 +1035,14 @@
               <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
             </div>
           </div>
-          <div class="tcols tcols-3">
-            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/audio_classifier.svg" alt=""></figure>
-              <div class="pc green"><b>Audio Classifier</b>521 everyday sounds from a clip or the live mic<em>YamNet · 4.1 MB</em></div></div>
-            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/audio_transcriber.svg" alt=""></figure>
-              <div class="pc yellow"><b>Audio Transcriber</b>Speech → punctuated text, streaming while you talk<em>Parakeet TDT 0.6B · 615 MB</em></div></div>
-            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_to_speech.svg" alt=""></figure>
-              <div class="pc yellow"><b>Text-to-Speech</b>Natural 24 kHz speech, streamed sentence by sentence<em>Kokoro · Pocket TTS · Phonon · 87 – 760 MB</em></div></div>
+          <div class="tiles tiles-c4">
+            <figure class="live"><img src="images/mediapipe-slides/loops/audio_classifier.svg" alt=""><figcaption>Audio Classifier</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure><img src="images/mediapipe-slides/loops/audio_transcriber.svg" alt=""><figcaption>Audio Transcriber</figcaption></figure>
+            <figure><img src="images/mediapipe-slides/loops/text_to_speech.svg" alt=""><figcaption>Text-to-Speech</figcaption></figure>
+            <div class="tiles-key"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
           </div>
-          <p class="tcols-foot"><span class="dot green"></span>Live demo next &nbsp;·&nbsp; <span class="dot yellow"></span>Large speech models: overview only today</p>
         </div>
-        <aside class="notes">ภาพรวมหมวด Audio 3 tasks • สีเขียว Audio Classifier: จำแนกเสียงรอบตัว 521 ประเภทจากไฟล์หรือไมค์สด โมเดล YamNet แค่ 4.1 MB มี live demo หน้าถัดไป • สีเหลือง Audio Transcriber: ถอดเสียงพูดเป็นข้อความพร้อมวรรคตอนแบบ streaming โมเดล Parakeet TDT 0.6B ขนาด 615 MB เหมาะทำ caption หรือบันทึกประชุมแบบ offline • สีเหลือง Text-to-Speech: สังเคราะห์เสียงพูด 24 kHz เริ่มเล่นได้ตั้งแต่ประโยคแรก มีโมเดล Kokoro, Pocket TTS, Phonon ขนาด 87–760 MB ต่อกับ LLM ให้ตอบเป็นเสียงได้ • สองตัวหลังโมเดลใหญ่ วันนี้เลยแสดงแค่ภาพรวม ไม่มี demo</aside>
+        <aside class="notes">ภาพรวมหมวด Audio 3 tasks • กรอบเขียว (Live demo) Audio Classifier: จำแนกเสียงรอบตัว 521 ประเภทจากไฟล์หรือไมค์สด โมเดล YamNet แค่ 4.1 MB มี live demo หน้าถัดไป • ดูแค่ภาพรวม: Audio Transcriber: ถอดเสียงพูดเป็นข้อความพร้อมวรรคตอนแบบ streaming โมเดล Parakeet TDT 0.6B ขนาด 615 MB เหมาะทำ caption หรือบันทึกประชุมแบบ offline • Text-to-Speech: สังเคราะห์เสียงพูด 24 kHz เริ่มเล่นได้ตั้งแต่ประโยคแรก มีโมเดล Kokoro, Pocket TTS, Phonon ขนาด 87–760 MB ต่อกับ LLM ให้ตอบเป็นเสียงได้ • สองตัวหลังโมเดลใหญ่ วันนี้เลยแสดงแค่ภาพรวม ไม่มี demo</aside>
       </section>
 
       <section class="s-task" data-title="Audio Classifier">
