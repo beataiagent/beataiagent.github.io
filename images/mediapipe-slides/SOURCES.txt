@@ -13,3 +13,6 @@ id-photos/id-photos.js — sample ID photos (resized JPEG data URLs) from google
 ../logos/gemini.svg       — https://www.gstatic.com/images/branding/productlogos/gemini_2026/v1/192px.svg
 ../logos/typesafe.png     — TypeSafe icon from typesafe.ai (apple-touch-icon), resized to 64 px
 ../logos/gemma.png        — Gemma icon, https://commons.wikimedia.org/wiki/File:Gemma_icon.png (Apache-2.0), resized to 96 px
+adge-analysis.mp4 — ADGE Tennis analysis video supplied by the speaker (compressed from analysis_no_audio.mp4, 540 px, no audio)
+adge-court.webp — ADGE court render supplied by the speaker
+../logos/adge-symbol.png, adge-wordmark.png — from https://adge-tennis.com/brand/ (wordmark recoloured to the brand blue #0b47cb)
