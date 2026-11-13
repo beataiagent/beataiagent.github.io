@@ -418,6 +418,25 @@
     .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
     .try-what { font-size: 18px; line-height: 1.35; }
     .try-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .dmx-flow { display: flex; align-items: stretch; gap: 10px; margin-top: 18px; }
+    .dmx-box { border: 2.5px solid var(--ink); border-radius: 18px; background: #fff; padding: 12px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; }
+    .dmx-k { font: 500 14px/1 var(--mono); color: var(--muted); }
+    .dmx-box small { font: 400 12.5px/1.2 var(--mono); color: var(--muted); }
+    .dmx-in { width: 190px; flex: none; align-items: center; }
+    .reveal .dmx-in img { width: 150px; height: 200px; object-fit: cover; border-radius: 12px; border: 2px solid var(--ink); margin: 0; }
+    .dmx-arr { width: 34px; flex: none; align-self: center; height: 24px; }
+    .dmx-q { flex: 1; justify-content: center; }
+    .dmx-row { font-size: 17px; line-height: 1.3; padding: 8px 10px; border-radius: 10px; background: var(--paper); }
+    .dmx-row em { display: block; font-style: normal; font-size: 13.5px; color: var(--muted); margin-top: 2px; }
+    .dmx-row i { font: 700 11px/1 var(--mono); font-style: normal; padding: 4px 6px; border-radius: 6px; margin-right: 8px; vertical-align: 2px; }
+    .t-choice { background: var(--p-green); color: #137333; } .t-bool { background: var(--p-blue); color: #174ea6; } .t-score { background: var(--p-yellow); color: #8a5a00; }
+    .dmx-out { width: 260px; flex: none; justify-content: center; }
+    .dmx-res { display: grid; grid-template-columns: 88px 1fr 46px; align-items: center; gap: 8px; font-size: 15px; }
+    .dmx-res span { height: 10px; border-radius: 5px; background: linear-gradient(90deg, var(--g-green) var(--p), #e0e0e0 var(--p)); }
+    .dmx-res em { font: 400 13px/1 var(--mono); font-style: normal; text-align: right; }
+    .dmx-vs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; width: 790px; }
+    .dmx-vs .pc { font-size: 16px; line-height: 1.35; padding: 12px 16px; }
+    .dmx-vs b { display: block; font-size: 18px; margin-bottom: 2px; }
     .pp-left { width: 340px; flex: none; display: flex; flex-direction: column; gap: 12px; }
     .pp-frame { height: 452px; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
     .reveal .pp-shot { width: 100%; height: 100%; object-fit: cover; margin: 0; display: block; }
@@ -1087,6 +1106,43 @@
           </div>
         </div>
         <aside class="notes">Decision Maker: ให้คะแนนตัวเลือก ตอบ yes/no หรือให้คะแนนตาม rubric ในการคำนวณรอบเดียว ไม่ต้องสร้างข้อความ (zero decoding) จึงเร็วมาก • ใช้ EmbeddingGemma 2 หรือ Gemma 4 E2B • เหมาะกับ routing หรือ classification แบบ custom • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EmbeddingGemma 2 · 270M 165 MB, 440M 388 MB, 740M 485 MB, Gemma 4 E2B 2.6 GB</aside>
+      </section>
+
+      <!-- Decision Maker explained: photo → your questions → scored options; vs an LLM -->
+      <section data-title="How Decision Maker works">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Decision · how it works</div>
+            <h2 style="font-size:40px">It scores your options, it doesn't write text</h2>
+            <div class="dmx-flow">
+              <div class="dmx-box dmx-in">
+                <span class="dmx-k">1 · Input</span>
+                <img data-photo-src="passport_compliant_female" alt="Example ID photo">
+                <small>Photo, text or audio</small>
+              </div>
+              <svg class="dmx-arr" viewBox="0 0 40 24"><use href="#i-right"/></svg>
+              <div class="dmx-box dmx-q">
+                <span class="dmx-k">2 · Your questions</span>
+                <div class="dmx-row"><i class="t-choice">CHOICE</i>Background? <em>plain wall · outdoor · cluttered room</em></div>
+                <div class="dmx-row"><i class="t-bool">YES / NO</i>Eyes open, looking at the camera?</div>
+                <div class="dmx-row"><i class="t-score">SCORE</i>Photo quality, 1 – 5</div>
+              </div>
+              <svg class="dmx-arr" viewBox="0 0 40 24"><use href="#i-right"/></svg>
+              <div class="dmx-box dmx-out">
+                <span class="dmx-k">3 · One pass → scores</span>
+                <div class="dmx-res"><b>plain wall</b><span style="--p:94%"></span><em>0.94</em></div>
+                <div class="dmx-res"><b>yes</b><span style="--p:97%"></span><em>0.97</em></div>
+                <div class="dmx-res"><b>4.6 / 5</b><span style="--p:90%"></span><em>score</em></div>
+                <small>example values</small>
+              </div>
+            </div>
+            <div class="dmx-vs">
+              <div class="pc red"><b>LLM chat</b>Writes an answer word by word → you parse it → it may go off-script</div>
+              <div class="pc green"><b>Decision Maker</b>Reads the input once and scores <u>only the options you wrote</u> → always a valid answer + probability</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Decision Maker ทำงานยังไง (ตัวอย่างเดียวกับ demo รูปติดบัตร): (1) Input ใส่รูป ข้อความ หรือเสียง (2) เราเขียนคำถามเอง 3 แบบ: Choice เลือก 1 จากตัวเลือกที่เรากำหนด, Yes/No, Score ให้คะแนนตาม rubric (3) โมเดลอ่าน input รอบเดียว แล้วให้คะแนนทุกตัวเลือก ได้ความน่าจะเป็นออกมา (ตัวเลขในภาพเป็นตัวอย่าง) • ต่างจาก LLM: LLM เขียนคำตอบทีละคำ ต้อง parse เอง และอาจตอบนอกเรื่อง ส่วน Decision Maker ตอบได้แค่ตัวเลือกที่เรากำหนด เร็วกว่าเพราะไม่ต้อง generate และรันบนเครื่องได้ • เหมาะกับ routing, moderation, ตรวจฟอร์มหรือรูป, quality gate ก่อนเรียก LLM • หน้าถัดไปลองของจริง</aside>
       </section>
 
       <section data-state="trydemo" data-demo="decision" data-title="Live demo · Decision Maker">
