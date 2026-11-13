@@ -517,6 +517,14 @@
     .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
     .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
     .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what .tiles-v4 { grid-template-columns: repeat(4, 1fr); gap: 12px 16px; }
+    .s-what .tiles-v4 figure { aspect-ratio: 2.35 / 1; }
+    .s-what .wp-main:has(.tiles-v4) { top: 70px; padding-bottom: 18px; }
+    .s-what .wp-main:has(.tiles-v4) .wp-head { margin-bottom: 12px; }
+    .s-what .tiles-v4 figcaption { font-size: 13.5px; padding: 5px 10px; left: 8px; bottom: 8px; }
+    .s-what .tiles-v4 .live-tag { font-size: 12px; padding: 4px 8px; right: 8px; top: 8px; }
+    .s-what .wp-head .key-head { margin-right: auto; font-size: 14px; line-height: 1.6; padding-left: 4px; }
+    .s-what .wp-head .key-head span { font-size: 12px; }
     .s-what .tiles-6 { grid-template-columns: repeat(6, 1fr); gap: 14px 14px; }
     .s-what .tiles-c3 { grid-template-columns: repeat(3, 1fr); gap: 18px 22px; }
     .s-what .tiles-c4 { grid-template-columns: repeat(4, 1fr); gap: 18px; }
@@ -900,18 +908,18 @@
         <div class="wp wp-main">
           <div class="wp-head">
             <span class="tag" style="background:var(--g-green)">Text · 5 tasks</span>
+            <div class="tiles-key key-head"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
             <div class="lockups">
               <span class="mp-lockup"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
               <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
             </div>
           </div>
           <div class="tiles tiles-c4">
-            <figure class="live"><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""><figcaption>Text Classifier</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure class="live"><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""><figcaption>Text Embedder</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure class="live"><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""><figcaption>Language Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure><img src="images/mediapipe-slides/loops/text_proofreader.svg" alt=""><figcaption>Text Proofreader</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/text_summarizer.svg" alt=""><figcaption>Text Summarizer</figcaption></figure>
-            <div class="tiles-key"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""><figcaption>Text Classifier</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""><figcaption>Text Embedder</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""><figcaption>Language Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/text_proofreader.svg" alt=""><figcaption>Text Proofreader</figcaption></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/text_summarizer.svg" alt=""><figcaption>Text Summarizer</figcaption></figure>
           </div>
         </div>
         <aside class="notes">ภาพรวมหมวด Text 5 tasks • กรอบเขียวมีป้าย Live demo 3 ตัว โมเดลเล็ก รันบนเว็บได้ มี live demo ในหน้าถัดไป: Text Classifier (บวก/ลบ), Text Embedder (เทียบความหมายประโยค), Language Detector (บอกภาษา 110 ภาษา) • อีก 2 ตัว (ดูแค่ภาพรวม) เป็น GenAI ใช้โมเดล Gemma 200M ขนาด 118 MB: Text Proofreader แก้คำผิด/ไวยากรณ์พร้อมบอกจุดที่แก้, Text Summarizer สรุปเป็น TL;DR หรือ key points • สองตัวนี้ยังไม่รองรับ Web มีบน Android, iOS, Python, Flutter จึงไม่มี demo ในวันนี้</aside>
@@ -1074,16 +1082,16 @@
         <div class="wp wp-main">
           <div class="wp-head">
             <span class="tag">Audio · 3 tasks</span>
+            <div class="tiles-key key-head"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
             <div class="lockups">
               <span class="mp-lockup"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
               <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
             </div>
           </div>
           <div class="tiles tiles-c4">
-            <figure class="live"><img src="images/mediapipe-slides/loops/audio_classifier.svg" alt=""><figcaption>Audio Classifier</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure><img src="images/mediapipe-slides/loops/audio_transcriber.svg" alt=""><figcaption>Audio Transcriber</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/text_to_speech.svg" alt=""><figcaption>Text-to-Speech</figcaption></figure>
-            <div class="tiles-key"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/audio_classifier.svg" alt=""><figcaption>Audio Classifier</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/audio_transcriber.svg" alt=""><figcaption>Audio Transcriber</figcaption></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/text_to_speech.svg" alt=""><figcaption>Text-to-Speech</figcaption></figure>
           </div>
         </div>
         <aside class="notes">ภาพรวมหมวด Audio 3 tasks • กรอบเขียว (Live demo) Audio Classifier: จำแนกเสียงรอบตัว 521 ประเภทจากไฟล์หรือไมค์สด โมเดล YamNet แค่ 4.1 MB มี live demo หน้าถัดไป • ดูแค่ภาพรวม: Audio Transcriber: ถอดเสียงพูดเป็นข้อความพร้อมวรรคตอนแบบ streaming โมเดล Parakeet TDT 0.6B ขนาด 615 MB เหมาะทำ caption หรือบันทึกประชุมแบบ offline • Text-to-Speech: สังเคราะห์เสียงพูด 24 kHz เริ่มเล่นได้ตั้งแต่ประโยคแรก มีโมเดล Kokoro, Pocket TTS, Phonon ขนาด 87–760 MB ต่อกับ LLM ให้ตอบเป็นเสียงได้ • สองตัวหลังโมเดลใหญ่ วันนี้เลยแสดงแค่ภาพรวม ไม่มี demo</aside>
@@ -1282,24 +1290,24 @@
         <div class="wp wp-main">
           <div class="wp-head">
             <span class="tag">Vision · 11 tasks</span>
+            <div class="tiles-key key-head"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
             <div class="lockups">
               <span class="mp-lockup"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
               <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
             </div>
           </div>
-          <div class="tiles tiles-6">
-            <figure class="live"><img src="images/mediapipe-slides/loops/object_detector.webp" alt=""><figcaption>Object Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure><img src="images/mediapipe-slides/loops/image_classifier.webp" alt=""><figcaption>Image Classifier</figcaption></figure>
-            <figure class="live"><img src="images/mediapipe-slides/loops/image_segmenter.webp" alt=""><figcaption>Image Segmenter</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure><img src="images/mediapipe-slides/loops/interactive_segmenter.webp" alt=""><figcaption>Interactive Segmenter</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/gesture_recognizer.webp" alt=""><figcaption>Gesture Recognizer</figcaption></figure>
-            <figure class="live"><img src="images/mediapipe-slides/loops/hand_landmarker.webp" alt=""><figcaption>Hand Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure class="live"><img src="images/mediapipe-slides/loops/face_detector_v2.webp" alt=""><figcaption>Face Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure class="live"><img src="images/mediapipe-slides/loops/face_landmarker_v2.webp" alt=""><figcaption>Face Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure class="live"><img src="images/mediapipe-slides/loops/pose_landmarker_v2.webp" alt=""><figcaption>Pose Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
-            <figure><img src="images/mediapipe-slides/loops/holistic_landmarker_v3.webp" alt=""><figcaption>Holistic Landmarker</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/image_embedder.svg" alt=""><figcaption>Image Embedder</figcaption></figure>
-            <div class="tiles-key"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
+          <div class="tiles tiles-v4">
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/object_detector.webp" alt=""><figcaption>Object Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/image_classifier.webp" alt=""><figcaption>Image Classifier</figcaption></figure>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/image_segmenter.webp" alt=""><figcaption>Image Segmenter</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/interactive_segmenter.webp" alt=""><figcaption>Interactive Segmenter</figcaption></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/gesture_recognizer.webp" alt=""><figcaption>Gesture Recognizer</figcaption></figure>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/hand_landmarker.webp" alt=""><figcaption>Hand Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/face_detector_v2.webp" alt=""><figcaption>Face Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/face_landmarker_v2.webp" alt=""><figcaption>Face Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live fragment"><img src="images/mediapipe-slides/loops/pose_landmarker_v2.webp" alt=""><figcaption>Pose Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/holistic_landmarker_v3.webp" alt=""><figcaption>Holistic Landmarker</figcaption></figure>
+            <figure class="fragment"><img src="images/mediapipe-slides/loops/image_embedder.svg" alt=""><figcaption>Image Embedder</figcaption></figure>
           </div>
         </div>
         <aside class="notes">ภาพรวมหมวด Vision ครบ 11 tasks • กรอบสีเขียวที่มีป้าย Live demo คือ 6 ตัวที่จะลองสดต่อจากนี้: Object Detector, Image Segmenter, Hand Landmarker, Face Detector, Face Landmarker, Pose Landmarker • ตัวที่เหลือ Image Classifier, Interactive Segmenter, Gesture Recognizer, Holistic, Image Embedder วันนี้ดูแค่ภาพรวม ลองเล่นเองได้ใน MediaPipe Studio • ทั้งหมดรันได้บน Android, Web, Python, iOS</aside>
