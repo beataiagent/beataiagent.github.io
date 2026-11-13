@@ -427,6 +427,8 @@
     .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
     .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
     .s-what .tcols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+    .s-what .tcols-3 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .s-what .tcols-3 .pc { font-size: 17px; } .s-what .tcols-3 b { font-size: 22px; } .s-what .tcols-3 em { font-size: 14px; }
     .s-what .tcol { display: flex; flex-direction: column; gap: 12px; }
     .s-what .tcol .pc { position: relative; flex: 1; font-size: 15px; line-height: 1.3; padding: 12px 14px 14px; }
     .s-what .tcol b { display: block; font-size: 18px; margin-bottom: 4px; }
@@ -941,10 +943,33 @@
         <aside class="notes">เข้าสู่หมวด Audio มี 3 tasks</aside>
       </section>
 
+      <!-- Audio intro: all 3 audio tasks at a glance (Transcriber / TTS: overview only, large models) -->
+      <section class="s-what" data-title="Audio tasks at a glance">
+        <div class="wp wp-main">
+          <div class="wp-head">
+            <span class="tag">Audio · 3 tasks</span>
+            <div class="lockups">
+              <span class="mp-lockup"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
+              <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
+            </div>
+          </div>
+          <div class="tcols tcols-3">
+            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/audio_classifier.svg" alt=""></figure>
+              <div class="pc green"><b>Audio Classifier</b>521 everyday sounds from a clip or the live mic<em>YamNet · 4.1 MB</em></div></div>
+            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/audio_transcriber.svg" alt=""></figure>
+              <div class="pc yellow"><b>Audio Transcriber</b>Speech → punctuated text, streaming while you talk<em>Parakeet TDT 0.6B · 615 MB</em></div></div>
+            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_to_speech.svg" alt=""></figure>
+              <div class="pc yellow"><b>Text-to-Speech</b>Natural 24 kHz speech, streamed sentence by sentence<em>Kokoro · Pocket TTS · Phonon · 87 – 760 MB</em></div></div>
+          </div>
+          <p class="tcols-foot"><span class="dot green"></span>Live demo next &nbsp;·&nbsp; <span class="dot yellow"></span>Large speech models: overview only today</p>
+        </div>
+        <aside class="notes">ภาพรวมหมวด Audio 3 tasks • สีเขียว Audio Classifier: จำแนกเสียงรอบตัว 521 ประเภทจากไฟล์หรือไมค์สด โมเดล YamNet แค่ 4.1 MB มี live demo หน้าถัดไป • สีเหลือง Audio Transcriber: ถอดเสียงพูดเป็นข้อความพร้อมวรรคตอนแบบ streaming โมเดล Parakeet TDT 0.6B ขนาด 615 MB เหมาะทำ caption หรือบันทึกประชุมแบบ offline • สีเหลือง Text-to-Speech: สังเคราะห์เสียงพูด 24 kHz เริ่มเล่นได้ตั้งแต่ประโยคแรก มีโมเดล Kokoro, Pocket TTS, Phonon ขนาด 87–760 MB ต่อกับ LLM ให้ตอบเป็นเสียงได้ • สองตัวหลังโมเดลใหญ่ วันนี้เลยแสดงแค่ภาพรวม ไม่มี demo</aside>
+      </section>
+
       <section class="s-task" data-title="Audio Classifier">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Audio · 1 / 3</div><h2>Audio Classifier</h2><p class="tk-desc">Classify everyday sound events from audio clips or a live microphone stream.</p></div>
+            <div class="tk-head"><div class="eyebrow">Audio · 1 / 1</div><h2>Audio Classifier</h2><p class="tk-desc">Classify everyday sound events from audio clips or a live microphone stream.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/audio_classifier.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Audio clip</span><span class="chip">Mic stream</span></div></div>
@@ -979,42 +1004,6 @@
           </div>
         </div>
         <aside class="notes">Live demo Audio Classifier (YAMNet 4.1 MB): กด Use microphone แล้วลองพูด ปรบมือ ผิวปาก หรือเปิดเพลง ผลอัปเดตหลายครั้งต่อวินาที รู้จักเสียง 521 ประเภท • ถ้าไมค์ในงานมีปัญหา กดปุ่มเสียงตัวอย่างแทน: 🎹 Piano (Mozart K545) → Piano / Music, 🐶 Dog → Dog / Bark, Beep (บี๊บ 1 kHz) → Dial tone / Telephone • เสียงหมาเห่า: "Barking of a dog 2" โดย Amada44, CC BY-SA 3.0 (Wikimedia Commons) • ต้องเปิดผ่าน http://localhost หรือ https เพื่อใช้ไมค์ • เปลี่ยนสไลด์แล้วไมค์ปิดเอง</aside>
-      </section>
-
-      <section class="s-task" data-title="Audio Transcriber">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Audio · 2 / 3</div><h2>Audio Transcriber</h2><p class="tk-desc">Transcribe speech into punctuated, capitalized text — streaming while the user speaks.</p></div>
-            <figure class="tk-media"><img src="images/mediapipe-slides/loops/audio_transcriber.svg" alt=""></figure>
-            <div class="tk-info">
-              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Audio chunks</span><span class="chip">Audio clip</span></div></div>
-              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Transcript segments</span><span class="chip">Timestamps</span></div></div>
-              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Parakeet TDT 0.6B v3</span></div></div>
-              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Parakeet TDT 0.6B v3 <em>615 MB</em></span></div></div>
-            </div>
-            <img class="tk-diagram" src="images/mediapipe-slides/diagrams/audio_transcriber.svg" alt="Audio Transcriber pipeline">
-            <div class="tk-stat pc yellow"><b>0.6B</b><span>param speech model</span></div>
-          </div>
-        </div>
-        <aside class="notes">Audio Transcriber: แปลงเสียงพูดเป็นข้อความพร้อมเครื่องหมายวรรคตอน ถอดได้ทันทีระหว่างพูด (streaming) • โมเดล Parakeet TDT 0.6B v3 • ใช้ทำ caption หรือบันทึกประชุมแบบ offline • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Parakeet TDT 0.6B v3 615 MB</aside>
-      </section>
-
-      <section class="s-task" data-title="Text-to-Speech">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Audio · 3 / 3</div><h2>Text-to-Speech</h2><p class="tk-desc">Synthesize natural speech from text, streamed clause by clause for low latency.</p></div>
-            <figure class="tk-media"><img src="images/mediapipe-slides/loops/text_to_speech.svg" alt=""></figure>
-            <div class="tk-info">
-              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text</span></div></div>
-              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">PCM audio · 24 kHz</span></div></div>
-              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Kokoro-82M</span><span class="chip">Pocket TTS</span><span class="chip">Phonon</span></div></div>
-              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Phonon 31M <em>87 MB</em></span><span class="chip sz">PocketTTS EN <em>163 MB</em></span><span class="chip sz">Kokoro-82M <em>295 MB</em></span><span class="chip sz">PocketTTS <em>760 MB</em></span></div></div>
-            </div>
-            <img class="tk-diagram" src="images/mediapipe-slides/diagrams/text_to_speech.svg" alt="Text-to-Speech pipeline">
-            <div class="tk-stat pc yellow"><b>24 kHz</b><span>streaming speech</span></div>
-          </div>
-        </div>
-        <aside class="notes">Text-to-Speech: สังเคราะห์เสียงพูดจากข้อความที่ 24 kHz แบบ streaming เริ่มเล่นได้ตั้งแต่ประโยคแรก • มีโมเดล Kokoro-82M, Pocket TTS, Phonon • ต่อกับ LLM ให้ตอบเป็นเสียงได้ • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Phonon 31M 87 MB, PocketTTS EN 163 MB, Kokoro-82M 295 MB, PocketTTS 760 MB</aside>
       </section>
 
       <!-- Section divider 2.3: Decision -->
