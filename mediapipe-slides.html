@@ -429,16 +429,8 @@
     .reveal p.st-cta { font: 700 34px/1.15 var(--sans); margin: 0 0 8px; }
     .reveal p.st-sub { font: 300 18px/1.4 var(--mono); margin: 0 0 22px; }
     .st-link { font-size: 17px !important; white-space: nowrap; padding: 12px 18px !important; }
-    .reveal p.cmp-sub { font: 300 18px/1.4 var(--mono); margin: 6px 0 16px; }
-    .cmp { display: grid; grid-template-columns: 110px 1fr 1fr; border: 2.5px solid var(--ink); border-radius: 18px; overflow: hidden; font-size: 16px; line-height: 1.3; }
-    .cmp > * { padding: 9px 14px; border-top: 1.5px solid #dadce0; }
-    .cmp > .cmp-h { border-top: 0; font: 700 17px/1.2 var(--sans); padding: 11px 14px; }
-    .cmp-mp { background: var(--p-green); } .cmp-gm { background: var(--p-blue); }
-    .reveal .cmp-h img { height: 22px; width: auto; margin: 0 8px 0 0; vertical-align: -5px; }
-    .cmp > b { font: 500 14px/1.3 var(--mono); color: var(--muted); background: var(--paper); }
-    .cmp > span:nth-child(3n+2) { background: #f6fdf5; }
-    .cmp code { font: 400 14px var(--mono); }
-    .reveal p.cmp-tip { margin: 14px 0 0; font-size: 18px; display: inline-block; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-yellow); }
+    .reveal .cmp-tag img { height: 20px; width: auto; margin: 0 8px 0 0; vertical-align: -4px; }
+    .reveal p.cmp-tip { margin: 26px 0 0; font-size: 18px; display: inline-block; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-yellow); }
     .pp-left { width: 340px; flex: none; display: flex; flex-direction: column; gap: 12px; }
     .pp-frame { height: 452px; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
     .reveal .pp-shot { width: 100%; height: 100%; object-fit: cover; margin: 0; display: block; }
@@ -1116,23 +1108,31 @@
           <div class="in" style="padding:34px 44px">
             <div class="eyebrow">Decision · on-device vs cloud</div>
             <h2 style="font-size:38px">Same idea, two places to run it</h2>
-            <p class="cmp-sub">Both score your options in one pass, with no text generation, and return probabilities you can act on.</p>
-            <div class="cmp">
-              <div class="cmp-h"></div>
-              <div class="cmp-h cmp-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe Decision Maker</div>
-              <div class="cmp-h cmp-gm"><img src="images/mediapipe-slides/logos/gemini.svg" alt="">Gemini Decisions API</div>
-              <b>Runs</b><span>On the device · browser, Android, iOS</span><span>Cloud API · <code>gemini-decision-1</code></span>
-              <b>Model</b><span>EmbeddingGemma 2 / Gemma 4 E2B · 165 MB – 2.6 GB download</span><span>Hosted, nothing to download</span>
-              <b>Input</b><span>Text, images (440M), + audio (740M)</span><span>Text, image, audio, video, PDF · up to 256K tokens</span>
-              <b>Questions</b><span>Choice · yes/no · score, many in one pass</span><span>Yes/No · choice · score, up to 1,000 per request</span>
-              <b>Speed</b><span>~0.1–0.2 s text, ~1.4 s photo (our demo, laptop)</span><span>150–250 ms end-to-end</span>
-              <b>Cost</b><span>Free after download · works offline</span><span>$0.10 / 1M input tokens · $0 output</span>
-              <b>Data</b><span>Never leaves the device</span><span>Sent to the Gemini API</span>
+            <p class="sub" style="font-size:20px; margin:8px 0 28px">Both score your options in one pass · no text generation · probabilities you can act on</p>
+            <div class="grid g2" style="gap:28px; width:1000px">
+              <div class="pc green fragment" style="height:262px">
+                <span class="tag cmp-tag"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe Decision Maker</span>
+                <ul class="bl" style="font-size:21px; margin-top:18px">
+                  <li>Runs <b>on the device</b>, even offline</li>
+                  <li>Data never leaves the phone or browser</li>
+                  <li>Free after a 165 MB+ model download</li>
+                  <li>Text, images and audio</li>
+                </ul>
+              </div>
+              <div class="pc blue fragment" style="height:262px">
+                <span class="tag cmp-tag"><img src="images/mediapipe-slides/logos/gemini.svg" alt="">Gemini Decisions API</span>
+                <ul class="bl" style="font-size:21px; margin-top:18px">
+                  <li><b>Cloud API</b>, nothing to download</li>
+                  <li>Up to 256K tokens, video and PDF too</li>
+                  <li>Up to 1,000 questions per request</li>
+                  <li>$0.10 / 1M input tokens · $0 output</li>
+                </ul>
+              </div>
             </div>
-            <p class="cmp-tip"><b>Use both:</b> decide on-device first, and send only low-confidence cases to Gemini Decisions</p>
+            <p class="cmp-tip fragment"><b>Use both:</b> decide on-device first, and send only low-confidence cases to Gemini Decisions</p>
           </div>
         </div>
-        <aside class="notes">เทียบ Decision Maker (บนเครื่อง) กับ Gemini Decisions API (บน cloud): หลักการเดียวกัน คือให้คะแนนตัวเลือกในรอบเดียว ไม่ต้อง generate ข้อความ ได้ความน่าจะเป็นและ confidence • ต่างกันที่ที่รัน: Decision Maker รันบนเครื่อง ฟรีหลังโหลดโมเดล ใช้ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง แต่ต้องโหลดโมเดล 165 MB ขึ้นไป • Gemini Decisions ไม่ต้องโหลดอะไร รับ input ใหญ่ได้ถึง 256K tokens รวมวิดีโอและ PDF ถามได้ถึง 1,000 คำถามต่อครั้ง ราคา $0.10 ต่อ 1M input tokens • ตัวเลขความเร็วฝั่ง MediaPipe มาจาก demo ในเครื่อง laptop ของเรา ฝั่ง Gemini มาจากเอกสารทางการ • ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป Gemini Decisions (มี talk แยกเรื่อง Gemini Decisions API)</aside>
+        <aside class="notes">เทียบ Decision Maker (บนเครื่อง) กับ Gemini Decisions API (บน cloud): หลักการเดียวกัน คือให้คะแนนตัวเลือกในรอบเดียว ไม่ต้อง generate ข้อความ ได้ความน่าจะเป็นออกมา • (คลิก 1) Decision Maker รันบนเครื่อง ใช้ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง ฟรีหลังโหลดโมเดล (165 MB ขึ้นไป) รับข้อความ รูป เสียง • (คลิก 2) Gemini Decisions ไม่ต้องโหลดอะไร รับ input ได้ถึง 256K tokens รวมวิดีโอและ PDF ถามได้ถึง 1,000 คำถามต่อครั้ง $0.10 ต่อ 1M input tokens และ output ฟรี • (คลิก 3) ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป Gemini Decisions • มี talk แยกเรื่อง Gemini Decisions API</aside>
       </section>
 
       <section data-state="trydemo" data-demo="decision" data-title="Live demo · Decision Maker">
