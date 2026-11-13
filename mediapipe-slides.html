@@ -1697,6 +1697,35 @@ Keep all video on-device — never upload frames.</pre></div>
         <aside class="notes">สูตรเขียน prompt 5 ส่วน: (1) Goal แอปทำอะไร (2) ระบุชื่อ MediaPipe task ให้ชัด (3) Input กล้อง/รูป/วิดีโอ (4) Output &amp; UI จะวาดอะไร นับอะไร แสดงอะไร (5) Rules เช่น on-device เท่านั้น จัดการ error • กด Copy prompt ตัวอย่าง Balloon Blow (ป่องแก้มเป่าลูกโป่ง ใช้ blendshapes ของ Face Landmarker) ไปวางใน Build → New app แล้วให้ผู้ฟังลองสั่งแก้ต่อ เช่น 'make the balloon red' หรือ 'add a high score'</aside>
       </section>
 
+      <!-- AI Studio: publish your app (Publish tab → Cloud project + billing → live URL) -->
+      <section data-title="Publish your app from AI Studio">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Google AI Studio · Publish</div>
+            <h2 style="font-size:40px">Done building? Publish it 🚀</h2>
+            <div class="as-left pub-left">
+              <div class="pub-mock" aria-label="AI Studio Publish panel">
+                <div class="pub-tabs"><span>Chat</span><span>Share</span><span class="on">● Publish</span><span>Versions</span><span>GitHub</span></div>
+                <div class="pub-title">Publish your app</div>
+                <div class="pub-bars"><i class="on"></i><i></i><i></i></div>
+                <div class="pub-step"><span>Step 1</span> Confirm project and billing</div>
+                <svg class="pub-cloud" viewBox="0 0 120 90" aria-hidden="true"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z" fill="#fff" stroke="#4285f4" stroke-width="7" stroke-linejoin="round"/></svg>
+                <div class="pub-proj"><b>my-devfest-project</b><span>My billing account ✓</span><em>▾</em></div>
+                <div class="pub-btn">Continue</div>
+              </div>
+            </div>
+            <ol class="as-steps">
+              <li><b>1</b><span>In your app, open the <strong>Publish</strong> tab (next to Chat · Share)</span></li>
+              <li><b>2</b><span>Pick your <strong>Google Cloud project</strong> with a billing account → <strong>Continue</strong><br><small>Use the credits you redeemed today</small></span></li>
+              <li><b>3</b><span>Wait for <strong>"Publishing your app"</strong> while AI Studio prepares the project</span></li>
+              <li><b>4</b><span>Copy the <strong>public link</strong>, open it on your phone and share it</span></li>
+            </ol>
+            <p class="pub-note"><b>Share</b> = invite people to the app in AI Studio &nbsp;·&nbsp; <b>Publish</b> = a live web app on your Google Cloud project</p>
+          </div>
+        </div>
+        <aside class="notes">ทำแอปเสร็จแล้ว publish ให้คนอื่นเปิดใช้ได้: (1) ในหน้าแอปที่สร้าง เปิดแท็บ Publish ที่แถบขวา ข้าง Chat และ Share (2) ขั้นที่ 1 เลือก Google Cloud project ที่ผูก billing account แล้ว (ใช้เครดิตที่ redeem ไปตอนต้นได้) แล้วกด Continue (3) รอ AI Studio เตรียม Cloud project และ publish แอป ("Publishing your app") (4) ได้ลิงก์สาธารณะ ลองเปิดบนมือถือแล้วแชร์ได้เลย • ต่างจาก Share ที่เป็นการแชร์แอปใน AI Studio, Publish คือได้เว็บแอปจริงบน Google Cloud ของเรา</aside>
+      </section>
+
       <!-- AI Studio 3: more prompt ideas -->
       <section data-title="More MediaPipe prompt ideas">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
@@ -1778,35 +1807,6 @@ Keep all video on-device — never upload frames.</pre></div>
           </div>
         </div>
         <aside class="notes">ช่วงแข่งสร้างแอป 15 นาที • กติกา: เปิด AI Studio → Build ใช้ MediaPipe อย่างน้อย 1 task สั่งแก้ไปเรื่อย ๆ จนหมดเวลา แล้วยกมือออกมาเดโมบนเวที • ไม่มีการตัดสินหรือให้คะแนน: 3 คนแรกที่กล้าออกมาเดโมได้รางวัลเลย แอปยังไม่เสร็จหรือทำงานได้ครึ่งเดียวก็นับ • ทำคนเดียวหรือเป็นคู่ก็ได้ • ใช้ prompt จากหน้าก่อนเป็นจุดเริ่มต้นได้ • ไปหน้าถัดไปแล้วกด Start เพื่อเริ่มจับเวลา</aside>
-      </section>
-
-      <!-- AI Studio: publish your app (Publish tab → Cloud project + billing → live URL) -->
-      <section data-title="Publish your app from AI Studio">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:36px 44px">
-            <div class="eyebrow">Google AI Studio · Publish</div>
-            <h2 style="font-size:40px">Done building? Publish it 🚀</h2>
-            <div class="as-left pub-left">
-              <div class="pub-mock" aria-label="AI Studio Publish panel">
-                <div class="pub-tabs"><span>Chat</span><span>Share</span><span class="on">● Publish</span><span>Versions</span><span>GitHub</span></div>
-                <div class="pub-title">Publish your app</div>
-                <div class="pub-bars"><i class="on"></i><i></i><i></i></div>
-                <div class="pub-step"><span>Step 1</span> Confirm project and billing</div>
-                <svg class="pub-cloud" viewBox="0 0 120 90" aria-hidden="true"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z" fill="#fff" stroke="#4285f4" stroke-width="7" stroke-linejoin="round"/></svg>
-                <div class="pub-proj"><b>my-devfest-project</b><span>My billing account ✓</span><em>▾</em></div>
-                <div class="pub-btn">Continue</div>
-              </div>
-            </div>
-            <ol class="as-steps">
-              <li><b>1</b><span>In your app, open the <strong>Publish</strong> tab (next to Chat · Share)</span></li>
-              <li><b>2</b><span>Pick your <strong>Google Cloud project</strong> with a billing account → <strong>Continue</strong><br><small>Use the credits you redeemed today</small></span></li>
-              <li><b>3</b><span>Wait for <strong>"Publishing your app"</strong> while AI Studio prepares the project</span></li>
-              <li><b>4</b><span>Copy the <strong>public link</strong>, open it on your phone and share it</span></li>
-            </ol>
-            <p class="pub-note"><b>Share</b> = invite people to the app in AI Studio &nbsp;·&nbsp; <b>Publish</b> = a live web app on your Google Cloud project</p>
-          </div>
-        </div>
-        <aside class="notes">ทำแอปเสร็จแล้ว publish ให้คนอื่นเปิดใช้ได้: (1) ในหน้าแอปที่สร้าง เปิดแท็บ Publish ที่แถบขวา ข้าง Chat และ Share (2) ขั้นที่ 1 เลือก Google Cloud project ที่ผูก billing account แล้ว (ใช้เครดิตที่ redeem ไปตอนต้นได้) แล้วกด Continue (3) รอ AI Studio เตรียม Cloud project และ publish แอป ("Publishing your app") (4) ได้ลิงก์สาธารณะ ลองเปิดบนมือถือแล้วแชร์ได้เลย • ต่างจาก Share ที่เป็นการแชร์แอปใน AI Studio, Publish คือได้เว็บแอปจริงบน Google Cloud ของเรา</aside>
       </section>
 
       <!-- On-device first: a small MediaPipe model as the gate in front of a cloud LLM -->
