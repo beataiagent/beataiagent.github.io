@@ -1077,57 +1077,9 @@
         <aside class="notes">Decision Maker: ให้คะแนนตัวเลือก ตอบ yes/no หรือให้คะแนนตาม rubric ในการคำนวณรอบเดียว ไม่ต้องสร้างข้อความ (zero decoding) จึงเร็วมาก • ใช้ EmbeddingGemma 2 หรือ Gemma 4 E2B • เหมาะกับ routing หรือ classification แบบ custom • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EmbeddingGemma 2 · 270M 165 MB, 440M 388 MB, 740M 485 MB, Gemma 4 E2B 2.6 GB</aside>
       </section>
 
-      <!-- Section divider 2.4: Retrieval -->
-      <section class="bg-blue" data-title="2.4 · Retrieval">
+      <!-- Section divider 2.4: Vision -->
+      <section class="bg-blue" data-title="2.4 · Vision">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.4</div>
-        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.3-4.3"/></svg></div>
-        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
-          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
-            <h1 style="font-size:120px">Retrieval</h1>
-          </div>
-        </div>
-        <aside class="notes">เข้าสู่หมวด Retrieval มี 2 tasks</aside>
-      </section>
-
-      <section class="s-task" data-title="Semantic Retriever">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Retrieval · 1 / 2</div><h2>Semantic Retriever</h2><p class="tk-desc">Index text, image and audio chunks and retrieve the right context for on-device RAG.</p></div>
-            <figure class="tk-media"><img src="images/mediapipe-slides/loops/semantic_retriever.svg" alt=""></figure>
-            <div class="tk-info">
-              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Documents</span><span class="chip">Query</span></div></div>
-              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Ranked records</span><span class="chip">Similarity score</span></div></div>
-              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">EmbeddingGemma V2</span><span class="chip">SQLite vector store</span></div></div>
-              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">EmbeddingGemma 2 · 270M <em>165 MB</em></span><span class="chip sz">440M <em>388 MB</em></span><span class="chip sz">740M <em>485 MB</em></span></div></div>
-            </div>
-            <img class="tk-diagram" src="images/mediapipe-slides/diagrams/semantic_retriever.svg" alt="Semantic Retriever pipeline">
-            <div class="tk-stat pc "><b>RAG</b><span>fully on-device</span></div>
-          </div>
-        </div>
-        <aside class="notes">Semantic Retriever: ทำ RAG บนเครื่อง: เก็บเอกสาร/รูป/เสียงเป็นเวกเตอร์ใน SQLite แล้วค้นหาบริบทที่เกี่ยวข้องส่งให้ LLM • ไม่ต้องมี server • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EmbeddingGemma 2 · 270M 165 MB, 440M 388 MB, 740M 485 MB</aside>
-      </section>
-
-      <section class="s-task" data-title="Universal Embedder">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Retrieval · 2 / 2</div><h2>Universal Embedder</h2><p class="tk-desc">Embed text, images and audio into one shared multimodal vector space.</p></div>
-            <figure class="tk-media"><img src="images/mediapipe-slides/loops/universal_embedder.svg" alt=""></figure>
-            <div class="tk-info">
-              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text</span><span class="chip">Image</span><span class="chip">Audio</span></div></div>
-              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Embedding vector</span></div></div>
-              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">EmbeddingGemma V2 (Text / Vision / Audio)</span></div></div>
-              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">EmbeddingGemma 2 · 270M <em>165 MB</em></span><span class="chip sz">440M <em>388 MB</em></span><span class="chip sz">740M <em>485 MB</em></span></div></div>
-            </div>
-            <img class="tk-diagram" src="images/mediapipe-slides/diagrams/universal_embedder.svg" alt="Universal Embedder pipeline">
-            <div class="tk-stat pc "><b>3</b><span>modalities, one space</span></div>
-          </div>
-        </div>
-        <aside class="notes">Universal Embedder: แปลงข้อความ รูปภาพ และเสียงให้อยู่ในเวกเตอร์ชุดเดียวกัน จึงค้นรูปด้วยข้อความได้ • ใช้ EmbeddingGemma V2 • ทำงานคู่กับ Semantic Retriever • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EmbeddingGemma 2 · 270M 165 MB, 440M 388 MB, 740M 485 MB</aside>
-      </section>
-
-      <!-- Section divider 2.5: Vision -->
-      <section class="bg-blue" data-title="2.5 · Vision">
-        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.5</div>
         <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
