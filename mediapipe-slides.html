@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>MediaPipe On-device ML</title>
+  <title>DevFest Bangkok 2026 - MediaPipe On-device ML</title>
   <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
   <link rel="icon" type="image/png" sizes="32x32" href="images/logos/gdg-favicon-32.png" />
   <link rel="icon" type="image/png" sizes="192x192" href="images/logos/gdg-favicon-192.png" />
@@ -13,10 +13,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
-  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="fonts/fonts.css" rel="stylesheet" />
 
   <style>
     /* ================= DevFest 2026 theme tokens (from the official template) ================= */
@@ -169,6 +167,9 @@
     .s-agenda .ag-list li { position: relative; display: flex; align-items: center; gap: 18px; height: 84px; }
     .s-agenda .ag-list svg { position: absolute; left: 0; top: -6px; width: 96px; height: 96px; fill: none; stroke: var(--ink); stroke-width: 2.5; }
     .s-agenda .ag-list b { width: 96px; text-align: center; font: 500 54px/1 var(--sans); flex: none; }
+    .s-agenda .ag-qr { position: absolute; left: 940px; top: 168px; width: 300px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 28px; background: #fff; padding: 22px 22px 18px; text-align: center; }
+    .reveal .s-agenda .ag-qr img { display: block; width: 252px; height: 252px; margin: 0 auto; }
+    .s-agenda .ag-qr b { display: block; margin-top: 16px; font: 500 24px/1.2 var(--sans); }
     .s-agenda .ag-list span { width: 688px; height: 84px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 999px; background: #d3e3f3; display: flex; align-items: center; padding: 0 26px; font: 400 34px/1 var(--sans); }
 
     /* tasks slide: Text · Audio · Decision · Retrieval / Vision · GenAI */
@@ -227,6 +228,7 @@
     .copy { font: 500 13px/1 var(--sans); padding: 8px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
     .copy:hover { background: var(--g-yellow); }
     .copy.done { background: var(--g-green); color: #fff; }
+    .copy.try-cam.on { background: var(--g-red); color: #fff; }
     .as-ideas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
     .as-idea { display: flex; flex-direction: column; gap: 8px; height: 392px; min-width: 0; padding: 14px 14px !important; }
     .as-idea .as-mock { display: block; width: 100%; height: auto; }
@@ -388,6 +390,15 @@
     .try-results li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; border-radius: 10px; background: var(--paper); border: 1.5px solid #d0d0d0; }
     .try-results li b { font-weight: 500; }
     .try-status { font: 300 14px/1.4 var(--mono); color: var(--muted); }
+    .try-panel { width: 640px; height: 470px; flex: none; border: 2.5px solid var(--ink); border-radius: 24px; background: #fff; box-sizing: border-box; padding: 22px 24px; display: flex; flex-direction: column; gap: 12px; }
+    .try-label { font: 400 14px/1 var(--mono); color: var(--muted); }
+    .reveal .try-text { flex: 1; min-height: 0; font: 400 28px/1.35 var(--sans); color: var(--ink); border: 2px solid var(--ink); border-radius: 16px; padding: 14px 16px; resize: none; outline: none; background: var(--paper); }
+    .reveal .try-text:focus { border-color: var(--g-blue); background: #fff; }
+    .try-results li.bar { background: linear-gradient(90deg, var(--p-blue) var(--p), var(--paper) var(--p)); }
+    .try-big { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 2; font: 700 30px/1.2 var(--sans); color: #fff; text-align: center; }
+    .try-pick { display: flex; align-items: center; gap: 10px; }
+    .try-pick > b { font: 500 16px/1 var(--mono); flex: none; width: 18px; }
+    .copy.try-mic.on, .copy.try-tone.on { background: var(--g-red); color: #fff; }
 
     /* ---------- slide 4: MediaPipe · Google AI Edge (real loops + logos) ---------- */
     .s-what .wp { position: absolute; background: #fff; border: var(--stroke) solid var(--ink); border-radius: 30px; box-sizing: border-box; }
@@ -545,6 +556,10 @@
           <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>3</b><span>From demo to code: tools &amp; APIs</span></li>
           <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>4</b><span>Hands-on: Build with Google AI Studio</span></li>
         </ol>
+        <div class="ag-qr">
+          <img src="images/qr-slides.svg" alt="QR code: download these slides">
+          <b>Scan to get the slides</b>
+        </div>
         <aside class="notes">วันนี้มี 4 ช่วง: (1) MediaPipe และ Google AI Edge คืออะไร (2) ข้างในมีอะไร ไล่ดู 22 tasks ทีละตัว (3) From demo to code: เครื่องมือและโค้ดเบื้องหลัง demo (4) Hands-on ให้ทุกคนสร้างแอปเองใน Google AI Studio • บอกผู้ฟังเปิด aistudio.google.com เตรียมไว้ได้เลย</aside>
       </section>
 
@@ -555,8 +570,8 @@
         <svg class="abs" style="left:66px; top:560px; width:240px; height:40px"><use href="#i-scallop"/></svg>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
-            <h1 style="font-size:76px">What is<br>MediaPipe?</h1>
-            <p class="sub" style="margin-top:28px">On-device ML from<br>Google AI Edge</p>
+            <h1 style="font-size:108px; line-height:1.02">What is<br>MediaPipe?</h1>
+            <p class="sub" style="margin-top:32px; font-size:32px">On-device ML from<br>Google AI Edge</p>
           </div>
         </div>
         <aside class="notes">เข้าสู่ช่วงที่ 1 • เริ่มจากภาพรวมว่า MediaPipe คืออะไร อยู่ตรงไหนในโลกของ Google AI Edge และทำไมต้องรัน ML บนเครื่อง</aside>
@@ -672,8 +687,8 @@
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
-            <h1 style="font-size:76px">What's<br>inside?</h1>
-            <p class="sub" style="margin-top:28px">22 ready-to-use tasks<br>across 5 categories</p>
+            <h1 style="font-size:108px; line-height:1.02">What's<br>inside?</h1>
+            <p class="sub" style="margin-top:32px; font-size:32px">22 ready-to-use tasks<br>across 5 categories</p>
           </div>
         </div>
         <aside class="notes">เข้าสู่ช่วงที่ 2 • รู้แล้วว่า MediaPipe คืออะไร มาดูกันว่าข้างในมีอะไรให้ใช้บ้าง ตอนนี้มี 22 tasks ใน 5 หมวด และจะไล่ดูทีละตัวพร้อมภาพเคลื่อนไหวของจริง</aside>
@@ -765,6 +780,32 @@
         <aside class="notes">Text Classifier: จัดหมวดข้อความ เช่น บวก/ลบ (sentiment) • โมเดลแนะนำคือ BERT-classifier • ตัวอย่างใช้งาน: กรองรีวิว คอมเมนต์ หรือแชตลูกค้า • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Average word embedding 0.8 MB, BERT-classifier 25.7 MB</aside>
       </section>
 
+      <!-- Live demo for Text Classifier -->
+      <section data-state="trydemo" data-demo="textcls" data-title="Live demo · Text Classifier">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-panel">
+              <span class="try-label">Write a short review</span>
+              <textarea class="try-text" data-in="a" spellcheck="false">Great talk, really enjoyed it!</textarea>
+              <div class="try-tabs">
+                <button data-set-a="What a fantastic, fun and inspiring day.">😀 Loved it</button>
+                <button data-set-a="The food was cold and the service was painfully slow.">😡 Bad service</button>
+                <button data-set-a="The movie was okay, nothing special.">😐 Meh</button>
+                <button data-set-a="Not bad at all, I would go again.">🤔 Tricky</button>
+              </div>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Text Classifier</h2>
+              <p class="try-what">Positive or negative? (English sentiment)</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Live demo Text Classifier (Average word embedding 0.8 MB): จัดประโยคภาษาอังกฤษเป็น positive หรือ negative ทันทีที่พิมพ์ • ลองปุ่ม Tricky ("Not bad at all…") โมเดลจะตอบ negative เพราะดูทีละคำ ไม่เข้าใจการปฏิเสธซ้อน ถ้าต้องการแม่นกว่าใช้ BERT-classifier (25.7 MB) • โมเดลนี้เทรนกับรีวิวหนังภาษาอังกฤษ ภาษาไทยจะไม่แม่น</aside>
+      </section>
+
       <section class="s-task" data-title="Text Embedder">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
@@ -783,6 +824,33 @@
         <aside class="notes">Text Embedder: แปลงข้อความเป็นเวกเตอร์ แล้ววัดความหมายใกล้กันด้วย cosine similarity • ใช้ทำ semantic search หรือจับคู่คำถามที่คล้ายกัน • มีโมเดล EmbeddingGemma 300M และ Universal Sentence Encoder • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Universal Sentence Encoder 6.1 MB, EmbeddingGemma 300M 184 MB</aside>
       </section>
 
+      <!-- Live demo for Text Embedder -->
+      <section data-state="trydemo" data-demo="textemb" data-title="Live demo · Text Embedder">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-panel">
+              <span class="try-label">Sentence A</span>
+              <textarea class="try-text" data-in="a" spellcheck="false" style="font-size:22px">I want to buy a new laptop.</textarea>
+              <span class="try-label">Sentence B</span>
+              <textarea class="try-text" data-in="b" spellcheck="false" style="font-size:22px">Where can I get a cheap computer?</textarea>
+              <div class="try-tabs">
+                <button data-set-a="Dogs are loyal pets." data-set-b="Puppies make faithful companions.">Same meaning</button>
+                <button data-set-a="The weather is lovely today." data-set-b="It is a beautiful sunny day.">Paraphrase</button>
+                <button data-set-a="Dogs are loyal pets." data-set-b="The stock market fell today.">Unrelated</button>
+              </div>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Text Embedder</h2>
+              <p class="try-what">How close are two sentences in meaning?</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Live demo Text Embedder (Universal Sentence Encoder 6.1 MB): แปลงแต่ละประโยคเป็นเวกเตอร์ แล้ววัด cosine similarity • ชี้ว่า "Dogs are loyal pets" กับ "Puppies make faithful companions" แทบไม่มีคำซ้ำกันแต่ได้ 0.92 ส่วนเรื่องไม่เกี่ยวกันได้ราว 0.75 (โมเดลเล็กตัวนี้ให้คะแนนต่ำสุดราว 0.7 แถบจึงเริ่มที่ 0.7) • นี่คือพื้นฐานของ semantic search และ RAG บนเครื่อง • โมเดลนี้เน้นภาษาอังกฤษ</aside>
+      </section>
+
       <section class="s-task" data-title="Language Detector">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
@@ -799,6 +867,35 @@
           </div>
         </div>
         <aside class="notes">Language Detector: บอกว่าข้อความเป็นภาษาอะไร รองรับกว่า 110 ภาษา พร้อมความมั่นใจ • โมเดลเล็กมากแค่ 315 KB • ใช้เลือกภาษาให้แอปหรือส่งต่อไปแปลอัตโนมัติ • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Language Detector 0.3 MB</aside>
+      </section>
+
+      <!-- Live demo for Language Detector -->
+      <section data-state="trydemo" data-demo="lang" data-title="Live demo · Language Detector">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-panel">
+              <span class="try-label">Type in any language</span>
+              <textarea class="try-text" data-in="a" spellcheck="false">สวัสดีครับ ยินดีต้อนรับสู่งาน DevFest</textarea>
+              <div class="try-tabs">
+                <button data-set-a="สวัสดีครับ ยินดีต้อนรับสู่งาน DevFest">ไทย</button>
+                <button data-set-a="Machine learning runs right here on this laptop.">English</button>
+                <button data-set-a="今日はとてもいい天気ですね。">日本語</button>
+                <button data-set-a="만나서 반갑습니다. 오늘 날씨가 좋네요.">한국어</button>
+                <button data-set-a="Bonjour à tous, bienvenue à la conférence !">Français</button>
+                <button data-set-a="¿Dónde está la estación de tren?">Español</button>
+                <button data-set-a="Xin chào các bạn, rất vui được gặp bạn.">Tiếng Việt</button>
+              </div>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Language Detector</h2>
+              <p class="try-what">Detects the language as you type</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Live demo Language Detector (0.3 MB): พิมพ์ข้อความภาษาอะไรก็ได้ ผลอัปเดตทันทีที่พิมพ์ • กดปุ่มตัวอย่างเพื่อสลับภาษา ไทย อังกฤษ ญี่ปุ่น เกาหลี ฝรั่งเศส สเปน เวียดนาม • ชวนผู้ฟังบอกประโยคให้พิมพ์ • ลองพิมพ์ปนสองภาษาจะเห็นความน่าจะเป็นแบ่งกัน</aside>
       </section>
 
       <section class="s-task" data-title="Text Proofreader">
@@ -881,6 +978,28 @@
           </div>
         </div>
         <aside class="notes">Audio Classifier: จำแนกเสียงรอบตัวได้ 521 ประเภท เช่น เสียงดนตรี เสียงสุนัข เสียงไซเรน • ใช้โมเดล YamNet รับได้ทั้งไฟล์เสียงและไมค์สด • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: YamNet 4.1 MB</aside>
+      </section>
+
+      <!-- Live demo for Audio Classifier -->
+      <section data-state="trydemo" data-demo="audio" data-title="Live demo · Audio Classifier">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Audio Classifier</span>
+              <span class="try-big">Press “Use microphone”</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Audio Classifier</h2>
+              <p class="try-what">521 sound classes, live from the mic</p>
+              <ol class="try-results"><li>Top 5 sounds appear here</li></ol>
+              <div class="try-actions"><button class="copy try-mic">Use microphone</button><button class="copy try-tone">Play test sound</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Live demo Audio Classifier (YAMNet 4.1 MB): กด Use microphone แล้วลองพูด ปรบมือ ผิวปาก หรือเปิดเพลง ผลอัปเดตหลายครั้งต่อวินาที รู้จักเสียง 521 ประเภท • ถ้าไมค์ในงานมีปัญหา กด Play test sound จะเล่นเสียงบี๊บสังเคราะห์ (1 kHz) ให้โมเดลฟัง โมเดลจะตอบว่าเป็นเสียงโทรศัพท์ / Dial tone • ต้องเปิดผ่าน http://localhost หรือ https เพื่อใช้ไมค์ • เปลี่ยนสไลด์แล้วไมค์ปิดเอง</aside>
       </section>
 
       <section class="s-task" data-title="Audio Transcriber">
@@ -1113,7 +1232,7 @@
               <h2 style="font-size:38px">Try it: Object Detector</h2>
               <p class="try-what">Boxes + labels for every pet in the photo</p>
               <ol class="try-results"><li>Runs when this slide opens</li></ol>
-              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <div class="try-actions"><button class="copy try-run">Run again</button><button class="copy try-cam">Open camera</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
@@ -1154,7 +1273,7 @@
               <h2 style="font-size:38px">Try it: Image Classifier</h2>
               <p class="try-what">Top-4 categories for the whole image</p>
               <ol class="try-results"><li>Runs when this slide opens</li></ol>
-              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <div class="try-actions"><button class="copy try-run">Run again</button><button class="copy try-cam">Open camera</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
@@ -1195,7 +1314,7 @@
               <h2 style="font-size:38px">Try it: Image Segmenter</h2>
               <p class="try-what">Person mask tinted in Google blue</p>
               <ol class="try-results"><li>Runs when this slide opens</li></ol>
-              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <div class="try-actions"><button class="copy try-run">Run again</button><button class="copy try-cam">Open camera</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
@@ -1254,7 +1373,7 @@
               <h2 style="font-size:38px">Try it: Gesture Recognizer</h2>
               <p class="try-what">Gesture name + 21 hand landmarks</p>
               <ol class="try-results"><li>Runs when this slide opens</li></ol>
-              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <div class="try-actions"><button class="copy try-run">Run again</button><button class="copy try-cam">Open camera</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
@@ -1295,7 +1414,7 @@
               <h2 style="font-size:38px">Try it: Hand Landmarker</h2>
               <p class="try-what">21 landmarks per hand + left / right</p>
               <ol class="try-results"><li>Runs when this slide opens</li></ol>
-              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <div class="try-actions"><button class="copy try-run">Run again</button><button class="copy try-cam">Open camera</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
@@ -1336,7 +1455,7 @@
               <h2 style="font-size:38px">Try it: Face Detector</h2>
               <p class="try-what">Face box + 6 keypoints</p>
               <ol class="try-results"><li>Runs when this slide opens</li></ol>
-              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <div class="try-actions"><button class="copy try-run">Run again</button><button class="copy try-cam">Open camera</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
@@ -1377,7 +1496,7 @@
               <h2 style="font-size:38px">Try it: Face Landmarker</h2>
               <p class="try-what">478-point 3D face mesh</p>
               <ol class="try-results"><li>Runs when this slide opens</li></ol>
-              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <div class="try-actions"><button class="copy try-run">Run again</button><button class="copy try-cam">Open camera</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
@@ -1418,7 +1537,7 @@
               <h2 style="font-size:38px">Try it: Pose Landmarker</h2>
               <p class="try-what">33 body landmarks + skeleton</p>
               <ol class="try-results"><li>Runs when this slide opens</li></ol>
-              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <div class="try-actions"><button class="copy try-run">Run again</button><button class="copy try-cam">Open camera</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
@@ -1445,20 +1564,6 @@
         <aside class="notes">Holistic Landmarker: รวมหน้า มือสองข้าง และท่าทางร่างกายไว้ใน pipeline เดียว ได้ landmarks รวม 543 จุดต่อคน (ตามไดอะแกรมทางการ) • ใช้ทำ motion capture หรือ avatar เต็มตัว • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Holistic bundle 13.7 MB</aside>
       </section>
 
-      <!-- Section divider 03 -->
-      <section class="bg-green" data-title="03 · From demo to code">
-        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:1.8; fill:#fff"><use href="#i-globe"/></svg>
-        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
-        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
-          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
-            <h1 style="font-size:76px">From demo<br>to code</h1>
-            <p class="sub" style="margin-top:28px">Studio, the Task API<br>and the code behind the demos</p>
-          </div>
-        </div>
-        <aside class="notes">เข้าสู่ช่วงที่ 3 • เห็น demo ไปแล้ว คราวนี้มาดูว่าเบื้องหลังทำงานยังไง: MediaPipe Studio, ขั้นตอน Model → Task API → Result และโค้ดจริงบนเว็บกับ Python ที่เขียนแค่ไม่กี่บรรทัด</aside>
-      </section>
-
       <section class="s-task" data-title="Image Embedder">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
@@ -1477,6 +1582,32 @@
         <aside class="notes">Image Embedder: แปลงรูปเป็นเวกเตอร์ แล้ววัดความคล้ายด้วย cosine similarity • ใช้ค้นหารูปที่คล้ายกัน หรือจับกลุ่มสินค้า • โมเดล MobileNet-V3 small/large • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: MobileNet-V3 small 4.1 MB, large 10.9 MB</aside>
       </section>
 
+      <!-- Live demo for Image Embedder -->
+      <section data-state="trydemo" data-demo="imgemb" data-title="Live demo · Image Embedder">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Image Embedder</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Image Embedder</h2>
+              <p class="try-what">How similar are two images?</p>
+              <div class="try-pick"><b>A</b><div class="try-tabs" data-pick="a">
+                <button data-img="object">Pets</button><button data-img="classify">Bird</button><button data-img="face" class="on">Face</button><button data-img="hands">Hand</button>
+              </div></div>
+              <div class="try-pick"><b>B</b><div class="try-tabs" data-pick="b">
+                <button data-img="object">Pets</button><button data-img="classify">Bird</button><button data-img="segment" class="on">Person</button><button data-img="gesture">Thumb</button><button data-img="pose">Yoga</button>
+              </div></div>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Live demo Image Embedder (MobileNet-V3 small 4.1 MB): แปลงรูปเป็นเวกเตอร์ แล้ววัดความคล้ายด้วย cosine similarity • เลือกรูป A และ B: Face กับ Person ได้ราว 0.30 (เป็นคนทั้งคู่) Face กับ Yoga ราว 0.26 ส่วน Pets กับ Bird เกือบ 0 • รูปเดียวกันได้ 1.00 • ใช้ทำค้นหารูปที่คล้ายกัน หรือจัดกลุ่มรูปภาพบนเครื่อง</aside>
+      </section>
+
       <!-- 11. MediaPipe Studio -->
       <section data-title="MediaPipe Studio">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
@@ -1491,13 +1622,31 @@
                   <li>Tune threshold, max results and delegate in real time</li>
                   <li>Evaluate models before writing any code</li>
                 </ul>
-                <p class="mono" style="font-size:18px; margin-top:20px"><a href="https://mediapipe-studio.webapps.google.com/" target="_blank">mediapipe-studio.webapps.google.com</a></p>
+                <div style="display:flex; flex-direction:column; gap:12px; margin-top:24px">
+                  <b style="font-size:18px">Try it yourself</b>
+                  <a class="as-link" style="align-self:flex-start" href="https://mediapipe-studio.webapps.google.com/home" target="_blank">mediapipe-studio.webapps.google.com</a>
+                  <a class="as-link" style="align-self:flex-start; background:var(--p-green)" href="https://google-ai-edge.github.io/mediapipe-samples-web/#/home" target="_blank">google-ai-edge.github.io/mediapipe-samples-web</a>
+                </div>
               </div>
-              <div class="placeholder" style="height:330px">Add a MediaPipe Studio screenshot<br>(e.g. Face Landmarker / Object Detection)</div>
+              <img class="as-shot" style="align-self:start" src="images/mediapipe-studio-home.jpg" alt="MediaPipe Studio home page listing Vision tasks">
             </div>
           </div>
         </div>
         <aside class="notes">MediaPipe Studio = เว็บสำหรับลองทุก task โดยไม่ต้องเขียนโค้ด • ใช้กล้องหรืออัปโหลดรูปของเราเอง ปรับ threshold, จำนวนผลลัพธ์ และ delegate ได้ทันที • เหมาะสำหรับทดสอบโมเดลก่อนลงมือเขียนแอป</aside>
+      </section>
+
+      <!-- Section divider 03 -->
+      <section class="bg-green" data-title="03 · From demo to code">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:1.8; fill:#fff"><use href="#i-globe"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:108px; line-height:1.02">From demo<br>to code</h1>
+            <p class="sub" style="margin-top:32px; font-size:32px">Studio, the Task API<br>and the code behind the demos</p>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่ช่วงที่ 3 • เห็น demo ไปแล้ว คราวนี้มาดูว่าเบื้องหลังทำงานยังไง: MediaPipe Studio, ขั้นตอน Model → Task API → Result และโค้ดจริงบนเว็บกับ Python ที่เขียนแค่ไม่กี่บรรทัด</aside>
       </section>
 
       <!-- 7. How it works -->
@@ -1613,8 +1762,8 @@ for det in result.detections:
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
-            <h1 style="font-size:76px">Hands-on:<br>build it</h1>
-            <p class="sub" style="margin-top:28px">Create your own MediaPipe app<br>in Google AI Studio</p>
+            <h1 style="font-size:108px; line-height:1.02">Hands-on:<br>build it</h1>
+            <p class="sub" style="margin-top:32px; font-size:32px">Create your own MediaPipe app<br>in Google AI Studio</p>
           </div>
         </div>
         <aside class="notes">เข้าสู่ช่วงที่ 4 ช่วงลงมือทำ • ให้ทุกคนเปิด aistudio.google.com แล้วทำตามไปพร้อมกัน ไม่ต้องติดตั้งอะไร ใช้แค่เบราว์เซอร์และกล้อง</aside>
@@ -1778,26 +1927,6 @@ Keep all video on-device — never upload frames.</pre>
           </div>
         </div>
         <aside class="notes">ช่วงแข่งสร้างแอป 15 นาที • กติกา: เปิด AI Studio → Build ใช้ MediaPipe อย่างน้อย 1 task สั่งแก้ไปเรื่อย ๆ จนหมดเวลา แล้วกด Share ส่งลิงก์แอป • เกณฑ์: ไอเดียสร้างสรรค์ 40% สนุก/ว้าว 30% ใช้ MediaPipe ได้ฉลาด 30% • แจกของรางวัล 3 อันดับ ให้ผู้ชนะออกมาเดโมบนเวที • ทำคนเดียวหรือเป็นคู่ก็ได้ • ใช้ prompt จากหน้าก่อนเป็นจุดเริ่มต้นได้ • บอกช่องทางส่งลิงก์ (เช่น QR / ฟอร์ม / แชตกลุ่ม) ก่อนเริ่ม • ไปหน้าถัดไปแล้วกด Start เพื่อเริ่มจับเวลา</aside>
-      </section>
-
-      <!-- 14. Showcase -->
-      <section data-title="AI Studio × MediaPipe">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:52px 56px">
-            <div class="eyebrow">Showcase</div>
-            <h2 style="margin-bottom:34px">AI Studio × MediaPipe</h2>
-            <div class="grid" style="grid-template-columns: 520px 1fr; gap:44px">
-              <div class="placeholder" style="height:330px">Add a screenshot of your project<br>(campaign page / web app)</div>
-              <ul class="bl">
-                <li>Prototype the UI in <strong>Google AI Studio</strong></li>
-                <li>Add MediaPipe (e.g. Face / Gesture) so users play via the camera</li>
-                <li>Everything runs on the user's device — no images sent to a server</li>
-                <li>Deploy as a plain website and share the link</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-        <aside class="notes">Showcase: ตัวอย่างโปรเจกต์จริงที่สร้างด้วย AI Studio + MediaPipe • เล่า flow: prototype UI ใน AI Studio → ใส่ MediaPipe ให้ผู้ใช้เล่นผ่านกล้อง → ประมวลผลบนเครื่องผู้ใช้ทั้งหมด → deploy เป็นเว็บแล้วแชร์ลิงก์ได้ทันที • ชวนผู้ฟังแชร์แอปที่เพิ่งสร้าง</aside>
       </section>
 
       <!-- 15. Resources -->
@@ -2088,7 +2217,7 @@ const answer = await llm.generateResponse(
         const wasOpen = menus.some((m) => m.classList.contains("open"));
         openOnly(null);
         if (wasOpen) return;
-        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,video,canvas,pre,.demo-wrap")) return;
+        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,textarea,video,canvas,pre,.demo-wrap,.try-panel")) return;
         if (String(getSelection?.() || "").length) return;
         Reveal.next();
       }, true); // capture: read isOverview() before reveal handles the overview click
@@ -2117,24 +2246,31 @@ const answer = await llm.generateResponse(
   <script src="images/mediapipe/samples/samples.js"></script>
   <script type="module">
     // Live demos: every <section data-try="…"> runs that MediaPipe task on its sample image when the slide opens.
+    // "Open camera" switches the same slide to the webcam (VIDEO running mode), drawing with the same code.
     const TASKS = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
     const M = "https://storage.googleapis.com/mediapipe-models";
     const SAMPLES = window.MP_SAMPLES || {};
     const SAMPLE_KEY = { facedet: "face" };
     const LABEL = { object: "Object Detector", classify: "Image Classifier", pose: "Pose Landmarker", hands: "Hand Landmarker", face: "Face Landmarker", facedet: "Face Detector", gesture: "Gesture Recognizer", segment: "Image Segmenter" };
     if (!/[?&]print-pdf\b/.test(location.search)) {
-      let mod, fileset; const cache = {}, imgs = {}, done = new WeakSet();
+      let mod, fileset, RM = "IMAGE", cam = null; const cache = {}, imgs = {}, done = new WeakSet();
       const pct = (x) => (x * 100).toFixed(0) + "%";
-      async function base(status) {
-        if (mod) return;
+      // shared by the sample run and the camera, so a click during page load waits for the same runtime instead of racing it
+      let basePromise;
+      function base(status) {
+        if (fileset) return Promise.resolve();
         status.textContent = "Loading MediaPipe runtime…";
-        mod = await import(`${TASKS}/vision_bundle.mjs`);
-        fileset = await mod.FilesetResolver.forVisionTasks(`${TASKS}/wasm`);
+        return basePromise ??= (async () => {
+          const m = await import(`${TASKS}/vision_bundle.mjs`);
+          fileset = await m.FilesetResolver.forVisionTasks(`${TASKS}/wasm`);
+          mod = m;
+        })().catch((err) => { basePromise = null; throw err; });
       }
-      const opts = (path, extra = {}) => ({ baseOptions: { modelAssetPath: `${M}/${path}`, delegate: "GPU" }, runningMode: "IMAGE", ...extra });
+      const opts = (path, extra = {}) => ({ baseOptions: { modelAssetPath: `${M}/${path}`, delegate: "GPU" }, runningMode: RM, ...extra });
       const MAKERS = {
         object:   () => mod.ObjectDetector.createFromOptions(fileset, opts("object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite", { scoreThreshold: 0.35, maxResults: 6 })),
-        classify: () => mod.ImageClassifier.createFromOptions(fileset, opts("image_classifier/efficientnet_lite0/float32/1/efficientnet_lite0.tflite", { maxResults: 4 })),
+        // int8 model (5 MB instead of 18 MB) runs on CPU: the GPU delegate rejects quantized models
+        classify: () => mod.ImageClassifier.createFromOptions(fileset, { ...opts("image_classifier/efficientnet_lite0/int8/1/efficientnet_lite0.tflite", { maxResults: 4 }), baseOptions: { modelAssetPath: `${M}/image_classifier/efficientnet_lite0/int8/1/efficientnet_lite0.tflite`, delegate: "CPU" } }),
         pose:     () => mod.PoseLandmarker.createFromOptions(fileset, opts("pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task", { numPoses: 2 })),
         hands:    () => mod.HandLandmarker.createFromOptions(fileset, opts("hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task", { numHands: 2 })),
         face:     () => mod.FaceLandmarker.createFromOptions(fileset, opts("face_landmarker/face_landmarker/float16/latest/face_landmarker.task", { numFaces: 1 })),
@@ -2142,68 +2278,344 @@ const answer = await llm.generateResponse(
         gesture:  () => mod.GestureRecognizer.createFromOptions(fileset, opts("gesture_recognizer/gesture_recognizer/float16/latest/gesture_recognizer.task", { numHands: 2 })),
         segment:  () => mod.ImageSegmenter.createFromOptions(fileset, opts("image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite", { outputConfidenceMasks: true, outputCategoryMask: false })),
       };
+      // one model instance per task and running mode (IMAGE for the sample, VIDEO for the camera)
+      async function getTask(task, mode, status) {
+        const key = task + ":" + mode;
+        if (!cache[key]) {
+          status.textContent = `Downloading ${LABEL[task]} model…`; RM = mode;
+          cache[key] = MAKERS[task]().catch((err) => { delete cache[key]; throw err; }); // retry on the next click if a download fails
+        }
+        return cache[key];
+      }
       const image = (k) => imgs[k] ??= new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = SAMPLES[SAMPLE_KEY[k] || k] || ""; });
+      const parts = (sec) => ({ task: sec.dataset.try, canvas: sec.querySelector(".try-canvas"), out: sec.querySelector(".try-results"), status: sec.querySelector(".try-status"), btn: sec.querySelector(".try-run"), camBtn: sec.querySelector(".try-cam") });
+      const list = (out, rows) => (out.innerHTML = (rows.length ? rows : [["no result", ""]]).map(([a, b]) => `<li><b>${a}</b><span>${b ?? ""}</span></li>`).join(""));
+
+      // run the task on `im` (already drawn on the canvas) and draw the result; ts = video timestamp, or undefined for a still image
+      function paint(task, tk, im, canvas, draw, ts) {
+        const ctx = canvas.getContext("2d"), video = ts != null;
+        const call = (name) => (video ? tk[name + "ForVideo"](im, ts) : tk[name](im));
+        const lm = (pts, conn, color) => { draw.drawConnectors(pts, conn, { color, lineWidth: Math.max(2, canvas.width / 260) }); draw.drawLandmarks(pts, { color: "#fff", fillColor: color, lineWidth: 1, radius: Math.max(2, canvas.width / 220) }); };
+        let rows = [];
+        const boxes = (dets) => {
+          ctx.lineWidth = Math.max(3, canvas.width / 200); ctx.font = `500 ${Math.round(canvas.width / 34)}px "Google Sans", sans-serif`;
+          dets.forEach((d, i) => {
+            const b = d.boundingBox, c = d.categories[0] || { categoryName: "face", score: 0 }, col = ["#4285f4", "#ea4335", "#fbbc04", "#34a853"][i % 4];
+            const name = c.categoryName || "face";
+            ctx.strokeStyle = col; ctx.strokeRect(b.originX, b.originY, b.width, b.height);
+            const label = `${name} ${pct(c.score)}`, tw = ctx.measureText(label).width + 16, th = canvas.width / 24;
+            ctx.fillStyle = col; ctx.fillRect(b.originX, Math.max(0, b.originY - th), tw, th);
+            ctx.fillStyle = "#fff"; ctx.fillText(label, b.originX + 8, Math.max(th, b.originY) - th * 0.28);
+            rows.push([name, pct(c.score)]);
+          });
+        };
+        if (task === "object") boxes(call("detect").detections);
+        else if (task === "facedet") {
+          const r = call("detect"); boxes(r.detections);
+          ctx.fillStyle = "#fbbc04";
+          r.detections.forEach((d) => d.keypoints.forEach((k) => { ctx.beginPath(); ctx.arc(k.x * canvas.width, k.y * canvas.height, Math.max(4, canvas.width / 90), 0, 7); ctx.fill(); }));
+          rows.push(["keypoints / face", r.detections[0]?.keypoints.length ?? 0]);
+        } else if (task === "classify") rows = call("classify").classifications[0].categories.map((c) => [c.categoryName, pct(c.score)]);
+        else if (task === "pose") { const r = call("detect"); r.landmarks.forEach((pt) => lm(pt, mod.PoseLandmarker.POSE_CONNECTIONS, "#34a853")); rows = [["people", r.landmarks.length], ["landmarks / person", 33]]; }
+        else if (task === "hands") { const r = call("detect"); r.landmarks.forEach((pt) => lm(pt, mod.HandLandmarker.HAND_CONNECTIONS, "#4285f4")); rows = r.handedness.map((h, i) => [`hand ${i + 1}: ${h[0].categoryName}`, pct(h[0].score)]); rows.push(["landmarks / hand", 21]); }
+        else if (task === "face") {
+          const r = call("detect"), F = mod.FaceLandmarker;
+          r.faceLandmarks.forEach((pt) => {
+            draw.drawConnectors(pt, F.FACE_LANDMARKS_TESSELATION, { color: "rgba(255,255,255,.55)", lineWidth: 1 });
+            draw.drawConnectors(pt, F.FACE_LANDMARKS_FACE_OVAL, { color: "#fbbc04", lineWidth: 3 });
+            draw.drawConnectors(pt, F.FACE_LANDMARKS_LIPS, { color: "#ea4335", lineWidth: 3 });
+            draw.drawConnectors(pt, F.FACE_LANDMARKS_LEFT_EYE, { color: "#4285f4", lineWidth: 3 });
+            draw.drawConnectors(pt, F.FACE_LANDMARKS_RIGHT_EYE, { color: "#4285f4", lineWidth: 3 });
+          });
+          rows = [["faces", r.faceLandmarks.length], ["landmarks / face", r.faceLandmarks[0]?.length ?? 0]];
+        } else if (task === "gesture") { const r = call("recognize"); r.landmarks.forEach((pt) => lm(pt, mod.GestureRecognizer.HAND_CONNECTIONS, "#fbbc04")); rows = r.gestures.map((g) => [g[0].categoryName, pct(g[0].score)]); }
+        else if (task === "segment") {
+          // callback form: the mask is only valid inside the callback
+          const onResult = (r) => {
+            const mask = r.confidenceMasks[0], m = mask.getAsFloat32Array(), W = mask.width, Hh = mask.height;
+            const px = ctx.getImageData(0, 0, W, Hh), d = px.data; let on = 0;
+            for (let i = 0; i < m.length; i++) { const a = m[i]; if (a > 0.5) on++; const k = a * 0.6; d[i*4] = d[i*4]*(1-k) + 66*k; d[i*4+1] = d[i*4+1]*(1-k) + 133*k; d[i*4+2] = d[i*4+2]*(1-k) + 244*k; }
+            ctx.putImageData(px, 0, 0); rows = [["person", `${pct(on / m.length)} of pixels`]];
+          };
+          video ? tk.segmentForVideo(im, ts, onResult) : tk.segment(im, onResult);
+        }
+        return rows;
+      }
 
       async function run(sec) {
-        const task = sec.dataset.try, canvas = sec.querySelector(".try-canvas"), ctx = canvas.getContext("2d");
-        const out = sec.querySelector(".try-results"), status = sec.querySelector(".try-status"), btn = sec.querySelector(".try-run");
-        const list = (rows) => (out.innerHTML = rows.map(([a, b]) => `<li><b>${a}</b><span>${b ?? ""}</span></li>`).join(""));
+        const { task, canvas, out, status, btn } = parts(sec), ctx = canvas.getContext("2d");
         if (btn) btn.disabled = true;
         try {
           await base(status);
-          const im = await image(task), draw = new mod.DrawingUtils(ctx);
+          const im = await image(task), tk = await getTask(task, "IMAGE", status);
+          if (cam?.sec === sec) return; // camera took over meanwhile
           canvas.width = im.naturalWidth; canvas.height = im.naturalHeight; ctx.drawImage(im, 0, 0);
-          const lm = (pts, conn, color) => { draw.drawConnectors(pts, conn, { color, lineWidth: Math.max(2, canvas.width / 260) }); draw.drawLandmarks(pts, { color: "#fff", fillColor: color, lineWidth: 1, radius: Math.max(2, canvas.width / 220) }); };
-          if (!cache[task]) { status.textContent = `Downloading ${LABEL[task]} model…`; cache[task] = await MAKERS[task](); }
           status.textContent = "Running…";
-          const t0 = performance.now(), tk = cache[task]; let rows = [];
-          const boxes = (dets) => {
-            ctx.lineWidth = Math.max(3, canvas.width / 200); ctx.font = `500 ${Math.round(canvas.width / 34)}px "Google Sans", sans-serif`;
-            dets.forEach((d, i) => {
-              const b = d.boundingBox, c = d.categories[0] || { categoryName: "face", score: 0 }, col = ["#4285f4", "#ea4335", "#fbbc04", "#34a853"][i % 4];
-              const name = c.categoryName || "face";
-              ctx.strokeStyle = col; ctx.strokeRect(b.originX, b.originY, b.width, b.height);
-              const label = `${name} ${pct(c.score)}`, tw = ctx.measureText(label).width + 16, th = canvas.width / 24;
-              ctx.fillStyle = col; ctx.fillRect(b.originX, Math.max(0, b.originY - th), tw, th);
-              ctx.fillStyle = "#fff"; ctx.fillText(label, b.originX + 8, Math.max(th, b.originY) - th * 0.28);
-              rows.push([name, pct(c.score)]);
-            });
-          };
-          if (task === "object") boxes(tk.detect(im).detections);
-          else if (task === "facedet") {
-            const r = tk.detect(im); boxes(r.detections);
-            ctx.fillStyle = "#fbbc04";
-            r.detections.forEach((d) => d.keypoints.forEach((k) => { ctx.beginPath(); ctx.arc(k.x * canvas.width, k.y * canvas.height, Math.max(4, canvas.width / 90), 0, 7); ctx.fill(); }));
-            rows.push(["keypoints / face", r.detections[0]?.keypoints.length ?? 0]);
-          } else if (task === "classify") rows = tk.classify(im).classifications[0].categories.map((c) => [c.categoryName, pct(c.score)]);
-          else if (task === "pose") { const r = tk.detect(im); r.landmarks.forEach((pt) => lm(pt, mod.PoseLandmarker.POSE_CONNECTIONS, "#34a853")); rows = [["people", r.landmarks.length], ["landmarks / person", 33]]; }
-          else if (task === "hands") { const r = tk.detect(im); r.landmarks.forEach((pt) => lm(pt, mod.HandLandmarker.HAND_CONNECTIONS, "#4285f4")); rows = r.handedness.map((h, i) => [`hand ${i + 1}: ${h[0].categoryName}`, pct(h[0].score)]); rows.push(["landmarks / hand", 21]); }
-          else if (task === "face") {
-            const r = tk.detect(im), F = mod.FaceLandmarker;
-            r.faceLandmarks.forEach((pt) => {
-              draw.drawConnectors(pt, F.FACE_LANDMARKS_TESSELATION, { color: "rgba(255,255,255,.55)", lineWidth: 1 });
-              draw.drawConnectors(pt, F.FACE_LANDMARKS_FACE_OVAL, { color: "#fbbc04", lineWidth: 3 });
-              draw.drawConnectors(pt, F.FACE_LANDMARKS_LIPS, { color: "#ea4335", lineWidth: 3 });
-              draw.drawConnectors(pt, F.FACE_LANDMARKS_LEFT_EYE, { color: "#4285f4", lineWidth: 3 });
-              draw.drawConnectors(pt, F.FACE_LANDMARKS_RIGHT_EYE, { color: "#4285f4", lineWidth: 3 });
-            });
-            rows = [["faces", r.faceLandmarks.length], ["landmarks / face", r.faceLandmarks[0]?.length ?? 0]];
-          } else if (task === "gesture") { const r = tk.recognize(im); r.landmarks.forEach((pt) => lm(pt, mod.GestureRecognizer.HAND_CONNECTIONS, "#fbbc04")); rows = r.gestures.map((g) => [g[0].categoryName, pct(g[0].score)]); }
-          else if (task === "segment") {
-            const r = tk.segment(im), mask = r.confidenceMasks[0], m = mask.getAsFloat32Array(), W = mask.width, Hh = mask.height;
-            const px = ctx.getImageData(0, 0, W, Hh), d = px.data; let on = 0;
-            for (let i = 0; i < m.length; i++) { const a = m[i]; if (a > 0.5) on++; const k = a * 0.6; d[i*4] = d[i*4]*(1-k) + 66*k; d[i*4+1] = d[i*4+1]*(1-k) + 133*k; d[i*4+2] = d[i*4+2]*(1-k) + 244*k; }
-            ctx.putImageData(px, 0, 0); r.close?.(); rows = [["person", `${pct(on / m.length)} of pixels`]];
-          }
-          list(rows.length ? rows : [["no result", ""]]);
+          const t0 = performance.now(), rows = paint(task, tk, im, canvas, new mod.DrawingUtils(ctx));
+          list(out, rows);
           status.textContent = `${LABEL[task]} · ${Math.round(performance.now() - t0)} ms · on-device`;
           done.add(sec);
         } catch (err) { console.error(err); status.textContent = "Could not run: " + (err?.message || err); }
         finally { if (btn) btn.disabled = false; }
       }
-      document.addEventListener("click", (e) => { const b = e.target.closest(".try-run"); if (!b) return; e.stopPropagation(); run(b.closest("section")); }, true);
+
+      // ---- camera mode ----
+      const frame = document.createElement("canvas"), fctx = frame.getContext("2d");
+      async function startCam(sec) {
+        stopCam(false);
+        const { task, canvas, out, status, camBtn } = parts(sec), ctx = canvas.getContext("2d");
+        camBtn.disabled = true;
+        let stream;
+        try {
+          await base(status);
+          const tk = await getTask(task, "VIDEO", status);
+          status.textContent = "Opening camera…";
+          stream = await navigator.mediaDevices.getUserMedia({ video: { width: 960, height: 720, facingMode: "user" }, audio: false });
+          if (Reveal.getCurrentSlide() !== sec) { stream.getTracks().forEach((t) => t.stop()); return; }
+          const video = Object.assign(document.createElement("video"), { muted: true, playsInline: true, srcObject: stream });
+          await video.play();
+          cam = { sec, stream, raf: 0 };
+          camBtn.textContent = "Stop camera"; camBtn.classList.add("on"); sec.classList.add("cam-on");
+          const draw = new mod.DrawingUtils(ctx);
+          let lastT = -1, lastUi = 0, ema = 0;
+          const loop = () => {
+            if (cam?.sec !== sec) return;
+            if (video.readyState >= 2 && video.currentTime !== lastT) {
+              lastT = video.currentTime;
+              const W = video.videoWidth, H = video.videoHeight;
+              if (frame.width !== W || frame.height !== H) { frame.width = W; frame.height = H; }
+              if (canvas.width !== W || canvas.height !== H) { canvas.width = W; canvas.height = H; }
+              // mirror like a selfie camera, then run the model on the mirrored frame so labels read normally
+              fctx.setTransform(-1, 0, 0, 1, W, 0); fctx.drawImage(video, 0, 0, W, H); fctx.setTransform(1, 0, 0, 1, 0, 0);
+              ctx.drawImage(frame, 0, 0);
+              const t0 = performance.now(), rows = paint(task, tk, frame, canvas, draw, t0), dt = performance.now() - t0;
+              ema = ema ? ema * 0.9 + dt * 0.1 : dt;
+              if (t0 - lastUi > 250) { lastUi = t0; list(out, rows); status.textContent = `${LABEL[task]} · camera · ${Math.round(ema)} ms / frame · on-device`; }
+            }
+            cam.raf = requestAnimationFrame(loop);
+          };
+          loop();
+        } catch (err) {
+          console.error(err); stream?.getTracks().forEach((t) => t.stop());
+          status.textContent = "Could not open camera: " + (err?.message || err) + " (needs http://localhost or https)";
+        } finally { camBtn.disabled = false; }
+      }
+      function stopCam(backToSample = true) {
+        if (!cam) return;
+        const { sec, stream, raf } = cam; cam = null;
+        cancelAnimationFrame(raf); stream.getTracks().forEach((t) => t.stop());
+        sec.classList.remove("cam-on");
+        const b = sec.querySelector(".try-cam"); if (b) { b.textContent = "Open camera"; b.classList.remove("on"); }
+        done.delete(sec);
+        if (backToSample) run(sec);
+      }
+
+      document.addEventListener("click", (e) => {
+        const b = e.target.closest(".try-run, .try-cam"); if (!b) return;
+        e.stopPropagation();
+        const sec = b.closest("section");
+        if (b.classList.contains("try-cam")) return cam?.sec === sec ? stopCam() : startCam(sec);
+        if (cam?.sec === sec) stopCam(); else run(sec);
+      }, true);
       const maybe = (sec) => { if (sec?.dataset.try && !done.has(sec)) run(sec); };
-      Reveal.on("slidechanged", (e) => maybe(e.currentSlide));
+      Reveal.on("slidechanged", (e) => { if (cam && cam.sec !== e.currentSlide) stopCam(false); maybe(e.currentSlide); });
+      Reveal.on("ready", (e) => maybe(e.currentSlide));
+      maybe(Reveal.getCurrentSlide());
+    }
+  </script>
+
+  <!-- Try it: text, audio and image-embedding demos (<section data-demo="…">) -->
+  <script type="module">
+    const VER = "0.10.14", CDN = (p) => `https://cdn.jsdelivr.net/npm/@mediapipe/${p}@${VER}`;
+    const M = "https://storage.googleapis.com/mediapipe-models";
+    const SAMPLES = window.MP_SAMPLES || {};
+    const LABEL = { lang: "Language Detector", textcls: "Text Classifier", textemb: "Text Embedder", audio: "Audio Classifier", imgemb: "Image Embedder" };
+    if (!/[?&]print-pdf\b/.test(location.search)) {
+      // memoised loaders; a failed download is forgotten so the next try retries
+      const memo = {}, once = (k, f) => (memo[k] ??= f().catch((e) => { delete memo[k]; throw e; }));
+      const runtime = (kind) => once(kind, async () => {
+        const pkg = { text: "tasks-text", audio: "tasks-audio", vision: "tasks-vision" }[kind];
+        const m = await import(`${CDN(pkg)}/${kind}_bundle.mjs`);
+        const res = { text: "forTextTasks", audio: "forAudioTasks", vision: "forVisionTasks" }[kind];
+        return { m, fs: await m.FilesetResolver[res](`${CDN(pkg)}/wasm`) };
+      });
+      const model = (path, extra = {}) => ({ baseOptions: { modelAssetPath: `${M}/${path}` }, ...extra });
+      const MAKERS = {
+        lang:    ["text",   (m, fs) => m.LanguageDetector.createFromOptions(fs, model("language_detector/language_detector/float32/1/language_detector.tflite", { maxResults: 3 }))],
+        textcls: ["text",   (m, fs) => m.TextClassifier.createFromOptions(fs, model("text_classifier/average_word_classifier/float32/1/average_word_classifier.tflite", { maxResults: 2 }))],
+        textemb: ["text",   (m, fs) => m.TextEmbedder.createFromOptions(fs, model("text_embedder/universal_sentence_encoder/float32/1/universal_sentence_encoder.tflite"))],
+        audio:   ["audio",  (m, fs) => m.AudioClassifier.createFromOptions(fs, model("audio_classifier/yamnet/float32/1/yamnet.tflite", { maxResults: 5 }))],
+        imgemb:  ["vision", (m, fs) => m.ImageEmbedder.createFromOptions(fs, model("image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.tflite", { runningMode: "IMAGE" }))],
+      };
+      const getTask = (key, status) => once("task:" + key, async () => {
+        const [kind, make] = MAKERS[key];
+        status.textContent = "Loading MediaPipe runtime…";
+        const { m, fs } = await runtime(kind);
+        status.textContent = `Downloading ${LABEL[key]} model…`;
+        return make(m, fs);
+      });
+
+      const pct = (x) => (x * 100).toFixed(0) + "%";
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+      // rows: [label, value, fraction 0..1 for the bar (optional)]
+      const list = (sec, rows) => (sec.querySelector(".try-results").innerHTML = rows.map(([a, b, p]) =>
+        `<li${p != null ? ` class="bar" style="--p:${Math.max(0, Math.min(1, p)) * 100}%"` : ""}><b>${esc(a)}</b><span>${esc(b ?? "")}</span></li>`).join(""));
+      const setStatus = (sec, t) => (sec.querySelector(".try-status").textContent = t);
+      const timed = (sec, key, t0) => setStatus(sec, `${LABEL[key]} · ${Math.max(1, Math.round(performance.now() - t0))} ms · on-device`);
+      const cosine = (a, b) => { let d = 0, x = 0, y = 0; for (let i = 0; i < a.length; i++) { d += a[i] * b[i]; x += a[i] * a[i]; y += b[i] * b[i]; } return d / Math.sqrt(x * y || 1); };
+      const vec = (r) => r.embeddings[0].floatEmbedding;
+      const langName = (() => { let dn; try { dn = new Intl.DisplayNames(["en"], { type: "language" }); } catch {} return (c) => { try { return dn?.of(c) || c; } catch { return c; } }; })();
+      const val = (sec, k) => sec.querySelector(`.try-text[data-in="${k}"]`)?.value.trim() || "";
+
+      // ---- text + image-embedding demos: run once per change ----
+      const RUN = {
+        async lang(sec, tk) {
+          const text = val(sec, "a"); if (!text) return list(sec, [["Type something…", ""]]);
+          const r = tk.detect(text);
+          list(sec, r.languages.length ? r.languages.map((l) => [`${langName(l.languageCode)} (${l.languageCode})`, pct(l.probability), l.probability]) : [["not sure", ""]]);
+        },
+        async textcls(sec, tk) {
+          const text = val(sec, "a"); if (!text) return list(sec, [["Type something…", ""]]);
+          const cats = tk.classify(text).classifications[0].categories.slice().sort((a, b) => b.score - a.score);
+          const NAME = { 1: "😀 positive", 0: "😡 negative", positive: "😀 positive", negative: "😡 negative" }; // this model labels 1 = positive, 0 = negative
+          list(sec, cats.map((c) => [NAME[c.categoryName] || c.categoryName, pct(c.score), c.score]));
+        },
+        async textemb(sec, tk) {
+          const a = val(sec, "a"), b = val(sec, "b"); if (!a || !b) return list(sec, [["Type two sentences…", ""]]);
+          const s = cosine(vec(tk.embed(a)), vec(tk.embed(b)));
+          // this compact encoder scores unrelated sentences ≈ 0.75 and paraphrases ≈ 0.9+, so the bar spans 0.7 → 1
+          list(sec, [["cosine similarity", s.toFixed(2), (s - 0.7) / 0.3], ["meaning", s >= 0.9 ? "very similar" : s >= 0.84 ? "related" : "different"], ["vector size", vec(tk.embed(a)).length]]);
+        },
+        async imgemb(sec, tk) {
+          const pick = (k) => sec.querySelector(`[data-pick="${k}"] button.on`)?.dataset.img;
+          const [ia, ib] = await Promise.all([pick("a"), pick("b")].map(img));
+          const canvas = sec.querySelector(".try-canvas"), ctx = canvas.getContext("2d");
+          canvas.width = 1280; canvas.height = 940; ctx.fillStyle = "#1e1e1e"; ctx.fillRect(0, 0, 1280, 940);
+          [[ia, 0, "A"], [ib, 640, "B"]].forEach(([im, x, tag]) => {
+            const s = Math.min(620 / im.naturalWidth, 860 / im.naturalHeight), w = im.naturalWidth * s, h = im.naturalHeight * s;
+            ctx.drawImage(im, x + (640 - w) / 2, (940 - h) / 2 + 20, w, h);
+            ctx.fillStyle = "#fff"; ctx.beginPath(); ctx.arc(x + 320, 120, 34, 0, 7); ctx.fill();
+            ctx.fillStyle = "#1e1e1e"; ctx.font = '700 40px "Google Sans", sans-serif'; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(tag, x + 320, 122);
+          });
+          const ea = (sec._emb ??= {})[pick("a")] ??= vec(tk.embed(ia)), eb = sec._emb[pick("b")] ??= vec(tk.embed(ib));
+          const s = cosine(ea, eb);
+          // MobileNet-V3 small: unrelated photos ≈ 0, two photos of people ≈ 0.3, identical = 1
+          list(sec, [["cosine similarity", s.toFixed(2), s / 0.5], ["looks", s >= 0.99 ? "identical" : s >= 0.25 ? "similar" : s >= 0.12 ? "a bit similar" : "different"], ["vector size", ea.length]]);
+        },
+      };
+      const imgs = {}, img = (k) => (imgs[k] ??= new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = SAMPLES[k] || ""; }));
+
+      const busy = new WeakMap(), done = new WeakSet();
+      async function run(sec) {
+        const key = sec.dataset.demo; if (!RUN[key]) return;
+        if (busy.get(sec)) return busy.set(sec, "again"); // coalesce fast typing
+        busy.set(sec, true);
+        try {
+          const tk = await getTask(key, sec.querySelector(".try-status"));
+          const t0 = performance.now(); await RUN[key](sec, tk); timed(sec, key, t0); done.add(sec);
+        } catch (err) { console.error(err); setStatus(sec, "Could not run: " + (err?.message || err)); }
+        const again = busy.get(sec) === "again"; busy.delete(sec);
+        if (again) run(sec);
+      }
+
+      // ---- audio: mic or a synthetic whistle → YAMNet, ~3 updates / s ----
+      let au = null;
+      async function startAudio(sec, mode) {
+        stopAudio();
+        const btn = sec.querySelector(mode === "mic" ? ".try-mic" : ".try-tone"), big = sec.querySelector(".try-big");
+        btn.disabled = true;
+        let stream, actx;
+        try {
+          const cls = await getTask("audio", sec.querySelector(".try-status"));
+          actx = new AudioContext();
+          await actx.resume(); // browsers start audio suspended until a user gesture
+          let source;
+          if (mode === "mic") {
+            setStatus(sec, "Opening microphone…");
+            stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
+            source = actx.createMediaStreamSource(stream);
+          } else {
+            // beeping 1 kHz tone (on/off twice a second): the model hears it at full level, the room hears it quietly
+            const osc = actx.createOscillator(), gate = actx.createGain(), pulse = actx.createOscillator(), depth = actx.createGain(), out = actx.createGain();
+            osc.frequency.value = 1000; pulse.type = "square"; pulse.frequency.value = 2;
+            gate.gain.value = 0.5; depth.gain.value = 0.5; pulse.connect(depth).connect(gate.gain); // gain swings 0 ↔ 1
+            osc.connect(gate); out.gain.value = 0.15; gate.connect(out).connect(actx.destination);
+            osc.start(); pulse.start(); source = gate;
+          }
+          if (Reveal.getCurrentSlide() !== sec) throw new Error("left the slide");
+          const analyser = actx.createAnalyser(); analyser.fftSize = 512; source.connect(analyser);
+          const proc = actx.createScriptProcessor(16384, 1, 1), mute = actx.createGain(); mute.gain.value = 0;
+          source.connect(proc); proc.connect(mute).connect(actx.destination);
+          const sr = actx.sampleRate, ring = new Float32Array(sr); // last 1 s of audio
+          proc.onaudioprocess = (e) => {
+            if (au?.sec !== sec) return;
+            const d = e.inputBuffer.getChannelData(0);
+            ring.copyWithin(0, d.length); ring.set(d, ring.length - d.length);
+            // results come per ~1 s window; the first one covers our whole buffer (later ones are mostly padding → "Silence")
+            const t0 = performance.now(), res = cls.classify(ring, sr);
+            const cats = res[0]?.classifications[0]?.categories || [];
+            list(sec, cats.length ? cats.map((c) => [c.categoryName, pct(c.score), c.score]) : [["(silence)", ""]]);
+            big.textContent = cats[0] ? `${cats[0].categoryName} · ${pct(cats[0].score)}` : "…";
+            timed(sec, "audio", t0);
+          };
+          au = { sec, actx, stream, btn, mode, raf: 0 };
+          btn.textContent = "Stop"; btn.classList.add("on"); big.textContent = mode === "mic" ? "Listening…" : "Playing test sound…";
+          setStatus(sec, mode === "mic" ? "Listening · on-device" : "Test sound · on-device");
+          // level bars
+          const canvas = sec.querySelector(".try-canvas"), ctx = canvas.getContext("2d"), bins = new Uint8Array(analyser.frequencyBinCount);
+          canvas.width = 1280; canvas.height = 940;
+          const draw = () => {
+            if (au?.sec !== sec) return;
+            analyser.getByteFrequencyData(bins);
+            ctx.fillStyle = "#1e1e1e"; ctx.fillRect(0, 0, 1280, 940);
+            const n = 48, w = 1280 / n, col = ["#4285f4", "#ea4335", "#fbbc04", "#34a853"];
+            for (let i = 0; i < n; i++) {
+              const v = bins[Math.floor(i * bins.length * 0.6 / n)] / 255, h = Math.max(6, v * 640);
+              ctx.fillStyle = col[i % 4]; ctx.beginPath(); ctx.roundRect(i * w + 6, 520 - h / 2, w - 12, h, 10); ctx.fill();
+            }
+            au.raf = requestAnimationFrame(draw);
+          };
+          draw();
+        } catch (err) {
+          console.error(err); stream?.getTracks().forEach((t) => t.stop()); actx?.close();
+          if (err?.message !== "left the slide") setStatus(sec, `Could not start ${mode === "mic" ? "microphone" : "sound"}: ${err?.message || err}${mode === "mic" ? " (needs http://localhost or https)" : ""}`);
+        } finally { btn.disabled = false; }
+      }
+      function stopAudio() {
+        if (!au) return;
+        const { sec, actx, stream, btn, mode, raf } = au; au = null;
+        cancelAnimationFrame(raf); stream?.getTracks().forEach((t) => t.stop()); actx.close();
+        btn.textContent = mode === "mic" ? "Use microphone" : "Play test sound"; btn.classList.remove("on");
+        sec.querySelector(".try-big").textContent = "Stopped";
+      }
+
+      // ---- wiring ----
+      const timers = new WeakMap();
+      document.addEventListener("input", (e) => {
+        const t = e.target.closest?.("section[data-demo] .try-text"); if (!t) return;
+        const sec = t.closest("section"); clearTimeout(timers.get(sec)); timers.set(sec, setTimeout(() => run(sec), 120));
+      });
+      document.addEventListener("click", (e) => {
+        const sec = e.target.closest("section[data-demo]"); if (!sec) return;
+        const b = e.target.closest("button"); if (!b) return;
+        e.stopPropagation();
+        if (b.matches(".try-mic, .try-tone")) { const same = au?.btn === b; stopAudio(); if (!same) startAudio(sec, b.matches(".try-mic") ? "mic" : "tone"); return; }
+        if ("setA" in b.dataset || "setB" in b.dataset) {
+          for (const k of ["a", "b"]) { const v = b.dataset["set" + k.toUpperCase()]; const ta = sec.querySelector(`.try-text[data-in="${k}"]`); if (v != null && ta) ta.value = v; }
+          sec.querySelectorAll(".try-tabs button").forEach((x) => x.classList.toggle("on", x === b));
+          return run(sec);
+        }
+        if (b.dataset.img) { b.parentElement.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); return run(sec); }
+      }, true);
+      const maybe = (sec) => {
+        if (!sec?.dataset.demo || done.has(sec)) return;
+        if (sec.dataset.demo !== "audio") return run(sec);
+        // audio waits for a click (mic permission / sound), but preload the model so it starts instantly
+        getTask("audio", sec.querySelector(".try-status"))
+          .then(() => { done.add(sec); if (!au) setStatus(sec, "Model ready · press Use microphone"); })
+          .catch((err) => setStatus(sec, "Could not load: " + (err?.message || err)));
+      };
+      Reveal.on("slidechanged", (e) => { if (au && au.sec !== e.currentSlide) stopAudio(); maybe(e.currentSlide); });
       Reveal.on("ready", (e) => maybe(e.currentSlide));
       maybe(Reveal.getCurrentSlide());
     }
