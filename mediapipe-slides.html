@@ -1302,7 +1302,7 @@
             <div class="tiles-key"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
           </div>
         </div>
-        <aside class="notes">ภาพรวมหมวด Vision ครบ 11 tasks • กรอบสีเขียวที่มีป้าย Live demo คือ 6 ตัวที่จะลองสดต่อจากนี้: Object Detector, Image Segmenter, Hand Landmarker, Face Detector, Face Landmarker, Pose Landmarker (Gesture Recognizer มีสไลด์อธิบาย) • ตัวที่เหลือ Image Classifier, Interactive Segmenter, Holistic, Image Embedder วันนี้ดูแค่ภาพรวม ลองเล่นเองได้ใน MediaPipe Studio • ทั้งหมดรันได้บน Android, Web, Python, iOS</aside>
+        <aside class="notes">ภาพรวมหมวด Vision ครบ 11 tasks • กรอบสีเขียวที่มีป้าย Live demo คือ 6 ตัวที่จะลองสดต่อจากนี้: Object Detector, Image Segmenter, Hand Landmarker, Face Detector, Face Landmarker, Pose Landmarker • ตัวที่เหลือ Image Classifier, Interactive Segmenter, Gesture Recognizer, Holistic, Image Embedder วันนี้ดูแค่ภาพรวม ลองเล่นเองได้ใน MediaPipe Studio • ทั้งหมดรันได้บน Android, Web, Python, iOS</aside>
       </section>
 
       <section class="s-task" data-title="Object Detector">
@@ -1389,24 +1389,6 @@
         <aside class="notes">รัน Selfie Segmenter แยกตัวคนออกจากพื้นหลังทีละพิกเซล (ระบายสีฟ้า) • นี่คือหลักการเดียวกับการเบลอพื้นหลังใน Google Meet • โมเดลแค่ 0.2 MB • ถ้าเน็ตช้า กด Run again ได้</aside>
       </section>
 
-
-      <section class="s-task" data-title="Gesture Recognizer">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Vision</div><h2>Gesture Recognizer</h2><p class="tk-desc">Recognize hand gestures together with 21 hand landmarks in real time.</p></div>
-            <figure class="tk-media"><img src="images/mediapipe-slides/loops/gesture_recognizer.webp" alt=""></figure>
-            <div class="tk-info">
-              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
-              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Gesture</span><span class="chip">Handedness</span><span class="chip">Hand landmarks</span></div></div>
-              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Hand landmark bundle</span><span class="chip">Gesture classifier (customizable)</span></div></div>
-              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Gesture bundle <em>8.4 MB</em></span></div></div>
-            </div>
-            <img class="tk-diagram" src="images/mediapipe-slides/diagrams/gesture_recognizer.svg" alt="Gesture Recognizer pipeline">
-            <div class="tk-stat pc blue"><b>7</b><span>built-in gestures</span></div>
-          </div>
-        </div>
-        <aside class="notes">Gesture Recognizer: จำท่ามือได้ 7 ท่ามาตรฐาน พร้อมจุดบนมือ 21 จุด • สอนท่ามือใหม่เองได้ด้วย Model Maker • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Gesture bundle 8.4 MB</aside>
-      </section>
 
 
       <section class="s-task" data-title="Hand Landmarker">
