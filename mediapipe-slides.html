@@ -426,12 +426,15 @@
     .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
     .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
     .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
-    .s-what .tiles-3 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
-    .s-what .tiles-3 figcaption { font-size: 17px; padding: 7px 14px; left: 12px; bottom: 12px; }
-    .s-what .tile-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 18px; }
-    .s-what .tile-notes .pc { font-size: 17px; line-height: 1.35; padding: 16px 18px; }
-    .s-what .tile-notes b { display: block; font-size: 22px; margin-bottom: 4px; }
-    .s-what .tile-notes em { display: block; font: 400 15px/1 var(--mono); font-style: normal; margin-top: 10px; color: var(--muted); }
+    .s-what .tcols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
+    .s-what .tcol { display: flex; flex-direction: column; gap: 12px; }
+    .s-what .tcol .pc { position: relative; flex: 1; font-size: 15px; line-height: 1.3; padding: 12px 14px 14px; }
+    .s-what .tcol b { display: block; font-size: 18px; margin-bottom: 4px; }
+    .s-what .tcol em { display: block; font: 400 13px/1 var(--mono); font-style: normal; margin-top: 8px; color: var(--muted); }
+    .s-what .noweb { display: inline-block; margin-top: 8px; font: 500 12px/1 var(--sans); padding: 5px 9px; border-radius: 999px; border: 1.5px solid var(--ink); background: #fff; }
+    .s-what .tcols-foot { margin: 16px 0 0; font: 400 14px/1 var(--mono); color: var(--muted); display: flex; align-items: center; gap: 8px; }
+    .s-what .tcols-foot .dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; border: 1.5px solid var(--ink); }
+    .s-what .tcols-foot .dot.green { background: var(--p-green); } .s-what .tcols-foot .dot.yellow { background: var(--p-yellow); }
     .s-what figure { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 2.5px solid var(--ink); background: #f1f3f4; }
     .s-what figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .s-what figcaption { position: absolute; left: 8px; bottom: 7px; font: 500 13px/1 var(--sans); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); color: var(--ink); }
@@ -762,35 +765,38 @@
         <aside class="notes">เข้าสู่หมวด Text มี 5 tasks</aside>
       </section>
 
-      <!-- Text intro: tasks at a glance (classic text tasks, no GenAI) -->
+      <!-- Text intro: all 5 text tasks at a glance (Proofreader / Summarizer: overview only, no Web yet) -->
       <section class="s-what" data-title="Text tasks at a glance">
         <div class="wp wp-main">
           <div class="wp-head">
-            <span class="tag" style="background:var(--g-green)">Text · 3 tasks</span>
+            <span class="tag" style="background:var(--g-green)">Text · 5 tasks</span>
             <div class="lockups">
               <span class="mp-lockup"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
               <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
             </div>
           </div>
-          <div class="tiles tiles-3">
-            <figure><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""><figcaption>Text Classifier</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""><figcaption>Text Embedder</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""><figcaption>Language Detector</figcaption></figure>
+          <div class="tcols">
+            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""></figure>
+              <div class="pc green"><b>Text Classifier</b>Positive or negative? Sort reviews &amp; chats<em>0.8 – 26 MB</em></div></div>
+            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""></figure>
+              <div class="pc green"><b>Text Embedder</b>Sentence → vector to compare meaning<em>6.1 MB</em></div></div>
+            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""></figure>
+              <div class="pc green"><b>Language Detector</b>Which of 110 languages is this text?<em>0.3 MB</em></div></div>
+            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_proofreader.svg" alt=""></figure>
+              <div class="pc yellow"><b>Text Proofreader</b>Fix grammar &amp; spelling, edit by edit<em>118 MB · Gemma</em><span class="noweb">No Web yet</span></div></div>
+            <div class="tcol"><figure><img src="images/mediapipe-slides/loops/text_summarizer.svg" alt=""></figure>
+              <div class="pc yellow"><b>Text Summarizer</b>TL;DR or key points from long text<em>118 MB · Gemma</em><span class="noweb">No Web yet</span></div></div>
           </div>
-          <div class="tile-notes">
-            <div class="pc green"><b>Positive or negative?</b>Sort reviews, comments and chats<em>0.8 – 26 MB</em></div>
-            <div class="pc green"><b>Compare meaning</b>Sentence → vector, similar text scores high<em>6.1 MB</em></div>
-            <div class="pc green"><b>Which language?</b>Detects 110 languages from a short text<em>0.3 MB</em></div>
-          </div>
+          <p class="tcols-foot"><span class="dot green"></span>Live demos next &nbsp;·&nbsp; <span class="dot yellow"></span>GenAI (Gemma 200M): Android · iOS · Python · Flutter</p>
         </div>
-        <aside class="notes">ภาพรวมหมวด Text: Text Classifier จัดหมวดข้อความ เช่น บวกหรือลบ • Text Embedder แปลงประโยคเป็นเวกเตอร์ เพื่อเทียบความหมาย • Language Detector บอกว่าข้อความเป็นภาษาอะไร • ทั้งสามตัวโมเดลเล็ก (ไม่ถึง 30 MB) โหลดบนเว็บได้ทันที • หน้าถัดไปจะไล่ดูทีละ task พร้อม live demo</aside>
+        <aside class="notes">ภาพรวมหมวด Text 5 tasks • สีเขียว 3 ตัวโมเดลเล็ก รันบนเว็บได้ มี live demo ในหน้าถัดไป: Text Classifier (บวก/ลบ), Text Embedder (เทียบความหมายประโยค), Language Detector (บอกภาษา 110 ภาษา) • สีเหลือง 2 ตัวเป็น GenAI ใช้โมเดล Gemma 200M ขนาด 118 MB: Text Proofreader แก้คำผิด/ไวยากรณ์พร้อมบอกจุดที่แก้, Text Summarizer สรุปเป็น TL;DR หรือ key points • สองตัวนี้ยังไม่รองรับ Web มีบน Android, iOS, Python, Flutter จึงไม่มี demo ในวันนี้</aside>
       </section>
 
       <!-- ===== Task deep-dives (content + diagrams from developers.google.com/edge/mediapipe/solutions) ===== -->
       <section class="s-task" data-title="Text Classifier">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Text · 1 / 5</div><h2>Text Classifier</h2><p class="tk-desc">Classify text into categories, such as positive or negative sentiment, fully on-device.</p></div>
+            <div class="tk-head"><div class="eyebrow">Text · 1 / 3</div><h2>Text Classifier</h2><p class="tk-desc">Classify text into categories, such as positive or negative sentiment, fully on-device.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
@@ -834,7 +840,7 @@
       <section class="s-task" data-title="Text Embedder">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Text · 2 / 5</div><h2>Text Embedder</h2><p class="tk-desc">Turn text into semantic vectors and compare meaning with built-in cosine similarity.</p></div>
+            <div class="tk-head"><div class="eyebrow">Text · 2 / 3</div><h2>Text Embedder</h2><p class="tk-desc">Turn text into semantic vectors and compare meaning with built-in cosine similarity.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
@@ -879,7 +885,7 @@
       <section class="s-task" data-title="Language Detector">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Text · 3 / 5</div><h2>Language Detector</h2><p class="tk-desc">Identify the language of any text, with a confidence score for each guess.</p></div>
+            <div class="tk-head"><div class="eyebrow">Text · 3 / 3</div><h2>Language Detector</h2><p class="tk-desc">Identify the language of any text, with a confidence score for each guess.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
@@ -921,42 +927,6 @@
           </div>
         </div>
         <aside class="notes">Live demo Language Detector (0.3 MB): พิมพ์ข้อความภาษาอะไรก็ได้ ผลอัปเดตทันทีที่พิมพ์ • กดปุ่มตัวอย่างเพื่อสลับภาษา ไทย อังกฤษ ญี่ปุ่น เกาหลี ฝรั่งเศส สเปน เวียดนาม • ชวนผู้ฟังบอกประโยคให้พิมพ์ • ลองพิมพ์ปนสองภาษาจะเห็นความน่าจะเป็นแบ่งกัน</aside>
-      </section>
-
-      <section class="s-task" data-title="Text Proofreader">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Text · 4 / 5</div><h2>Text Proofreader</h2><p class="tk-desc">Detect and fix grammar and spelling errors locally, with a breakdown of each edit.</p></div>
-            <figure class="tk-media"><img src="images/mediapipe-slides/loops/text_proofreader.svg" alt=""></figure>
-            <div class="tk-info">
-              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
-              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Corrected text</span><span class="chip">Granular edits</span></div></div>
-              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Proofread 200M (Gemma terms)</span></div></div>
-              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Proofread 200M <em>118 MB</em></span></div></div>
-            </div>
-            <img class="tk-diagram" src="images/mediapipe-slides/diagrams/text_proofreader.svg" alt="Text Proofreader pipeline">
-            <div class="tk-stat pc green"><b>200M</b><span>parameter model</span><i>Android · iOS · Python · Flutter</i></div>
-          </div>
-        </div>
-        <aside class="notes">Text Proofreader: ตรวจและแก้คำผิด/ไวยากรณ์บนเครื่อง พร้อมบอกว่าแก้ตรงไหน • ใช้โมเดล Proofread 200M (ตามเงื่อนไข Gemma) • ยังไม่รองรับ Web มีบน Android, iOS, Python, Flutter • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Proofread 200M 118 MB</aside>
-      </section>
-
-      <section class="s-task" data-title="Text Summarizer">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Text · 5 / 5</div><h2>Text Summarizer</h2><p class="tk-desc">Summarize articles and notes into a short TL;DR or a list of key points.</p></div>
-            <figure class="tk-media"><img src="images/mediapipe-slides/loops/text_summarizer.svg" alt=""></figure>
-            <div class="tk-info">
-              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
-              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Summary text</span></div></div>
-              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Summarization 200M (Gemma terms)</span></div></div>
-              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Summarization 200M <em>118 MB</em></span></div></div>
-            </div>
-            <img class="tk-diagram" src="images/mediapipe-slides/diagrams/text_summarizer.svg" alt="Text Summarizer pipeline">
-            <div class="tk-stat pc green"><b>2</b><span>modes: TLDR · KEYPOINTS</span><i>Android · iOS · Python · Flutter</i></div>
-          </div>
-        </div>
-        <aside class="notes">Text Summarizer: สรุปบทความหรือโน้ตเป็น TL;DR หรือ bullet points • โมเดล Summarization 200M รันบนเครื่อง • ยังไม่รองรับ Web • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Summarization 200M 118 MB</aside>
       </section>
 
       <!-- Section divider 2.2: Audio -->
