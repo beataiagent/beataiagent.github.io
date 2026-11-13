@@ -429,6 +429,11 @@
     .reveal p.st-cta { font: 700 34px/1.15 var(--sans); margin: 0 0 8px; }
     .reveal p.st-sub { font: 300 18px/1.4 var(--mono); margin: 0 0 22px; }
     .st-link { font-size: 17px !important; white-space: nowrap; padding: 12px 18px !important; }
+    .cmp3 { grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .cmp3 .pc { height: 222px; padding: 18px 18px !important; }
+    .reveal .cmp3 ul.bl { font-size: 18px; margin-top: 16px; }
+    .reveal .cmp3 ul.bl li { margin-bottom: 8px; }
+    .cmp3 .cmp-tag { font-size: 15px; }
     .reveal .cmp-tag img { height: 20px; width: auto; margin: 0 8px 0 0; vertical-align: -4px; }
     .reveal p.cmp-tip { margin: 26px 0 0; font-size: 18px; display: inline-block; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-yellow); }
     .pp-left { width: 340px; flex: none; display: flex; flex-direction: column; gap: 12px; }
@@ -1103,36 +1108,45 @@
       </section>
 
       <!-- Decision Maker (on-device) vs Gemini Decisions API (cloud) -->
-      <section data-title="Decision Maker vs Gemini Decisions API">
+      <section data-title="Generate vs. decide">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:34px 44px">
-            <div class="eyebrow">Decision · on-device vs cloud</div>
-            <h2 style="font-size:38px">Same idea, two places to run it</h2>
-            <p class="sub" style="font-size:20px; margin:8px 0 28px">Both score your options in one pass · no text generation · probabilities you can act on</p>
-            <div class="grid g2" style="gap:28px; width:1000px">
-              <div class="pc green fragment" style="height:262px">
-                <span class="tag cmp-tag"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe Decision Maker</span>
-                <ul class="bl" style="font-size:21px; margin-top:18px">
-                  <li>Runs <b>on the device</b>, even offline</li>
-                  <li>Data never leaves the phone or browser</li>
-                  <li>Free after a 165 MB+ model download</li>
-                  <li>Text, images and audio</li>
+            <div class="eyebrow">Decision · generate vs decide</div>
+            <h2 style="font-size:40px">Generate vs. decide</h2>
+            <p class="sub" style="font-size:19px; margin:6px 0 24px">Many AI calls are really closed-set choices: routing · policy checks · tool selection · grading</p>
+            <div class="grid cmp3">
+              <div class="pc fragment">
+                <span class="tag cmp-tag">✍️ Generative model (LLM)</span>
+                <ul class="bl">
+                  <li>Writes the answer token by token</li>
+                  <li>Pay for output &amp; thinking tokens</li>
+                  <li>Parse free text back into a label</li>
+                  <li>No calibrated "how sure"</li>
                 </ul>
               </div>
-              <div class="pc blue fragment" style="height:262px">
+              <div class="pc green fragment">
+                <span class="tag cmp-tag"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe Decision Maker</span>
+                <ul class="bl">
+                  <li>Scores your options in <b>one pass</b></li>
+                  <li>Runs <b>on the device</b>, even offline</li>
+                  <li>Data never leaves the device</li>
+                  <li>Free after a 165 MB+ download</li>
+                </ul>
+              </div>
+              <div class="pc blue fragment">
                 <span class="tag cmp-tag"><img src="images/mediapipe-slides/logos/gemini.svg" alt="">Gemini Decisions API</span>
-                <ul class="bl" style="font-size:21px; margin-top:18px">
+                <ul class="bl">
+                  <li>Scores your options in <b>one pass</b></li>
                   <li><b>Cloud API</b>, nothing to download</li>
-                  <li>Up to 256K tokens, video and PDF too</li>
-                  <li>Up to 1,000 questions per request</li>
-                  <li>$0.10 / 1M input tokens · $0 output</li>
+                  <li>256K tokens · video &amp; PDF · 1,000 questions</li>
+                  <li>$0.10 / 1M input · $0 output</li>
                 </ul>
               </div>
             </div>
             <p class="cmp-tip fragment"><b>Use both:</b> decide on-device first, and send only low-confidence cases to Gemini Decisions</p>
           </div>
         </div>
-        <aside class="notes">เทียบ Decision Maker (บนเครื่อง) กับ Gemini Decisions API (บน cloud): หลักการเดียวกัน คือให้คะแนนตัวเลือกในรอบเดียว ไม่ต้อง generate ข้อความ ได้ความน่าจะเป็นออกมา • (คลิก 1) Decision Maker รันบนเครื่อง ใช้ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง ฟรีหลังโหลดโมเดล (165 MB ขึ้นไป) รับข้อความ รูป เสียง • (คลิก 2) Gemini Decisions ไม่ต้องโหลดอะไร รับ input ได้ถึง 256K tokens รวมวิดีโอและ PDF ถามได้ถึง 1,000 คำถามต่อครั้ง $0.10 ต่อ 1M input tokens และ output ฟรี • (คลิก 3) ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป Gemini Decisions • มี talk แยกเรื่อง Gemini Decisions API</aside>
+        <aside class="notes">Generate vs. decide: หลาย call ในแอป AI จริง ๆ เป็นคำถามปิด เช่น ส่งไปทางไหน ผิดกติกาไหม ใช้ tool ไหน ให้คะแนน • (คลิก 1) ถ้าใช้ LLM ทั่วไป ต้องรอมันเขียนทีละ token จ่ายค่า output/thinking แล้ว parse ข้อความกลับเป็น label และไม่รู้ว่ามั่นใจแค่ไหน • (คลิก 2) MediaPipe Decision Maker ให้คะแนนตัวเลือกในรอบเดียว รันบนเครื่อง ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง ฟรีหลังโหลดโมเดล • (คลิก 3) Gemini Decisions API แนวคิดเดียวกันบน cloud ไม่ต้องโหลดอะไร รับ input ใหญ่ถึง 256K tokens รวมวิดีโอและ PDF ถามได้ถึง 1,000 คำถาม $0.10 ต่อ 1M input tokens • (คลิก 4) ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป Gemini Decisions • มี talk แยกเรื่อง Gemini Decisions API</aside>
       </section>
 
       <section data-state="trydemo" data-demo="decision" data-title="Live demo · Decision Maker">
