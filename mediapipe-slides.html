@@ -372,27 +372,9 @@
     .sz-notes { position: absolute; left: 44px; top: 474px; width: 760px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
     .sz-notes .pc { font-size: 15px; line-height: 1.35; padding: 12px 16px !important; }
     .sz-notes .pc b { display: block; font: 700 19px/1.2 var(--sans); margin-bottom: 2px; }
-    .szc-dense { gap: 0; }
-    .szc-dense .szc-row > b { font-size: 14.5px; }
-    .szc-dense .szc-row > b small { display: none; }
-    .szc-dense .szc-row > b { white-space: nowrap; }
-    .szc-dense .szc-track { height: 25px; }
-    .szc-dense .szc-bar { top: 4px; height: 17px; }
-    .szc-dense .szc-row > em { font-size: 13px; }
     /* category dividers */
     .cat-ico { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
     .cat-ico svg { width: 120px; height: 120px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-    .cat-side { position: absolute; left: 70px; top: 456px; width: 230px; text-align: center; }
-    .cat-side b { display: block; font: 700 34px/1.1 var(--sans); }
-    .cat-side span { display: block; font: 300 15px/1.4 var(--mono); margin-top: 4px; }
-    .cat-in { padding: 30px 40px !important; }
-    .cat-h { font-size: 64px !important; }
-    .cat-take { font-size: 17px; line-height: 1.35; margin: 8px 0 16px !important; max-width: 760px; }
-    .szc-cat .szc-row { grid-template-columns: 200px 1fr 118px; }
-    .szc-cat .szc-row > b { font-size: 15.5px; }
-    .bg-green .szc-cat .szc-bar { background: var(--g-green); }
-    .bg-yellow .szc-cat .szc-bar { background: var(--g-yellow); }
-    .bg-red .szc-cat .szc-bar { background: var(--g-red); }
 
     /* ---------- Try it: sample-image demo ---------- */
     .try-stage { position: relative; width: 640px; height: 470px; flex: none; border: 2.5px solid var(--ink); border-radius: 24px; overflow: hidden; background: #1e1e1e; }
@@ -573,9 +555,9 @@
       <section class="s-agenda" data-title="Agenda">
         <h2 class="ag-title">Agenda</h2>
         <ol class="ag-list">
-          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>1</b><span>What is MediaPipe &amp; Google AI Edge</span></li>
-          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>2</b><span>What's inside: 22 ready-to-use tasks</span></li>
-          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>3</b><span>From demo to code: tools &amp; APIs</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>1</b><span>What is MediaPipe</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>2</b><span>Explore	Ready-to-Use AI Tasks</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>3</b><span>From demo to code</span></li>
           <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>4</b><span>Hands-on: Build with Google AI Studio</span></li>
         </ol>
         <div class="ag-qr">
@@ -603,7 +585,6 @@
       <section data-title="What is Google AI Edge?">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:36px 44px">
-            <div class="eyebrow">Google AI Edge · ai.google.dev/edge</div>
             <h2 style="font-size:42px">What is Google AI Edge?</h2>
             <img class="ae-logo" src="images/mediapipe-slides/logos/google-ai-edge-logo.png" alt="Google AI Edge">
             <p class="sub" style="font-size:19px; margin-top:8px">Google's end-to-end stack for building and deploying on-device ML &amp; AI across platforms</p>
@@ -634,7 +615,7 @@
           <div class="in" style="padding:34px 44px">
             <div class="eyebrow">MediaPipe Tasks · Google AI Edge</div>
             <h2 style="font-size:40px">What is MediaPipe?</h2>
-            <p class="sub" style="font-size:18px; margin-top:6px">Ready-made AI building blocks: send in a camera frame, get back points, boxes or labels.</p>
+            <p class="sub" style="font-size:18px; margin-top:6px">Ready-made AI building blocks that run on-device</p>
             <div class="wm-cards">
               <div class="pc blue wm-card fragment" data-fragment-index="1"><span class="wm-ic"><svg class="ico" viewBox="0 0 24 24" style="stroke-width:1.8"><path d="M12 3 2 8l10 5 10-5z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg></span>
                 <div><b>Ready-to-use AI</b>Pre-trained tasks for face, hands, pose, objects, text &amp; audio</div>
@@ -656,7 +637,6 @@
               <svg class="arr fragment" data-fragment-index="7" viewBox="0 0 26 24"><path d="M2 12h20M15 5l7 7-7 7"/></svg>
               <div class="pc yellow app fragment" data-fragment-index="7"><b>Your App · AR filter</b><img src="images/mediapipe-slides/mockups/ar-selfie.svg" alt="AR selfie filter built on face landmarks"></div>
             </div>
-            <p class="fragment" data-fragment-index="8" style="margin-top:26px; font-size:17px; max-width:760px">Swap the task, keep the flow: <b>22 tasks</b> across Vision, Text, Audio, Decision &amp; Retrieval all work the same way.</p>
           </div>
         </div>
         <aside class="notes">[คลิก 8 ครั้ง: 3 การ์ดทีละใบ → Camera → Task → Results → Your App → บรรทัดสรุป] อธิบายง่าย ๆ: MediaPipe คือ "ชิ้นส่วน AI สำเร็จรูป" ส่งภาพจากกล้องเข้าไป ได้ผลลัพธ์กลับมาเป็นจุด กรอบ หรือป้ายชื่อ แล้วเราเอาไปทำแอปต่อ • 3 จุดเด่น: (1) พร้อมใช้ ไม่ต้องเทรนโมเดลหรือสร้าง pipeline เอง (2) รันบนเครื่องเรา ใช้ CPU/GPU ของมือถือหรือโน้ตบุ๊ก → เร็ว ข้อมูลไม่ออกจากเครื่อง ใช้ออฟไลน์ได้ (3) ใช้ได้ทุกแพลตฟอร์ม Web / Android / iOS / Python ด้วยโมเดลและ API แบบเดียวกัน • ตัวอย่าง Face Landmarker: กล้อง → MediaPipe Task → ได้ 478 จุดบนหน้า + ค่า expression → แอปเราเอาไปวางแว่น หมวก เป็น AR filter</aside>
@@ -668,7 +648,6 @@
           <div class="in" style="padding:36px 44px">
             <div class="eyebrow">Platforms &amp; languages</div>
             <h2 style="font-size:42px">Where can you use MediaPipe?</h2>
-            <p class="sub" style="font-size:19px; margin-top:8px">Same tasks, same options and result types on every platform</p>
             <div class="pl-grid">
               <div class="pc blue pl-card"><img src="images/mediapipe-slides/logos/web.svg" alt=""><h3>Web</h3><p>JavaScript · TypeScript<br><span>WASM · WebGPU</span></p><code>npm install @mediapipe/tasks-vision</code></div>
               <div class="pc green pl-card"><img src="images/mediapipe-slides/logos/android.svg" alt=""><h3>Android</h3><p>Kotlin · Java<br><span>Maven Central</span></p><code>com.google.mediapipe:tasks-vision</code></div>
@@ -765,22 +744,6 @@
           </div>
         </div>
         <aside class="notes">เข้าสู่หมวด Text มี 5 tasks</aside>
-      </section>
-
-      <!-- Text: model sizes -->
-      <section class="bg-green s-cat" data-title="Text tasks · model sizes">
-        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.1</div>
-        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
-        <div class="cat-side"><b>5 tasks</b><span>0.3 MB – 184 MB</span></div>
-        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
-          <div class="in cat-in">
-            <div class="eyebrow">What's inside · model sizes</div>
-            <h1 class="cat-h">Text</h1>
-            <p class="cat-take">Classic text models are tiny (0.3–26 MB). Gemma-based proofreading and summarizing are ~118 MB.</p>
-            <div class="szc szc-cat"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Text Classifier<small>Avg word embedding · BERT</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:19.22%; width:32.07%"></span></div><em>0.8 MB – 26 MB</em></div><div class="szc-row"><b>Text Embedder<small>USE · EmbeddingGemma 300M</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:37.99%; width:31.49%"></span></div><em>6.1 MB – 184 MB</em></div><div class="szc-row"><b>Language Detector<small>Language Detector</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:10.15%; width:1.20%"></span></div><em>0.3 MB</em></div><div class="szc-row"><b>Text Proofreader<small>Proofread 200M</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:65.37%; width:1.20%"></span></div><em>118 MB</em></div><div class="szc-row"><b>Text Summarizer<small>Summarization 200M</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:65.37%; width:1.20%"></span></div><em>118 MB</em></div></div>
-          </div>
-        </div>
-        <aside class="notes">หมวด Text มี 5 tasks • ดูกราฟขนาดโมเดล: งานแบบดั้งเดิมอย่าง Language Detector (0.3 MB) และ Text Classifier เล็กมาก ส่วน Proofreader และ Summarizer ใช้โมเดลตระกูล Gemma ขนาดประมาณ 118 MB • ยิ่งโมเดลใหญ่ ยิ่งโหลดนานบนเว็บ ควรโหลดครั้งเดียวแล้ว cache</aside>
       </section>
 
       <!-- ===== Task deep-dives (content + diagrams from developers.google.com/edge/mediapipe/solutions) ===== -->
@@ -968,22 +931,6 @@
         <aside class="notes">เข้าสู่หมวด Audio มี 3 tasks</aside>
       </section>
 
-      <!-- Audio: model sizes -->
-      <section class="bg-yellow s-cat" data-title="Audio tasks · model sizes">
-        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.2</div>
-        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"/></svg></div>
-        <div class="cat-side"><b>3 tasks</b><span>4.1 MB – 760 MB</span></div>
-        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
-          <div class="in cat-in">
-            <div class="eyebrow">What's inside · model sizes</div>
-            <h1 class="cat-h">Audio</h1>
-            <p class="cat-take">Sound classification is a 4 MB model; speech-to-text and TTS need 87–760 MB.</p>
-            <div class="szc szc-cat"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Audio Classifier<small>YamNet</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:34.32%; width:1.20%"></span></div><em>4.1 MB</em></div><div class="szc-row"><b>Audio Transcriber<small>Parakeet TDT 0.6B v3</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:80.63%; width:1.20%"></span></div><em>615 MB</em></div><div class="szc-row"><b>Text-to-Speech<small>Phonon · Kokoro · PocketTTS</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:62.56%; width:20.03%"></span></div><em>87 MB – 760 MB</em></div></div>
-          </div>
-        </div>
-        <aside class="notes">หมวด Audio มี 3 tasks • Audio Classifier ใช้ YamNet แค่ 4.1 MB • ส่วนถอดเสียง (Parakeet 615 MB) และสังเคราะห์เสียง (87–760 MB) ใหญ่กว่ามาก เหมาะกับแอปมือถือที่โหลดโมเดลเก็บไว้ในเครื่อง</aside>
-      </section>
-
       <section class="s-task" data-title="Audio Classifier">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
@@ -1072,22 +1019,6 @@
         <aside class="notes">เข้าสู่หมวด Decision มี 1 task</aside>
       </section>
 
-      <!-- Decision: model sizes -->
-      <section class="bg-red s-cat" data-title="Decision tasks · model sizes">
-        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.3</div>
-        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M6 3v12M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM18 9a9 9 0 0 1-9 9"/></svg></div>
-        <div class="cat-side"><b>1 task</b><span>165 MB – 3.7 GB</span></div>
-        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
-          <div class="in cat-in">
-            <div class="eyebrow">What's inside · model sizes</div>
-            <h1 class="cat-h">Decision</h1>
-            <p class="cat-take">One task, many backends: pick 165 MB for speed or a multi-GB Gemma 4 for harder decisions.</p>
-            <div class="szc szc-cat"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>EmbeddingGemma 2<small>270M · text</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:68.47%; width:1.20%"></span></div><em>165 MB</em></div><div class="szc-row"><b>EmbeddingGemma 2<small>440M · text + image</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:76.37%; width:1.20%"></span></div><em>388 MB</em></div><div class="szc-row"><b>EmbeddingGemma 2<small>740M · text+image+audio</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:78.44%; width:1.20%"></span></div><em>485 MB</em></div><div class="szc-row"><b>Gemma 4 E2B<small>LLM backend</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:93.91%; width:1.20%"></span></div><em>2.6 GB</em></div><div class="szc-row"><b>Gemma 4 E4B<small>LLM backend</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:97.12%; width:1.20%"></span></div><em>3.7 GB</em></div></div>
-          </div>
-        </div>
-        <aside class="notes">หมวด Decision มี 1 task คือ Decision Maker แต่เลือกโมเดลได้หลายขนาด: EmbeddingGemma 2 ตั้งแต่ 165 MB (เร็ว) ไปจนถึง Gemma 4 E2B/E4B ระดับ 2.6–3.7 GB (ฉลาดกว่า) • เลือกตามความยากของงานและพื้นที่ในเครื่อง</aside>
-      </section>
-
       <section class="s-task" data-title="Decision Maker">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
@@ -1116,22 +1047,6 @@
           </div>
         </div>
         <aside class="notes">เข้าสู่หมวด Retrieval มี 2 tasks</aside>
-      </section>
-
-      <!-- Retrieval: model sizes -->
-      <section class="bg-blue s-cat" data-title="Retrieval tasks · model sizes">
-        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.4</div>
-        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.3-4.3"/></svg></div>
-        <div class="cat-side"><b>2 tasks</b><span>165 MB – 485 MB</span></div>
-        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
-          <div class="in cat-in">
-            <div class="eyebrow">What's inside · model sizes</div>
-            <h1 class="cat-h">Retrieval</h1>
-            <p class="cat-take">Both tasks share EmbeddingGemma 2: 165 MB for text only, up to 485 MB for text + image + audio.</p>
-            <div class="szc szc-cat"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Semantic Retriever<small>EmbeddingGemma 2</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:68.47%; width:9.97%"></span></div><em>165 MB – 485 MB</em></div><div class="szc-row"><b>Universal Embedder<small>EmbeddingGemma 2</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:68.47%; width:9.97%"></span></div><em>165 MB – 485 MB</em></div></div>
-          </div>
-        </div>
-        <aside class="notes">หมวด Retrieval มี 2 tasks ใช้โมเดล EmbeddingGemma 2 ตัวเดียวกัน: 165 MB ถ้าค้นแค่ข้อความ, 388 MB ถ้ารวมรูป, 485 MB ถ้ารวมเสียง • ใช้ทำ RAG บนเครื่องโดยไม่ต้องมี server</aside>
       </section>
 
       <section class="s-task" data-title="Semantic Retriever">
@@ -1180,22 +1095,6 @@
           </div>
         </div>
         <aside class="notes">เข้าสู่หมวด Vision ซึ่งใหญ่ที่สุด มี 11 tasks</aside>
-      </section>
-
-      <!-- Vision: model sizes -->
-      <section class="bg-blue s-cat" data-title="Vision tasks · model sizes">
-        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.5</div>
-        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></div>
-        <div class="cat-side"><b>11 tasks</b><span>0.2 MB – 31 MB</span></div>
-        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
-          <div class="in cat-in">
-            <div class="eyebrow">What's inside · model sizes</div>
-            <h1 class="cat-h">Vision</h1>
-            <p class="cat-take">Every vision model is under 31 MB — small enough to load instantly in a web page.</p>
-            <div class="szc szc-cat szc-dense"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Object Detector<small>EfficientDet · SSD</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:35.39%; width:14.92%"></span></div><em>4.6 MB – 23 MB</em></div><div class="szc-row"><b>Image Classifier<small>EfficientNet-Lite0/2</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:36.87%; width:13.90%"></span></div><em>5.4 MB – 24 MB</em></div><div class="szc-row"><b>Image Segmenter<small>Selfie · Hair · DeepLab</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:6.41%; width:40.73%"></span></div><em>0.2 MB – 16 MB</em></div><div class="szc-row"><b>Interactive Segmenter<small>MagicTouch</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:52.87%; width:1.20%"></span></div><em>30 MB</em></div><div class="szc-row"><b>Gesture Recognizer<small>bundle</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:40.95%; width:1.20%"></span></div><em>8.4 MB</em></div><div class="szc-row"><b>Hand Landmarker<small>bundle</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:40.27%; width:1.20%"></span></div><em>7.8 MB</em></div><div class="szc-row"><b>Face Detector<small>BlazeFace</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:6.41%; width:15.76%"></span></div><em>0.2 MB – 1.1 MB</em></div><div class="szc-row"><b>Face Landmarker<small>bundle</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:33.62%; width:1.20%"></span></div><em>3.8 MB</em></div><div class="szc-row"><b>Pose Landmarker<small>lite · full · heavy</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:37.53%; width:15.40%"></span></div><em>5.8 MB – 31 MB</em></div><div class="szc-row"><b>Holistic Landmarker<small>bundle</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:45.47%; width:1.20%"></span></div><em>14 MB</em></div><div class="szc-row"><b>Image Embedder<small>MobileNet-V3</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:34.32%; width:9.04%"></span></div><em>4.1 MB – 11 MB</em></div></div>
-          </div>
-        </div>
-        <aside class="notes">หมวด Vision ใหญ่ที่สุด มี 11 tasks • จุดเด่นคือทุกโมเดลเล็กกว่า 31 MB บางตัวเล็กแค่ 0.2 MB (BlazeFace, Selfie Segmenter) จึงโหลดบนเว็บได้ทันทีและรัน real-time บนมือถือได้สบาย</aside>
       </section>
 
       <!-- Vision intro: tasks at a glance (official loops + platforms) -->
