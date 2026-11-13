@@ -499,6 +499,13 @@
     .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
     .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
     .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what .tiles-6 { grid-template-columns: repeat(6, 1fr); gap: 14px 14px; }
+    .s-what .tiles-6 figcaption { font-size: 11.5px; padding: 4px 8px; left: 6px; bottom: 6px; }
+    .s-what .tiles-6 figure.live { border-color: var(--g-green); box-shadow: 0 0 0 3px var(--g-green); }
+    .s-what .live-tag { position: absolute; right: 6px; top: 6px; font: 700 10.5px/1 var(--sans); padding: 4px 7px; border-radius: 999px; background: var(--g-green); color: #fff; }
+    .s-what .tiles-key { align-self: center; font: 400 13px/1.9 var(--mono); }
+    .s-what .tiles-key span { font: 700 11.5px/1 var(--sans); padding: 4px 8px; border-radius: 999px; }
+    .s-what .k-live { background: var(--g-green); color: #fff; } .s-what .k-ov { background: #e8eaed; color: #3c4043; }
     .s-what .tcols { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
     .s-what .tcols-3 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .s-what .tcols-3 .pc { font-size: 17px; } .s-what .tcols-3 b { font-size: 22px; } .s-what .tcols-3 em { font-size: 14px; }
@@ -872,7 +879,7 @@
       <section class="s-task" data-title="Text Classifier">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Text · 1 / 3</div><h2>Text Classifier</h2><p class="tk-desc">Classify text into categories, such as positive or negative sentiment, fully on-device.</p></div>
+            <div class="tk-head"><div class="eyebrow">Text</div><h2>Text Classifier</h2><p class="tk-desc">Classify text into categories, such as positive or negative sentiment, fully on-device.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
@@ -916,7 +923,7 @@
       <section class="s-task" data-title="Text Embedder">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Text · 2 / 3</div><h2>Text Embedder</h2><p class="tk-desc">Turn text into semantic vectors and compare meaning with built-in cosine similarity.</p></div>
+            <div class="tk-head"><div class="eyebrow">Text</div><h2>Text Embedder</h2><p class="tk-desc">Turn text into semantic vectors and compare meaning with built-in cosine similarity.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
@@ -961,7 +968,7 @@
       <section class="s-task" data-title="Language Detector">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Text · 3 / 3</div><h2>Language Detector</h2><p class="tk-desc">Identify the language of any text, with a confidence score for each guess.</p></div>
+            <div class="tk-head"><div class="eyebrow">Text</div><h2>Language Detector</h2><p class="tk-desc">Identify the language of any text, with a confidence score for each guess.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
@@ -1043,7 +1050,7 @@
       <section class="s-task" data-title="Audio Classifier">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Audio · 1 / 1</div><h2>Audio Classifier</h2><p class="tk-desc">Classify everyday sound events from audio clips or a live microphone stream.</p></div>
+            <div class="tk-head"><div class="eyebrow">Audio</div><h2>Audio Classifier</h2><p class="tk-desc">Classify everyday sound events from audio clips or a live microphone stream.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/audio_classifier.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Audio clip</span><span class="chip">Mic stream</span></div></div>
@@ -1095,7 +1102,7 @@
       <section class="s-task" data-title="Decision Maker">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Decision · 1 / 1</div><h2>Decision Maker</h2><p class="tk-desc">Score choices, yes/no checks and rubrics in a single forward pass — no token decoding.</p></div>
+            <div class="tk-head"><div class="eyebrow">Decision</div><h2>Decision Maker</h2><p class="tk-desc">Score choices, yes/no checks and rubrics in a single forward pass — no token decoding.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/decision_maker.svg" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Context</span><span class="chip">Options / schema</span></div></div>
@@ -1236,24 +1243,28 @@
               <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
             </div>
           </div>
-          <div class="tiles">
-            <figure><img src="images/mediapipe-slides/loops/object_detector.webp" alt=""><figcaption>Object Detection</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/image_classifier.webp" alt=""><figcaption>Image Classification</figcaption></figure>
+          <div class="tiles tiles-6">
+            <figure class="live"><img src="images/mediapipe-slides/loops/object_detector.webp" alt=""><figcaption>Object Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure><img src="images/mediapipe-slides/loops/image_classifier.webp" alt=""><figcaption>Image Classifier</figcaption></figure>
+            <figure class="live"><img src="images/mediapipe-slides/loops/image_segmenter.webp" alt=""><figcaption>Image Segmenter</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure><img src="images/mediapipe-slides/loops/interactive_segmenter.webp" alt=""><figcaption>Interactive Segmenter</figcaption></figure>
             <figure><img src="images/mediapipe-slides/loops/gesture_recognizer.webp" alt=""><figcaption>Gesture Recognizer</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/hand_landmarker.webp" alt=""><figcaption>Hand Landmarker</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/pose_landmarker_v2.webp" alt=""><figcaption>Pose Landmarker</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/image_segmenter.webp" alt=""><figcaption>Image Segmentation</figcaption></figure>
-            <figure><img src="images/mediapipe-slides/loops/face_landmarker_v2.webp" alt=""><figcaption>Face Landmarker</figcaption></figure>
+            <figure class="live"><img src="images/mediapipe-slides/loops/hand_landmarker.webp" alt=""><figcaption>Hand Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live"><img src="images/mediapipe-slides/loops/face_detector_v2.webp" alt=""><figcaption>Face Detector</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live"><img src="images/mediapipe-slides/loops/face_landmarker_v2.webp" alt=""><figcaption>Face Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
+            <figure class="live"><img src="images/mediapipe-slides/loops/pose_landmarker_v2.webp" alt=""><figcaption>Pose Landmarker</figcaption><span class="live-tag">▶ Live demo</span></figure>
             <figure><img src="images/mediapipe-slides/loops/holistic_landmarker_v3.webp" alt=""><figcaption>Holistic Landmarker</figcaption></figure>
+            <figure><img src="images/mediapipe-slides/loops/image_embedder.svg" alt=""><figcaption>Image Embedder</figcaption></figure>
+            <div class="tiles-key"><span class="k-live">▶ Live demo</span> next<br><span class="k-ov">overview only</span> today</div>
           </div>
         </div>
-        <aside class="notes">เปิดหมวด Vision ซึ่งใหญ่ที่สุด มี 11 tasks • ภาพเคลื่อนไหวคือผลลัพธ์จริงจากเว็บ MediaPipe: Object Detection, Image Classification, Gesture, Hand, Pose, Segmentation, Face และ Holistic • ทั้งหมดรันได้บน Android, Web, Python, iOS • หน้าถัดไปจะไล่ดูทีละ task</aside>
+        <aside class="notes">ภาพรวมหมวด Vision ครบ 11 tasks • กรอบสีเขียวที่มีป้าย Live demo คือ 6 ตัวที่จะลองสดต่อจากนี้: Object Detector, Image Segmenter, Hand Landmarker, Face Detector, Face Landmarker, Pose Landmarker (Gesture Recognizer มีสไลด์อธิบาย) • ตัวที่เหลือ Image Classifier, Interactive Segmenter, Holistic, Image Embedder วันนี้ดูแค่ภาพรวม ลองเล่นเองได้ใน MediaPipe Studio • ทั้งหมดรันได้บน Android, Web, Python, iOS</aside>
       </section>
 
       <section class="s-task" data-title="Object Detector">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Vision · 1 / 7</div><h2>Object Detector</h2><p class="tk-desc">Detect and label multiple objects with bounding boxes and confidence scores in real time.</p></div>
+            <div class="tk-head"><div class="eyebrow">Vision</div><h2>Object Detector</h2><p class="tk-desc">Detect and label multiple objects with bounding boxes and confidence scores in real time.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/object_detector.webp" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
@@ -1295,7 +1306,7 @@
       <section class="s-task" data-title="Image Segmenter">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Vision · 2 / 7</div><h2>Image Segmenter</h2><p class="tk-desc">Segment people, hair, clothes and background at pixel resolution.</p></div>
+            <div class="tk-head"><div class="eyebrow">Vision</div><h2>Image Segmenter</h2><p class="tk-desc">Segment people, hair, clothes and background at pixel resolution.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/image_segmenter.webp" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
@@ -1336,7 +1347,7 @@
       <section class="s-task" data-title="Gesture Recognizer">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Vision · 3 / 7</div><h2>Gesture Recognizer</h2><p class="tk-desc">Recognize hand gestures together with 21 hand landmarks in real time.</p></div>
+            <div class="tk-head"><div class="eyebrow">Vision</div><h2>Gesture Recognizer</h2><p class="tk-desc">Recognize hand gestures together with 21 hand landmarks in real time.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/gesture_recognizer.webp" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
@@ -1355,7 +1366,7 @@
       <section class="s-task" data-title="Hand Landmarker">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Vision · 4 / 7</div><h2>Hand Landmarker</h2><p class="tk-desc">Locate 21 3D hand keypoints and left/right handedness for every hand in frame.</p></div>
+            <div class="tk-head"><div class="eyebrow">Vision</div><h2>Hand Landmarker</h2><p class="tk-desc">Locate 21 3D hand keypoints and left/right handedness for every hand in frame.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/hand_landmarker.webp" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
@@ -1396,7 +1407,7 @@
       <section class="s-task" data-title="Face Detector">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Vision · 5 / 7</div><h2>Face Detector</h2><p class="tk-desc">Find faces with bounding boxes and 6 facial keypoints — fast enough for any camera feed.</p></div>
+            <div class="tk-head"><div class="eyebrow">Vision</div><h2>Face Detector</h2><p class="tk-desc">Find faces with bounding boxes and 6 facial keypoints — fast enough for any camera feed.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/face_detector_v2.webp" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
@@ -1437,7 +1448,7 @@
       <section class="s-task" data-title="Face Landmarker">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Vision · 6 / 7</div><h2>Face Landmarker</h2><p class="tk-desc">Predict a dense 3D face mesh, expression blendshapes and head pose.</p></div>
+            <div class="tk-head"><div class="eyebrow">Vision</div><h2>Face Landmarker</h2><p class="tk-desc">Predict a dense 3D face mesh, expression blendshapes and head pose.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/face_landmarker_v2.webp" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
@@ -1478,7 +1489,7 @@
       <section class="s-task" data-title="Pose Landmarker">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in tk">
-            <div class="tk-head"><div class="eyebrow">Vision · 7 / 7</div><h2>Pose Landmarker</h2><p class="tk-desc">Track full-body 3D pose landmarks, with an optional segmentation mask.</p></div>
+            <div class="tk-head"><div class="eyebrow">Vision</div><h2>Pose Landmarker</h2><p class="tk-desc">Track full-body 3D pose landmarks, with an optional segmentation mask.</p></div>
             <figure class="tk-media"><img src="images/mediapipe-slides/loops/pose_landmarker_v2.webp" alt=""></figure>
             <div class="tk-info">
               <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
