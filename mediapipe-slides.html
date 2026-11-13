@@ -1016,12 +1016,12 @@
               <h2 style="font-size:38px">Try it: Audio Classifier</h2>
               <p class="try-what">521 sound classes, live from the mic</p>
               <ol class="try-results"><li>Top 5 sounds appear here</li></ol>
-              <div class="try-actions"><button class="copy try-mic">Use microphone</button><button class="copy try-tone">Play test sound</button></div>
+              <div class="try-actions" style="flex-wrap:wrap"><button class="copy try-mic">Use microphone</button><button class="copy try-tone" data-sound="piano">🎹 Piano</button><button class="copy try-tone" data-sound="dog">🐶 Dog</button><button class="copy try-tone">Beep</button></div>
               <span class="try-status">Model loads from storage.googleapis.com</span>
             </div>
           </div>
         </div>
-        <aside class="notes">Live demo Audio Classifier (YAMNet 4.1 MB): กด Use microphone แล้วลองพูด ปรบมือ ผิวปาก หรือเปิดเพลง ผลอัปเดตหลายครั้งต่อวินาที รู้จักเสียง 521 ประเภท • ถ้าไมค์ในงานมีปัญหา กด Play test sound จะเล่นเสียงบี๊บสังเคราะห์ (1 kHz) ให้โมเดลฟัง โมเดลจะตอบว่าเป็นเสียงโทรศัพท์ / Dial tone • ต้องเปิดผ่าน http://localhost หรือ https เพื่อใช้ไมค์ • เปลี่ยนสไลด์แล้วไมค์ปิดเอง</aside>
+        <aside class="notes">Live demo Audio Classifier (YAMNet 4.1 MB): กด Use microphone แล้วลองพูด ปรบมือ ผิวปาก หรือเปิดเพลง ผลอัปเดตหลายครั้งต่อวินาที รู้จักเสียง 521 ประเภท • ถ้าไมค์ในงานมีปัญหา กดปุ่มเสียงตัวอย่างแทน: 🎹 Piano (Mozart K545) → Piano / Music, 🐶 Dog → Dog / Bark, Beep (บี๊บ 1 kHz) → Dial tone / Telephone • เสียงหมาเห่า: "Barking of a dog 2" โดย Amada44, CC BY-SA 3.0 (Wikimedia Commons) • ต้องเปิดผ่าน http://localhost หรือ https เพื่อใช้ไมค์ • เปลี่ยนสไลด์แล้วไมค์ปิดเอง</aside>
       </section>
 
       <section class="s-task" data-title="Audio Transcriber">
@@ -2593,9 +2593,11 @@ const answer = await llm.generateResponse(
 
       // ---- audio: mic or a synthetic whistle → YAMNet, ~3 updates / s ----
       let au = null;
-      async function startAudio(sec, mode) {
+      const SOUNDS = { piano: "images/mediapipe-slides/sounds/piano.mp3", dog: "images/mediapipe-slides/sounds/dog.mp3" }, soundBufs = {};
+      async function startAudio(sec, mode, btn) {
         stopAudio();
-        const btn = sec.querySelector(mode === "mic" ? ".try-mic" : ".try-tone"), big = sec.querySelector(".try-big");
+        const big = sec.querySelector(".try-big");
+        btn.dataset.label ??= btn.textContent;
         btn.disabled = true;
         let stream, actx;
         try {
@@ -2607,6 +2609,15 @@ const answer = await llm.generateResponse(
             setStatus(sec, "Opening microphone…");
             stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } });
             source = actx.createMediaStreamSource(stream);
+          } else if (SOUNDS[btn.dataset.sound]) {
+            // looping sample clip: the model and the room both hear it
+            const name = btn.dataset.sound;
+            setStatus(sec, "Loading sound…");
+            soundBufs[name] ??= fetch(SOUNDS[name]).then((r) => { if (!r.ok) throw new Error(r.status + " " + r.url); return r.arrayBuffer(); });
+            const buf = await actx.decodeAudioData((await soundBufs[name].catch((e) => { delete soundBufs[name]; throw e; })).slice(0));
+            const src = actx.createBufferSource(), out = actx.createGain();
+            src.buffer = buf; src.loop = true; out.gain.value = 0.7;
+            src.connect(out).connect(actx.destination); src.start(); source = src;
           } else {
             // beeping 1 kHz tone (on/off twice a second): the model hears it at full level, the room hears it quietly
             const osc = actx.createOscillator(), gate = actx.createGain(), pulse = actx.createOscillator(), depth = actx.createGain(), out = actx.createGain();
@@ -2632,7 +2643,7 @@ const answer = await llm.generateResponse(
             timed(sec, "audio", t0);
           };
           au = { sec, actx, stream, btn, mode, raf: 0 };
-          btn.textContent = "Stop"; btn.classList.add("on"); big.textContent = mode === "mic" ? "Listening…" : "Playing test sound…";
+          if (mode === "mic") btn.textContent = "Stop"; btn.classList.add("on"); // sound buttons keep their label so the row doesn't shift big.textContent = mode === "mic" ? "Listening…" : "Playing test sound…";
           setStatus(sec, mode === "mic" ? "Listening · on-device" : "Test sound · on-device");
           // level bars
           const canvas = sec.querySelector(".try-canvas"), ctx = canvas.getContext("2d"), bins = new Uint8Array(analyser.frequencyBinCount);
@@ -2658,7 +2669,7 @@ const answer = await llm.generateResponse(
         if (!au) return;
         const { sec, actx, stream, btn, mode, raf } = au; au = null;
         cancelAnimationFrame(raf); stream?.getTracks().forEach((t) => t.stop()); actx.close();
-        btn.textContent = mode === "mic" ? "Use microphone" : "Play test sound"; btn.classList.remove("on");
+        btn.textContent = btn.dataset.label; btn.classList.remove("on");
         sec.querySelector(".try-big").textContent = "Stopped";
       }
 
@@ -2672,7 +2683,7 @@ const answer = await llm.generateResponse(
         const sec = e.target.closest("section[data-demo]"); if (!sec) return;
         const b = e.target.closest("button"); if (!b) return;
         e.stopPropagation();
-        if (b.matches(".try-mic, .try-tone")) { const same = au?.btn === b; stopAudio(); if (!same) startAudio(sec, b.matches(".try-mic") ? "mic" : "tone"); return; }
+        if (b.matches(".try-mic, .try-tone")) { const same = au?.btn === b; stopAudio(); if (!same) startAudio(sec, b.matches(".try-mic") ? "mic" : "tone", b); return; }
         if ("setA" in b.dataset || "setB" in b.dataset) {
           for (const k of ["a", "b"]) { const v = b.dataset["set" + k.toUpperCase()]; const ta = sec.querySelector(`.try-text[data-in="${k}"]`); if (v != null && ta) ta.value = v; }
           sec.querySelectorAll(".try-tabs button").forEach((x) => x.classList.toggle("on", x === b));

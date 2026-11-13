@@ -1,0 +1,9 @@
+Sound clips for the Audio Classifier demo (trimmed / re-encoded to mono MP3).
+
+piano.mp3 — first 5 s of "Mozart Piano Sonata in C , K545 opening bars 01.wav"
+  Public domain. https://commons.wikimedia.org/wiki/File:Mozart_Piano_Sonata_in_C_,_K545_opening_bars_01.wav
+
+dog.mp3 — "Barking of a dog 2.ogg" by Amada44
+  CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/)
+  https://commons.wikimedia.org/wiki/File:Barking_of_a_dog_2.ogg
+  Changes: converted to mono MP3. This file is shared under the same license.
