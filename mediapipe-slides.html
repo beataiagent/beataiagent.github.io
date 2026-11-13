@@ -1112,7 +1112,7 @@
             </div>
           </div>
         </div>
-        <aside class="notes">Live demo Decision Maker (EmbeddingGemma 2 Text-Vision · 440M ขนาด 388 MB + WASM 27 MB): กด Load model ก่อน ครั้งแรกโหลดนาน แนะนำให้กดโหลดไว้ก่อนขึ้นพูด เบราว์เซอร์จะ cache ไว้ • โมเดลเดียวรับได้ทั้งข้อความและรูป ตอบคำถามโดยไม่ต้องสร้างข้อความ (zero decoding) • ข้อความลูกค้า: (1) choice เรื่องอะไร shipping / billing / tech / chitchat (2) score อารมณ์ 1–5 แล้วตัดสินใจส่งต่อ: chitchat ตอบเองไม่ต้องเรียก LLM, อารมณ์แย่มาก (ต่ำกว่า 2) ส่งให้คน, ที่เหลือส่ง Gemini • นี่คือหลัก On-device first ในของจริง • หน้าถัดไปใช้โมเดลเดียวกันตรวจรูปติดบัตร</aside>
+        <aside class="notes">Live demo Decision Maker (EmbeddingGemma 2 Text-Vision · 440M ขนาด 388 MB + WASM 27 MB): โมเดลเริ่มโหลดเองตั้งแต่หน้า Decision Maker ก่อนหน้านี้ (ปุ่ม Load model เป็นสำรอง) ครั้งแรกโหลดนาน ค้างหน้าก่อนหน้าไว้สักพัก เบราว์เซอร์จะ cache ไว้ • โมเดลเดียวรับได้ทั้งข้อความและรูป ตอบคำถามโดยไม่ต้องสร้างข้อความ (zero decoding) • ข้อความลูกค้า: (1) choice เรื่องอะไร shipping / billing / tech / chitchat (2) score อารมณ์ 1–5 แล้วตัดสินใจส่งต่อ: chitchat ตอบเองไม่ต้องเรียก LLM, อารมณ์แย่มาก (ต่ำกว่า 2) ส่งให้คน, ที่เหลือส่ง Gemini • นี่คือหลัก On-device first ในของจริง • หน้าถัดไปใช้โมเดลเดียวกันตรวจรูปติดบัตร</aside>
       </section>
 
       <section data-state="trydemo" data-demo="passport" data-title="Live demo · Passport photo check">
@@ -2466,9 +2466,15 @@ const answer = await llm.generateResponse(
         if (cam?.sec === sec) stopCam(); else run(sec);
       }, true);
       const maybe = (sec) => { if (sec?.dataset.try && !done.has(sec)) run(sec); };
-      Reveal.on("slidechanged", (e) => { if (cam && cam.sec !== e.currentSlide) stopCam(false); maybe(e.currentSlide); });
-      Reveal.on("ready", (e) => maybe(e.currentSlide));
-      maybe(Reveal.getCurrentSlide());
+      // preload: when a demo is one or two slides ahead, fetch its runtime, model and sample image now
+      const warm = (cur) => { const all = Reveal.getSlides(), i = all.indexOf(cur); all.slice(i + 1, i + 3).forEach((sec) => {
+        const task = sec.dataset.try; if (!task || done.has(sec)) return;
+        const st = sec.querySelector(".try-status"); image(task).catch(() => {});
+        base(st).then(() => getTask(task, "IMAGE", st)).then(() => { if (!done.has(sec)) st.textContent = "Model ready · preloaded"; }).catch(() => {});
+      }); };
+      Reveal.on("slidechanged", (e) => { if (cam && cam.sec !== e.currentSlide) stopCam(false); maybe(e.currentSlide); warm(e.currentSlide); });
+      Reveal.on("ready", (e) => { maybe(e.currentSlide); warm(e.currentSlide); });
+      maybe(Reveal.getCurrentSlide()); warm(Reveal.getCurrentSlide());
     }
   </script>
 
@@ -2726,9 +2732,15 @@ const answer = await llm.generateResponse(
           .then(() => { done.add(sec); if (!au) setStatus(sec, "Model ready · press Use microphone"); })
           .catch((err) => setStatus(sec, "Could not load: " + (err?.message || err)));
       };
-      Reveal.on("slidechanged", (e) => { if (au && au.sec !== e.currentSlide) stopAudio(); maybe(e.currentSlide); });
-      Reveal.on("ready", (e) => maybe(e.currentSlide));
-      maybe(Reveal.getCurrentSlide());
+      // preload: when a demo is one or two slides ahead, start downloading its model now (incl. the 388 MB Decision Maker)
+      const warm = (cur) => { const all = Reveal.getSlides(), i = all.indexOf(cur); all.slice(i + 1, i + 3).forEach((sec) => {
+        const k = sec.dataset.demo; if (!k || !MAKERS[SHARE[k] || k] || done.has(sec)) return;
+        const st = sec.querySelector(".try-status");
+        getTask(k, st).then(() => { if (!done.has(sec)) st.textContent = "Model ready · preloaded"; }).catch(() => {});
+      }); };
+      Reveal.on("slidechanged", (e) => { if (au && au.sec !== e.currentSlide) stopAudio(); maybe(e.currentSlide); warm(e.currentSlide); });
+      Reveal.on("ready", (e) => { maybe(e.currentSlide); warm(e.currentSlide); });
+      maybe(Reveal.getCurrentSlide()); warm(Reveal.getCurrentSlide());
     }
   </script>
 
