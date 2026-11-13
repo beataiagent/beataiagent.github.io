@@ -1119,12 +1119,12 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:36px 44px; display:flex; gap:28px">
             <div class="pp-left">
-              <div class="pp-frame"><img class="pp-shot" src="images/mediapipe-slides/id-photos/passport_compliant_female.webp" alt="ID photo"></div>
+              <div class="pp-frame"><img class="pp-shot" data-photo-src="passport_compliant_female" alt="ID photo"></div>
               <div class="pp-photos">
-                <button class="on" data-photo="images/mediapipe-slides/id-photos/passport_compliant_female.webp"><img src="images/mediapipe-slides/id-photos/passport_compliant_female.webp" alt="compliant"></button>
-                <button data-photo="images/mediapipe-slides/id-photos/id_fail_glasses_smile.webp"><img src="images/mediapipe-slides/id-photos/id_fail_glasses_smile.webp" alt="glasses and smile"></button>
-                <button data-photo="images/mediapipe-slides/id-photos/id_fail_eyes_closed_hair.webp"><img src="images/mediapipe-slides/id-photos/id_fail_eyes_closed_hair.webp" alt="eyes closed"></button>
-                <button data-photo="images/mediapipe-slides/id-photos/id_fail_mask_hat.webp"><img src="images/mediapipe-slides/id-photos/id_fail_mask_hat.webp" alt="mask and hat"></button>
+                <button class="on" data-photo="passport_compliant_female"><img data-photo-src="passport_compliant_female" alt="compliant"></button>
+                <button data-photo="id_fail_glasses_smile"><img data-photo-src="id_fail_glasses_smile" alt="glasses and smile"></button>
+                <button data-photo="id_fail_eyes_closed_hair"><img data-photo-src="id_fail_eyes_closed_hair" alt="eyes closed"></button>
+                <button data-photo="id_fail_mask_hat"><img data-photo-src="id_fail_mask_hat" alt="mask and hat"></button>
               </div>
             </div>
             <div class="try-side" style="gap:12px">
@@ -2285,6 +2285,8 @@ const answer = await llm.generateResponse(
 
   <!-- Try it: run real MediaPipe Tasks on the official demo sample images -->
   <script src="images/mediapipe-slides/samples/samples.js?v=2"></script>
+  <script src="images/mediapipe-slides/id-photos/id-photos.js"></script>
+  <script>document.querySelectorAll("img[data-photo-src]").forEach((im) => (im.src = (window.MP_ID_PHOTOS || {})[im.dataset.photoSrc] || ""));</script>
   <script type="module">
     // Live demos: every <section data-try="…"> runs that MediaPipe task on its sample image when the slide opens.
     // "Open camera" switches the same slide to the webcam (VIDEO running mode), drawing with the same code.
@@ -2563,12 +2565,10 @@ const answer = await llm.generateResponse(
         async passport(sec, tk) {
           const btn = sec.querySelector(".pp-photos button.on") || sec.querySelector(".pp-photos button");
           btn.classList.add("on");
-          const im = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = btn.dataset.photo; });
-          sec.querySelector(".pp-shot").src = btn.dataset.photo;
-          // encode as JPEG bytes, like the official sample
-          const cv = Object.assign(document.createElement("canvas"), { width: im.naturalWidth, height: im.naturalHeight });
-          cv.getContext("2d").drawImage(im, 0, 0);
-          const bytes = new Uint8Array(await (await new Promise((r) => cv.toBlob(r, "image/jpeg", 0.92))).arrayBuffer());
+          const url = (window.MP_ID_PHOTOS || {})[btn.dataset.photo]; if (!url) throw new Error("photo data missing");
+          sec.querySelector(".pp-shot").src = url;
+          // JPEG bytes decoded straight from the data URL: no canvas, so it also works when the deck is opened as a local file
+          const bytes = Uint8Array.from(atob(url.slice(url.indexOf(",") + 1)), (ch) => ch.charCodeAt(0));
           const schema = { context: "", questions: PP_RULES.map((r) => ({ id: r.id, type: "categorical", prompt: r.prompt, normalizePrior: false, options: r.options })) };
           const res = await tk.evaluate({ text: "", imageBytes: bytes }, schema);
           let passed = 0;
