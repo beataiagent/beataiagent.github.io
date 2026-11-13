@@ -1151,7 +1151,6 @@
                 </ul>
               </div>
             </div>
-            <p class="cmp-tip fragment"><b>Combine them:</b> decide on-device first, send only low-confidence cases to a cloud decision API</p>
           </div>
         </div>
         <aside class="notes">เทียบโมเดลตัดสินใจ 3 ตัว ทุกตัวใช้หลักเดียวกัน: ให้คะแนนตัวเลือกที่เรากำหนดในรอบเดียว ไม่ generate ข้อความ ได้ความน่าจะเป็นออกมา • (คลิก 1) MediaPipe Decision Maker: ใช้โมเดล EmbeddingGemma 2 ของตระกูล Gemma ตัวเดียวที่รันบนเครื่อง ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง ฟรีหลังโหลดโมเดล • (คลิก 2) Gemini Decisions API ของ Google: cloud รับ input หลากหลายสุด (วิดีโอ PDF) ได้ถึง 256K tokens ถามได้ 1,000 คำถาม $0.10 ต่อ 1M input tokens • (คลิก 3) Jev ของ TypeSafe (ออกเดือน ก.ย. 2026): cloud API รับข้อความเป็นหลัก (รูปยังทดลอง) 64K tokens คำถามแบบ Noul / choice / score $0.042 ต่อ 1M input tokens • ข้อควรระวังที่รีวิวพูดถึง: คำตอบอยู่ในรูปแบบที่กำหนดเสมอ แต่ก็ผิดได้ ควรทดสอบกับข้อมูลจริง • (คลิก 4) ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป API บน cloud • ข้อมูล Jev จาก flaviocopes.com/jev และ composio.dev (ราคาและ latency เป็นตัวเลขจากผู้ผลิต)</aside>
@@ -1537,13 +1536,14 @@
                 <div style="display:flex; flex-direction:column; gap:12px; margin-top:6px">
                   <a class="as-link st-link" style="align-self:flex-start" href="https://mediapipe-studio.webapps.google.com/home" target="_blank">mediapipe-studio.webapps.google.com</a>
                   <a class="as-link st-link" style="align-self:flex-start; background:var(--p-green)" href="https://google-ai-edge.github.io/mediapipe-samples-web/#/home" target="_blank">google-ai-edge.github.io/mediapipe-samples-web</a>
+                  <a class="as-link st-link" style="align-self:flex-start; background:var(--p-yellow)" href="https://github.com/google-ai-edge/mediapipe" target="_blank">github.com/google-ai-edge/mediapipe</a>
                 </div>
               </div>
               <img class="as-shot" style="align-self:start" src="images/mediapipe-slides/mediapipe-studio-home.jpg" alt="MediaPipe Studio home page listing Vision tasks">
             </div>
           </div>
         </div>
-        <aside class="notes">MediaPipe Studio = เว็บสำหรับลองทุก task โดยไม่ต้องเขียนโค้ด • ชวนทุกคนเปิดลิงก์ ลองเล่นกับกล้องของตัวเองตอนนี้เลย ใช้รูปของเราเองหรือปรับค่าต่าง ๆ ได้ • อีกลิงก์คือ mediapipe-samples-web มีตัวอย่างโค้ดเว็บของทุก task (รวม Decision Maker ที่เพิ่งดู) • ให้เวลาลองสัก 2–3 นาที</aside>
+        <aside class="notes">MediaPipe Studio = เว็บสำหรับลองทุก task โดยไม่ต้องเขียนโค้ด • ชวนทุกคนเปิดลิงก์ ลองเล่นกับกล้องของตัวเองตอนนี้เลย ใช้รูปของเราเองหรือปรับค่าต่าง ๆ ได้ • อีกลิงก์คือ mediapipe-samples-web มีตัวอย่างโค้ดเว็บของทุก task (รวม Decision Maker ที่เพิ่งดู) • ลิงก์ที่ 3 คือ GitHub ของ MediaPipe ใครอยากดูโค้ดหรือให้ดาว ⭐ เข้าไปได้ • ให้เวลาลองสัก 2–3 นาที</aside>
       </section>
 
       <!-- Section divider 03 -->
