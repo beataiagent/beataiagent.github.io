@@ -15,4 +15,4 @@ id-photos/id-photos.js — sample ID photos (resized JPEG data URLs) from google
 ../logos/gemma.png        — Gemma icon, https://commons.wikimedia.org/wiki/File:Gemma_icon.png (Apache-2.0), resized to 96 px
 adge-analysis.mp4 — ADGE Tennis analysis video supplied by the speaker (compressed from analysis_no_audio.mp4, 540 px, no audio)
 adge-court.webp — ADGE court render supplied by the speaker
-../logos/adge-symbol.png, adge-wordmark.png — from https://adge-tennis.com/brand/ (wordmark recoloured to the brand blue #0b47cb)
+../logos/adge-wordmark.png — resized from Adge-logo-02.png (supplied by the speaker); adge-symbol.png — from https://adge-tennis.com/brand/
