@@ -383,6 +383,16 @@
     section.cam-on .try-fallback { display: none; }
     .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
     .try-what { font-size: 18px; line-height: 1.35; }
+    .try-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .try-model { position: relative; font: 500 15px/1 var(--sans); padding: 9px 14px 9px 32px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); white-space: nowrap; }
+    .try-model::before { content: ""; position: absolute; left: 12px; top: 50%; width: 11px; height: 11px; margin-top: -5.5px; border-radius: 50%; border: 1.5px solid var(--ink); box-sizing: border-box; background: #d0d0d0; }
+    .try-model[data-state="loading"] { background: var(--p-yellow); }
+    .try-model[data-state="loading"]::before { background: var(--g-yellow); animation: try-blink 0.9s ease-in-out infinite; }
+    .try-model[data-state="ready"] { background: var(--p-green); }
+    .try-model[data-state="ready"]::before { background: var(--g-green); }
+    .try-model[data-state="error"] { background: var(--p-red); }
+    .try-model[data-state="error"]::before { background: var(--g-red); }
+    @keyframes try-blink { 50% { opacity: .25; } }
     .try-actions { display: flex; gap: 10px; }
     .try-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; flex: 1; }
     .try-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -2213,6 +2223,27 @@ const answer = await llm.generateResponse(
     })();
   </script>
 
+  <!-- Model status chip for every live demo: idle → loading → ready / error (shared by both demo scripts) -->
+  <script>
+    (() => {
+      const TEXT = { idle: "Model not loaded", loading: "Loading model…", ready: "Model loaded", error: "Model failed · try again" };
+      window.mpModel = (sec, state, note) => {
+        if (!sec) return;
+        let el = sec.querySelector(".try-model");
+        if (!el) {
+          const tag = sec.querySelector(".try-side > .tag"); if (!tag) return;
+          const row = Object.assign(document.createElement("div"), { className: "try-head" });
+          el = Object.assign(document.createElement("span"), { className: "try-model" });
+          tag.before(row); row.append(tag, el);
+        }
+        el.dataset.state = state;
+        el.textContent = TEXT[state] + (note ? " · " + note : "");
+      };
+      window.mpSince = (t0) => ((performance.now() - t0) / 1000).toFixed(1) + " s";
+      if (!/[?&]print-pdf\b/.test(location.search)) document.querySelectorAll("section[data-try], section[data-demo]").forEach((s) => mpModel(s, "idle"));
+    })();
+  </script>
+
   <!-- Try it: run real MediaPipe Tasks on the official demo sample images -->
   <script src="images/mediapipe-slides/samples/samples.js"></script>
   <script type="module">
@@ -2230,12 +2261,13 @@ const answer = await llm.generateResponse(
       let basePromise;
       function base(status) {
         if (fileset) return Promise.resolve();
-        status.textContent = "Loading MediaPipe runtime…";
-        return basePromise ??= (async () => {
+        const sec = status.closest("section");
+        status.textContent = "Loading MediaPipe runtime…"; mpModel(sec, "loading");
+        return (basePromise ??= (async () => {
           const m = await import(`${TASKS}/vision_bundle.mjs`);
           fileset = await m.FilesetResolver.forVisionTasks(`${TASKS}/wasm`);
           mod = m;
-        })().catch((err) => { basePromise = null; throw err; });
+        })().catch((err) => { basePromise = null; throw err; })).catch((err) => { mpModel(sec, "error"); throw err; });
       }
       const opts = (path, extra = {}) => ({ baseOptions: { modelAssetPath: `${M}/${path}`, delegate: "GPU" }, runningMode: RM, ...extra });
       const MAKERS = {
@@ -2253,8 +2285,11 @@ const answer = await llm.generateResponse(
       async function getTask(task, mode, status) {
         const key = task + ":" + mode;
         if (!cache[key]) {
-          status.textContent = `Downloading ${LABEL[task]} model…`; RM = mode;
-          cache[key] = MAKERS[task]().catch((err) => { delete cache[key]; throw err; }); // retry on the next click if a download fails
+          const sec = status.closest("section"), t0 = performance.now();
+          status.textContent = `Downloading ${LABEL[task]} model…`; RM = mode; mpModel(sec, "loading");
+          cache[key] = MAKERS[task]().then(
+            (tk) => (mpModel(sec, "ready", mpSince(t0)), tk),
+            (err) => { delete cache[key]; mpModel(sec, "error"); throw err; }); // retry on the next click if a download fails
         }
         return cache[key];
       }
@@ -2419,13 +2454,18 @@ const answer = await llm.generateResponse(
         audio:   ["audio",  (m, fs) => m.AudioClassifier.createFromOptions(fs, model("audio_classifier/yamnet/float32/1/yamnet.tflite", { maxResults: 5 }))],
         imgemb:  ["vision", (m, fs) => m.ImageEmbedder.createFromOptions(fs, model("image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.tflite", { runningMode: "IMAGE" }))],
       };
-      const getTask = (key, status) => once("task:" + key, async () => {
-        const [kind, make] = MAKERS[key];
-        status.textContent = "Loading MediaPipe runtime…";
-        const { m, fs } = await runtime(kind);
-        status.textContent = `Downloading ${LABEL[key]} model…`;
-        return make(m, fs);
-      });
+      const getTask = (key, status) => {
+        if (memo["task:" + key]) return memo["task:" + key];
+        const sec = status.closest("section"), t0 = performance.now();
+        mpModel(sec, "loading");
+        return once("task:" + key, async () => {
+          const [kind, make] = MAKERS[key];
+          status.textContent = "Loading MediaPipe runtime…";
+          const { m, fs } = await runtime(kind);
+          status.textContent = `Downloading ${LABEL[key]} model…`;
+          return make(m, fs);
+        }).then((tk) => (mpModel(sec, "ready", mpSince(t0)), tk), (err) => { mpModel(sec, "error"); throw err; });
+      };
 
       const pct = (x) => (x * 100).toFixed(0) + "%";
       const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
