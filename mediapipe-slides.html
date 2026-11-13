@@ -426,6 +426,12 @@
     .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
     .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
     .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what .tiles-3 { grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .s-what .tiles-3 figcaption { font-size: 17px; padding: 7px 14px; left: 12px; bottom: 12px; }
+    .s-what .tile-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 18px; }
+    .s-what .tile-notes .pc { font-size: 17px; line-height: 1.35; padding: 16px 18px; }
+    .s-what .tile-notes b { display: block; font-size: 22px; margin-bottom: 4px; }
+    .s-what .tile-notes em { display: block; font: 400 15px/1 var(--mono); font-style: normal; margin-top: 10px; color: var(--muted); }
     .s-what figure { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 2.5px solid var(--ink); background: #f1f3f4; }
     .s-what figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .s-what figcaption { position: absolute; left: 8px; bottom: 7px; font: 500 13px/1 var(--sans); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); color: var(--ink); }
@@ -754,6 +760,30 @@
           </div>
         </div>
         <aside class="notes">เข้าสู่หมวด Text มี 5 tasks</aside>
+      </section>
+
+      <!-- Text intro: tasks at a glance (classic text tasks, no GenAI) -->
+      <section class="s-what" data-title="Text tasks at a glance">
+        <div class="wp wp-main">
+          <div class="wp-head">
+            <span class="tag" style="background:var(--g-green)">Text · 3 tasks</span>
+            <div class="lockups">
+              <span class="mp-lockup"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
+              <span class="edge-lockup"><img src="images/mediapipe-slides/logos/google.svg" alt="Google">AI Edge</span>
+            </div>
+          </div>
+          <div class="tiles tiles-3">
+            <figure><img src="images/mediapipe-slides/loops/text_classifier.svg" alt=""><figcaption>Text Classifier</figcaption></figure>
+            <figure><img src="images/mediapipe-slides/loops/text_embedder.svg" alt=""><figcaption>Text Embedder</figcaption></figure>
+            <figure><img src="images/mediapipe-slides/loops/language_detector.svg" alt=""><figcaption>Language Detector</figcaption></figure>
+          </div>
+          <div class="tile-notes">
+            <div class="pc green"><b>Positive or negative?</b>Sort reviews, comments and chats<em>0.8 – 26 MB</em></div>
+            <div class="pc green"><b>Compare meaning</b>Sentence → vector, similar text scores high<em>6.1 MB</em></div>
+            <div class="pc green"><b>Which language?</b>Detects 110 languages from a short text<em>0.3 MB</em></div>
+          </div>
+        </div>
+        <aside class="notes">ภาพรวมหมวด Text: Text Classifier จัดหมวดข้อความ เช่น บวกหรือลบ • Text Embedder แปลงประโยคเป็นเวกเตอร์ เพื่อเทียบความหมาย • Language Detector บอกว่าข้อความเป็นภาษาอะไร • ทั้งสามตัวโมเดลเล็ก (ไม่ถึง 30 MB) โหลดบนเว็บได้ทันที • หน้าถัดไปจะไล่ดูทีละ task พร้อม live demo</aside>
       </section>
 
       <!-- ===== Task deep-dives (content + diagrams from developers.google.com/edge/mediapipe/solutions) ===== -->
