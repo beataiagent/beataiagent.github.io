@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="400" height="225" role="img" aria-label="Audio Transcriber preview">
+  <defs>
+    <linearGradient id="stageBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0f5ff"/>
+      <stop offset="50%" stop-color="#edf3fc"/>
+      <stop offset="100%" stop-color="#e9f1f4"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-4%" y="-5%" width="108%" height="114%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1a73e8" flood-opacity="0.07"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#3c4043" flood-opacity="0.05"/>
+    </filter>
+  </defs>
+  <style>
+
+    .wv { transform-box: fill-box; transform-origin: center; }
+    .b0 { animation: atWave 1.6s ease-in-out infinite; }
+    .b1 { animation: atWave 1.6s ease-in-out 0.25s infinite; }
+    .b2 { animation: atWave 1.6s ease-in-out 0.5s infinite; }
+    .w2 { animation: atW2 3.8s ease-in-out infinite; }
+    .w3 { animation: atW3 3.8s ease-in-out infinite; }
+    .cur { animation: atCur 1s steps(2) infinite; }
+    @keyframes atWave { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.62); } }
+    @keyframes atW2 {
+      0%, 15% { fill: #9aa0a6; }
+      30%, 50% { fill: #1a73e8; }
+      65%, 100% { fill: #202124; }
+    }
+    @keyframes atW3 {
+      0%, 35% { fill: #9aa0a6; }
+      55%, 80% { fill: #1a73e8; }
+      90%, 100% { fill: #202124; }
+    }
+    @keyframes atCur { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <rect width="800" height="450" fill="url(#stageBg)"/>
+
+  <g filter="url(#cardShadow)">
+    <rect x="56" y="66" width="688" height="318" rx="16" fill="#ffffff" stroke="#e3e9f1" stroke-width="1.2"/>
+  </g>
+  <rect x="84" y="94" width="632" height="98" rx="12" fill="#f3f7fe" stroke="#dde7f5" stroke-width="1.2"/>
+  <rect x="108" y="126" width="116" height="34" rx="17" fill="#ffffff" stroke="#d8e4f6" stroke-width="1.2"/>
+  <circle cx="128" cy="143" r="4" fill="#1a73e8"/>
+  <text x="142" y="147.5" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1a73e8" letter-spacing="0.6">LIVE MIC</text>
+    <rect class="wv b0" x="248.0" y="139.7" width="6" height="6.7" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="260.4" y="139.5" width="6" height="6.9" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="272.8" y="139.2" width="6" height="7.6" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="285.2" y="138.6" width="6" height="8.8" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="297.6" y="137.4" width="6" height="11.1" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="310.0" y="135.6" width="6" height="14.8" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="322.4" y="133.0" width="6" height="19.9" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="334.8" y="129.9" width="6" height="26.3" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="347.2" y="126.5" width="6" height="33.0" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="359.6" y="123.7" width="6" height="38.6" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="372.0" y="122.1" width="6" height="41.9" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="384.4" y="122.1" width="6" height="41.9" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="396.8" y="123.7" width="6" height="38.6" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="409.2" y="126.5" width="6" height="33.0" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="421.6" y="129.9" width="6" height="26.3" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="434.0" y="126.2" width="6" height="33.6" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="446.4" y="122.3" width="6" height="41.5" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="458.8" y="119.0" width="6" height="48.0" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="471.2" y="117.1" width="6" height="51.8" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="483.6" y="117.0" width="6" height="52.0" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="496.0" y="118.7" width="6" height="48.5" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="508.4" y="121.9" width="6" height="42.2" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="520.8" y="125.8" width="6" height="34.4" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="533.2" y="129.7" width="6" height="26.6" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="545.6" y="126.9" width="6" height="32.1" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="558.0" y="123.5" width="6" height="39.0" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="570.4" y="121.3" width="6" height="43.4" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="582.8" y="121.1" width="6" height="43.8" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="595.2" y="122.9" width="6" height="40.2" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="607.6" y="126.2" width="6" height="33.6" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="620.0" y="130.0" width="6" height="26.0" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="632.4" y="133.5" width="6" height="19.0" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="644.8" y="136.2" width="6" height="13.7" rx="3" fill="#1a73e8"/>
+    <rect class="wv b0" x="657.2" y="137.9" width="6" height="10.2" rx="3" fill="#1a73e8"/>
+    <rect class="wv b1" x="669.6" y="138.9" width="6" height="8.2" rx="3" fill="#1a73e8"/>
+    <rect class="wv b2" x="682.0" y="139.4" width="6" height="7.2" rx="3" fill="#1a73e8"/>
+
+  <rect x="84" y="212" width="632" height="144" rx="12" fill="#f8fafd" stroke="#e3eaf3" stroke-width="1.2"/>
+  <text x="110" y="250" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#188038" letter-spacing="0.6">STREAMING SPEECH-TO-TEXT</text>
+  <text x="110" y="296" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="19.5" font-weight="500" fill="#202124">“Schedule design review <tspan class="w2">for Tuesday </tspan><tspan class="w3">at 10:00 AM.”</tspan><tspan class="cur" fill="#1a73e8"> |</tspan></text>
+</svg>

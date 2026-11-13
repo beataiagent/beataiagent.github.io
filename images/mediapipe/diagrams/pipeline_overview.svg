@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 192" width="920" height="192" role="img">
+  <defs>
+    <filter id="cardShadow" x="-6%" y="-8%" width="112%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#3c4043" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#1a73e8"/>
+    </marker>
+    <marker id="arrowMuted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#5f6368"/>
+    </marker>
+  </defs>
+  <rect width="920" height="192" rx="16" fill="#f4f8fe"/>
+  <text x="28" y="34" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12" font-weight="600" letter-spacing="0.06em" fill="#1a73e8">END-TO-END MEDIAPIPE TASK PIPELINE</text>
+  <g filter="url(#cardShadow)">
+    <rect x="28" y="52" width="186" height="114" rx="14" fill="#ffffff" stroke="#dadce0" stroke-width="1.5"/>
+    <text x="48" y="84" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="600" fill="#202124">1. Media Input</text>
+    <text x="48" y="112" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12.5" fill="#3c4043">MPImage, video frame,</text>
+    <text x="48" y="131" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12.5" fill="#5f6368">audio stream, or text</text>
+  </g>
+  <line x1="218" y1="109" x2="248" y2="109" stroke="#1a73e8" stroke-width="2.2" marker-end="url(#arrowBlue)"/>
+  <g filter="url(#cardShadow)">
+    <rect x="254" y="52" width="186" height="114" rx="14" fill="#ffffff" stroke="#dadce0" stroke-width="1.5"/>
+    <text x="274" y="84" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="600" fill="#202124">2. Pre-processing</text>
+    <text x="274" y="112" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12.5" fill="#3c4043">Resize, color-convert,</text>
+    <text x="274" y="131" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12.5" fill="#5f6368">normalize, or tokenize</text>
+  </g>
+  <line x1="444" y1="109" x2="474" y2="109" stroke="#1a73e8" stroke-width="2.2" marker-end="url(#arrowBlue)"/>
+  <g filter="url(#cardShadow)">
+    <rect x="480" y="52" width="186" height="114" rx="14" fill="#e8f0fe" stroke="#1a73e8" stroke-width="1.5"/>
+    <text x="500" y="84" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="600" fill="#174ea6">3. Task Model Bundle</text>
+    <text x="500" y="112" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12.5" fill="#3c4043">LiteRT inference on</text>
+    <text x="500" y="131" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12.5" fill="#5f6368">CPU or GPU</text>
+  </g>
+  <line x1="670" y1="109" x2="700" y2="109" stroke="#1a73e8" stroke-width="2.2" marker-end="url(#arrowBlue)"/>
+  <g filter="url(#cardShadow)">
+    <rect x="706" y="52" width="186" height="114" rx="14" fill="#e6f4ea" stroke="#34a853" stroke-width="1.5"/>
+    <text x="726" y="84" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="14" font-weight="600" fill="#137333">4. Typed Output</text>
+    <text x="726" y="112" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12.5" fill="#3c4043">Landmarks, boxes, masks,</text>
+    <text x="726" y="131" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="12.5" fill="#5f6368">categories, or tokens</text>
+  </g>
+</svg>

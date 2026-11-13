@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="400" height="225" role="img" aria-label="Audio Classifier preview">
+  <defs>
+    <linearGradient id="stageBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0f5ff"/>
+      <stop offset="50%" stop-color="#edf3fc"/>
+      <stop offset="100%" stop-color="#e9f1f4"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-4%" y="-5%" width="108%" height="114%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1a73e8" flood-opacity="0.07"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#3c4043" flood-opacity="0.05"/>
+    </filter>
+  </defs>
+  <style>
+
+    .wv { transform-box: fill-box; transform-origin: center; }
+    .b0 { animation: acWaveA 1.8s ease-in-out infinite; }
+    .b1 { animation: acWaveB 1.8s ease-in-out 0.22s infinite; }
+    .b2 { animation: acWaveA 1.8s ease-in-out 0.44s infinite; }
+    .b3 { animation: acWaveB 1.8s ease-in-out 0.66s infinite; }
+    .fill1 { transform-box: fill-box; transform-origin: left center; animation: acBar 3.6s ease-in-out infinite; }
+    .fill2 { transform-box: fill-box; transform-origin: left center; animation: acBar 3.6s ease-in-out 0.12s infinite; }
+    .fill3 { transform-box: fill-box; transform-origin: left center; animation: acBar 3.6s ease-in-out 0.24s infinite; }
+    @keyframes acWaveA { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.62); } }
+    @keyframes acWaveB { 0%, 100% { transform: scaleY(0.76); } 50% { transform: scaleY(1.14); } }
+    @keyframes acBar { 0%, 100% { transform: scaleX(1); } 45% { transform: scaleX(0.72); } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <rect width="800" height="450" fill="url(#stageBg)"/>
+
+  <g filter="url(#cardShadow)">
+    <rect x="56" y="66" width="688" height="318" rx="16" fill="#ffffff" stroke="#e3e9f1" stroke-width="1.2"/>
+  </g>
+  <rect x="84" y="94" width="296" height="262" rx="12" fill="#f3f7fe" stroke="#dde7f5" stroke-width="1.2"/>
+  <text x="104" y="126" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#1a73e8" letter-spacing="0.6">AUDIO STREAM · 16 KHZ</text>
+    <rect class="wv b0" x="104.0" y="231.6" width="8" height="20.7" rx="4" fill="#1a73e8"/>
+    <rect class="wv b1" x="116.6" y="220.2" width="8" height="43.7" rx="4" fill="#1a73e8"/>
+    <rect class="wv b2" x="129.2" y="207.7" width="8" height="68.5" rx="4" fill="#1a73e8"/>
+    <rect class="wv b3" x="141.8" y="198.0" width="8" height="88.0" rx="4" fill="#1a73e8"/>
+    <rect class="wv b0" x="154.4" y="194.8" width="8" height="94.4" rx="4" fill="#1a73e8"/>
+    <rect class="wv b1" x="167.0" y="199.4" width="8" height="85.2" rx="4" fill="#1a73e8"/>
+    <rect class="wv b2" x="179.6" y="194.8" width="8" height="94.5" rx="4" fill="#1a73e8"/>
+    <rect class="wv b3" x="192.2" y="179.5" width="8" height="124.9" rx="4" fill="#1a73e8"/>
+    <rect class="wv b0" x="204.8" y="170.7" width="8" height="142.6" rx="4" fill="#1a73e8"/>
+    <rect class="wv b1" x="217.4" y="171.6" width="8" height="140.8" rx="4" fill="#1a73e8"/>
+    <rect class="wv b2" x="230.0" y="182.1" width="8" height="119.8" rx="4" fill="#1a73e8"/>
+    <rect class="wv b3" x="242.6" y="195.8" width="8" height="92.4" rx="4" fill="#1a73e8"/>
+    <rect class="wv b0" x="255.2" y="182.1" width="8" height="119.8" rx="4" fill="#1a73e8"/>
+    <rect class="wv b1" x="267.8" y="175.5" width="8" height="133.1" rx="4" fill="#34a853"/>
+    <rect class="wv b2" x="280.4" y="178.4" width="8" height="127.2" rx="4" fill="#34a853"/>
+    <rect class="wv b3" x="293.0" y="189.5" width="8" height="104.9" rx="4" fill="#34a853"/>
+    <rect class="wv b0" x="305.6" y="204.6" width="8" height="74.8" rx="4" fill="#34a853"/>
+    <rect class="wv b1" x="318.2" y="207.8" width="8" height="68.4" rx="4" fill="#34a853"/>
+    <rect class="wv b2" x="330.8" y="209.0" width="8" height="66.0" rx="4" fill="#34a853"/>
+    <rect class="wv b3" x="343.4" y="217.2" width="8" height="49.5" rx="4" fill="#34a853"/>
+    <rect class="wv b0" x="356.0" y="231.6" width="8" height="20.7" rx="4" fill="#34a853"/>
+
+  <text x="408" y="114" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="13" font-weight="700" fill="#5f6368" letter-spacing="0.6">YAMNET · 521 SOUND CLASSES</text>
+
+  <text x="408" y="156" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Acoustic guitar</text>
+  <text x="712" y="156" text-anchor="end" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#1a73e8">94%</text>
+  <rect x="408" y="168" width="304" height="9" rx="4.5" fill="#f1f3f4"/>
+  <rect class="fill1" x="408" y="168" width="286" height="9" rx="4.5" fill="#1a73e8"/>
+
+  <text x="408" y="226" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Music</text>
+  <text x="712" y="226" text-anchor="end" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#188038">89%</text>
+  <rect x="408" y="238" width="304" height="9" rx="4.5" fill="#f1f3f4"/>
+  <rect class="fill2" x="408" y="238" width="270" height="9" rx="4.5" fill="#1e8e3e"/>
+
+  <text x="408" y="296" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="19" font-weight="500" fill="#202124">Plucked string</text>
+  <text x="712" y="296" text-anchor="end" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" font-weight="700" fill="#1a73e8">74%</text>
+  <rect x="408" y="308" width="304" height="9" rx="4.5" fill="#f1f3f4"/>
+  <rect class="fill3" x="408" y="308" width="225" height="9" rx="4.5" fill="#1a73e8"/>
+</svg>

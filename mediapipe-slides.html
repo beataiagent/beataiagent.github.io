@@ -1,0 +1,2225 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MediaPipe On-device ML</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/logos/gdg-favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="images/logos/gdg-favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="images/logos/gdg-apple-touch-180.png" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ================= DevFest 2026 theme tokens (from the official template) ================= */
+    :root {
+      --ink: #1e1e1e;            /* Black 02 */
+      --paper: #f0f0f0;          /* Off-White */
+      --white: #fff;
+      --g-blue: #4285f4; --g-green: #34a853; --g-red: #ea4335; --g-yellow: #fbbc04;      /* Google 500 */
+      --h-blue: #57caff; --h-green: #5cdb6d; --h-red: #ff7daf; --h-yellow: #ffd427;      /* Halftone */
+      --p-blue: #c3ecf6; --p-green: #ccf6c5; --p-red: #f8d8d8; --p-yellow: #ffe7a5;      /* Pastel */
+      --muted: #5f6368;
+      --stroke: 3px;
+      --sans: "Google Sans", "Product Sans", system-ui, sans-serif;
+      --mono: "Roboto Mono", ui-monospace, monospace;
+
+      --r-background-color: var(--paper);
+      --r-main-font: var(--sans);
+      --r-heading-font: var(--sans);
+      --r-code-font: var(--mono);
+      --r-main-color: var(--ink);
+      --r-heading-color: var(--ink);
+      --r-heading-text-transform: none;
+      --r-heading-font-weight: 700;
+      --r-heading-letter-spacing: -0.01em;
+      --r-link-color: #1a73e8;
+      --r-link-color-hover: #174ea6;
+      --r-main-font-size: 28px;
+    }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--paper); }
+    .reveal { color: var(--ink); }
+    .reveal strong, .reveal b { font-weight: 700; }
+
+    /* every slide is a fixed 1280×720 canvas, laid out absolutely like the Slides template */
+    .reveal .slides section { width: 1280px; height: 720px; padding: 0; box-sizing: border-box; text-align: left; background: var(--paper); line-height: 1.3; }
+    .reveal .slides section.bg-blue { background: var(--p-blue); }
+    .reveal .slides section.bg-green { background: var(--p-green); }
+    .reveal .slides section.bg-yellow { background: var(--p-yellow); }
+    .reveal .slides section.bg-red { background: var(--p-red); }
+    .reveal h1, .reveal h2, .reveal h3 { margin: 0; text-transform: none; color: var(--ink); line-height: 1.12; }
+    .reveal h1 { font-size: 84px; font-weight: 700; letter-spacing: -.015em; }
+    .reveal h2 { font-size: 46px; font-weight: 700; }
+    .reveal h3 { font-size: 26px; font-weight: 700; }
+    .reveal p { margin: 0; }
+    .reveal .slides img { margin: 0; max-width: none; max-height: none; }
+    .reveal a { text-decoration: none; }
+    .abs { position: absolute; }
+    .mono { font-family: var(--mono); font-weight: 300; }
+    .sub { font-family: var(--mono); font-weight: 300; font-size: 22px; line-height: 1.35; color: var(--ink); }
+    .muted { color: var(--muted); }
+
+    /* ---------- notched card (shape drawn by dfShapes(): data-tl / data-br notches, data-scallop) ---------- */
+    .nc { position: absolute; }
+    .nc > svg.nc-s { position: absolute; inset: 0; overflow: visible; z-index: 0; pointer-events: none; }
+    .nc > .in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; padding: 40px 52px; }
+
+    /* ---------- DevFest badge: { DevFest / location } ---------- */
+    .badge { position: absolute; display: flex; align-items: center; gap: 4px; --bk: var(--g-yellow); }
+    .badge .bk { font: 700 92px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .badge b { font: 700 50px/1 var(--sans); letter-spacing: -.01em; }
+    .badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 6px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .badge.sm .bk { font-size: 64px; -webkit-text-stroke-width: 2.5px; }
+    .badge.sm b { font-size: 34px; }
+    .badge.sm i { font-size: 11px; padding: 4px 0; margin-top: 5px; border-width: 2px; }
+
+    /* ---------- corner logos: Build with Gemini + DevFest/GDG lockup (auto-added bottom-right of every slide) ---------- */
+    .corner-logos { position: absolute; right: 40px; bottom: 38px; display: flex; align-items: flex-end; gap: 14px; z-index: 2; pointer-events: none; }
+    .corner-logos img { height: 94px; width: auto; display: block; }
+
+    /* ---------- line icons (sprite at top of <body>) ---------- */
+    .ico { display: block; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .dots { position: absolute; display: flex; gap: 14px; }
+    .dots i { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--ink); background: var(--dc, var(--g-blue)); box-sizing: border-box; }
+    .numbox { position: absolute; border: var(--stroke) solid var(--ink); border-radius: 28px; background: #fff; font: 300 64px/1 var(--mono); display: flex; align-items: center; padding: 0 28px; box-sizing: border-box; }
+
+    /* ---------- content atoms ---------- */
+    .pc { border: 2.5px solid var(--ink); border-radius: 24px; padding: 22px 24px; background: #fff; box-sizing: border-box; font-size: 20px; line-height: 1.38; }
+    .pc.blue { background: var(--p-blue); } .pc.green { background: var(--p-green); } .pc.yellow { background: var(--p-yellow); } .pc.red { background: var(--p-red); }
+    .pc h3 { margin-bottom: 8px; }
+    .pc .ico { width: 46px; height: 46px; margin-bottom: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 5px 13px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; font-size: 15px; line-height: 1.3; }
+    .tag { display: inline-block; padding: 7px 20px; border-radius: 999px; border: 2.5px solid var(--ink); background: #fff; font: 500 18px/1.2 var(--sans); }
+    .tag.red { background: var(--p-red); } .tag.yellow { background: var(--g-yellow); }
+    .eyebrow { font: 400 17px/1 var(--mono); letter-spacing: .02em; color: var(--ink); margin-bottom: 12px; }
+    .grid { display: grid; gap: 20px; }
+    .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+    .reveal ul.bl { list-style: none; margin: 0; padding: 0; display: block; font-size: 25px; line-height: 1.35; }
+    .reveal ul.bl li { position: relative; padding-left: 34px; margin: 0 0 16px; }
+    .reveal ul.bl li::before { content: ""; position: absolute; left: 2px; top: .38em; width: 15px; height: 15px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--g-blue); }
+    .reveal ul.bl li:nth-child(4n+2)::before { background: var(--g-red); }
+    .reveal ul.bl li:nth-child(4n+3)::before { background: var(--g-yellow); }
+    .reveal ul.bl li:nth-child(4n+4)::before { background: var(--g-green); }
+    .placeholder { border: 2.5px dashed #9aa0a6; border-radius: 24px; display: grid; place-items: center; color: var(--muted); font-size: 18px; text-align: center; padding: 20px; background: var(--paper); box-sizing: border-box; }
+
+    /* code */
+    .reveal pre { width: auto; margin: 0; box-shadow: none; font-size: 15px; line-height: 1.42; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--paper); overflow: hidden; }
+    .reveal pre code { max-height: none; padding: 16px 22px; background: transparent; font-family: var(--mono); font-weight: 400; }
+    .reveal .hljs { background: transparent; color: #1e1e1e; }
+    .reveal .hljs-ln-numbers { color: #9aa0a6; }
+    .cmd { font: 400 15px/1.4 var(--mono); padding: 12px 16px; border-radius: 16px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; }
+
+    /* flow (slide 7) */
+    .flow { display: flex; align-items: center; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 26px 18px; }
+    .flow .node b { display: block; font-size: 24px; margin-bottom: 8px; }
+    .flow .node code { font-family: var(--mono); font-size: 18px; }
+    .flow .arr { width: 46px; flex: none; }
+
+    /* demo */
+    .demo-wrap { position: relative; width: 520px; aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; border: 2.5px solid var(--ink); background: #1e1e1e; }
+    .reveal .demo-wrap video, .reveal .demo-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; object-fit: cover; transform: scaleX(-1); }
+    .demo-ui { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn { font: 500 18px/1 var(--sans); padding: 13px 26px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); color: #fff; cursor: pointer; }
+    .btn.ghost { background: #fff; color: var(--ink); }
+    .btn:disabled { opacity: .45; cursor: default; }
+    #demoStatus { font: 300 16px/1.4 var(--mono); color: var(--ink); }
+    .gesture { position: absolute; left: 14px; top: 12px; font: 500 20px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); z-index: 2; }
+
+    /* ---------- slide 1: speaker cover ---------- */
+    .reveal .slides section.s-cover { overflow: hidden; }
+    .s-cover .cv-pill { position: absolute; left: 129px; top: 44px; width: 556px; height: 93px; border-radius: 999px; background: var(--ink); }
+    .s-cover .cv-dot { position: absolute; left: 670px; top: 44px; width: 91px; height: 91px; border-radius: 50%; background: var(--g-blue); border: 3px solid var(--ink); box-sizing: border-box; }
+    .s-cover .cv-kicker { font: 700 38px/1.1 var(--sans); color: var(--g-blue); margin-bottom: 8px; }
+    .s-cover .cv-title { font-size: 86px; line-height: 1.04; letter-spacing: -.015em; }
+    .s-cover .cv-name { position: absolute; left: 88px; top: 542px; width: 346px; height: 97px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 999px; background: #fff; display: flex; flex-direction: column; justify-content: center; padding: 0 24px; z-index: 2; }
+    .s-cover .cv-name b { font: 700 29px/1.15 var(--sans); white-space: nowrap; }
+    .s-cover .cv-name span { font: 400 15px/1.3 var(--sans); white-space: nowrap; margin-top: 3px; }
+    .s-cover .cv-photo { position: absolute; left: 761px; top: 40px; width: 479px; height: 370px; border: 3px solid #555; border-radius: 66px; overflow: hidden; background: #efeeef; box-sizing: border-box; }
+    .s-cover .cv-photo > img { position: absolute; left: 92px; top: 30px; width: 334px; height: 334px; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); }
+    .s-cover .gde { position: absolute; left: 128px; top: 262px; display: flex; height: 79px; border: 2px solid #c6dafc; border-radius: 9px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .s-cover .gde-l { width: 108px; display: flex; flex-direction: column; align-items: center; padding-top: 8px; position: relative; }
+    .s-cover .gde-l img { width: 36px; height: 18px; object-fit: contain; }
+    .s-cover .gde-l span { font: 400 17px/1 var(--sans); color: #5f6368; margin-top: 4px; }
+    .s-cover .gde-l i { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: #4a86e8; color: #fff; font: 400 12px/18px var(--sans); text-align: center; font-style: normal; }
+    .s-cover .gde-r { width: 108px; display: grid; place-items: center; font: 500 12px/1 var(--sans); color: #3c4043; border-left: 6px solid #e8f0fe; background: #fff; }
+    .s-cover .cv-badge { position: absolute; left: 696px; top: 505px; width: 313px; height: 124px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 42px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .s-cover .cv-badge .bk { font: 700 82px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .s-cover .cv-badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .s-cover .cv-badge b { font: 700 45px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover .cv-badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 5px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .s-cover .cv-blobs { position: absolute; left: 1010px; top: 501px; width: 211px; height: 77px; }
+    .s-cover .cv-gdg { position: absolute; left: 1007px; top: 578px; width: 132px; height: 87px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 44px; background: #fff; display: grid; place-items: center; }
+    .s-cover .cv-gdg img { width: 90px; height: 45px; object-fit: contain; }
+
+    /* ---------- slide 2: agenda ---------- */
+    .s-agenda .ag-title { position: absolute; left: 41px; top: 40px; font-size: 56px; font-weight: 400; }
+    .reveal .s-agenda ol.ag-list { position: absolute; left: 41px; top: 168px; margin: 0; padding: 0; list-style: none; display: grid; gap: 22px; }
+    .s-agenda .ag-list li { position: relative; display: flex; align-items: center; gap: 18px; height: 84px; }
+    .s-agenda .ag-list svg { position: absolute; left: 0; top: -6px; width: 96px; height: 96px; fill: none; stroke: var(--ink); stroke-width: 2.5; }
+    .s-agenda .ag-list b { width: 96px; text-align: center; font: 500 54px/1 var(--sans); flex: none; }
+    .s-agenda .ag-list span { width: 688px; height: 84px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 999px; background: #d3e3f3; display: flex; align-items: center; padding: 0 26px; font: 400 34px/1 var(--sans); }
+
+    /* tasks slide: Text · Audio · Decision · Retrieval / Vision · GenAI */
+    .tasks-grid { display: grid; grid-template-columns: 1.3fr 1.25fr .95fr 1.1fr; grid-template-rows: auto auto; gap: 14px; }
+    .tasks-grid .pc { padding: 16px 16px; }
+    .tasks-grid .pc.span3 { grid-column: span 3; }
+    .tasks-grid h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 24px; }
+    .tasks-grid .ord { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid var(--ink); background: #fff; display: grid; place-items: center; font: 500 16px/1 var(--sans); box-sizing: border-box; }
+    .tasks-grid .tcount { font: 300 13px/1 var(--mono); margin-left: auto; padding-left: 6px; white-space: nowrap; }
+    .tasks-grid .chips { gap: 6px; }
+    .tasks-grid .chip { font-size: 13.5px; padding: 4px 10px; }
+
+    /* ---------- task deep-dive slides ---------- */
+    .tk { padding: 34px 44px !important; }
+    .tk-head { position: absolute; left: 44px; top: 30px; right: 44px; }
+    .tk-head .eyebrow { margin-bottom: 6px; }
+    .tk-head h2 { font-size: 40px; }
+    .tk-desc { font-size: 19px; line-height: 1.35; margin-top: 6px !important; }
+    .tk-media { position: absolute; left: 44px; top: 150px; width: 400px; height: 225px; margin: 0; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
+    .tk-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tk-info { position: absolute; left: 474px; top: 156px; right: 44px; display: flex; flex-direction: column; gap: 10px; }
+    .tk-io { display: flex; align-items: flex-start; gap: 12px; }
+    .tk-io > b { width: 64px; flex: none; font: 400 14px/28px var(--mono); }
+    .tk-io .chips { gap: 6px; }
+    .tk-io .chip { font-size: 15px; padding: 4px 12px; }
+    .tk-diagram { position: absolute; left: 30px; top: 392px; width: 800px; height: auto; }
+    .tk-stat { position: absolute; left: 872px; top: 400px; width: 284px; height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 12px 22px !important; }
+    .tk-stat b { font: 700 46px/1 var(--sans); letter-spacing: -.02em; }
+    .tk-stat span { font: 300 15px/1.3 var(--mono); margin-top: 6px; }
+    .tk-stat i { font: 300 11px/1.3 var(--mono); font-style: normal; color: var(--muted); margin-top: 6px; white-space: nowrap; }
+    .tk-size .chip.sz { background: var(--p-yellow); font-size: 14px; }
+    .tk-size .chip.sz em { font: 500 12.5px/1 var(--mono); font-style: normal; margin-left: 4px; }
+
+    /* section dividers: MediaPipe logo tile */
+    .div-logo { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .div-logo img { width: 150px; height: 150px; object-fit: contain; }
+
+
+    /* ---------- AI Studio how-to slides ---------- */
+    .as-left { position: absolute; left: 44px; top: 132px; width: 690px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+    .as-shot { width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 18px; display: block; }
+    .as-link { font: 400 16px/1 var(--mono); padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-blue); color: var(--ink) !important; }
+    .reveal ol.as-steps { position: absolute; left: 766px; top: 128px; width: 390px; margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+    .as-steps li { display: flex; gap: 14px; align-items: flex-start; font-size: 19px; line-height: 1.35; }
+    .as-steps li b { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid var(--ink); display: grid; place-items: center; font: 500 20px/1 var(--sans); background: #fff; box-sizing: border-box; }
+    .as-steps li:nth-child(1) b { background: var(--p-blue); } .as-steps li:nth-child(2) b { background: var(--p-green); }
+    .as-steps li:nth-child(3) b { background: var(--p-yellow); } .as-steps li:nth-child(4) b { background: var(--p-red); }
+    .as-steps li span { padding-top: 6px; }
+    .as-recipe { display: flex; gap: 22px; align-items: flex-start; }
+    .reveal ul.as-parts { list-style: none; margin: 0; padding: 0; width: 330px; flex: none; display: grid; gap: 9px; }
+    .as-parts li { padding: 10px 16px !important; font-size: 15.5px; line-height: 1.3; border-radius: 16px !important; }
+    .as-parts li b { display: block; font-size: 18px; margin-bottom: 2px; }
+    .as-prompt { flex: 1; border: 2.5px solid var(--ink); border-radius: 20px; background: var(--ink); color: #fff; overflow: hidden; max-width: 740px; }
+    .as-ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 10px 18px; font: 400 14px/1 var(--mono); color: #c4c7c5; border-bottom: 1px solid #3c3c3c; }
+    .reveal pre.as-text { margin: 0; padding: 14px 18px 18px; border: 0; border-radius: 0; background: transparent; color: #fff; white-space: pre-wrap; font: 400 15px/1.5 var(--mono); }
+    .copy { font: 500 13px/1 var(--sans); padding: 8px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .copy:hover { background: var(--g-yellow); }
+    .copy.done { background: var(--g-green); color: #fff; }
+    .as-ideas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+    .as-idea { display: flex; flex-direction: column; gap: 8px; height: 392px; min-width: 0; padding: 14px 14px !important; }
+    .as-idea .as-mock { display: block; width: 100%; height: auto; }
+    .as-ih { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+    .as-ih b { flex: 0 0 100%; }
+    .as-ih b { font-size: 19px; white-space: nowrap; }
+    .as-ih .chip { font-size: 11.5px; padding: 3px 8px; }
+    .as-idea .as-text { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; margin: 0; font: 400 11px/1.4 var(--mono); background: #fff; border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; }
+    .as-idea .copy { margin-left: auto; padding: 4px 9px; font-size: 11px; }
+    .as-tip { margin-top: 16px !important; font-size: 17px; max-width: 800px; }
+    .as-tip b { font: 500 13px/1 var(--mono); padding: 4px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); margin-right: 8px; }
+    .as-tip code { font-family: var(--mono); font-size: 15px; }
+
+    /* thank-you: round speaker photo + name */
+    .ty-who { display: flex; align-items: center; gap: 20px; margin-top: 44px; }
+    .ty-who img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 3px solid var(--ink); background: #fff; flex: none; }
+    .ty-who .sub { margin: 0; }
+
+    /* Hydrogen slide */
+    .hy-word { background: linear-gradient(90deg, #0b1f5c, #2f6fd6 55%, #7cc7f5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    html.print-pdf .hy-word { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #2f6fd6; }
+    .hy-left { position: absolute; left: 44px; top: 128px; width: 620px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .hy-right { position: absolute; left: 696px; top: 128px; width: 460px; display: flex; flex-direction: column; gap: 16px; }
+    .hy-badge { align-self: flex-start; font: 500 18px/1 var(--sans); letter-spacing: .22em; color: #fff; padding: 12px 34px; border-radius: 999px; border: 2.5px solid var(--ink); background: linear-gradient(90deg, #0b1f5c, #2f6fd6 60%, #a8dcfb); }
+    .reveal ul.hy-facts { font-size: 18.5px; line-height: 1.32; }
+    .reveal ul.hy-facts li { margin-bottom: 8px; }
+    .hy-how { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.38; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .hy-how b { font: 500 13px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); flex: none; margin-top: 1px; }
+
+    /* What is Google AI Edge / MediaPipe */
+    .ae-logo { position: absolute; right: 44px; top: 40px; height: 54px; width: auto; }
+    .ae-stack { position: absolute; left: 44px; top: 186px; width: 720px; display: grid; gap: 12px; }
+    .ae-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .ae-row .pc { font-size: 16px; line-height: 1.35; padding: 16px 18px; min-height: 150px; position: relative; }
+    .ae-row h3 { font-size: 24px; margin-bottom: 6px; }
+    .ae-hl { box-shadow: 6px 6px 0 var(--ink); }
+    .ae-tag { position: absolute; right: 12px; top: -14px; font: 500 12px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); }
+    .ae-hw { display: grid; grid-template-columns: 90px repeat(3, 1fr); border: 2.5px solid var(--ink); border-radius: 16px; overflow: hidden; background: #fff; }
+    .ae-hw span, .ae-tools > span { font: 400 14px/1 var(--mono); display: grid; place-items: center; }
+    .ae-hw b { text-align: center; font: 700 22px/1 var(--sans); padding: 14px 0; border-left: 2px solid var(--ink); background: var(--paper); }
+    .ae-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .ae-tools > span { width: 90px; flex: none; }
+    .ae-tools .chip { font-style: normal; font-size: 13.5px; }
+    .ae-side { position: absolute; left: 800px; top: 186px; width: 356px; display: flex; flex-direction: column; gap: 12px; }
+    .ae-sh { font: 700 22px/1.2 var(--sans); }
+    .why-yt { position: absolute; left: 56px; top: 440px; display: flex; align-items: center; gap: 22px; }
+    .why-yt .ae-yt { width: 360px; flex: none; }
+    .why-yt p { width: 360px; font-size: 18px; line-height: 1.35; }
+    .ae-yt { position: relative; margin: 0; border: 2.5px solid var(--ink); border-radius: 18px; overflow: hidden; background: #fff; }
+    .ae-yt img { display: block; width: 100%; height: auto; }
+    .ae-yt figcaption { position: absolute; left: 10px; bottom: 10px; display: flex; align-items: center; gap: 6px; font: 500 13.5px/1 var(--sans); background: #fff; border: 2px solid var(--ink); border-radius: 999px; padding: 4px 10px 4px 6px; }
+    .yt-logo { width: 26px; height: 18px; flex: none; vertical-align: -3px; }
+    .ae-side ul.bl { font-size: 19px; }
+    .ae-try { font-size: 16px; line-height: 1.4; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .ae-demo { position: absolute; left: 44px; top: 424px; width: 680px; margin: 0; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #fff; }
+    .ae-demo img { display: block; width: 100%; height: auto; }
+    .ae-demo figcaption { position: absolute; left: 12px; top: 12px; font: 500 14px/1 var(--sans); background: #fff; border: 2px solid var(--ink); border-radius: 999px; padding: 6px 12px; }
+    .wm-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 18px; }
+    .wm-card { display: grid; grid-template-columns: 54px 1fr; column-gap: 14px; row-gap: 10px; align-items: start; padding: 14px 16px !important; font-size: 15.5px; line-height: 1.3; }
+    .wm-card .wm-ic { width: 54px; height: 54px; border-radius: 18px; border: 2px solid var(--ink); background: #fff; display: grid; place-items: center; }
+    .wm-card .wm-ic svg { width: 30px; height: 30px; }
+    .wm-card b { display: block; font-size: 20px; margin-bottom: 2px; }
+    .wm-card .wm-ok { grid-column: 1 / -1; display: flex; gap: 8px; align-items: center; font: 500 13.5px/1.2 var(--sans); background: #fff; border: 2px solid var(--ink); border-radius: 999px; padding: 4px 10px 4px 5px; }
+    .wm-card .wm-ok i { flex: none; width: 20px; height: 20px; border-radius: 50%; background: var(--g-green); color: #fff; font: 700 12px/20px var(--sans); text-align: center; font-style: normal; }
+    .wm-how { display: flex; align-items: center; gap: 12px; margin-top: 18px; }
+    .wm-how .tag { background: var(--g-blue); color: #fff; font-size: 15px; padding: 5px 16px; letter-spacing: .04em; }
+    .wm-how span { font-size: 18px; } .wm-how span b { font-weight: 700; }
+    .wm-flow { display: flex; align-items: stretch; gap: 8px; margin-top: 12px; width: 1112px; height: 134px; }
+    .wm-flow .pc { flex: 1; text-align: center; padding: 10px 12px !important; font-size: 14px; line-height: 1.25; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+    .wm-flow .pc svg { width: 32px; height: 32px; margin-bottom: 2px; }
+    .wm-flow .pc b { font-size: 18px; }
+    .wm-flow .pc.hl { box-shadow: 5px 5px 0 var(--ink); }
+    .wm-flow .pc.app { flex: 1.25; padding: 6px 10px !important; gap: 2px; }
+    .wm-flow .pc.app img { width: auto; height: 92px; max-width: 100%; display: block; border-radius: 8px; }
+    .wm-flow .arr { flex: none; width: 26px; align-self: center; stroke: var(--ink); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    .mp-facts { position: absolute; left: 860px; top: 432px; width: 296px; display: flex; align-items: center; gap: 14px; padding: 12px 20px; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--p-green); box-sizing: border-box; }
+    .mp-facts b { font: 700 46px/1 var(--sans); }
+    .mp-facts span { display: block; font: 300 15px/1.35 var(--mono); }
+    .mp-facts p { font: 300 12.5px/1.4 var(--mono); color: var(--muted); margin-top: 8px !important; }
+
+    /* why on-device: numbered cards, revealed one per click */
+    .why-card { position: relative; }
+    .why-n { position: absolute; right: 16px; top: 14px; font: 300 30px/1 var(--mono); padding: 6px 12px; border: 2.5px solid var(--ink); border-radius: 14px; background: #fff; }
+
+    /* platforms slide */
+    .pl-grid { position: absolute; left: 44px; top: 190px; width: 1112px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .pl-card { display: flex; flex-direction: column; gap: 8px; height: 310px; padding: 18px 16px !important; }
+    .pl-card img { height: 72px; width: 72px; object-fit: contain; box-sizing: border-box; padding: 11px; background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; }
+    .pl-card img.ios { padding: 6px; }
+    .pl-card h3 { font-size: 26px; margin: 4px 0 0; }
+    .pl-card p { font-size: 17px; line-height: 1.35; flex: 1; }
+    .pl-card p span { font: 300 13.5px/1.4 var(--mono); }
+    .pl-card code { font: 400 12px/1.35 var(--mono); background: var(--ink); color: #fff; border-radius: 10px; padding: 8px 10px; word-break: break-all; }
+
+    /* model-size charts (log scale) */
+    .szc { display: grid; gap: 4px; }
+    .szc-row { display: grid; grid-template-columns: 230px 1fr 132px; align-items: center; gap: 14px; }
+    .szc-row > b { font: 500 17px/1.15 var(--sans); }
+    .szc-row > b small { display: block; font: 300 12px/1.3 var(--mono); color: var(--muted); margin-top: 2px; }
+    .szc-row > em { font: 400 14px/1 var(--mono); font-style: normal; text-align: right; white-space: nowrap; }
+    .szc-track { position: relative; height: 30px; }
+    .szc-track > i { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed #c8c8c8; }
+    .szc-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid #e0e0e0; }
+    .szc-bar { position: absolute; top: 6px; height: 18px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); box-sizing: border-box; min-width: 18px; }
+    .szc-axis .szc-track { height: 18px; }
+    .szc-axis .szc-track::before { display: none; }
+    .szc-axis .szc-track span { position: absolute; transform: translateX(-50%); font: 300 12px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+    .szc-all { position: absolute; left: 44px; top: 168px; width: 1112px; gap: 4px; }
+    .szc-all .szc-row { grid-template-columns: 220px 1fr 170px; }
+    .szc-all .szc-row > b { font-size: 22px; }
+    .szc-all .szc-track { height: 44px; }
+    .szc-all .szc-row > b small { display: inline; margin-left: 8px; }
+    .szc-all .szc-bar { top: 7px; height: 26px; }
+    .szc-all .szc-row:nth-child(2) .szc-bar { background: var(--g-green); }
+    .szc-all .szc-row:nth-child(3) .szc-bar { background: var(--g-yellow); }
+    .szc-all .szc-row:nth-child(4) .szc-bar { background: var(--g-red); }
+    .szc-all .szc-row:nth-child(5) .szc-bar { background: #a142f4; }
+    .szc-all .szc-row:nth-child(6) .szc-bar { background: var(--g-blue); }
+    .szc-all .szc-row > em { font-size: 16px; }
+    .sz-notes { position: absolute; left: 44px; top: 474px; width: 760px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sz-notes .pc { font-size: 15px; line-height: 1.35; padding: 12px 16px !important; }
+    .sz-notes .pc b { display: block; font: 700 19px/1.2 var(--sans); margin-bottom: 2px; }
+    .szc-dense { gap: 0; }
+    .szc-dense .szc-row > b { font-size: 14.5px; }
+    .szc-dense .szc-row > b small { display: none; }
+    .szc-dense .szc-row > b { white-space: nowrap; }
+    .szc-dense .szc-track { height: 25px; }
+    .szc-dense .szc-bar { top: 4px; height: 17px; }
+    .szc-dense .szc-row > em { font-size: 13px; }
+    /* category dividers */
+    .cat-ico { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .cat-ico svg { width: 120px; height: 120px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .cat-side { position: absolute; left: 70px; top: 456px; width: 230px; text-align: center; }
+    .cat-side b { display: block; font: 700 34px/1.1 var(--sans); }
+    .cat-side span { display: block; font: 300 15px/1.4 var(--mono); margin-top: 4px; }
+    .cat-in { padding: 30px 40px !important; }
+    .cat-h { font-size: 64px !important; }
+    .cat-take { font-size: 17px; line-height: 1.35; margin: 8px 0 16px !important; max-width: 760px; }
+    .szc-cat .szc-row { grid-template-columns: 200px 1fr 118px; }
+    .szc-cat .szc-row > b { font-size: 15.5px; }
+    .bg-green .szc-cat .szc-bar { background: var(--g-green); }
+    .bg-yellow .szc-cat .szc-bar { background: var(--g-yellow); }
+    .bg-red .szc-cat .szc-bar { background: var(--g-red); }
+
+    /* ---------- Try it: sample-image demo ---------- */
+    .try-stage { position: relative; width: 640px; height: 470px; flex: none; border: 2.5px solid var(--ink); border-radius: 24px; overflow: hidden; background: #1e1e1e; }
+    .try-stage canvas, .try-stage .try-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .try-stage canvas { z-index: 1; }
+    .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
+    .try-what { font-size: 18px; line-height: 1.35; }
+    .try-actions { display: flex; gap: 10px; }
+    .try-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; flex: 1; }
+    .try-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .try-tabs button { font: 500 15px/1 var(--sans); padding: 9px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .try-tabs button:hover { background: var(--p-blue); }
+    .try-tabs button.on { background: var(--g-blue); color: #fff; }
+    .try-tabs button:disabled { opacity: .5; cursor: progress; }
+    .reveal ol.try-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 17px/1.3 var(--mono); max-height: 200px; overflow: hidden; }
+    .try-results li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; border-radius: 10px; background: var(--paper); border: 1.5px solid #d0d0d0; }
+    .try-results li b { font-weight: 500; }
+    .try-status { font: 300 14px/1.4 var(--mono); color: var(--muted); }
+
+    /* ---------- slide 4: MediaPipe · Google AI Edge (real loops + logos) ---------- */
+    .s-what .wp { position: absolute; background: #fff; border: var(--stroke) solid var(--ink); border-radius: 30px; box-sizing: border-box; }
+    .s-what .wp-main { left: 40px; top: 96px; width: 1200px; padding: 22px 28px 26px; }
+    .s-what .wp-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+    .s-what .tag { font-size: 22px; padding: 8px 26px; background: var(--g-yellow); }
+    .s-what .lockups { display: flex; align-items: center; gap: 34px; }
+    .s-what .mp-lockup, .s-what .edge-lockup { display: flex; align-items: center; font-size: 50px; line-height: 1; white-space: nowrap; }
+    .s-what .mp-lockup { gap: 12px; font-weight: 500; color: #3c4043; }
+    .s-what .mp-lockup img { height: 50px; }
+    .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
+    .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
+    .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what figure { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 2.5px solid var(--ink); background: #f1f3f4; }
+    .s-what figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s-what figcaption { position: absolute; left: 8px; bottom: 7px; font: 500 13px/1 var(--sans); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); color: var(--ink); }
+    .s-what .wp-plat { left: 40px; bottom: 26px; display: flex; align-items: center; gap: 52px; padding: 14px 38px; }
+    .s-what .wp-plat span { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 500; color: #3c4043; }
+    .s-what .wp-plat img { height: 58px; }
+    .s-what .wp-plat img.ios { border-radius: 13px; box-shadow: 0 0 0 1px #dadce0; }
+
+    /* ================= Slide controls (shopio-style) ================= */
+    .reveal .controls, .reveal .progress, html:not(.print-pdf) .reveal .slide-number { display: none !important; }
+    #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; z-index: 40; background: linear-gradient(90deg, var(--g-blue), var(--g-green), var(--g-yellow), var(--g-red)); transition: width .6s cubic-bezier(.16,1,.3,1); }
+    #ctrl { position: fixed; right: 18px; bottom: 16px; z-index: 40; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(30,30,30,.86); backdrop-filter: blur(8px); color: #fff; font: 13px var(--sans); transition: opacity .4s; }
+    #ctrl button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0; }
+    #ctrl button:hover { background: rgba(255,255,255,.25); }
+    #ctrl button.on { background: var(--g-blue); }
+    #ctrl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #ctrl .cnt { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; cursor: pointer; }
+    body.idle #ctrl { opacity: 0; }
+    body.idle { cursor: none; }
+    #menu, #exportMenu { position: fixed; right: 18px; bottom: 64px; z-index: 41; padding: 8px; border-radius: 14px; background: rgba(30,30,30,.96); backdrop-filter: blur(10px); box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); font-family: var(--sans); display: none; }
+    #menu { width: 380px; max-height: 70vh; overflow: auto; }
+    #menu.open, #exportMenu.open { display: block; }
+    #menu a { display: flex; gap: 10px; color: #cfd2d6; text-decoration: none; font-size: 13px; padding: 7px 10px; border-radius: 8px; }
+    #menu a:hover, #menu a.cur { background: rgba(255,255,255,.12); color: #fff; }
+    #menu a span { opacity: .5; width: 22px; text-align: right; flex: none; }
+    #exportMenu { min-width: 230px; padding: 6px; }
+    #exportMenu button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 12px; border: 0; border-radius: 9px; background: transparent; color: #fff; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+    #exportMenu button:hover, #exportMenu button:focus-visible { background: #3a3a3a; outline: none; }
+    #exportMenu kbd { font-family: var(--mono); font-size: 11px; color: #9aa0a6; border: 1px solid #444; border-radius: 5px; padding: 1px 6px; }
+    #exportMenu .sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 12px; line-height: 1.5; margin-top: 2px; color: #9aa0a6; }
+    #exportMenu button > span { line-height: 1.3; }
+    /* all-slides overview (scrollable grid of live thumbnails) */
+    #ov { position: fixed; inset: 0; z-index: 45; background: #1e1e1e; overflow: auto; padding: 28px 32px 40px; display: none; font-family: var(--sans); }
+    #ov.open { display: block; }
+    #ov .ovh { display: flex; justify-content: space-between; align-items: center; color: #fff; max-width: 1700px; margin: 0 auto 18px; font-size: 18px; font-weight: 500; }
+    #ov .ovh button { border: 0; background: rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+    #ov .ovh button:hover { background: rgba(255,255,255,.25); }
+    #ov .ovg { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px 18px; max-width: 1700px; margin: 0 auto; }
+    #ov .ovt { cursor: pointer; color: #cfd2d6; font-size: 13px; }
+    #ov .fr { position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: var(--paper); outline: 2px solid #3a3a3a; outline-offset: 3px; transition: outline-color .15s; }
+    #ov .ovt:hover .fr { outline-color: rgba(255,255,255,.5); }
+    #ov .ovt.cur .fr { outline-color: var(--g-yellow); }
+    #ov .cap { display: flex; gap: 8px; margin-top: 10px; line-height: 1.35; }
+    #ov .cap span { opacity: .5; flex: none; }
+    #ov .fr > .reveal { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; pointer-events: none; overflow: hidden; }
+    #ov .fr > .reveal > .slides { position: absolute; inset: 0; width: 1280px; height: 720px; margin: 0; transform: none; zoom: 1; pointer-events: none; }
+    #ov .fr > .reveal > .slides > section { display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; }
+    #ov .fr .fragment { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+    #ov .fr pre code.fragment { display: none !important; }
+    #ov .fr .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    html.print-pdf #progress, html.print-pdf #ctrl, html.print-pdf #menu, html.print-pdf #exportMenu { display: none !important; }
+    @media print { #progress, #ctrl, #menu, #exportMenu { display: none !important; } }
+    /* print view: show the full code block, not the stacked line-highlight step clones */
+    html.print-pdf .reveal pre code.fragment { display: none !important; }
+    html.print-pdf .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    /* Build challenge (rules + 15-min countdown) */
+    .ch-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 26px; }
+    .ch-grid .pc { display: flex; flex-direction: column; gap: 10px; min-height: 300px; }
+    .ch-grid .pc h3 { font: 700 26px/1.1 var(--sans); margin: 0 0 4px; }
+    .ch-grid ol { margin: 0; padding-left: 22px; } .ch-grid ol li { margin-bottom: 8px; }
+    .ch-crit { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px dashed #9aa0a6; padding-bottom: 8px; }
+    .ch-crit em { font: 400 16px/1.4 var(--mono); font-style: normal; white-space: nowrap; }
+    .ch-prize { font: 700 30px/1.15 var(--sans); }
+    .ch-time { position: absolute; right: 44px; top: 34px; font: 300 22px/1 var(--mono); padding: 12px 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-yellow); }
+    .ch-clock { font: 300 230px/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin: 18px 0 10px; }
+    .ch-bar { height: 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; overflow: hidden; box-sizing: border-box; }
+    .ch-bar i { display: block; height: 100%; width: 100%; background: var(--g-green); transition: width .4s linear, background .4s; }
+    .ch-ctrl { display: flex; gap: 12px; margin-top: 26px; align-items: center; }
+    .ch-ctrl .btn.ghost { background: #fff; color: var(--ink); }
+    .ch-ctrl span { font: 400 17px/1.3 var(--mono); margin-left: 12px; }
+    .ch-warn .ch-clock { color: var(--g-red); }
+    .ch-warn .ch-bar i { background: var(--g-red); }
+    .ch-done .ch-clock { animation: chblink 1s steps(2) infinite; }
+    @keyframes chblink { 50% { opacity: .25; } }
+  </style>
+</head>
+<body>
+  <!-- line-icon sprite (DevFest template style: 3px ink outlines, pastel fills) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 200 220"><path d="M100 8 L188 112 H138 V212 H62 V112 H12 Z" fill="var(--p-yellow)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-scallop" viewBox="0 0 240 40"><path d="M4 36 A36 30 0 0 1 80 36 A36 30 0 0 1 160 36 A36 30 0 0 1 236 36" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><ellipse cx="32" cy="32" rx="12" ry="28"/><path d="M4 32h56M9 18h46M9 46h46"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 120 90"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M2 2l20 20M8.5 16.4a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.3-1.7M2 8.8a15 15 0 0 1 4.2-2.7M22 8.8A15 15 0 0 0 10.7 5M12 20h.01"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18M7 6h1v4M16.7 13.9l.7.7-2.8 2.8"/></symbol>
+    <symbol id="i-next" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></symbol>
+  </svg>
+
+  <!-- Slide controls (shopio-style): progress · ‹ n/N › · overview · fullscreen · notes · export -->
+  <div id="progress"></div>
+  <div id="ctrl">
+    <button id="bPrev" title="Previous (←)">‹</button>
+    <span class="cnt" id="cnt" title="Slide list">1 / 16</span>
+    <button id="bNext" title="Next (→)">›</button>
+    <button id="bOv" title="All slides (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+    <button id="bFs" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    <button id="bNotes" title="Speaker notes (N / S)"><svg viewBox="0 0 24 24"><path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg></button>
+    <button id="bPdf" title="Export PDF (E = this slide, Shift+E = all)" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg></button>
+  </div>
+  <div id="menu"></div>
+  <div id="ov"><div class="ovh"><span>All slides</span><button id="ovX" title="Close (Esc)">✕</button></div><div class="ovg"></div></div>
+  <div id="exportMenu" role="menu">
+    <button role="menuitem" data-export="all"><span>All slides<span class="sub">PDF of every slide</span></span><kbd>Shift+E</kbd></button>
+    <button role="menuitem" data-export="slide"><span>This slide<span class="sub" id="exportCur">PDF of the current slide</span></span><kbd>E</kbd></button>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Title (speaker cover, DevFest 2026 style) -->
+      <section class="s-cover" data-corner="off" data-title="Build On-Device AI with MediaPipe and Google AI Studio">
+        <div class="cv-pill"></div><div class="cv-dot"></div>
+        <div class="nc" style="left:40px; top:137px; width:799px; height:403px" data-br="199x87" data-r="48">
+          <div class="in" style="padding:54px 30px 0">
+            <p class="cv-kicker">Build On-Device AI with</p>
+            <h1 class="cv-title">MediaPipe and<br>Google<br>AI Studio</h1>
+          </div>
+        </div>
+        <div class="cv-name"><b>Punsiri Boonyakiat</b><span>Google Developer Expert in Cloud AI</span></div>
+        <div class="cv-photo">
+          <img src="images/profile.jpeg" alt="Punsiri Boonyakiat">
+          <div class="gde">
+            <div class="gde-l"><img src="images/logos/gdg-mark.svg" alt=""><span>Experts</span><i>2025</i></div>
+            <div class="gde-r">Cloud AI</div>
+          </div>
+        </div>
+        <div class="cv-badge"><span class="bk" style="--bk: var(--p-blue)">{</span><span class="bw"><b>DevFest</b><i>Bangkok 2026</i></span><span class="bk" style="--bk: var(--p-green)">}</span></div>
+        <svg class="cv-blobs" viewBox="0 0 211 77"><g stroke="#1e1e1e" stroke-width="5" fill="none"><circle cx="38.5" cy="38.5" r="35.5"/><circle cx="105.5" cy="38.5" r="35.5"/><circle cx="172.5" cy="38.5" r="35.5"/></g><g fill="var(--p-red)"><circle cx="38.5" cy="38.5" r="33"/><circle cx="105.5" cy="38.5" r="33"/><circle cx="172.5" cy="38.5" r="33"/></g></svg>
+        <div class="cv-gdg"><img src="images/logos/gdg-mark.svg" alt="Google Developer Groups"></div>
+        <aside class="notes">สวัสดีครับ/ค่ะ แนะนำตัว: ปุณศิริ บุญยเกียรติ, Google Developer Expert สาย Cloud AI • วันนี้จะพาทุกคนสร้างแอป AI ที่รันบนเครื่องผู้ใช้เองด้วย MediaPipe แล้วใช้ Google AI Studio ช่วยสร้างแอปจาก prompt • ชวนคุย: ใครเคยใช้ฟิลเตอร์หน้า หรือฟีเจอร์เบลอพื้นหลังใน Meet บ้าง? นั่นแหละคือ on-device ML</aside>
+      </section>
+
+      <!-- 2. Agenda (numbered pills) -->
+      <section class="s-agenda" data-title="Agenda">
+        <h2 class="ag-title">Agenda</h2>
+        <ol class="ag-list">
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>1</b><span>What is MediaPipe &amp; Google AI Edge</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>2</b><span>What's inside: 22 ready-to-use tasks</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>3</b><span>From demo to code: tools &amp; APIs</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>4</b><span>Hands-on: Build with Google AI Studio</span></li>
+        </ol>
+        <aside class="notes">วันนี้มี 4 ช่วง: (1) MediaPipe และ Google AI Edge คืออะไร (2) ข้างในมีอะไร ไล่ดู 22 tasks ทีละตัว (3) From demo to code: เครื่องมือและโค้ดเบื้องหลัง demo (4) Hands-on ให้ทุกคนสร้างแอปเองใน Google AI Studio • บอกผู้ฟังเปิด aistudio.google.com เตรียมไว้ได้เลย</aside>
+      </section>
+
+      <!-- 3. Section divider (template: numbered section title) -->
+      <section data-title="01 · What is MediaPipe">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="div-logo"><img src="images/logos/mediapipe-icon.svg" alt="MediaPipe"></div>
+        <svg class="abs" style="left:66px; top:560px; width:240px; height:40px"><use href="#i-scallop"/></svg>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">What is<br>MediaPipe?</h1>
+            <p class="sub" style="margin-top:28px">On-device ML from<br>Google AI Edge</p>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่ช่วงที่ 1 • เริ่มจากภาพรวมว่า MediaPipe คืออะไร อยู่ตรงไหนในโลกของ Google AI Edge และทำไมต้องรัน ML บนเครื่อง</aside>
+      </section>
+
+      <!-- What is Google AI Edge? (stack, from ai.google.dev/edge) -->
+      <section data-title="What is Google AI Edge?">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Google AI Edge · ai.google.dev/edge</div>
+            <h2 style="font-size:42px">What is Google AI Edge?</h2>
+            <img class="ae-logo" src="images/logos/google-ai-edge-logo.png" alt="Google AI Edge">
+            <p class="sub" style="font-size:19px; margin-top:8px">Google's end-to-end stack for building and deploying on-device ML &amp; AI across platforms</p>
+            <div class="ae-stack">
+              <div class="ae-row ae-sdk">
+                <div class="pc green ae-hl fragment" data-fragment-index="1"><span class="ae-tag">This talk</span><h3>MediaPipe</h3>Prebuilt APIs for common AI tasks — vision, text, audio, retrieval, decision</div>
+                <div class="pc yellow fragment" data-fragment-index="2"><h3>LiteRT-LM</h3>SDKs to run LLMs on-device across platforms</div>
+                <div class="pc blue fragment" data-fragment-index="3"><h3>LiteRT</h3>Hardware-accelerated runtime for custom models from PyTorch, JAX, TensorFlow, Keras</div>
+              </div>
+              <div class="ae-hw fragment" data-fragment-index="4"><span>Runs on</span><b>CPU</b><b>GPU</b><b>NPU</b></div>
+            </div>
+            <div class="ae-side fragment" data-fragment-index="5">
+              <b class="ae-sh">Powers Google's own apps</b>
+              <ul class="bl">
+                <li>Dynamic backgrounds in Google Meet</li>
+                <li class="fragment" data-fragment-index="7">Creator effects on YouTube Shorts</li>
+              </ul>
+            </div>
+            <figure class="ae-demo fragment" data-fragment-index="6"><img src="images/cover/mediapipe-hero.gif" alt="MediaPipe selfie segmentation: background blur and background replacement"><figcaption>MediaPipe in action · background blur &amp; replace, like Google Meet</figcaption></figure>
+          </div>
+        </div>
+        <aside class="notes">[คลิก 7 ครั้ง: MediaPipe → LiteRT-LM → LiteRT → CPU/GPU/NPU → Powers Google apps + Meet → GIF → YouTube Shorts] Google AI Edge คือชุดเครื่องมือครบวงจรของ Google สำหรับรัน AI บนอุปกรณ์ • มี 3 ทางเข้า: MediaPipe = API สำเร็จรูป (หัวข้อวันนี้), LiteRT-LM = รัน LLM อย่าง Gemma บนเครื่อง, LiteRT = เอาโมเดลของเราเองจาก PyTorch/JAX/TensorFlow มารัน • ทั้งหมดเร่งความเร็วด้วย CPU/GPU/NPU • ย้ำว่าเทคโนโลยีเดียวกันนี้อยู่เบื้องหลัง Live translation บน Pixel, พื้นหลังใน Meet และเอฟเฟกต์ YouTube Shorts • ชี้ GIF ด้านล่าง: นี่คือ MediaPipe segmentation เบลอ/เปลี่ยนพื้นหลังแบบเดียวกับใน Meet รันบนเครื่องแบบ real-time • แนะนำแอป Google AI Edge Gallery ให้ลองโหลดเล่น</aside>
+      </section>
+
+      <!-- What is MediaPipe? (MediaPipe Tasks: Live ML anywhere) -->
+      <section data-title="What is MediaPipe?">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:34px 44px">
+            <div class="eyebrow">MediaPipe Tasks · Google AI Edge</div>
+            <h2 style="font-size:40px">What is MediaPipe?</h2>
+            <p class="sub" style="font-size:18px; margin-top:6px">Ready-made AI building blocks: send in a camera frame, get back points, boxes or labels.</p>
+            <div class="wm-cards">
+              <div class="pc blue wm-card fragment" data-fragment-index="1"><span class="wm-ic"><svg class="ico" viewBox="0 0 24 24" style="stroke-width:1.8"><path d="M12 3 2 8l10 5 10-5z"/><path d="m2 12 10 5 10-5M2 16l10 5 10-5"/></svg></span>
+                <div><b>Ready-to-use AI</b>Pre-trained tasks for face, hands, pose, objects, text &amp; audio</div>
+                <span class="wm-ok"><i>✓</i>No ML training or pipeline to build</span></div>
+              <div class="pc red wm-card fragment" data-fragment-index="2"><span class="wm-ic"><svg class="ico" viewBox="0 0 24 24" style="stroke-width:1.8"><rect x="6" y="6" width="12" height="12" rx="2"/><path d="M9 2v4M15 2v4M9 18v4M15 18v4M2 9h4M2 15h4M18 9h4M18 15h4"/></svg></span>
+                <div><b>Runs on-device</b>The model runs on the phone or laptop's own CPU / GPU</div>
+                <span class="wm-ok"><i>✓</i>Fast · private · works offline</span></div>
+              <div class="pc green wm-card fragment" data-fragment-index="3"><span class="wm-ic"><svg class="ico" viewBox="0 0 24 24" style="stroke-width:1.8"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></svg></span>
+                <div><b>Every platform</b>Web, Android, iOS and Python SDKs</div>
+                <span class="wm-ok"><i>✓</i>Same model, same API everywhere</span></div>
+            </div>
+            <div class="wm-how fragment" data-fragment-index="4"><span class="tag">HOW IT WORKS</span><span>Example: <b>Face Landmarker</b></span></div>
+            <div class="wm-flow">
+              <div class="pc fragment" data-fragment-index="4"><svg class="ico" viewBox="0 0 24 24" style="stroke-width:1.8"><rect x="2" y="6" width="14" height="12" rx="2"/><path d="m16 10 6-3v10l-6-3z"/></svg><b>Camera</b>Video frames in</div>
+              <svg class="arr fragment" data-fragment-index="5" viewBox="0 0 26 24"><path d="M2 12h20M15 5l7 7-7 7"/></svg>
+              <div class="pc blue hl fragment" data-fragment-index="5"><svg class="ico" viewBox="0 0 24 24" style="stroke-width:1.8"><path d="M5 4v16M10 7v13M15 4v16M20 9v11"/></svg><b>MediaPipe Task</b>Face Landmarker model</div>
+              <svg class="arr fragment" data-fragment-index="6" viewBox="0 0 26 24"><path d="M2 12h20M15 5l7 7-7 7"/></svg>
+              <div class="pc fragment" data-fragment-index="6"><svg class="ico" viewBox="0 0 24 24" style="stroke-width:1.8"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><circle cx="9" cy="10" r="1"/><circle cx="15" cy="10" r="1"/><circle cx="12" cy="13" r="1"/><path d="M9 16q3 2 6 0"/></svg><b>AI Results</b>478 face points + expressions</div>
+              <svg class="arr fragment" data-fragment-index="7" viewBox="0 0 26 24"><path d="M2 12h20M15 5l7 7-7 7"/></svg>
+              <div class="pc yellow app fragment" data-fragment-index="7"><b>Your App · AR filter</b><img src="images/mockups/ar-selfie.svg" alt="AR selfie filter built on face landmarks"></div>
+            </div>
+            <p class="fragment" data-fragment-index="8" style="margin-top:26px; font-size:17px; max-width:760px">Swap the task, keep the flow: <b>22 tasks</b> across Vision, Text, Audio, Decision &amp; Retrieval all work the same way.</p>
+          </div>
+        </div>
+        <aside class="notes">[คลิก 8 ครั้ง: 3 การ์ดทีละใบ → Camera → Task → Results → Your App → บรรทัดสรุป] อธิบายง่าย ๆ: MediaPipe คือ "ชิ้นส่วน AI สำเร็จรูป" ส่งภาพจากกล้องเข้าไป ได้ผลลัพธ์กลับมาเป็นจุด กรอบ หรือป้ายชื่อ แล้วเราเอาไปทำแอปต่อ • 3 จุดเด่น: (1) พร้อมใช้ ไม่ต้องเทรนโมเดลหรือสร้าง pipeline เอง (2) รันบนเครื่องเรา ใช้ CPU/GPU ของมือถือหรือโน้ตบุ๊ก → เร็ว ข้อมูลไม่ออกจากเครื่อง ใช้ออฟไลน์ได้ (3) ใช้ได้ทุกแพลตฟอร์ม Web / Android / iOS / Python ด้วยโมเดลและ API แบบเดียวกัน • ตัวอย่าง Face Landmarker: กล้อง → MediaPipe Task → ได้ 478 จุดบนหน้า + ค่า expression → แอปเราเอาไปวางแว่น หมวก เป็น AR filter</aside>
+      </section>
+
+      <!-- Platforms & languages (from ai.google.dev/edge/mediapipe quickstart) -->
+      <section data-title="Where can you use MediaPipe?">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Platforms &amp; languages</div>
+            <h2 style="font-size:42px">Where can you use MediaPipe?</h2>
+            <p class="sub" style="font-size:19px; margin-top:8px">Same tasks, same options and result types on every platform</p>
+            <div class="pl-grid">
+              <div class="pc blue pl-card"><img src="images/logos/web.svg" alt=""><h3>Web</h3><p>JavaScript · TypeScript<br><span>WASM · WebGPU</span></p><code>npm install @mediapipe/tasks-vision</code></div>
+              <div class="pc green pl-card"><img src="images/logos/android.svg" alt=""><h3>Android</h3><p>Kotlin · Java<br><span>Maven Central</span></p><code>com.google.mediapipe:tasks-vision</code></div>
+              <div class="pc pl-card"><img src="images/logos/ios.svg" alt="" class="ios"><h3>iOS</h3><p>Swift · Objective-C<br><span>Swift Package Manager</span></p><code>MediaPipeTasksVision</code></div>
+              <div class="pc yellow pl-card"><img src="images/logos/python.svg" alt=""><h3>Python</h3><p>Python 3<br><span>Linux · macOS · Windows</span></p><code>pip install mediapipe</code></div>
+              <div class="pc red pl-card"><img src="images/logos/flutter.svg" alt=""><h3>Flutter</h3><p>Dart<br><span>pub.dev</span></p><code>flutter pub add mediapipe_vision</code></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">MediaPipe ใช้ได้ 5 แพลตฟอร์ม: Web (JavaScript/TypeScript ใช้ WASM และ WebGPU), Android (Kotlin/Java), iOS (Swift/Objective-C), Python (Linux, macOS, Windows) และ Flutter (Dart) • จุดเด่นคือ task, ตัวเลือก และรูปแบบผลลัพธ์เหมือนกันทุกแพลตฟอร์ม เขียนครั้งเดียวย้ายไปแพลตฟอร์มอื่นง่าย • คำสั่งติดตั้งในการ์ดเป็นของหมวด Vision หมวดอื่นแค่เปลี่ยนชื่อ package เช่น tasks-text, tasks-audio</aside>
+      </section>
+
+      <!-- 5. Why on-device -->
+      <section data-title="Why run ML on the device">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:52px 56px">
+            <div class="eyebrow">Why on-device?</div>
+            <h2 style="margin-bottom:36px">Why run ML on the device</h2>
+            <div class="grid g4">
+              <div class="pc blue fragment why-card" data-fragment-index="1" style="height:236px"><svg class="ico"><use href="#i-bolt"/></svg><h3>Low latency</h3>Real-time processing with no network round-trip</div>
+              <div class="pc red fragment why-card" data-fragment-index="2" style="height:236px"><svg class="ico"><use href="#i-lock"/></svg><h3>Privacy</h3>Users' images and audio never leave the device</div>
+              <div class="pc yellow fragment why-card" data-fragment-index="3" style="height:236px"><svg class="ico"><use href="#i-offline"/></svg><h3>Offline</h3>Works without an internet connection</div>
+              <div class="pc green fragment why-card" data-fragment-index="4" style="height:236px"><svg class="ico"><use href="#i-coins"/></svg><h3>Cost</h3>No per-request inference server cost</div>
+            </div>
+            <div class="why-yt">
+              <figure class="ae-yt"><img src="images/edge/youtube-effects.gif" alt="YouTube Shorts creator effects: real-time face stylization"><figcaption><svg class="yt-logo" viewBox="0 0 28 20" aria-label="YouTube"><rect width="28" height="20" rx="5" fill="#ff0000"/><path d="M11 5.5v9l8-4.5z" fill="#fff"/></svg>YouTube Shorts effects</figcaption></figure>
+              <p><b>Real example:</b> YouTube Shorts creator effects run on the phone in real time — no video is uploaded to process each frame.</p>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ทำไมต้องรันบนเครื่อง? เปิดด้วยตัวอย่างจริง: เอฟเฟกต์ใน YouTube Shorts รันบนมือถือแบบ real-time ไม่ต้องส่งวิดีโอขึ้น server • คลิกทีละใบ: (1) Low latency ไม่ต้องรอ network ทำ real-time ได้ (2) Privacy ภาพและเสียงของผู้ใช้ไม่ออกจากเครื่อง (3) Offline ใช้ได้แม้ไม่มีเน็ต (4) Cost ไม่ต้องจ่ายค่า server ต่อ request • ถามผู้ฟัง: แอปแบบไหนที่ privacy สำคัญมาก? (สุขภาพ, เด็ก, ธนาคาร)</aside>
+      </section>
+
+      <!-- Section divider 02 -->
+      <section class="bg-blue" data-title="02 · What's inside">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="div-logo"><img src="images/logos/mediapipe-icon.svg" alt="MediaPipe"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">What's<br>inside?</h1>
+            <p class="sub" style="margin-top:28px">22 ready-to-use tasks<br>across 5 categories</p>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่ช่วงที่ 2 • รู้แล้วว่า MediaPipe คืออะไร มาดูกันว่าข้างในมีอะไรให้ใช้บ้าง ตอนนี้มี 22 tasks ใน 5 หมวด และจะไล่ดูทีละตัวพร้อมภาพเคลื่อนไหวของจริง</aside>
+      </section>
+
+      <!-- 6. Solutions (official categories on ai.google.dev: 22 tasks, + GenAI) -->
+      <section data-title="Ready-to-use tasks">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 52px">
+            <div class="eyebrow">MediaPipe Solutions · 22 on-device tasks</div>
+            <h2 style="margin-bottom:22px">Ready-to-use tasks</h2>
+            <div class="tasks-grid">
+              <div class="pc green fragment" data-fragment-index="1"><h3><span class="ord">1</span>Text <small class="tcount">5 tasks</small></h3><div class="chips"><span class="chip">Text Classifier</span><span class="chip">Text Embedder</span><span class="chip">Language Detector</span><span class="chip">Text Proofreader</span><span class="chip">Text Summarizer</span></div></div>
+              <div class="pc yellow fragment" data-fragment-index="2"><h3><span class="ord">2</span>Audio <small class="tcount">3 tasks</small></h3><div class="chips"><span class="chip">Audio Classifier</span><span class="chip">Audio Transcriber</span><span class="chip">Text-to-Speech</span></div></div>
+              <div class="pc fragment" data-fragment-index="3"><h3><span class="ord">3</span>Decision <small class="tcount">1 task</small></h3><div class="chips"><span class="chip">Decision Maker</span></div></div>
+              <div class="pc fragment" data-fragment-index="4"><h3><span class="ord">4</span>Retrieval <small class="tcount">2 tasks</small></h3><div class="chips"><span class="chip">Semantic Retriever</span><span class="chip">Universal Embedder</span></div></div>
+              <div class="pc blue span3 fragment" data-fragment-index="5"><h3><span class="ord">5</span>Vision <small class="tcount">11 tasks</small></h3><div class="chips">
+                <span class="chip">Object Detector</span><span class="chip">Image Classifier</span><span class="chip">Image Segmenter</span><span class="chip">Interactive Segmenter</span>
+                <span class="chip">Gesture Recognizer</span><span class="chip">Hand Landmarker</span><span class="chip">Face Detector</span><span class="chip">Face Landmarker</span>
+                <span class="chip">Pose Landmarker</span><span class="chip">Holistic Landmarker</span><span class="chip">Image Embedder</span></div></div>
+              <div class="pc red fragment" data-fragment-index="6"><h3><span class="ord">6</span>GenAI <small class="tcount">LLMs</small></h3><div class="chips"><span class="chip">LLM Inference (Gemma)</span><span class="chip">Image Generation</span></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพรวม 22 tasks แบ่งเป็น 5 หมวดตามเว็บทางการ + GenAI คลิกทีละกล่อง: (1) Text 5 ตัว (2) Audio 3 ตัว (3) Decision 1 ตัว (4) Retrieval 2 ตัว (5) Vision 11 ตัว ซึ่งเป็นหมวดที่ใช้บ่อยที่สุด (6) GenAI รัน LLM อย่าง Gemma บนเครื่อง • บอกว่าหน้าถัดไปจะไล่ดูทีละ task</aside>
+      </section>
+
+      <!-- Model size summary by task type -->
+      <section data-title="Model sizes by task type">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">What's inside · model sizes</div>
+            <h2 style="font-size:42px">Model sizes by task type</h2>
+            <p class="sub" style="font-size:19px; margin-top:8px">Download size of the official models (log scale) — measured from the model files</p>
+            <div class="szc szc-all"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Text<small>5 tasks</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:10.15%; width:59.33%"></span></div><em>0.3 MB – 184 MB</em></div><div class="szc-row"><b>Audio<small>3 tasks</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:34.32%; width:48.27%"></span></div><em>4.1 MB – 760 MB</em></div><div class="szc-row"><b>Decision<small>1 task</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:68.47%; width:28.64%"></span></div><em>165 MB – 3.7 GB</em></div><div class="szc-row"><b>Retrieval<small>2 tasks</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:68.47%; width:9.97%"></span></div><em>165 MB – 485 MB</em></div><div class="szc-row"><b>Vision<small>11 tasks</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:6.41%; width:46.52%"></span></div><em>0.2 MB – 31 MB</em></div></div>
+            <div class="sz-notes">
+              <div class="pc blue"><b>KB – tens of MB</b>Vision &amp; classic models load instantly on the web</div>
+              <div class="pc yellow"><b>100 MB – GB</b>Gemma-based &amp; speech models: download once, cache on device</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">สรุปขนาดโมเดลแยกตามหมวด (สเกล log): Vision เล็กสุด 0.2–31 MB, Text 0.3–184 MB, Audio 4–760 MB, Retrieval 165–485 MB และ Decision 165 MB ถึง 3.7 GB • ข้อคิด: งานที่ต้องรันบนเว็บแบบโหลดทันทีควรใช้โมเดลกลุ่มเล็ก ส่วนโมเดลระดับร้อย MB–GB เหมาะกับแอปที่โหลดเก็บไว้ในเครื่องครั้งเดียว • หน้าถัดไปจะเข้าแต่ละหมวด</aside>
+      </section>
+
+      <!-- Section divider 2.1: Text -->
+      <section class="bg-green" data-title="2.1 · Text">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.1</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:120px">Text</h1>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่หมวด Text มี 5 tasks</aside>
+      </section>
+
+      <!-- Text: model sizes -->
+      <section class="bg-green s-cat" data-title="Text tasks · model sizes">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.1</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M4 7V4h16v3M9 20h6M12 4v16"/></svg></div>
+        <div class="cat-side"><b>5 tasks</b><span>0.3 MB – 184 MB</span></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in cat-in">
+            <div class="eyebrow">What's inside · model sizes</div>
+            <h1 class="cat-h">Text</h1>
+            <p class="cat-take">Classic text models are tiny (0.3–26 MB). Gemma-based proofreading and summarizing are ~118 MB.</p>
+            <div class="szc szc-cat"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Text Classifier<small>Avg word embedding · BERT</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:19.22%; width:32.07%"></span></div><em>0.8 MB – 26 MB</em></div><div class="szc-row"><b>Text Embedder<small>USE · EmbeddingGemma 300M</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:37.99%; width:31.49%"></span></div><em>6.1 MB – 184 MB</em></div><div class="szc-row"><b>Language Detector<small>Language Detector</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:10.15%; width:1.20%"></span></div><em>0.3 MB</em></div><div class="szc-row"><b>Text Proofreader<small>Proofread 200M</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:65.37%; width:1.20%"></span></div><em>118 MB</em></div><div class="szc-row"><b>Text Summarizer<small>Summarization 200M</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:65.37%; width:1.20%"></span></div><em>118 MB</em></div></div>
+          </div>
+        </div>
+        <aside class="notes">หมวด Text มี 5 tasks • ดูกราฟขนาดโมเดล: งานแบบดั้งเดิมอย่าง Language Detector (0.3 MB) และ Text Classifier เล็กมาก ส่วน Proofreader และ Summarizer ใช้โมเดลตระกูล Gemma ขนาดประมาณ 118 MB • ยิ่งโมเดลใหญ่ ยิ่งโหลดนานบนเว็บ ควรโหลดครั้งเดียวแล้ว cache</aside>
+      </section>
+
+      <!-- ===== Task deep-dives (content + diagrams from developers.google.com/edge/mediapipe/solutions) ===== -->
+      <section class="s-task" data-title="Text Classifier">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Text · 1 / 5</div><h2>Text Classifier</h2><p class="tk-desc">Classify text into categories, such as positive or negative sentiment, fully on-device.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/text_classifier.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Category</span><span class="chip">Score</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">BERT-classifier (recommended)</span><span class="chip">Average word embedding</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Average word embedding <em>0.8 MB</em></span><span class="chip sz">BERT-classifier <em>25.7 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/text_classifier.svg" alt="Text Classifier pipeline">
+            <div class="tk-stat pc green"><b>2</b><span>sentiment classes</span></div>
+          </div>
+        </div>
+        <aside class="notes">Text Classifier: จัดหมวดข้อความ เช่น บวก/ลบ (sentiment) • โมเดลแนะนำคือ BERT-classifier • ตัวอย่างใช้งาน: กรองรีวิว คอมเมนต์ หรือแชตลูกค้า • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Average word embedding 0.8 MB, BERT-classifier 25.7 MB</aside>
+      </section>
+
+      <section class="s-task" data-title="Text Embedder">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Text · 2 / 5</div><h2>Text Embedder</h2><p class="tk-desc">Turn text into semantic vectors and compare meaning with built-in cosine similarity.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/text_embedder.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Embedding vector</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">EmbeddingGemma 300M</span><span class="chip">Universal Sentence Encoder</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Universal Sentence Encoder <em>6.1 MB</em></span><span class="chip sz">EmbeddingGemma 300M <em>184 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/text_embedder.svg" alt="Text Embedder pipeline">
+            <div class="tk-stat pc green"><b>cos θ</b><span>built-in similarity</span></div>
+          </div>
+        </div>
+        <aside class="notes">Text Embedder: แปลงข้อความเป็นเวกเตอร์ แล้ววัดความหมายใกล้กันด้วย cosine similarity • ใช้ทำ semantic search หรือจับคู่คำถามที่คล้ายกัน • มีโมเดล EmbeddingGemma 300M และ Universal Sentence Encoder • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Universal Sentence Encoder 6.1 MB, EmbeddingGemma 300M 184 MB</aside>
+      </section>
+
+      <section class="s-task" data-title="Language Detector">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Text · 3 / 5</div><h2>Language Detector</h2><p class="tk-desc">Identify the language of any text, with a confidence score for each guess.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/language_detector.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">ISO 639-1 code</span><span class="chip">Probability</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Language Detector · 315 KB</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Language Detector <em>0.3 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/language_detector.svg" alt="Language Detector pipeline">
+            <div class="tk-stat pc green"><b>110+</b><span>languages</span></div>
+          </div>
+        </div>
+        <aside class="notes">Language Detector: บอกว่าข้อความเป็นภาษาอะไร รองรับกว่า 110 ภาษา พร้อมความมั่นใจ • โมเดลเล็กมากแค่ 315 KB • ใช้เลือกภาษาให้แอปหรือส่งต่อไปแปลอัตโนมัติ • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Language Detector 0.3 MB</aside>
+      </section>
+
+      <section class="s-task" data-title="Text Proofreader">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Text · 4 / 5</div><h2>Text Proofreader</h2><p class="tk-desc">Detect and fix grammar and spelling errors locally, with a breakdown of each edit.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/text_proofreader.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Corrected text</span><span class="chip">Granular edits</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Proofread 200M (Gemma terms)</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Proofread 200M <em>118 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/text_proofreader.svg" alt="Text Proofreader pipeline">
+            <div class="tk-stat pc green"><b>200M</b><span>parameter model</span><i>Android · iOS · Python · Flutter</i></div>
+          </div>
+        </div>
+        <aside class="notes">Text Proofreader: ตรวจและแก้คำผิด/ไวยากรณ์บนเครื่อง พร้อมบอกว่าแก้ตรงไหน • ใช้โมเดล Proofread 200M (ตามเงื่อนไข Gemma) • ยังไม่รองรับ Web มีบน Android, iOS, Python, Flutter • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Proofread 200M 118 MB</aside>
+      </section>
+
+      <section class="s-task" data-title="Text Summarizer">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Text · 5 / 5</div><h2>Text Summarizer</h2><p class="tk-desc">Summarize articles and notes into a short TL;DR or a list of key points.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/text_summarizer.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text string</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Summary text</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Summarization 200M (Gemma terms)</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Summarization 200M <em>118 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/text_summarizer.svg" alt="Text Summarizer pipeline">
+            <div class="tk-stat pc green"><b>2</b><span>modes: TLDR · KEYPOINTS</span><i>Android · iOS · Python · Flutter</i></div>
+          </div>
+        </div>
+        <aside class="notes">Text Summarizer: สรุปบทความหรือโน้ตเป็น TL;DR หรือ bullet points • โมเดล Summarization 200M รันบนเครื่อง • ยังไม่รองรับ Web • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Summarization 200M 118 MB</aside>
+      </section>
+
+      <!-- Section divider 2.2: Audio -->
+      <section class="bg-yellow" data-title="2.2 · Audio">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.2</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"/></svg></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:120px">Audio</h1>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่หมวด Audio มี 3 tasks</aside>
+      </section>
+
+      <!-- Audio: model sizes -->
+      <section class="bg-yellow s-cat" data-title="Audio tasks · model sizes">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.2</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M2 10v3M6 6v11M10 3v18M14 8v7M18 5v13M22 10v3"/></svg></div>
+        <div class="cat-side"><b>3 tasks</b><span>4.1 MB – 760 MB</span></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in cat-in">
+            <div class="eyebrow">What's inside · model sizes</div>
+            <h1 class="cat-h">Audio</h1>
+            <p class="cat-take">Sound classification is a 4 MB model; speech-to-text and TTS need 87–760 MB.</p>
+            <div class="szc szc-cat"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Audio Classifier<small>YamNet</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:34.32%; width:1.20%"></span></div><em>4.1 MB</em></div><div class="szc-row"><b>Audio Transcriber<small>Parakeet TDT 0.6B v3</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:80.63%; width:1.20%"></span></div><em>615 MB</em></div><div class="szc-row"><b>Text-to-Speech<small>Phonon · Kokoro · PocketTTS</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:62.56%; width:20.03%"></span></div><em>87 MB – 760 MB</em></div></div>
+          </div>
+        </div>
+        <aside class="notes">หมวด Audio มี 3 tasks • Audio Classifier ใช้ YamNet แค่ 4.1 MB • ส่วนถอดเสียง (Parakeet 615 MB) และสังเคราะห์เสียง (87–760 MB) ใหญ่กว่ามาก เหมาะกับแอปมือถือที่โหลดโมเดลเก็บไว้ในเครื่อง</aside>
+      </section>
+
+      <section class="s-task" data-title="Audio Classifier">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Audio · 1 / 3</div><h2>Audio Classifier</h2><p class="tk-desc">Classify everyday sound events from audio clips or a live microphone stream.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/audio_classifier.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Audio clip</span><span class="chip">Mic stream</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Category</span><span class="chip">Score</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">YamNet (recommended)</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">YamNet <em>4.1 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/audio_classifier.svg" alt="Audio Classifier pipeline">
+            <div class="tk-stat pc yellow"><b>521</b><span>sound classes</span></div>
+          </div>
+        </div>
+        <aside class="notes">Audio Classifier: จำแนกเสียงรอบตัวได้ 521 ประเภท เช่น เสียงดนตรี เสียงสุนัข เสียงไซเรน • ใช้โมเดล YamNet รับได้ทั้งไฟล์เสียงและไมค์สด • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: YamNet 4.1 MB</aside>
+      </section>
+
+      <section class="s-task" data-title="Audio Transcriber">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Audio · 2 / 3</div><h2>Audio Transcriber</h2><p class="tk-desc">Transcribe speech into punctuated, capitalized text — streaming while the user speaks.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/audio_transcriber.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Audio chunks</span><span class="chip">Audio clip</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Transcript segments</span><span class="chip">Timestamps</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Parakeet TDT 0.6B v3</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Parakeet TDT 0.6B v3 <em>615 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/audio_transcriber.svg" alt="Audio Transcriber pipeline">
+            <div class="tk-stat pc yellow"><b>0.6B</b><span>param speech model</span></div>
+          </div>
+        </div>
+        <aside class="notes">Audio Transcriber: แปลงเสียงพูดเป็นข้อความพร้อมเครื่องหมายวรรคตอน ถอดได้ทันทีระหว่างพูด (streaming) • โมเดล Parakeet TDT 0.6B v3 • ใช้ทำ caption หรือบันทึกประชุมแบบ offline • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Parakeet TDT 0.6B v3 615 MB</aside>
+      </section>
+
+      <section class="s-task" data-title="Text-to-Speech">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Audio · 3 / 3</div><h2>Text-to-Speech</h2><p class="tk-desc">Synthesize natural speech from text, streamed clause by clause for low latency.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/text_to_speech.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">PCM audio · 24 kHz</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Kokoro-82M</span><span class="chip">Pocket TTS</span><span class="chip">Phonon</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Phonon 31M <em>87 MB</em></span><span class="chip sz">PocketTTS EN <em>163 MB</em></span><span class="chip sz">Kokoro-82M <em>295 MB</em></span><span class="chip sz">PocketTTS <em>760 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/text_to_speech.svg" alt="Text-to-Speech pipeline">
+            <div class="tk-stat pc yellow"><b>24 kHz</b><span>streaming speech</span></div>
+          </div>
+        </div>
+        <aside class="notes">Text-to-Speech: สังเคราะห์เสียงพูดจากข้อความที่ 24 kHz แบบ streaming เริ่มเล่นได้ตั้งแต่ประโยคแรก • มีโมเดล Kokoro-82M, Pocket TTS, Phonon • ต่อกับ LLM ให้ตอบเป็นเสียงได้ • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Phonon 31M 87 MB, PocketTTS EN 163 MB, Kokoro-82M 295 MB, PocketTTS 760 MB</aside>
+      </section>
+
+      <!-- Section divider 2.3: Decision -->
+      <section class="bg-red" data-title="2.3 · Decision">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.3</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M6 3v12M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM18 9a9 9 0 0 1-9 9"/></svg></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:120px">Decision</h1>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่หมวด Decision มี 1 task</aside>
+      </section>
+
+      <!-- Decision: model sizes -->
+      <section class="bg-red s-cat" data-title="Decision tasks · model sizes">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.3</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M6 3v12M18 9a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM6 21a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM18 9a9 9 0 0 1-9 9"/></svg></div>
+        <div class="cat-side"><b>1 task</b><span>165 MB – 3.7 GB</span></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in cat-in">
+            <div class="eyebrow">What's inside · model sizes</div>
+            <h1 class="cat-h">Decision</h1>
+            <p class="cat-take">One task, many backends: pick 165 MB for speed or a multi-GB Gemma 4 for harder decisions.</p>
+            <div class="szc szc-cat"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>EmbeddingGemma 2<small>270M · text</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:68.47%; width:1.20%"></span></div><em>165 MB</em></div><div class="szc-row"><b>EmbeddingGemma 2<small>440M · text + image</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:76.37%; width:1.20%"></span></div><em>388 MB</em></div><div class="szc-row"><b>EmbeddingGemma 2<small>740M · text+image+audio</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:78.44%; width:1.20%"></span></div><em>485 MB</em></div><div class="szc-row"><b>Gemma 4 E2B<small>LLM backend</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:93.91%; width:1.20%"></span></div><em>2.6 GB</em></div><div class="szc-row"><b>Gemma 4 E4B<small>LLM backend</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:97.12%; width:1.20%"></span></div><em>3.7 GB</em></div></div>
+          </div>
+        </div>
+        <aside class="notes">หมวด Decision มี 1 task คือ Decision Maker แต่เลือกโมเดลได้หลายขนาด: EmbeddingGemma 2 ตั้งแต่ 165 MB (เร็ว) ไปจนถึง Gemma 4 E2B/E4B ระดับ 2.6–3.7 GB (ฉลาดกว่า) • เลือกตามความยากของงานและพื้นที่ในเครื่อง</aside>
+      </section>
+
+      <section class="s-task" data-title="Decision Maker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Decision · 1 / 1</div><h2>Decision Maker</h2><p class="tk-desc">Score choices, yes/no checks and rubrics in a single forward pass — no token decoding.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/decision_maker.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Context</span><span class="chip">Options / schema</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Winning key</span><span class="chip">Probabilities</span><span class="chip">Score</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">EmbeddingGemma 2 (270M–740M)</span><span class="chip">Gemma 4 E2B</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">EmbeddingGemma 2 · 270M <em>165 MB</em></span><span class="chip sz">440M <em>388 MB</em></span><span class="chip sz">740M <em>485 MB</em></span><span class="chip sz">Gemma 4 E2B <em>2.6 GB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/decision_maker.svg" alt="Decision Maker pipeline">
+            <div class="tk-stat pc "><b>1 pass</b><span>zero decoding</span></div>
+          </div>
+        </div>
+        <aside class="notes">Decision Maker: ให้คะแนนตัวเลือก ตอบ yes/no หรือให้คะแนนตาม rubric ในการคำนวณรอบเดียว ไม่ต้องสร้างข้อความ (zero decoding) จึงเร็วมาก • ใช้ EmbeddingGemma 2 หรือ Gemma 4 E2B • เหมาะกับ routing หรือ classification แบบ custom • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EmbeddingGemma 2 · 270M 165 MB, 440M 388 MB, 740M 485 MB, Gemma 4 E2B 2.6 GB</aside>
+      </section>
+
+      <!-- Section divider 2.4: Retrieval -->
+      <section class="bg-blue" data-title="2.4 · Retrieval">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.4</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.3-4.3"/></svg></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:120px">Retrieval</h1>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่หมวด Retrieval มี 2 tasks</aside>
+      </section>
+
+      <!-- Retrieval: model sizes -->
+      <section class="bg-blue s-cat" data-title="Retrieval tasks · model sizes">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.4</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM21 21l-4.3-4.3"/></svg></div>
+        <div class="cat-side"><b>2 tasks</b><span>165 MB – 485 MB</span></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in cat-in">
+            <div class="eyebrow">What's inside · model sizes</div>
+            <h1 class="cat-h">Retrieval</h1>
+            <p class="cat-take">Both tasks share EmbeddingGemma 2: 165 MB for text only, up to 485 MB for text + image + audio.</p>
+            <div class="szc szc-cat"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Semantic Retriever<small>EmbeddingGemma 2</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:68.47%; width:9.97%"></span></div><em>165 MB – 485 MB</em></div><div class="szc-row"><b>Universal Embedder<small>EmbeddingGemma 2</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:68.47%; width:9.97%"></span></div><em>165 MB – 485 MB</em></div></div>
+          </div>
+        </div>
+        <aside class="notes">หมวด Retrieval มี 2 tasks ใช้โมเดล EmbeddingGemma 2 ตัวเดียวกัน: 165 MB ถ้าค้นแค่ข้อความ, 388 MB ถ้ารวมรูป, 485 MB ถ้ารวมเสียง • ใช้ทำ RAG บนเครื่องโดยไม่ต้องมี server</aside>
+      </section>
+
+      <section class="s-task" data-title="Semantic Retriever">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Retrieval · 1 / 2</div><h2>Semantic Retriever</h2><p class="tk-desc">Index text, image and audio chunks and retrieve the right context for on-device RAG.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/semantic_retriever.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Documents</span><span class="chip">Query</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Ranked records</span><span class="chip">Similarity score</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">EmbeddingGemma V2</span><span class="chip">SQLite vector store</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">EmbeddingGemma 2 · 270M <em>165 MB</em></span><span class="chip sz">440M <em>388 MB</em></span><span class="chip sz">740M <em>485 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/semantic_retriever.svg" alt="Semantic Retriever pipeline">
+            <div class="tk-stat pc "><b>RAG</b><span>fully on-device</span></div>
+          </div>
+        </div>
+        <aside class="notes">Semantic Retriever: ทำ RAG บนเครื่อง: เก็บเอกสาร/รูป/เสียงเป็นเวกเตอร์ใน SQLite แล้วค้นหาบริบทที่เกี่ยวข้องส่งให้ LLM • ไม่ต้องมี server • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EmbeddingGemma 2 · 270M 165 MB, 440M 388 MB, 740M 485 MB</aside>
+      </section>
+
+      <section class="s-task" data-title="Universal Embedder">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Retrieval · 2 / 2</div><h2>Universal Embedder</h2><p class="tk-desc">Embed text, images and audio into one shared multimodal vector space.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/universal_embedder.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Text</span><span class="chip">Image</span><span class="chip">Audio</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Embedding vector</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">EmbeddingGemma V2 (Text / Vision / Audio)</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">EmbeddingGemma 2 · 270M <em>165 MB</em></span><span class="chip sz">440M <em>388 MB</em></span><span class="chip sz">740M <em>485 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/universal_embedder.svg" alt="Universal Embedder pipeline">
+            <div class="tk-stat pc "><b>3</b><span>modalities, one space</span></div>
+          </div>
+        </div>
+        <aside class="notes">Universal Embedder: แปลงข้อความ รูปภาพ และเสียงให้อยู่ในเวกเตอร์ชุดเดียวกัน จึงค้นรูปด้วยข้อความได้ • ใช้ EmbeddingGemma V2 • ทำงานคู่กับ Semantic Retriever • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EmbeddingGemma 2 · 270M 165 MB, 440M 388 MB, 740M 485 MB</aside>
+      </section>
+
+      <!-- Section divider 2.5: Vision -->
+      <section class="bg-blue" data-title="2.5 · Vision">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.5</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:120px">Vision</h1>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่หมวด Vision ซึ่งใหญ่ที่สุด มี 11 tasks</aside>
+      </section>
+
+      <!-- Vision: model sizes -->
+      <section class="bg-blue s-cat" data-title="Vision tasks · model sizes">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">2.5</div>
+        <div class="cat-ico"><svg viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></svg></div>
+        <div class="cat-side"><b>11 tasks</b><span>0.2 MB – 31 MB</span></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in cat-in">
+            <div class="eyebrow">What's inside · model sizes</div>
+            <h1 class="cat-h">Vision</h1>
+            <p class="cat-take">Every vision model is under 31 MB — small enough to load instantly in a web page.</p>
+            <div class="szc szc-cat szc-dense"><div class="szc-row szc-axis"><b></b><div class="szc-track"><span style="left:0.00%">100 KB</span><span style="left:21.28%">1 MB</span><span style="left:42.56%">10 MB</span><span style="left:63.84%">100 MB</span><span style="left:85.13%">1 GB</span></div><em></em></div><div class="szc-row"><b>Object Detector<small>EfficientDet · SSD</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:35.39%; width:14.92%"></span></div><em>4.6 MB – 23 MB</em></div><div class="szc-row"><b>Image Classifier<small>EfficientNet-Lite0/2</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:36.87%; width:13.90%"></span></div><em>5.4 MB – 24 MB</em></div><div class="szc-row"><b>Image Segmenter<small>Selfie · Hair · DeepLab</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:6.41%; width:40.73%"></span></div><em>0.2 MB – 16 MB</em></div><div class="szc-row"><b>Interactive Segmenter<small>MagicTouch</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:52.87%; width:1.20%"></span></div><em>30 MB</em></div><div class="szc-row"><b>Gesture Recognizer<small>bundle</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:40.95%; width:1.20%"></span></div><em>8.4 MB</em></div><div class="szc-row"><b>Hand Landmarker<small>bundle</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:40.27%; width:1.20%"></span></div><em>7.8 MB</em></div><div class="szc-row"><b>Face Detector<small>BlazeFace</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:6.41%; width:15.76%"></span></div><em>0.2 MB – 1.1 MB</em></div><div class="szc-row"><b>Face Landmarker<small>bundle</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:33.62%; width:1.20%"></span></div><em>3.8 MB</em></div><div class="szc-row"><b>Pose Landmarker<small>lite · full · heavy</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:37.53%; width:15.40%"></span></div><em>5.8 MB – 31 MB</em></div><div class="szc-row"><b>Holistic Landmarker<small>bundle</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:45.47%; width:1.20%"></span></div><em>14 MB</em></div><div class="szc-row"><b>Image Embedder<small>MobileNet-V3</small></b><div class="szc-track"><i style="left:0.00%"></i><i style="left:21.28%"></i><i style="left:42.56%"></i><i style="left:63.84%"></i><i style="left:85.13%"></i><span class="szc-bar" style="left:34.32%; width:9.04%"></span></div><em>4.1 MB – 11 MB</em></div></div>
+          </div>
+        </div>
+        <aside class="notes">หมวด Vision ใหญ่ที่สุด มี 11 tasks • จุดเด่นคือทุกโมเดลเล็กกว่า 31 MB บางตัวเล็กแค่ 0.2 MB (BlazeFace, Selfie Segmenter) จึงโหลดบนเว็บได้ทันทีและรัน real-time บนมือถือได้สบาย</aside>
+      </section>
+
+      <!-- Vision intro: tasks at a glance (official loops + platforms) -->
+      <section class="s-what" data-title="Vision tasks at a glance">
+        <div class="wp wp-main">
+          <div class="wp-head">
+            <span class="tag">Vision · 11 tasks</span>
+            <div class="lockups">
+              <span class="mp-lockup"><img src="images/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
+              <span class="edge-lockup"><img src="images/logos/google.svg" alt="Google">AI Edge</span>
+            </div>
+          </div>
+          <div class="tiles">
+            <figure><img src="images/mediapipe/loops/object_detector.webp" alt=""><figcaption>Object Detection</figcaption></figure>
+            <figure><img src="images/mediapipe/loops/image_classifier.webp" alt=""><figcaption>Image Classification</figcaption></figure>
+            <figure><img src="images/mediapipe/loops/gesture_recognizer.webp" alt=""><figcaption>Gesture Recognizer</figcaption></figure>
+            <figure><img src="images/mediapipe/loops/hand_landmarker.webp" alt=""><figcaption>Hand Landmarker</figcaption></figure>
+            <figure><img src="images/mediapipe/loops/pose_landmarker_v2.webp" alt=""><figcaption>Pose Landmarker</figcaption></figure>
+            <figure><img src="images/mediapipe/loops/image_segmenter.webp" alt=""><figcaption>Image Segmentation</figcaption></figure>
+            <figure><img src="images/mediapipe/loops/face_landmarker_v2.webp" alt=""><figcaption>Face Landmarker</figcaption></figure>
+            <figure><img src="images/mediapipe/loops/holistic_landmarker_v3.webp" alt=""><figcaption>Holistic Landmarker</figcaption></figure>
+          </div>
+        </div>
+        <aside class="notes">เปิดหมวด Vision ซึ่งใหญ่ที่สุด มี 11 tasks • ภาพเคลื่อนไหวคือผลลัพธ์จริงจากเว็บ MediaPipe: Object Detection, Image Classification, Gesture, Hand, Pose, Segmentation, Face และ Holistic • ทั้งหมดรันได้บน Android, Web, Python, iOS • หน้าถัดไปจะไล่ดูทีละ task</aside>
+      </section>
+
+      <section class="s-task" data-title="Object Detector">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 1 / 11</div><h2>Object Detector</h2><p class="tk-desc">Detect and label multiple objects with bounding boxes and confidence scores in real time.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/object_detector.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Category</span><span class="chip">Score</span><span class="chip">Bounding box</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">EfficientDet-Lite0 (rec.)</span><span class="chip">Lite2</span><span class="chip">SSD MobileNetV2</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Lite0 <em>4.6–13.8 MB</em></span><span class="chip sz">Lite2 <em>7.5–23 MB</em></span><span class="chip sz">SSD <em>5.9–11 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/object_detector.svg" alt="Object Detector pipeline">
+            <div class="tk-stat pc blue"><b>80</b><span>COCO object classes</span></div>
+          </div>
+        </div>
+        <aside class="notes">Object Detector: หาและระบุวัตถุหลายชิ้นในภาพพร้อมกรอบและคะแนน • โมเดลแนะนำ EfficientDet-Lite0 รู้จัก 80 ประเภท (COCO) • ใช้กับรูป วิดีโอ หรือกล้องสด • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EfficientDet-Lite0 4.6–13.8 MB, Lite2 7.5–23 MB, SSD MobileNetV2 5.9–11 MB</aside>
+      </section>
+
+      <!-- Live demo for Object Detector (real model on the official sample image) -->
+      <section data-state="trydemo" data-try="object" data-title="Live demo · Object Detector">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <img class="try-fallback" src="images/mediapipe/samples/pets.webp" alt="">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Object Detector</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Object Detector</h2>
+              <p class="try-what">Boxes + labels for every pet in the photo</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน Object Detector จริงบนรูปสัตว์เลี้ยง จะเห็นกรอบและชื่อวัตถุพร้อมความมั่นใจ (dog / cat) • ชี้เวลาที่ใช้เป็น ms และคำว่า on-device • ครั้งแรกต้องโหลดโมเดล 7 MB • ถ้าเน็ตช้า กด Run again ได้</aside>
+      </section>
+
+
+      <section class="s-task" data-title="Image Classifier">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 2 / 11</div><h2>Image Classifier</h2><p class="tk-desc">Classify a whole image or video frame into one of over a thousand categories.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/image_classifier.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Category</span><span class="chip">Score</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">EfficientNet-Lite0 (recommended)</span><span class="chip">EfficientNet-Lite2</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">EfficientNet-Lite0 <em>5.4–18.6 MB</em></span><span class="chip sz">Lite2 <em>7.2–24.3 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/image_classifier.svg" alt="Image Classifier pipeline">
+            <div class="tk-stat pc blue"><b>1,000+</b><span>categories</span></div>
+          </div>
+        </div>
+        <aside class="notes">Image Classifier: บอกว่าภาพทั้งภาพคืออะไร จาก 1,000+ ประเภท • โมเดล EfficientNet-Lite0/Lite2 • สอนเพิ่มด้วยข้อมูลเราเองผ่าน Model Maker ได้ • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EfficientNet-Lite0 5.4–18.6 MB, Lite2 7.2–24.3 MB</aside>
+      </section>
+
+      <!-- Live demo for Image Classifier (real model on the official sample image) -->
+      <section data-state="trydemo" data-try="classify" data-title="Live demo · Image Classifier">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <img class="try-fallback" src="images/mediapipe/samples/bird.webp" alt="">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Image Classifier</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Image Classifier</h2>
+              <p class="try-what">Top-4 categories for the whole image</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน Image Classifier บนรูปนก ได้ 4 อันดับชื่อพันธุ์นกพร้อมเปอร์เซ็นต์ • ต่างจาก Object Detector ตรงที่บอกว่าทั้งภาพคืออะไร ไม่ได้วาดกรอบ • ถ้าเน็ตช้า กด Run again ได้</aside>
+      </section>
+
+
+      <section class="s-task" data-title="Image Segmenter">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 3 / 11</div><h2>Image Segmenter</h2><p class="tk-desc">Segment people, hair, clothes and background at pixel resolution.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/image_segmenter.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Category mask</span><span class="chip">Confidence mask</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">SelfieSegmenter</span><span class="chip">HairSegmenter</span><span class="chip">SelfieMulticlass</span><span class="chip">DeepLab-v3</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Selfie <em>0.2 MB</em></span><span class="chip sz">Hair <em>0.8 MB</em></span><span class="chip sz">DeepLab-v3 <em>2.8 MB</em></span><span class="chip sz">SelfieMulticlass <em>16.4 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/image_segmenter.svg" alt="Image Segmenter pipeline">
+            <div class="tk-stat pc blue"><b>per-pixel</b><span>masks</span></div>
+          </div>
+        </div>
+        <aside class="notes">Image Segmenter: แยกคน ผม เสื้อผ้า และพื้นหลังได้ระดับพิกเซล • ใช้ทำเบลอหรือเปลี่ยนพื้นหลังแบบ Google Meet • มีหลายโมเดล เช่น SelfieSegmenter, HairSegmenter, DeepLab-v3 • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Selfie 0.2 MB, Hair 0.8 MB, DeepLab-v3 2.8 MB, SelfieMulticlass 16.4 MB</aside>
+      </section>
+
+      <!-- Live demo for Image Segmenter (real model on the official sample image) -->
+      <section data-state="trydemo" data-try="segment" data-title="Live demo · Image Segmenter">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <img class="try-fallback" src="images/mediapipe/samples/person.webp" alt="">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Image Segmenter</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Image Segmenter</h2>
+              <p class="try-what">Person mask tinted in Google blue</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน Selfie Segmenter แยกตัวคนออกจากพื้นหลังทีละพิกเซล (ระบายสีฟ้า) • นี่คือหลักการเดียวกับการเบลอพื้นหลังใน Google Meet • โมเดลแค่ 0.2 MB • ถ้าเน็ตช้า กด Run again ได้</aside>
+      </section>
+
+
+      <section class="s-task" data-title="Interactive Segmenter">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 4 / 11</div><h2>Interactive Segmenter</h2><p class="tk-desc">Cut out the object under a user&#x27;s tap or scribble with a precise mask.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/interactive_segmenter.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Point / scribble</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Confidence mask</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">MagicTouch (recommended)</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">MagicTouch <em>30.5 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/interactive_segmenter.svg" alt="Interactive Segmenter pipeline">
+            <div class="tk-stat pc blue"><b>1 tap</b><span>to cut out an object</span></div>
+          </div>
+        </div>
+        <aside class="notes">Interactive Segmenter: แตะหรือขีดบนวัตถุ แล้วระบบตัดวัตถุนั้นออกมาเป็น mask ให้ • โมเดล MagicTouch • ใช้ทำเครื่องมือแต่งรูปหรือ sticker • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: MagicTouch 30.5 MB</aside>
+      </section>
+
+      <section class="s-task" data-title="Gesture Recognizer">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 5 / 11</div><h2>Gesture Recognizer</h2><p class="tk-desc">Recognize hand gestures together with 21 hand landmarks in real time.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/gesture_recognizer.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Gesture</span><span class="chip">Handedness</span><span class="chip">Hand landmarks</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Hand landmark bundle</span><span class="chip">Gesture classifier (customizable)</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Gesture bundle <em>8.4 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/gesture_recognizer.svg" alt="Gesture Recognizer pipeline">
+            <div class="tk-stat pc blue"><b>7</b><span>built-in gestures</span></div>
+          </div>
+        </div>
+        <aside class="notes">Gesture Recognizer: จำท่ามือได้ 7 ท่ามาตรฐาน พร้อมจุดบนมือ 21 จุด • สอนท่ามือใหม่เองได้ด้วย Model Maker • เดี๋ยวจะได้เห็นใน Live demo • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Gesture bundle 8.4 MB</aside>
+      </section>
+
+      <!-- Live demo for Gesture Recognizer (real model on the official sample image) -->
+      <section data-state="trydemo" data-try="gesture" data-title="Live demo · Gesture Recognizer">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <img class="try-fallback" src="images/mediapipe/samples/thumb_up.webp" alt="">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Gesture Recognizer</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Gesture Recognizer</h2>
+              <p class="try-what">Gesture name + 21 hand landmarks</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน Gesture Recognizer บนรูปชูนิ้วโป้ง ได้ท่า Thumb_Up พร้อมจุดบนมือ 21 จุด • เดี๋ยวในช่วง 03 จะลองกับกล้องจริง • ถ้าเน็ตช้า กด Run again ได้</aside>
+      </section>
+
+
+      <section class="s-task" data-title="Hand Landmarker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 6 / 11</div><h2>Hand Landmarker</h2><p class="tk-desc">Locate 21 3D hand keypoints and left/right handedness for every hand in frame.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/hand_landmarker.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Handedness</span><span class="chip">Image landmarks</span><span class="chip">World landmarks</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Palm detection</span><span class="chip">Hand landmarks (full)</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Hand bundle <em>7.8 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/hand_landmarker.svg" alt="Hand Landmarker pipeline">
+            <div class="tk-stat pc blue"><b>21</b><span>3D landmarks per hand</span></div>
+          </div>
+        </div>
+        <aside class="notes">Hand Landmarker: หาจุดบนมือ 21 จุดแบบ 3D และบอกว่าเป็นมือซ้ายหรือขวา • ทำงาน 2 ขั้น: หาฝ่ามือก่อน แล้วจึงหาจุดบนมือ • ใช้ทำเกม การควบคุมด้วยมือ หรือภาษามือ • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Hand bundle 7.8 MB</aside>
+      </section>
+
+      <!-- Live demo for Hand Landmarker (real model on the official sample image) -->
+      <section data-state="trydemo" data-try="hands" data-title="Live demo · Hand Landmarker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <img class="try-fallback" src="images/mediapipe/samples/hands.webp" alt="">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Hand Landmarker</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Hand Landmarker</h2>
+              <p class="try-what">21 landmarks per hand + left / right</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน Hand Landmarker บนรูปสองมือ ได้จุด 21 จุดต่อมือ และบอกว่าเป็นมือซ้ายหรือขวา • สังเกตว่า Left/Right อ้างอิงมือของคนในภาพ ไม่ใช่มุมมองผู้ชม • ถ้าเน็ตช้า กด Run again ได้</aside>
+      </section>
+
+
+      <section class="s-task" data-title="Face Detector">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 7 / 11</div><h2>Face Detector</h2><p class="tk-desc">Find faces with bounding boxes and 6 facial keypoints — fast enough for any camera feed.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/face_detector_v2.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Bounding box</span><span class="chip">6 keypoints</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">BlazeFace short-range</span><span class="chip">BlazeFace full-range</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">BlazeFace short <em>0.2 MB</em></span><span class="chip sz">sparse <em>0.7 MB</em></span><span class="chip sz">full <em>1.1 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/face_detector.svg" alt="Face Detector pipeline">
+            <div class="tk-stat pc blue"><b>6</b><span>keypoints per face</span></div>
+          </div>
+        </div>
+        <aside class="notes">Face Detector: หาใบหน้าพร้อมกรอบและจุดสำคัญ 6 จุด เร็วมาก • โมเดล BlazeFace มีทั้งระยะใกล้และไกล • มักใช้เป็นขั้นแรกก่อนงานด้านใบหน้าอื่น ๆ • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: BlazeFace short 0.2 MB, sparse 0.7 MB, full 1.1 MB</aside>
+      </section>
+
+      <!-- Live demo for Face Detector (real model on the official sample image) -->
+      <section data-state="trydemo" data-try="facedet" data-title="Live demo · Face Detector">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <img class="try-fallback" src="images/mediapipe/samples/face_man.webp" alt="">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Face Detector</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Face Detector</h2>
+              <p class="try-what">Face box + 6 keypoints</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน Face Detector (BlazeFace 0.2 MB) ได้กรอบหน้าและจุดสำคัญ 6 จุด (ตา หู จมูก ปาก) • เร็วมาก มักใช้เป็นขั้นแรกก่อนงานด้านใบหน้าอื่น • ถ้าเน็ตช้า กด Run again ได้</aside>
+      </section>
+
+
+      <section class="s-task" data-title="Face Landmarker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 8 / 11</div><h2>Face Landmarker</h2><p class="tk-desc">Predict a dense 3D face mesh, expression blendshapes and head pose.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/face_landmarker_v2.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">478 landmarks</span><span class="chip">52 blendshapes</span><span class="chip">Transform matrix</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">BlazeFace</span><span class="chip">Face Mesh V2</span><span class="chip">Blendshape model</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Face bundle <em>3.8 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/face_landmarker.svg" alt="Face Landmarker pipeline">
+            <div class="tk-stat pc blue"><b>478</b><span>3D face points</span></div>
+          </div>
+        </div>
+        <aside class="notes">Face Landmarker: สร้าง face mesh 478 จุดแบบ 3D, ค่า blendshapes 52 ค่าสำหรับสีหน้า และทิศทางศีรษะ • ใช้ทำฟิลเตอร์ AR, avatar หรือวัดการกะพริบตา • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Face bundle 3.8 MB</aside>
+      </section>
+
+      <!-- Live demo for Face Landmarker (real model on the official sample image) -->
+      <section data-state="trydemo" data-try="face" data-title="Live demo · Face Landmarker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <img class="try-fallback" src="images/mediapipe/samples/face_man.webp" alt="">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Face Landmarker</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Face Landmarker</h2>
+              <p class="try-what">478-point 3D face mesh</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน Face Landmarker บนรูปเดียวกัน ได้ face mesh 478 จุด วาดเส้นตา ปาก และกรอบหน้า • เทียบกับ Face Detector หน้าก่อนจะเห็นว่าละเอียดกว่ามาก • ถ้าเน็ตช้า กด Run again ได้</aside>
+      </section>
+
+
+      <section class="s-task" data-title="Pose Landmarker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 9 / 11</div><h2>Pose Landmarker</h2><p class="tk-desc">Track full-body 3D pose landmarks, with an optional segmentation mask.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/pose_landmarker_v2.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Image landmarks</span><span class="chip">World landmarks</span><span class="chip">Mask (optional)</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Pose Landmarker lite</span><span class="chip">full</span><span class="chip">heavy</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">lite <em>5.8 MB</em></span><span class="chip sz">full <em>9.4 MB</em></span><span class="chip sz">heavy <em>30.7 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/pose_landmarker.svg" alt="Pose Landmarker pipeline">
+            <div class="tk-stat pc blue"><b>33</b><span>body landmarks</span></div>
+          </div>
+        </div>
+        <aside class="notes">Pose Landmarker: ติดตามท่าทางร่างกาย 33 จุดแบบ 3D และทำ mask ตัวคนได้ • มีโมเดล lite / full / heavy ให้เลือกตามความเร็วและความแม่นยำ • ใช้ทำแอปออกกำลังกายหรือนับท่า • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: lite 5.8 MB, full 9.4 MB, heavy 30.7 MB</aside>
+      </section>
+
+      <!-- Live demo for Pose Landmarker (real model on the official sample image) -->
+      <section data-state="trydemo" data-try="pose" data-title="Live demo · Pose Landmarker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-stage">
+              <img class="try-fallback" src="images/mediapipe/samples/pose.webp" alt="">
+              <canvas class="try-canvas"></canvas>
+              <span class="try-pill">Pose Landmarker</span>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Pose Landmarker</h2>
+              <p class="try-what">33 body landmarks + skeleton</p>
+              <ol class="try-results"><li>Runs when this slide opens</li></ol>
+              <div class="try-actions"><button class="copy try-run">Run again</button></div>
+              <span class="try-status">Model loads from storage.googleapis.com</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน Pose Landmarker (lite 5.8 MB) บนรูปท่าโยคะ ได้จุดร่างกาย 33 จุดพร้อมเส้นโครงกระดูก • ใช้ทำแอปนับท่าออกกำลังกายได้ (เดี๋ยวมี prompt ตัวอย่าง Squat Coach) • ถ้าเน็ตช้า กด Run again ได้</aside>
+      </section>
+
+
+      <section class="s-task" data-title="Holistic Landmarker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 10 / 11</div><h2>Holistic Landmarker</h2><p class="tk-desc">Track face, both hands and full-body pose together in a single pipeline.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/holistic_landmarker_v3.webp" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Face 478</span><span class="chip">Pose 33</span><span class="chip">Hands 2 × 21</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">Pose · Face · Hand models in one bundle</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">Holistic bundle <em>13.7 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/holistic_landmarker.svg" alt="Holistic Landmarker pipeline">
+            <div class="tk-stat pc blue"><b>543</b><span>landmarks per person</span></div>
+          </div>
+        </div>
+        <aside class="notes">Holistic Landmarker: รวมหน้า มือสองข้าง และท่าทางร่างกายไว้ใน pipeline เดียว ได้ landmarks รวม 543 จุดต่อคน (ตามไดอะแกรมทางการ) • ใช้ทำ motion capture หรือ avatar เต็มตัว • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: Holistic bundle 13.7 MB</aside>
+      </section>
+
+      <!-- Section divider 03 -->
+      <section class="bg-green" data-title="03 · From demo to code">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:1.8; fill:#fff"><use href="#i-globe"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">From demo<br>to code</h1>
+            <p class="sub" style="margin-top:28px">Studio, the Task API<br>and the code behind the demos</p>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่ช่วงที่ 3 • เห็น demo ไปแล้ว คราวนี้มาดูว่าเบื้องหลังทำงานยังไง: MediaPipe Studio, ขั้นตอน Model → Task API → Result และโค้ดจริงบนเว็บกับ Python ที่เขียนแค่ไม่กี่บรรทัด</aside>
+      </section>
+
+      <section class="s-task" data-title="Image Embedder">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in tk">
+            <div class="tk-head"><div class="eyebrow">Vision · 11 / 11</div><h2>Image Embedder</h2><p class="tk-desc">Extract feature vectors from images for visual similarity search.</p></div>
+            <figure class="tk-media"><img src="images/mediapipe/loops/image_embedder.svg" alt=""></figure>
+            <div class="tk-info">
+              <div class="tk-io"><b>Input</b><div class="chips"><span class="chip">Image</span><span class="chip">Video</span><span class="chip">Live camera</span></div></div>
+              <div class="tk-io"><b>Output</b><div class="chips"><span class="chip">Embedding vector</span></div></div>
+              <div class="tk-io"><b>Model</b><div class="chips"><span class="chip">MobileNet-V3 small</span><span class="chip">MobileNet-V3 large</span></div></div>
+              <div class="tk-io tk-size"><b>Size</b><div class="chips"><span class="chip sz">MobileNet-V3 small <em>4.1 MB</em></span><span class="chip sz">large <em>10.9 MB</em></span></div></div>
+            </div>
+            <img class="tk-diagram" src="images/mediapipe/diagrams/image_embedder.svg" alt="Image Embedder pipeline">
+            <div class="tk-stat pc blue"><b>cos θ</b><span>image similarity</span></div>
+          </div>
+        </div>
+        <aside class="notes">Image Embedder: แปลงรูปเป็นเวกเตอร์ แล้ววัดความคล้ายด้วย cosine similarity • ใช้ค้นหารูปที่คล้ายกัน หรือจับกลุ่มสินค้า • โมเดล MobileNet-V3 small/large • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: MobileNet-V3 small 4.1 MB, large 10.9 MB</aside>
+      </section>
+
+      <!-- 11. MediaPipe Studio -->
+      <section data-title="MediaPipe Studio">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:52px 56px">
+            <div class="eyebrow">No-code</div>
+            <h2 style="margin-bottom:34px">MediaPipe Studio</h2>
+            <div class="grid" style="grid-template-columns: 1fr 520px; gap:44px">
+              <div>
+                <ul class="bl">
+                  <li>Try every task right in the browser</li>
+                  <li>Test with your webcam or your own uploads</li>
+                  <li>Tune threshold, max results and delegate in real time</li>
+                  <li>Evaluate models before writing any code</li>
+                </ul>
+                <p class="mono" style="font-size:18px; margin-top:20px"><a href="https://mediapipe-studio.webapps.google.com/" target="_blank">mediapipe-studio.webapps.google.com</a></p>
+              </div>
+              <div class="placeholder" style="height:330px">Add a MediaPipe Studio screenshot<br>(e.g. Face Landmarker / Object Detection)</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">MediaPipe Studio = เว็บสำหรับลองทุก task โดยไม่ต้องเขียนโค้ด • ใช้กล้องหรืออัปโหลดรูปของเราเอง ปรับ threshold, จำนวนผลลัพธ์ และ delegate ได้ทันที • เหมาะสำหรับทดสอบโมเดลก่อนลงมือเขียนแอป</aside>
+      </section>
+
+      <!-- 7. How it works -->
+      <section data-title="From input to result in 3 steps">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:52px 56px">
+            <div class="eyebrow">How it works</div>
+            <h2 style="margin-bottom:56px">From input to result in 3 steps</h2>
+            <div class="flow">
+              <div class="pc blue node fragment"><b>1 · Model</b><code>.task</code> / <code>.tflite</code><p class="mono" style="font-size:16px; margin-top:8px">pre-trained or custom</p></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc yellow node fragment"><b>2 · Task API</b><code>createFromOptions()</code><p class="mono" style="font-size:16px; margin-top:8px">CPU / GPU delegate</p></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc green node fragment"><b>3 · Result</b>landmarks, boxes,<br>categories, masks</div>
+            </div>
+            <p class="fragment" style="margin-top:44px; font-size:22px; display:flex; gap:12px; align-items:center">Running mode <span class="tag">IMAGE</span><span class="tag">VIDEO</span><span class="tag">LIVE_STREAM</span></p>
+          </div>
+        </div>
+        <aside class="notes">สรุปวิธีใช้ทุก task ใน 3 ขั้น: (1) เลือกโมเดล .task หรือ .tflite (2) สร้าง task ด้วย createFromOptions() เลือก CPU หรือ GPU (3) ได้ผลลัพธ์เป็น landmarks, boxes, categories หรือ masks • Running mode มี 3 แบบ: IMAGE ภาพเดี่ยว, VIDEO ไฟล์วิดีโอ, LIVE_STREAM กล้องสด</aside>
+      </section>
+
+      <!-- 8. Code: Web -->
+      <section data-title="Hand Landmarker on the web">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 48px">
+            <div class="eyebrow">Code · Web</div>
+            <h2 style="margin-bottom:20px; font-size:40px">Hand Landmarker on the web</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <pre style="width:760px; flex:none"><code class="language-javascript" data-trim data-line-numbers="1-3|5-7|8-15|17-22">
+import {
+  FilesetResolver, HandLandmarker
+} from "@mediapipe/tasks-vision";
+
+const vision = await FilesetResolver.forVisionTasks(
+  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+);
+const handLandmarker = await HandLandmarker.createFromOptions(vision, {
+  baseOptions: {
+    modelAssetPath: "hand_landmarker.task",
+    delegate: "GPU",
+  },
+  runningMode: "VIDEO",
+  numHands: 2,
+});
+
+function loop() {
+  const result = handLandmarker.detectForVideo(video, performance.now());
+  // result.landmarks → 21 points per hand (x, y, z)
+  draw(result.landmarks);
+  requestAnimationFrame(loop);
+}
+              </code></pre>
+              <div style="display:grid; gap:14px; width:310px">
+                <div class="cmd">npm i @mediapipe/tasks-vision</div>
+                <ul class="bl" style="font-size:19px">
+                  <li>Load WASM runtime</li>
+                  <li>Create the task (GPU)</li>
+                  <li>Run per video frame</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">คลิกไล่ highlight โค้ดทีละส่วน: (1) import จาก @mediapipe/tasks-vision (2) โหลด WASM runtime (3) สร้าง HandLandmarker ใช้ GPU, โหมด VIDEO, 2 มือ (4) loop เรียก detectForVideo ทุกเฟรม ได้ 21 จุดต่อมือ • ย้ำว่าทั้งหมดไม่ถึง 25 บรรทัด และรันในเบราว์เซอร์ล้วน ๆ</aside>
+      </section>
+
+      <!-- 9. Code: Python -->
+      <section data-title="Object Detection with Python">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 48px">
+            <div class="eyebrow">Code · Python</div>
+            <h2 style="margin-bottom:20px; font-size:40px">Object Detection with Python</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <pre style="width:760px; flex:none"><code class="language-python" data-trim data-line-numbers="1-3|5-10|12-14|15-17">
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
+
+options = vision.ObjectDetectorOptions(
+    base_options=python.BaseOptions(
+        model_asset_path="efficientdet_lite0.tflite"),
+    score_threshold=0.5,
+)
+detector = vision.ObjectDetector.create_from_options(options)
+
+image = mp.Image.create_from_file("cat_and_dog.jpg")
+result = detector.detect(image)
+
+for det in result.detections:
+    cat = det.categories[0]
+    print(cat.category_name, round(cat.score, 2), det.bounding_box)
+              </code></pre>
+              <div style="display:grid; gap:14px; width:310px">
+                <div class="cmd">pip install mediapipe</div>
+                <ul class="bl" style="font-size:19px">
+                  <li>Same Tasks API as web &amp; mobile</li>
+                  <li>Runs on desktop &amp; Raspberry Pi</li>
+                  <li>Boxes + labels + scores</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เวอร์ชัน Python ใช้ API แบบเดียวกัน: (1) import (2) ตั้งค่าโมเดล EfficientDet-Lite0 และ score threshold (3) โหลดรูปแล้วเรียก detect (4) วนลูปพิมพ์ชื่อวัตถุ คะแนน และกรอบ • เหมาะกับงานบน desktop, server หรือ Raspberry Pi</aside>
+      </section>
+
+
+
+      <!-- Section divider 04 -->
+      <section class="bg-yellow" data-title="04 · Hands-on: Build with Google AI Studio">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Hands-on:<br>build it</h1>
+            <p class="sub" style="margin-top:28px">Create your own MediaPipe app<br>in Google AI Studio</p>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่ช่วงที่ 4 ช่วงลงมือทำ • ให้ทุกคนเปิด aistudio.google.com แล้วทำตามไปพร้อมกัน ไม่ต้องติดตั้งอะไร ใช้แค่เบราว์เซอร์และกล้อง</aside>
+      </section>
+
+      <!-- AI Studio 1: find MediaPipe apps in the Gallery -->
+      <section data-title="Explore MediaPipe apps in the AI Studio Gallery">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Google AI Studio · Gallery</div>
+            <h2 style="font-size:40px">Explore MediaPipe apps in the Gallery</h2>
+            <div class="as-left">
+              <img class="as-shot" src="images/aistudio-gallery-mediapipe.jpg" alt="AI Studio Gallery filtered to MediaPipe">
+              <a class="as-link" href="https://aistudio.google.com/apps?source=showcase&amp;showcaseTag=mediapipe" target="_blank">aistudio.google.com/apps → MediaPipe</a>
+            </div>
+            <ol class="as-steps">
+              <li><b>1</b><span>Open <strong>aistudio.google.com</strong><br>→ <strong>Build</strong> › <strong>Gallery</strong></span></li>
+              <li><b>2</b><span>Pick the <strong>MediaPipe</strong> category chip</span></li>
+              <li><b>3</b><span>Open an app and try it live with your camera</span></li>
+              <li><b>4</b><span><strong>Remix</strong> it into <strong>My apps</strong> and keep prompting to make it yours</span></li>
+            </ol>
+          </div>
+        </div>
+        <aside class="notes">เข้าสู่ช่วง Hands-on • ให้ทุกคนทำตามไปพร้อมกัน: (1) เปิด aistudio.google.com → Build → Gallery (2) กดหมวด MediaPipe (3) เปิดแอปสักตัวแล้วลองเล่นกับกล้อง (4) Remix เข้า My apps เพื่อดูโค้ดและ prompt ที่ใช้สร้าง แล้วสั่งแก้ต่อได้</aside>
+      </section>
+
+      <!-- AI Studio: build with the newest model, Gemini 4 Hydrogen -->
+      <section data-title="Build with Gemini 4 Hydrogen in AI Studio">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Google AI Studio · Build › New app</div>
+            <h2 style="font-size:40px">Build with the newest model: <span class="hy-word">Gemini 4 Hydrogen</span></h2>
+            <div class="hy-left">
+              <img class="as-shot" src="images/aistudio-build-hydrogen.jpg" alt="AI Studio Build page running Gemini 4 Hydrogen">
+              <a class="as-link" href="https://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-4-hydrogen/" target="_blank">blog.google · Introducing Gemini 4 Hydrogen</a>
+            </div>
+            <div class="hy-right">
+              <span class="hy-badge">HYDROGEN</span>
+              <ul class="bl hy-facts">
+                <li><strong>Fast &amp; cost-efficient</strong> — built for everyday coding and agentic workflows</li>
+                <li><strong>2.5× faster</strong> than Gemini 3.8 Flash at its default setting</li>
+                <li><strong>1M-token</strong> context window</li>
+                <li><strong>4 thinking levels:</strong> low · medium · high (default) · xhigh</li>
+              </ul>
+              <div class="hy-how"><b>How</b><span>Open <strong>Build › New app</strong> — the <strong>HYDROGEN</strong> badge shows the active model — then describe your MediaPipe app</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ใน AI Studio ตอนนี้ใช้โมเดลใหม่ล่าสุด Gemini 4 Hydrogen (เปิดตัว 12 พ.ย. 2026) ใช้ได้ทุก tier • จุดเด่น: เร็วและประหยัด เหมาะกับงานเขียนโค้ดและ agentic, เร็วกว่า Gemini 3.8 Flash 2.5 เท่า, context 1M tokens, มี thinking 4 ระดับ • วิธีใช้: Build → New app สังเกตป้าย HYDROGEN แล้วพิมพ์อธิบายแอปที่อยากได้</aside>
+      </section>
+
+      <!-- AI Studio 2: anatomy of a good MediaPipe app prompt -->
+      <section data-title="Prompt recipe: build a MediaPipe app">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Google AI Studio · Build › New app</div>
+            <h2 style="font-size:40px; margin-bottom:22px">Prompt recipe for a MediaPipe app</h2>
+            <div class="as-recipe">
+              <ul class="as-parts">
+                <li class="pc blue"><b>1 · Goal</b>What the app is for, in one line</li>
+                <li class="pc green"><b>2 · MediaPipe task</b>Name it exactly: Pose / Hand / Face Landmarker…</li>
+                <li class="pc yellow"><b>3 · Input</b>Webcam, uploaded photo or video</li>
+                <li class="pc red"><b>4 · Output &amp; UI</b>What to draw, count, show or play</li>
+                <li class="pc"><b>5 · Rules</b>On-device only, errors, mobile-friendly</li>
+              </ul>
+              <div class="as-prompt">
+                <div class="as-ph"><span>Example prompt · Pose Landmarker</span><button class="copy" data-copy="pr-squat">Copy prompt</button></div>
+                <pre class="as-text" id="pr-squat">Build a web app called "Squat Coach".
+Use MediaPipe Pose Landmarker (@mediapipe/tasks-vision) on my webcam, running fully in the browser.
+Draw the 33 body landmarks and skeleton over the video.
+Count squats: one rep = knee angle drops below 90° and comes back above 160°.
+Show the rep count and live knee angle in big text.
+After each rep, show "Good rep!" with a short animation.
+Add Start / Stop camera buttons and a friendly message if camera permission is denied.
+Keep all video on-device — never upload frames.</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">สูตรเขียน prompt 5 ส่วน: (1) Goal แอปทำอะไร (2) ระบุชื่อ MediaPipe task ให้ชัด (3) Input กล้อง/รูป/วิดีโอ (4) Output &amp; UI จะวาดอะไร นับอะไร แสดงอะไร (5) Rules เช่น on-device เท่านั้น จัดการ error • กด Copy prompt ตัวอย่าง Squat Coach ไปวางใน Build → New app แล้วให้ผู้ฟังลองสั่งแก้ต่อ เช่น 'make the skeleton thicker' หรือ 'add a 30-second timer'</aside>
+      </section>
+
+      <!-- AI Studio 3: more prompt ideas -->
+      <section data-title="More MediaPipe prompt ideas">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Google AI Studio · Try these prompts</div>
+            <h2 style="font-size:40px; margin-bottom:22px">More prompt ideas to remix</h2>
+            <div class="as-ideas">
+              <div class="pc blue as-idea"><div class="as-ih"><b>✋ Air Piano</b><span class="chip">Hand Landmarker</span><button class="copy" data-copy="pr-piano">Copy prompt</button></div>
+                <img class="as-mock" src="images/mockups/air-piano.svg" alt="Example: Air Piano app">
+                <p class="as-text" id="pr-piano">Build a web app that uses MediaPipe Hand Landmarker on my webcam. Draw 8 piano keys across the bottom of the screen; when a fingertip dips into a key, play that note and highlight the key. Show the hand skeleton over the video. Run fully in the browser.</p></div>
+              <div class="pc red as-idea"><div class="as-ih"><b>😎 AR Selfie Filter</b><span class="chip">Face Landmarker</span><button class="copy" data-copy="pr-filter">Copy prompt</button></div>
+                <img class="as-mock" src="images/mockups/ar-selfie.svg" alt="Example: AR Selfie Filter app">
+                <p class="as-text" id="pr-filter">Create a selfie filter app with MediaPipe Face Landmarker: place sunglasses and a party hat that follow my head in real time. Use the blendshapes so opening my mouth fires confetti. Add a button to capture and download a photo. Keep everything on-device.</p></div>
+              <div class="pc yellow as-idea"><div class="as-ih"><b>👍 Gesture Slideshow</b><span class="chip">Gesture Recognizer</span><button class="copy" data-copy="pr-slides">Copy prompt</button></div>
+                <img class="as-mock" src="images/mockups/gesture-slideshow.svg" alt="Example: Gesture Slideshow app">
+                <p class="as-text" id="pr-slides">Make a photo slideshow controlled by MediaPipe Gesture Recognizer on the webcam: Thumb_Up = next, Thumb_Down = previous, Open_Palm = pause, Victory = take a screenshot. Show the detected gesture and confidence in the corner.</p></div>
+              <div class="pc green as-idea"><div class="as-ih"><b>✨ Gemini Magic</b><span class="chip">Gesture Recognizer</span><button class="copy" data-copy="pr-gemini">Copy prompt</button></div>
+                <img class="as-mock" src="images/mockups/gemini-magic.svg" alt="Example: Gemini Magic app">
+                <p class="as-text" id="pr-gemini">Build a web app with MediaPipe Gesture Recognizer on my webcam. When I make a Closed_Fist and then open my hand to Open_Palm, burst a glowing four-point Gemini sparkle logo out of my palm: it grows, spins and fades with particle trails in blue, purple and pink. Use the hand landmarks to anchor the effect to the center of my palm so it follows my hand. Show the current gesture with its confidence and count how many sparkles I have launched. Run fully in the browser.</p></div>
+            </div>
+            <p class="as-tip"><b>Tip</b> Name the exact task, the input and what to draw — then keep iterating in chat.</p>
+          </div>
+        </div>
+        <aside class="notes">ให้ผู้ฟังเลือก 1 prompt ไปลองสร้าง: Air Piano (Hand), AR Selfie Filter (Face), Gesture Slideshow (Gesture), Gemini Magic (กำมือแล้วแบออก มีโลโก้ Gemini พุ่งออกมา) • ทุกการ์ดมีปุ่ม Copy prompt • Tip: ระบุชื่อ task, input และสิ่งที่จะวาดให้ชัด แล้วค่อยแก้ทีละเรื่องในแชต • ให้เวลาลงมือประมาณ 10–15 นาที แล้วเดินดูช่วย</aside>
+      </section>
+
+      <section data-title="Even more MediaPipe prompt ideas">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Google AI Studio · Try these prompts</div>
+            <h2 style="font-size:40px; margin-bottom:22px">Even more prompt ideas</h2>
+            <div class="as-ideas">
+              <div class="pc red as-idea"><div class="as-ih"><b>🎈 Balloon Blow</b><span class="chip">Face Landmarker</span><button class="copy" data-copy="pr-balloon">Copy prompt</button></div>
+                <img class="as-mock" src="images/mockups/balloon-blow.svg" alt="Example: Balloon Blow app">
+                <p class="as-text" id="pr-balloon">Make a balloon-blowing game with MediaPipe Face Landmarker on my webcam. Attach a balloon to my lips using the mouth landmarks. While I puff my cheeks (cheekPuff blendshape) or pucker my lips (mouthPucker), inflate the balloon; when I stop, it slowly deflates. If it grows past the dashed limit, pop it with a bang and confetti and add 1 to my score. Show a live meter of the blendshape value, the score, and a 30-second timer with a final score screen.</p></div>
+              <div class="pc blue as-idea"><div class="as-ih"><b>💇 Hair Color</b><span class="chip">Image Segmenter</span><button class="copy" data-copy="pr-hair">Copy prompt</button></div>
+                <img class="as-mock" src="images/mockups/hair-color.svg" alt="Example: Hair Color Try-On app">
+                <p class="as-text" id="pr-hair">Build a hair color try-on app with MediaPipe Image Segmenter using the selfie_multiclass_256x256 model on my webcam. Use the hair category mask to tint only my hair with the selected color, with soft edges and blending so the texture still looks natural. Add color swatches (pink, blue, purple, blonde, green), a rainbow gradient mode and an intensity slider. Add a draggable before/after split line and a button to save a photo. Keep everything on-device.</p></div>
+              <div class="pc green as-idea"><div class="as-ih"><b>🧘 Pose Match</b><span class="chip">Pose Landmarker</span><button class="copy" data-copy="pr-posematch">Copy prompt</button></div>
+                <img class="as-mock" src="images/mockups/pose-match.svg" alt="Example: Pose Match app">
+                <p class="as-text" id="pr-posematch">Create a Pose Match game with MediaPipe Pose Landmarker on my webcam. Show a dashed target pose outline (star, T-pose, tree, superhero, squat) and draw my live skeleton on top. Compute a match score from the joint angles of arms and legs; when I stay above 80% for 2 seconds, award points, play a sound and move to the next pose. Add a 60-second timer, a match-percentage bar and a final score screen.</p></div>
+              <div class="pc yellow as-idea"><div class="as-ih"><b>🔍 Scavenger Hunt</b><span class="chip">Object Detector</span><button class="copy" data-copy="pr-hunt">Copy prompt</button></div>
+                <img class="as-mock" src="images/mockups/scavenger-hunt.svg" alt="Example: Scavenger Hunt app">
+                <p class="as-text" id="pr-hunt">Make an object scavenger hunt with MediaPipe Object Detector (EfficientDet-Lite0) on my webcam. Pick random everyday COCO items such as cup, cell phone, book, bottle and scissors and show one as the current mission with an emoji. When I hold that object up to the camera with score above 0.6, draw its box, play a ding and give points, with a bonus for finding it fast. Show the next items in a side list, run a 90-second round and keep a top-5 leaderboard in localStorage.</p></div>
+            </div>
+            <p class="as-tip"><b>Tip</b> Long prompt? Scroll inside the box — Copy prompt grabs the whole thing.</p>
+          </div>
+        </div>
+        <aside class="notes">อีก 4 ไอเดียสำหรับคนที่อยากลองอย่างอื่น: Balloon Blow (Face — ป่องแก้มเป่าลูกโป่ง), Hair Color (Image Segmenter — ใช้ hair mask ของโมเดล multiclass เปลี่ยนสีผม), Pose Match (Pose — ทำท่าให้ตรงกรอบ), Scavenger Hunt (Object Detector — หาของรอบตัวมาโชว์กล้อง) • prompt ยาวเลื่อนดูในกล่องได้ ปุ่ม Copy ก๊อปทั้งหมด</aside>
+      </section>
+
+      <!-- Build challenge: rules & prizes -->
+      <section class="bg-yellow" data-title="Build Challenge · 15 minutes">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Hands-on · Build Challenge</div>
+            <h2 style="font-size:46px">Build a MediaPipe app in 15 minutes 🏆</h2>
+            <span class="ch-time">⏱ 15:00</span>
+            <div class="ch-grid">
+              <div class="pc blue"><h3>How to play</h3>
+                <ol>
+                  <li>Open <strong>aistudio.google.com</strong> › <strong>Build</strong></li>
+                  <li>Use at least <strong>1 MediaPipe task</strong> — camera, hands, face, pose…</li>
+                  <li>Prompt, test, iterate until the timer ends</li>
+                  <li>Hit <strong>Share</strong> and send us your app link</li>
+                </ol>
+              </div>
+              <div class="pc green"><h3>Judging</h3>
+                <div class="ch-crit"><span>💡 Creative idea</span><em>40%</em></div>
+                <div class="ch-crit"><span>🎉 Fun / wow demo</span><em>30%</em></div>
+                <div class="ch-crit"><span>🧠 Smart use of MediaPipe</span><em>30%</em></div>
+                <p style="font-size:17px; margin-top:auto">Top picks demo live on stage</p>
+              </div>
+              <div class="pc red"><h3>Prizes 🎁</h3>
+                <p class="ch-prize">Prizes for the<br>top 3 apps</p>
+                <p style="font-size:18px">Solo or pairs · any idea goes · no install needed, just a browser + camera</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ช่วงแข่งสร้างแอป 15 นาที • กติกา: เปิด AI Studio → Build ใช้ MediaPipe อย่างน้อย 1 task สั่งแก้ไปเรื่อย ๆ จนหมดเวลา แล้วกด Share ส่งลิงก์แอป • เกณฑ์: ไอเดียสร้างสรรค์ 40% สนุก/ว้าว 30% ใช้ MediaPipe ได้ฉลาด 30% • แจกของรางวัล 3 อันดับ ให้ผู้ชนะออกมาเดโมบนเวที • ทำคนเดียวหรือเป็นคู่ก็ได้ • ใช้ prompt จากหน้าก่อนเป็นจุดเริ่มต้นได้ • บอกช่องทางส่งลิงก์ (เช่น QR / ฟอร์ม / แชตกลุ่ม) ก่อนเริ่ม • ไปหน้าถัดไปแล้วกด Start เพื่อเริ่มจับเวลา</aside>
+      </section>
+
+      <!-- 14. Showcase -->
+      <section data-title="AI Studio × MediaPipe">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:52px 56px">
+            <div class="eyebrow">Showcase</div>
+            <h2 style="margin-bottom:34px">AI Studio × MediaPipe</h2>
+            <div class="grid" style="grid-template-columns: 520px 1fr; gap:44px">
+              <div class="placeholder" style="height:330px">Add a screenshot of your project<br>(campaign page / web app)</div>
+              <ul class="bl">
+                <li>Prototype the UI in <strong>Google AI Studio</strong></li>
+                <li>Add MediaPipe (e.g. Face / Gesture) so users play via the camera</li>
+                <li>Everything runs on the user's device — no images sent to a server</li>
+                <li>Deploy as a plain website and share the link</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Showcase: ตัวอย่างโปรเจกต์จริงที่สร้างด้วย AI Studio + MediaPipe • เล่า flow: prototype UI ใน AI Studio → ใส่ MediaPipe ให้ผู้ใช้เล่นผ่านกล้อง → ประมวลผลบนเครื่องผู้ใช้ทั้งหมด → deploy เป็นเว็บแล้วแชร์ลิงก์ได้ทันที • ชวนผู้ฟังแชร์แอปที่เพิ่งสร้าง</aside>
+      </section>
+
+      <!-- 15. Resources -->
+      <section data-title="Get started today">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:52px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:34px">Get started today</h2>
+            <div class="grid g2">
+              <div class="pc blue"><h3>Docs</h3><a class="mono" style="font-size:18px" href="https://ai.google.dev/edge/mediapipe/solutions/guide" target="_blank">ai.google.dev/edge/mediapipe</a></div>
+              <div class="pc red"><h3>Studio</h3><a class="mono" style="font-size:18px" href="https://mediapipe-studio.webapps.google.com/" target="_blank">mediapipe-studio.webapps.google.com</a></div>
+              <div class="pc yellow"><h3>Samples</h3><a class="mono" style="font-size:18px" href="https://github.com/google-ai-edge/mediapipe-samples" target="_blank">github.com/google-ai-edge/mediapipe-samples</a></div>
+              <div class="pc green"><h3>Source</h3><a class="mono" style="font-size:18px" href="https://github.com/google-ai-edge/mediapipe" target="_blank">github.com/google-ai-edge/mediapipe</a></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แหล่งเรียนรู้ต่อ: Docs ที่ ai.google.dev/edge/mediapipe, MediaPipe Studio, ตัวอย่างโค้ดใน mediapipe-samples และ source code บน GitHub • ให้เวลาผู้ฟังถ่ายรูปสไลด์นี้</aside>
+      </section>
+
+      <!-- 16. Thank you (template: statement slide, pastel red) -->
+      <section class="bg-red" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="images/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-red)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <svg class="ico abs" style="left:930px; top:240px; width:200px; height:200px; stroke-width:4"><use href="#i-star"/></svg>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณทุกคนครับ/ค่ะ • เปิดถาม-ตอบ • ชวนติดตามและติดต่อพูดคุยต่อหลังงาน และขอบคุณทีม GDG Cloud Bangkok และ DevFest Bangkok 2026</aside>
+      </section>
+
+      <!-- Appendix divider -->
+      <section data-title="Appendix">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">A</div>
+        <div class="div-logo"><img src="images/logos/mediapipe-icon.svg" alt="MediaPipe"></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:120px">Appendix</h1>
+          </div>
+        </div>
+        <aside class="notes">ภาคผนวก: Model Maker และ LLM Inference API สำหรับเปิดดูเพิ่มเติมหรือตอบคำถาม</aside>
+      </section>
+      <!-- 12. Model Maker -->
+      <section data-title="Model Maker — train on your own data">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Customize</div>
+            <h2 style="margin-bottom:26px">Model Maker — train on your own data</h2>
+            <div class="grid g3">
+              <div class="pc blue fragment"><h3>1 · Prepare data</h3>A few hundred images or texts per class is enough to start</div>
+              <div class="pc yellow fragment"><h3>2 · Transfer learning</h3>Retrain only the last layers — quick on Colab</div>
+              <div class="pc green fragment"><h3>3 · Export</h3>Get a <code>.tflite</code> that plugs straight into the Tasks API</div>
+            </div>
+            <pre class="fragment" style="margin-top:20px; width:740px"><code class="language-python" data-trim>
+from mediapipe_model_maker import image_classifier
+data = image_classifier.Dataset.from_folder("dataset/")
+train, rest = data.split(0.8)
+model = image_classifier.ImageClassifier.create(
+    train_data=train, validation_data=rest,
+    options=image_classifier.ImageClassifierOptions(
+        supported_model=image_classifier.SupportedModels.MOBILENET_V2))
+model.export_model()
+            </code></pre>
+          </div>
+        </div>
+        <aside class="notes">ถ้าโมเดลสำเร็จรูปยังไม่ตรงงาน ใช้ Model Maker สอนเพิ่มด้วยข้อมูลของเรา คลิกทีละขั้น: (1) เตรียมข้อมูล ไม่กี่ร้อยตัวอย่างต่อ class ก็เริ่มได้ (2) Transfer learning เทรนแค่ layer ท้าย ใช้ Colab ได้เร็ว (3) Export เป็น .tflite แล้วใช้กับ Tasks API ได้เลย • ตัวอย่างโค้ดไม่ถึง 10 บรรทัด</aside>
+      </section>
+      <!-- 13. LLM on device -->
+      <section data-title="LLM Inference API — Gemma on device">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <span class="tag red">GenAI</span>
+            <h2 style="margin:18px 0 30px">LLM Inference API — Gemma on device</h2>
+            <div class="grid" style="grid-template-columns: 1fr 560px; gap:40px; align-items:start">
+              <ul class="bl">
+                <li>Run Gemma and other open models on Android, iOS, Web</li>
+                <li>Streaming responses</li>
+                <li>LoRA support for task-specific tuning</li>
+                <li>WebGPU acceleration on the web</li>
+              </ul>
+              <pre><code class="language-javascript" data-trim>
+import { FilesetResolver, LlmInference }
+  from "@mediapipe/tasks-genai";
+
+const genai = await FilesetResolver.forGenAiTasks(WASM_URL);
+const llm = await LlmInference.createFromOptions(genai, {
+  baseOptions: { modelAssetPath: "gemma.task" },
+  maxTokens: 512,
+});
+const answer = await llm.generateResponse(
+  "Explain MediaPipe in one sentence"
+);
+              </code></pre>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รัน LLM บนเครื่องด้วย LLM Inference API: รองรับ Gemma และโมเดลเปิดอื่น ๆ บน Android, iOS, Web • มี streaming และ LoRA สำหรับปรับแต่งเฉพาะงาน บนเว็บใช้ WebGPU เร่งความเร็ว • ชี้โค้ด: โหลด gemma.task แล้วเรียก generateResponse ได้เลย</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <!-- DevFest template shapes: notched/scalloped cards + GDG lockup on every slide -->
+  <script>
+    (function () {
+      const NS = "http://www.w3.org/2000/svg", S = 3, o = S / 2;
+      function cardPath(W, H, el) {
+        const r = +(el.dataset.r || 34);
+        const [a, b] = (el.dataset.tl || "0x0").split("x").map(Number);
+        const [c, d] = (el.dataset.br || "0x0").split("x").map(Number);
+        const n = +(el.dataset.scallop || 0);
+        const L = o, T = o, R = W - o, B = H - o, P = [];
+        if (n) P.push(`M${L},${T}`); else if (a && b) P.push(`M${L + a + r},${T}`); else P.push(`M${L + r},${T}`);
+        P.push(`H${R - r}`, `A${r},${r} 0 0 1 ${R},${T + r}`);
+        if (c && d) P.push(`V${B - d - r}`, `A${r},${r} 0 0 1 ${R - r},${B - d}`, `H${R - c + r}`, `A${r},${r} 0 0 0 ${R - c},${B - d + r}`, `V${B - r}`, `A${r},${r} 0 0 1 ${R - c - r},${B}`);
+        else P.push(`V${B - r}`, `A${r},${r} 0 0 1 ${R - r},${B}`);
+        if (n) { // scalloped left edge (statement slides)
+          P.push(`H${L}`); const h = (B - T) / n;
+          for (let i = 0; i < n; i++) P.push(`A${h / 2},${h / 2} 0 0 1 ${L},${B - h * (i + 1)}`);
+        } else {
+          P.push(`H${L + r}`, `A${r},${r} 0 0 1 ${L},${B - r}`);
+          if (a && b) P.push(`V${T + b + r}`, `A${r},${r} 0 0 1 ${L + r},${T + b}`, `H${L + a - r}`, `A${r},${r} 0 0 0 ${L + a},${T + b - r}`, `V${T + r}`, `A${r},${r} 0 0 1 ${L + a + r},${T}`);
+          else P.push(`V${T + r}`, `A${r},${r} 0 0 1 ${L + r},${T}`);
+        }
+        return P.join(" ") + " Z";
+      }
+      document.querySelectorAll(".reveal .nc").forEach((el) => {
+        const cs = getComputedStyle(el), W = parseFloat(cs.width), H = parseFloat(cs.height);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "nc-s"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+        svg.setAttribute("width", W); svg.setAttribute("height", H);
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", cardPath(W, H, el));
+        p.setAttribute("fill", el.dataset.fill || "#fff"); p.setAttribute("stroke", "#1e1e1e"); p.setAttribute("stroke-width", S);
+        svg.appendChild(p); el.prepend(svg);
+      });
+      document.querySelectorAll(".reveal .slides section:not([data-corner=off])").forEach((s) => {
+        s.insertAdjacentHTML("beforeend", '<div class="corner-logos"><img src="images/logos/build-with-gemini-light.png" alt="Build with Gemini"><img src="images/logos/devfest-gdg-lockup-light.png" alt="DevFest · Google Developer Groups"></div>');
+      });
+    })();
+  </script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      controls: false,     // replaced by the shopio-style #ctrl bar
+      overview: false,     // replaced by the scrollable #ov grid
+      progress: false,
+      slideNumber: "c/t",
+      showSlideNumber: "print", // page numbers only in exported PDF
+      transition: "fade",
+      backgroundTransition: "fade",
+      width: 1280,
+      height: 720,
+      margin: 0,
+      center: false,       // slides are absolutely laid out 1280×720 canvases
+      plugins: [RevealHighlight, RevealNotes],
+      // export: one page per slide, all fragments shown
+      view: /[?&]print-pdf\b/.test(location.search) ? "print" : null,
+      pdfSeparateFragments: false,
+      pdfMaxPagesPerSlide: 1,
+    });
+  </script>
+
+  <!-- Export PDF: All slides / This slide -->
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const isPrint = params.has("print-pdf");
+
+      if (isPrint) {
+        // ---- print view (opened in a new tab by the menu) ----
+        const only = params.get("slide");
+        Reveal.on("pdf-ready", async () => {
+          if (only !== null) {
+            const target = Reveal.getSlides()[+only]?.closest(".pdf-page");
+            if (target) document.querySelectorAll(".reveal .slides .pdf-page").forEach((p) => { if (p !== target) p.remove(); });
+            document.title = `MediaPipe – slide ${+only + 1}`;
+          } else {
+            document.title = "MediaPipe – all slides";
+          }
+          if (!params.has("autoprint")) return;
+          await document.fonts.ready;
+          addEventListener("afterprint", () => window.close());
+          setTimeout(() => window.print(), 300);
+        });
+        return;
+      }
+
+      // ---- normal view: shopio-style control bar ----
+      const $ = (id) => document.getElementById(id);
+      const slides = Reveal.getSlides(), N = slides.length;
+      const idx = () => slides.indexOf(Reveal.getCurrentSlide());
+      const cnt = $("cnt"), prog = $("progress"), list = $("menu"), xMenu = $("exportMenu"), bPdf = $("bPdf"), bNotes = $("bNotes");
+      const titleOf = (s, i) => s.dataset.title || s.querySelector("h1,h2")?.textContent.trim() || `Slide ${i + 1}`;
+
+      // slide list (click the counter)
+      list.innerHTML = slides.map((s, i) => `<a href="#" data-i="${i}"><span>${i + 1}</span>${titleOf(s, i).replace(/</g, "&lt;")}</a>`).join("");
+      function sync() {
+        const i = idx();
+        cnt.textContent = `${i + 1} / ${N}`;
+        prog.style.width = (N > 1 ? (i / (N - 1)) * 100 : 100) + "%";
+        list.querySelectorAll("a").forEach((a, k) => a.classList.toggle("cur", k === i));
+      }
+      Reveal.on("ready", sync); Reveal.on("slidechanged", sync); sync();
+
+      const menus = [list, xMenu];
+      function openOnly(m) {
+        const willOpen = m && !m.classList.contains("open");
+        menus.forEach((x) => x.classList.remove("open"));
+        if (willOpen) { m.classList.add("open"); wake(); }
+        bPdf.setAttribute("aria-expanded", xMenu.classList.contains("open"));
+        if (list.classList.contains("open")) list.querySelector("a.cur")?.scrollIntoView({ block: "center" });
+        if (xMenu.classList.contains("open")) $("exportCur").textContent = `PDF of slide ${idx() + 1} / ${N}`;
+      }
+
+      $("bPrev").onclick = () => Reveal.prev();
+      $("bNext").onclick = () => Reveal.next();
+      cnt.onclick = (e) => { e.stopPropagation(); openOnly(list); };
+      list.onclick = (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); Reveal.slide(+a.dataset.i); openOnly(null); };
+      // all-slides overview: clone each slide into a scaled 1280×720 thumbnail
+      const ov = $("ov"), ovg = ov.querySelector(".ovg");
+      function buildOv() {
+        const cur = idx();
+        ovg.innerHTML = "";
+        slides.forEach((s, i) => {
+          const t = document.createElement("div");
+          t.className = "ovt" + (i === cur ? " cur" : ""); t.dataset.i = i;
+          const fr = document.createElement("div"); fr.className = "fr";
+          const rv = document.createElement("div"); rv.className = "reveal";
+          const sl = document.createElement("div"); sl.className = "slides";
+          const c = s.cloneNode(true);
+          c.removeAttribute("hidden"); c.removeAttribute("aria-hidden");
+          c.classList.remove("past", "future"); c.classList.add("present");
+          c.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+          c.querySelectorAll("video").forEach((v) => v.remove());
+          c.querySelectorAll("aside.notes").forEach((n) => n.remove());
+          sl.appendChild(c); rv.appendChild(sl); fr.appendChild(rv);
+          const cap = document.createElement("div"); cap.className = "cap";
+          cap.innerHTML = `<span>${i + 1}</span>`; cap.append(titleOf(s, i));
+          t.append(fr, cap); ovg.appendChild(t);
+          // reveal only vertically-centres slides near the current one; centre every clone here
+          c.style.top = "0px";
+          c.style.top = Math.max((720 - c.offsetHeight) / 2, 0) + "px";
+        });
+        sizeOv();
+      }
+      function sizeOv() { ovg.querySelectorAll(".fr").forEach((fr) => { fr.firstChild.style.transform = `scale(${fr.clientWidth / 1280})`; }); }
+      const ovOpen = () => ov.classList.contains("open");
+      function toggleOv(force) {
+        const open = force ?? !ovOpen();
+        openOnly(null);
+        ov.classList.toggle("open", open);
+        $("bOv").classList.toggle("on", open);
+        if (open) { buildOv(); ovg.querySelector(".cur")?.scrollIntoView({ block: "center" }); }
+        else ovg.innerHTML = "";
+      }
+      $("bOv").onclick = () => toggleOv();
+      $("ovX").onclick = () => toggleOv(false);
+      ovg.onclick = (e) => { const t = e.target.closest(".ovt"); if (!t) return; Reveal.slide(+t.dataset.i); toggleOv(false); };
+      addEventListener("resize", () => { if (ovOpen()) sizeOv(); });
+      const toggleFs = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+      $("bFs").onclick = toggleFs;
+
+      // speaker notes → reveal's presenter window (current + next slide, timer, notes)
+      const notes = () => Reveal.getPlugin("notes");
+      bNotes.onclick = () => notes()?.open();
+
+      // export
+      function exportPdf(mode) {
+        const q = new URLSearchParams({ "print-pdf": "", autoprint: "" });
+        if (mode === "slide") q.set("slide", idx());
+        const url = location.pathname + "?" + q.toString().replace(/=(&|$)/g, "$1");
+        if (!window.open(url, "_blank")) location.href = url; // popup blocked → same tab
+        openOnly(null);
+      }
+      bPdf.onclick = (e) => { e.stopPropagation(); openOnly(xMenu); };
+      xMenu.onclick = (e) => { const b = e.target.closest("[data-export]"); if (b) exportPdf(b.dataset.export); };
+
+      // close menus on outside click; click on the slide = next (like shopio)
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("#ctrl,#menu,#exportMenu,#ov")) return;
+        const wasOpen = menus.some((m) => m.classList.contains("open"));
+        openOnly(null);
+        if (wasOpen) return;
+        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,video,canvas,pre,.demo-wrap")) return;
+        if (String(getSelection?.() || "").length) return;
+        Reveal.next();
+      }, true); // capture: read isOverview() before reveal handles the overview click
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menus.some((m) => m.classList.contains("open"))) { openOnly(null); e.stopPropagation(); e.preventDefault(); return; }
+        if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+        if (e.key === "o" || e.key === "O") { e.preventDefault(); e.stopPropagation(); toggleOv(); return; }
+        if (ovOpen()) { // overview owns the keyboard: Esc closes, arrows/space scroll the grid instead of changing slides
+          e.stopPropagation();
+          if (e.key === "Escape") { e.preventDefault(); toggleOv(false); }
+          return;
+        }
+        if (e.key === "e" || e.key === "E") { e.preventDefault(); e.stopPropagation(); exportPdf(e.shiftKey ? "all" : "slide"); }
+        else if (e.key === "n" || e.key === "N") { e.preventDefault(); e.stopPropagation(); notes()?.open(); }
+      }, true);
+
+      // hide the bar when the mouse is idle
+      let idle;
+      const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => { if (!menus.some((m) => m.classList.contains("open"))) document.body.classList.add("idle"); }, 2500); };
+      addEventListener("mousemove", wake); wake();
+    })();
+  </script>
+
+  <!-- Try it: run real MediaPipe Tasks on the official demo sample images -->
+  <script src="images/mediapipe/samples/samples.js"></script>
+  <script type="module">
+    // Live demos: every <section data-try="…"> runs that MediaPipe task on its sample image when the slide opens.
+    const TASKS = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
+    const M = "https://storage.googleapis.com/mediapipe-models";
+    const SAMPLES = window.MP_SAMPLES || {};
+    const SAMPLE_KEY = { facedet: "face" };
+    const LABEL = { object: "Object Detector", classify: "Image Classifier", pose: "Pose Landmarker", hands: "Hand Landmarker", face: "Face Landmarker", facedet: "Face Detector", gesture: "Gesture Recognizer", segment: "Image Segmenter" };
+    if (!/[?&]print-pdf\b/.test(location.search)) {
+      let mod, fileset; const cache = {}, imgs = {}, done = new WeakSet();
+      const pct = (x) => (x * 100).toFixed(0) + "%";
+      async function base(status) {
+        if (mod) return;
+        status.textContent = "Loading MediaPipe runtime…";
+        mod = await import(`${TASKS}/vision_bundle.mjs`);
+        fileset = await mod.FilesetResolver.forVisionTasks(`${TASKS}/wasm`);
+      }
+      const opts = (path, extra = {}) => ({ baseOptions: { modelAssetPath: `${M}/${path}`, delegate: "GPU" }, runningMode: "IMAGE", ...extra });
+      const MAKERS = {
+        object:   () => mod.ObjectDetector.createFromOptions(fileset, opts("object_detector/efficientdet_lite0/float16/1/efficientdet_lite0.tflite", { scoreThreshold: 0.35, maxResults: 6 })),
+        classify: () => mod.ImageClassifier.createFromOptions(fileset, opts("image_classifier/efficientnet_lite0/float32/1/efficientnet_lite0.tflite", { maxResults: 4 })),
+        pose:     () => mod.PoseLandmarker.createFromOptions(fileset, opts("pose_landmarker/pose_landmarker_lite/float16/latest/pose_landmarker_lite.task", { numPoses: 2 })),
+        hands:    () => mod.HandLandmarker.createFromOptions(fileset, opts("hand_landmarker/hand_landmarker/float16/latest/hand_landmarker.task", { numHands: 2 })),
+        face:     () => mod.FaceLandmarker.createFromOptions(fileset, opts("face_landmarker/face_landmarker/float16/latest/face_landmarker.task", { numFaces: 1 })),
+        facedet:  () => mod.FaceDetector.createFromOptions(fileset, opts("face_detector/blaze_face_short_range/float16/latest/blaze_face_short_range.tflite")),
+        gesture:  () => mod.GestureRecognizer.createFromOptions(fileset, opts("gesture_recognizer/gesture_recognizer/float16/latest/gesture_recognizer.task", { numHands: 2 })),
+        segment:  () => mod.ImageSegmenter.createFromOptions(fileset, opts("image_segmenter/selfie_segmenter/float16/latest/selfie_segmenter.tflite", { outputConfidenceMasks: true, outputCategoryMask: false })),
+      };
+      const image = (k) => imgs[k] ??= new Promise((res, rej) => { const im = new Image(); im.onload = () => res(im); im.onerror = rej; im.src = SAMPLES[SAMPLE_KEY[k] || k] || ""; });
+
+      async function run(sec) {
+        const task = sec.dataset.try, canvas = sec.querySelector(".try-canvas"), ctx = canvas.getContext("2d");
+        const out = sec.querySelector(".try-results"), status = sec.querySelector(".try-status"), btn = sec.querySelector(".try-run");
+        const list = (rows) => (out.innerHTML = rows.map(([a, b]) => `<li><b>${a}</b><span>${b ?? ""}</span></li>`).join(""));
+        if (btn) btn.disabled = true;
+        try {
+          await base(status);
+          const im = await image(task), draw = new mod.DrawingUtils(ctx);
+          canvas.width = im.naturalWidth; canvas.height = im.naturalHeight; ctx.drawImage(im, 0, 0);
+          const lm = (pts, conn, color) => { draw.drawConnectors(pts, conn, { color, lineWidth: Math.max(2, canvas.width / 260) }); draw.drawLandmarks(pts, { color: "#fff", fillColor: color, lineWidth: 1, radius: Math.max(2, canvas.width / 220) }); };
+          if (!cache[task]) { status.textContent = `Downloading ${LABEL[task]} model…`; cache[task] = await MAKERS[task](); }
+          status.textContent = "Running…";
+          const t0 = performance.now(), tk = cache[task]; let rows = [];
+          const boxes = (dets) => {
+            ctx.lineWidth = Math.max(3, canvas.width / 200); ctx.font = `500 ${Math.round(canvas.width / 34)}px "Google Sans", sans-serif`;
+            dets.forEach((d, i) => {
+              const b = d.boundingBox, c = d.categories[0] || { categoryName: "face", score: 0 }, col = ["#4285f4", "#ea4335", "#fbbc04", "#34a853"][i % 4];
+              const name = c.categoryName || "face";
+              ctx.strokeStyle = col; ctx.strokeRect(b.originX, b.originY, b.width, b.height);
+              const label = `${name} ${pct(c.score)}`, tw = ctx.measureText(label).width + 16, th = canvas.width / 24;
+              ctx.fillStyle = col; ctx.fillRect(b.originX, Math.max(0, b.originY - th), tw, th);
+              ctx.fillStyle = "#fff"; ctx.fillText(label, b.originX + 8, Math.max(th, b.originY) - th * 0.28);
+              rows.push([name, pct(c.score)]);
+            });
+          };
+          if (task === "object") boxes(tk.detect(im).detections);
+          else if (task === "facedet") {
+            const r = tk.detect(im); boxes(r.detections);
+            ctx.fillStyle = "#fbbc04";
+            r.detections.forEach((d) => d.keypoints.forEach((k) => { ctx.beginPath(); ctx.arc(k.x * canvas.width, k.y * canvas.height, Math.max(4, canvas.width / 90), 0, 7); ctx.fill(); }));
+            rows.push(["keypoints / face", r.detections[0]?.keypoints.length ?? 0]);
+          } else if (task === "classify") rows = tk.classify(im).classifications[0].categories.map((c) => [c.categoryName, pct(c.score)]);
+          else if (task === "pose") { const r = tk.detect(im); r.landmarks.forEach((pt) => lm(pt, mod.PoseLandmarker.POSE_CONNECTIONS, "#34a853")); rows = [["people", r.landmarks.length], ["landmarks / person", 33]]; }
+          else if (task === "hands") { const r = tk.detect(im); r.landmarks.forEach((pt) => lm(pt, mod.HandLandmarker.HAND_CONNECTIONS, "#4285f4")); rows = r.handedness.map((h, i) => [`hand ${i + 1}: ${h[0].categoryName}`, pct(h[0].score)]); rows.push(["landmarks / hand", 21]); }
+          else if (task === "face") {
+            const r = tk.detect(im), F = mod.FaceLandmarker;
+            r.faceLandmarks.forEach((pt) => {
+              draw.drawConnectors(pt, F.FACE_LANDMARKS_TESSELATION, { color: "rgba(255,255,255,.55)", lineWidth: 1 });
+              draw.drawConnectors(pt, F.FACE_LANDMARKS_FACE_OVAL, { color: "#fbbc04", lineWidth: 3 });
+              draw.drawConnectors(pt, F.FACE_LANDMARKS_LIPS, { color: "#ea4335", lineWidth: 3 });
+              draw.drawConnectors(pt, F.FACE_LANDMARKS_LEFT_EYE, { color: "#4285f4", lineWidth: 3 });
+              draw.drawConnectors(pt, F.FACE_LANDMARKS_RIGHT_EYE, { color: "#4285f4", lineWidth: 3 });
+            });
+            rows = [["faces", r.faceLandmarks.length], ["landmarks / face", r.faceLandmarks[0]?.length ?? 0]];
+          } else if (task === "gesture") { const r = tk.recognize(im); r.landmarks.forEach((pt) => lm(pt, mod.GestureRecognizer.HAND_CONNECTIONS, "#fbbc04")); rows = r.gestures.map((g) => [g[0].categoryName, pct(g[0].score)]); }
+          else if (task === "segment") {
+            const r = tk.segment(im), mask = r.confidenceMasks[0], m = mask.getAsFloat32Array(), W = mask.width, Hh = mask.height;
+            const px = ctx.getImageData(0, 0, W, Hh), d = px.data; let on = 0;
+            for (let i = 0; i < m.length; i++) { const a = m[i]; if (a > 0.5) on++; const k = a * 0.6; d[i*4] = d[i*4]*(1-k) + 66*k; d[i*4+1] = d[i*4+1]*(1-k) + 133*k; d[i*4+2] = d[i*4+2]*(1-k) + 244*k; }
+            ctx.putImageData(px, 0, 0); r.close?.(); rows = [["person", `${pct(on / m.length)} of pixels`]];
+          }
+          list(rows.length ? rows : [["no result", ""]]);
+          status.textContent = `${LABEL[task]} · ${Math.round(performance.now() - t0)} ms · on-device`;
+          done.add(sec);
+        } catch (err) { console.error(err); status.textContent = "Could not run: " + (err?.message || err); }
+        finally { if (btn) btn.disabled = false; }
+      }
+      document.addEventListener("click", (e) => { const b = e.target.closest(".try-run"); if (!b) return; e.stopPropagation(); run(b.closest("section")); }, true);
+      const maybe = (sec) => { if (sec?.dataset.try && !done.has(sec)) run(sec); };
+      Reveal.on("slidechanged", (e) => maybe(e.currentSlide));
+      Reveal.on("ready", (e) => maybe(e.currentSlide));
+      maybe(Reveal.getCurrentSlide());
+    }
+  </script>
+
+  <!-- copy-prompt buttons (AI Studio slides) -->
+  <script>
+    document.addEventListener("click", async (e) => {
+      const b = e.target.closest(".copy[data-copy]"); if (!b) return;
+      e.stopPropagation();
+      const t = document.getElementById(b.dataset.copy)?.innerText.trim() || "";
+      try { await navigator.clipboard.writeText(t); }
+      catch { const ta = Object.assign(document.createElement("textarea"), { value: t }); document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); }
+      const old = b.textContent; b.textContent = "Copied ✓"; b.classList.add("done");
+      setTimeout(() => { b.textContent = old; b.classList.remove("done"); }, 1600);
+    }, true);
+  </script>
+</body>
+</html>

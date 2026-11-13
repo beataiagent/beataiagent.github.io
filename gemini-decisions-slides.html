@@ -1,0 +1,1297 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Gemini Decisions API</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/logos/gdg-favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="images/logos/gdg-favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="images/logos/gdg-apple-touch-180.png" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github.min.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ================= DevFest 2026 theme tokens (from the official template) ================= */
+    :root {
+      --ink: #1e1e1e;            /* Black 02 */
+      --paper: #f0f0f0;          /* Off-White */
+      --white: #fff;
+      --g-blue: #4285f4; --g-green: #34a853; --g-red: #ea4335; --g-yellow: #fbbc04;      /* Google 500 */
+      --h-blue: #57caff; --h-green: #5cdb6d; --h-red: #ff7daf; --h-yellow: #ffd427;      /* Halftone */
+      --p-blue: #c3ecf6; --p-green: #ccf6c5; --p-red: #f8d8d8; --p-yellow: #ffe7a5;      /* Pastel */
+      --muted: #5f6368;
+      --stroke: 3px;
+      --sans: "Google Sans", "Product Sans", system-ui, sans-serif;
+      --mono: "Roboto Mono", ui-monospace, monospace;
+
+      --r-background-color: var(--paper);
+      --r-main-font: var(--sans);
+      --r-heading-font: var(--sans);
+      --r-code-font: var(--mono);
+      --r-main-color: var(--ink);
+      --r-heading-color: var(--ink);
+      --r-heading-text-transform: none;
+      --r-heading-font-weight: 700;
+      --r-heading-letter-spacing: -0.01em;
+      --r-link-color: #1a73e8;
+      --r-link-color-hover: #174ea6;
+      --r-main-font-size: 28px;
+    }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--paper); }
+    .reveal { color: var(--ink); }
+    .reveal strong, .reveal b { font-weight: 700; }
+
+    /* every slide is a fixed 1280×720 canvas, laid out absolutely like the Slides template */
+    .reveal .slides section { width: 1280px; height: 720px; padding: 0; box-sizing: border-box; text-align: left; background: var(--paper); line-height: 1.3; }
+    .reveal .slides section.bg-blue { background: var(--p-blue); }
+    .reveal .slides section.bg-green { background: var(--p-green); }
+    .reveal .slides section.bg-yellow { background: var(--p-yellow); }
+    .reveal .slides section.bg-red { background: var(--p-red); }
+    .reveal h1, .reveal h2, .reveal h3 { margin: 0; text-transform: none; color: var(--ink); line-height: 1.12; }
+    .reveal h1 { font-size: 84px; font-weight: 700; letter-spacing: -.015em; }
+    .reveal h2 { font-size: 46px; font-weight: 700; }
+    .reveal h3 { font-size: 26px; font-weight: 700; }
+    .reveal p { margin: 0; }
+    .reveal .slides img { margin: 0; max-width: none; max-height: none; }
+    .reveal a { text-decoration: none; }
+    .abs { position: absolute; }
+    .mono { font-family: var(--mono); font-weight: 300; }
+    .sub { font-family: var(--mono); font-weight: 300; font-size: 22px; line-height: 1.35; color: var(--ink); }
+    .muted { color: var(--muted); }
+
+    /* ---------- notched card (shape drawn by dfShapes(): data-tl / data-br notches, data-scallop) ---------- */
+    .nc { position: absolute; }
+    .nc > svg.nc-s { position: absolute; inset: 0; overflow: visible; z-index: 0; pointer-events: none; }
+    .nc > .in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; padding: 40px 52px; }
+
+    /* ---------- DevFest badge: { DevFest / location } ---------- */
+    .badge { position: absolute; display: flex; align-items: center; gap: 4px; --bk: var(--g-yellow); }
+    .badge .bk { font: 700 92px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .badge b { font: 700 50px/1 var(--sans); letter-spacing: -.01em; }
+    .badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 6px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .badge.sm .bk { font-size: 64px; -webkit-text-stroke-width: 2.5px; }
+    .badge.sm b { font-size: 34px; }
+    .badge.sm i { font-size: 11px; padding: 4px 0; margin-top: 5px; border-width: 2px; }
+
+    /* ---------- corner logos: Build with Gemini + DevFest/GDG lockup (auto-added bottom-right of every slide) ---------- */
+    .corner-logos { position: absolute; right: 40px; bottom: 38px; display: flex; align-items: flex-end; gap: 14px; z-index: 2; pointer-events: none; }
+    .corner-logos img { height: 94px; width: auto; display: block; }
+
+    /* ---------- line icons (sprite at top of <body>) ---------- */
+    .ico { display: block; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .dots { position: absolute; display: flex; gap: 14px; }
+    .dots i { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--ink); background: var(--dc, var(--g-blue)); box-sizing: border-box; }
+    .numbox { position: absolute; border: var(--stroke) solid var(--ink); border-radius: 28px; background: #fff; font: 300 64px/1 var(--mono); display: flex; align-items: center; padding: 0 28px; box-sizing: border-box; }
+
+    /* ---------- content atoms ---------- */
+    .pc { border: 2.5px solid var(--ink); border-radius: 24px; padding: 22px 24px; background: #fff; box-sizing: border-box; font-size: 20px; line-height: 1.38; }
+    .pc.blue { background: var(--p-blue); } .pc.green { background: var(--p-green); } .pc.yellow { background: var(--p-yellow); } .pc.red { background: var(--p-red); }
+    .pc h3 { margin-bottom: 8px; }
+    .pc .ico { width: 46px; height: 46px; margin-bottom: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 5px 13px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; font-size: 15px; line-height: 1.3; }
+    .tag { display: inline-block; padding: 7px 20px; border-radius: 999px; border: 2.5px solid var(--ink); background: #fff; font: 500 18px/1.2 var(--sans); }
+    .tag.red { background: var(--p-red); } .tag.yellow { background: var(--g-yellow); }
+    .eyebrow { font: 400 17px/1 var(--mono); letter-spacing: .02em; color: var(--ink); margin-bottom: 12px; }
+    .grid { display: grid; gap: 20px; }
+    .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+    .reveal ul.bl { list-style: none; margin: 0; padding: 0; display: block; font-size: 25px; line-height: 1.35; }
+    .reveal ul.bl li { position: relative; padding-left: 34px; margin: 0 0 16px; }
+    .reveal ul.bl li::before { content: ""; position: absolute; left: 2px; top: .38em; width: 15px; height: 15px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--g-blue); }
+    .reveal ul.bl li:nth-child(4n+2)::before { background: var(--g-red); }
+    .reveal ul.bl li:nth-child(4n+3)::before { background: var(--g-yellow); }
+    .reveal ul.bl li:nth-child(4n+4)::before { background: var(--g-green); }
+    .placeholder { border: 2.5px dashed #9aa0a6; border-radius: 24px; display: grid; place-items: center; color: var(--muted); font-size: 18px; text-align: center; padding: 20px; background: var(--paper); box-sizing: border-box; }
+
+    /* code */
+    .reveal pre { width: auto; margin: 0; box-shadow: none; font-size: 15px; line-height: 1.42; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--paper); overflow: hidden; }
+    .reveal pre code { max-height: none; padding: 16px 22px; background: transparent; font-family: var(--mono); font-weight: 400; }
+    .reveal .hljs { background: transparent; color: #1e1e1e; }
+    .reveal .hljs-ln-numbers { color: #9aa0a6; }
+    .cmd { font: 400 15px/1.4 var(--mono); padding: 12px 16px; border-radius: 16px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; }
+
+    /* flow (slide 7) */
+    .flow { display: flex; align-items: center; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 26px 18px; }
+    .flow .node b { display: block; font-size: 24px; margin-bottom: 8px; }
+    .flow .node code { font-family: var(--mono); font-size: 16px; white-space: nowrap; }
+    .flow .arr { width: 46px; flex: none; }
+
+    /* demo */
+    .demo-wrap { position: relative; width: 520px; aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; border: 2.5px solid var(--ink); background: #1e1e1e; }
+    .reveal .demo-wrap video, .reveal .demo-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; object-fit: cover; transform: scaleX(-1); }
+    .demo-ui { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn { font: 500 18px/1 var(--sans); padding: 13px 26px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); color: #fff; cursor: pointer; }
+    .btn.ghost { background: #fff; color: var(--ink); }
+    .btn:disabled { opacity: .45; cursor: default; }
+    #demoStatus { font: 300 16px/1.4 var(--mono); color: var(--ink); }
+    .gesture { position: absolute; left: 14px; top: 12px; font: 500 20px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); z-index: 2; }
+
+    /* ---------- slide 1: speaker cover ---------- */
+    .reveal .slides section.s-cover { overflow: hidden; }
+    .s-cover .cv-pill { position: absolute; left: 129px; top: 44px; width: 556px; height: 93px; border-radius: 999px; background: var(--ink); }
+    .s-cover .cv-dot { position: absolute; left: 670px; top: 44px; width: 91px; height: 91px; border-radius: 50%; background: var(--g-blue); border: 3px solid var(--ink); box-sizing: border-box; }
+    .s-cover .cv-kicker { font: 700 38px/1.1 var(--sans); color: var(--g-blue); margin-bottom: 8px; }
+    .s-cover .cv-title { font-size: 86px; line-height: 1.04; letter-spacing: -.015em; }
+    .s-cover .cv-name { position: absolute; left: 88px; top: 542px; width: 346px; height: 97px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 999px; background: #fff; display: flex; flex-direction: column; justify-content: center; padding: 0 24px; z-index: 2; }
+    .s-cover .cv-name b { font: 700 29px/1.15 var(--sans); white-space: nowrap; }
+    .s-cover .cv-name span { font: 400 15px/1.3 var(--sans); white-space: nowrap; margin-top: 3px; }
+    .s-cover .cv-photo { position: absolute; left: 761px; top: 40px; width: 479px; height: 370px; border: 3px solid #555; border-radius: 66px; overflow: hidden; background: #efeeef; box-sizing: border-box; }
+    .s-cover .cv-photo > img { position: absolute; left: 92px; top: 30px; width: 334px; height: 334px; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); }
+    .s-cover .gde { position: absolute; left: 128px; top: 262px; display: flex; height: 79px; border: 2px solid #c6dafc; border-radius: 9px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .s-cover .gde-l { width: 108px; display: flex; flex-direction: column; align-items: center; padding-top: 8px; position: relative; }
+    .s-cover .gde-l img { width: 36px; height: 18px; object-fit: contain; }
+    .s-cover .gde-l span { font: 400 17px/1 var(--sans); color: #5f6368; margin-top: 4px; }
+    .s-cover .gde-l i { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: #4a86e8; color: #fff; font: 400 12px/18px var(--sans); text-align: center; font-style: normal; }
+    .s-cover .gde-r { width: 108px; display: grid; place-items: center; font: 500 12px/1 var(--sans); color: #3c4043; border-left: 6px solid #e8f0fe; background: #fff; }
+    .s-cover .cv-badge { position: absolute; left: 696px; top: 505px; width: 313px; height: 124px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 42px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .s-cover .cv-badge .bk { font: 700 82px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .s-cover .cv-badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .s-cover .cv-badge b { font: 700 45px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover .cv-badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 5px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .s-cover .cv-blobs { position: absolute; left: 1010px; top: 501px; width: 211px; height: 77px; }
+    .s-cover .cv-gdg { position: absolute; left: 1007px; top: 578px; width: 132px; height: 87px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 44px; background: #fff; display: grid; place-items: center; }
+    .s-cover .cv-gdg img { width: 90px; height: 45px; object-fit: contain; }
+
+    /* ---------- slide 2: agenda ---------- */
+    .s-agenda .ag-title { position: absolute; left: 41px; top: 40px; font-size: 56px; font-weight: 400; }
+    .reveal .s-agenda ol.ag-list { position: absolute; left: 41px; top: 168px; margin: 0; padding: 0; list-style: none; display: grid; gap: 22px; }
+    .s-agenda .ag-list li { position: relative; display: flex; align-items: center; gap: 18px; height: 84px; }
+    .s-agenda .ag-list svg { position: absolute; left: 0; top: -6px; width: 96px; height: 96px; fill: none; stroke: var(--ink); stroke-width: 2.5; }
+    .s-agenda .ag-list b { width: 96px; text-align: center; font: 500 54px/1 var(--sans); flex: none; }
+    .s-agenda .ag-list span { width: 688px; height: 84px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 999px; background: #d3e3f3; display: flex; align-items: center; padding: 0 26px; font: 400 34px/1 var(--sans); }
+
+    /* tasks slide: Text · Audio · Decision · Retrieval / Vision · GenAI */
+    .tasks-grid { display: grid; grid-template-columns: 1.3fr 1.25fr .95fr 1.1fr; grid-template-rows: auto auto; gap: 14px; }
+    .tasks-grid .pc { padding: 16px 16px; }
+    .tasks-grid .pc.span3 { grid-column: span 3; }
+    .tasks-grid h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 24px; }
+    .tasks-grid .ord { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid var(--ink); background: #fff; display: grid; place-items: center; font: 500 16px/1 var(--sans); box-sizing: border-box; }
+    .tasks-grid .tcount { font: 300 13px/1 var(--mono); margin-left: auto; padding-left: 6px; white-space: nowrap; }
+    .tasks-grid .chips { gap: 6px; }
+    .tasks-grid .chip { font-size: 13.5px; padding: 4px 10px; }
+
+    /* ---------- task deep-dive slides ---------- */
+    .tk { padding: 34px 44px !important; }
+    .tk-head { position: absolute; left: 44px; top: 30px; right: 44px; }
+    .tk-head .eyebrow { margin-bottom: 6px; }
+    .tk-head h2 { font-size: 40px; }
+    .tk-desc { font-size: 19px; line-height: 1.35; margin-top: 6px !important; }
+    .tk-media { position: absolute; left: 44px; top: 150px; width: 400px; height: 225px; margin: 0; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
+    .tk-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tk-info { position: absolute; left: 474px; top: 156px; right: 44px; display: flex; flex-direction: column; gap: 10px; }
+    .tk-io { display: flex; align-items: flex-start; gap: 12px; }
+    .tk-io > b { width: 64px; flex: none; font: 400 14px/28px var(--mono); }
+    .tk-io .chips { gap: 6px; }
+    .tk-io .chip { font-size: 15px; padding: 4px 12px; }
+    .tk-diagram { position: absolute; left: 30px; top: 392px; width: 800px; height: auto; }
+    .tk-stat { position: absolute; left: 872px; top: 400px; width: 284px; height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 12px 22px !important; }
+    .tk-stat b { font: 700 46px/1 var(--sans); letter-spacing: -.02em; }
+    .tk-stat span { font: 300 15px/1.3 var(--mono); margin-top: 6px; }
+    .tk-stat i { font: 300 11px/1.3 var(--mono); font-style: normal; color: var(--muted); margin-top: 6px; white-space: nowrap; }
+    .tk-size .chip.sz { background: var(--p-yellow); font-size: 14px; }
+    .tk-size .chip.sz em { font: 500 12.5px/1 var(--mono); font-style: normal; margin-left: 4px; }
+
+    /* section dividers: MediaPipe logo tile */
+    .div-logo { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .div-logo img { width: 150px; height: 150px; object-fit: contain; }
+
+
+    /* ---------- AI Studio how-to slides ---------- */
+    .as-left { position: absolute; left: 44px; top: 132px; width: 690px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+    .as-shot { width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 18px; display: block; }
+    .as-link { font: 400 16px/1 var(--mono); padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-blue); color: var(--ink) !important; }
+    .reveal ol.as-steps { position: absolute; left: 766px; top: 128px; width: 390px; margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+    .as-steps li { display: flex; gap: 14px; align-items: flex-start; font-size: 19px; line-height: 1.35; }
+    .as-steps li b { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid var(--ink); display: grid; place-items: center; font: 500 20px/1 var(--sans); background: #fff; box-sizing: border-box; }
+    .as-steps li:nth-child(1) b { background: var(--p-blue); } .as-steps li:nth-child(2) b { background: var(--p-green); }
+    .as-steps li:nth-child(3) b { background: var(--p-yellow); } .as-steps li:nth-child(4) b { background: var(--p-red); }
+    .as-steps li span { padding-top: 6px; }
+    .as-recipe { display: flex; gap: 22px; align-items: flex-start; }
+    .reveal ul.as-parts { list-style: none; margin: 0; padding: 0; width: 330px; flex: none; display: grid; gap: 9px; }
+    .as-parts li { padding: 10px 16px !important; font-size: 15.5px; line-height: 1.3; border-radius: 16px !important; }
+    .as-parts li b { display: block; font-size: 18px; margin-bottom: 2px; }
+    .as-prompt { flex: 1; border: 2.5px solid var(--ink); border-radius: 20px; background: var(--ink); color: #fff; overflow: hidden; max-width: 740px; }
+    .as-ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 10px 18px; font: 400 14px/1 var(--mono); color: #c4c7c5; border-bottom: 1px solid #3c3c3c; }
+    .reveal pre.as-text { margin: 0; padding: 14px 18px 18px; border: 0; border-radius: 0; background: transparent; color: #fff; white-space: pre-wrap; font: 400 15px/1.5 var(--mono); }
+    .copy { font: 500 13px/1 var(--sans); padding: 8px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .copy:hover { background: var(--g-yellow); }
+    .copy.done { background: var(--g-green); color: #fff; }
+    .as-ideas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .as-idea { display: flex; flex-direction: column; gap: 10px; height: 338px; padding: 18px 20px !important; }
+    .as-ih { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+    .as-ih b { font-size: 22px; }
+    .as-ih .chip { font-size: 13px; padding: 3px 10px; }
+    .as-idea .as-text { flex: 1; margin: 0; font: 400 13.5px/1.42 var(--mono); background: #fff; border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; }
+    .as-idea .copy { align-self: flex-start; }
+    .as-tip { margin-top: 16px !important; font-size: 17px; max-width: 800px; }
+    .as-tip b { font: 500 13px/1 var(--mono); padding: 4px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); margin-right: 8px; }
+    .as-tip code { font-family: var(--mono); font-size: 15px; }
+
+    /* thank-you: round speaker photo + name */
+    .ty-who { display: flex; align-items: center; gap: 20px; margin-top: 44px; }
+    .ty-who img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 3px solid var(--ink); background: #fff; flex: none; }
+    .ty-who .sub { margin: 0; }
+
+    /* Hydrogen slide */
+    .hy-word { background: linear-gradient(90deg, #0b1f5c, #2f6fd6 55%, #7cc7f5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    html.print-pdf .hy-word { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #2f6fd6; }
+    .hy-left { position: absolute; left: 44px; top: 128px; width: 620px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .hy-right { position: absolute; left: 696px; top: 128px; width: 460px; display: flex; flex-direction: column; gap: 16px; }
+    .hy-badge { align-self: flex-start; font: 500 18px/1 var(--sans); letter-spacing: .22em; color: #fff; padding: 12px 34px; border-radius: 999px; border: 2.5px solid var(--ink); background: linear-gradient(90deg, #0b1f5c, #2f6fd6 60%, #a8dcfb); }
+    .reveal ul.hy-facts { font-size: 18.5px; line-height: 1.32; }
+    .reveal ul.hy-facts li { margin-bottom: 8px; }
+    .hy-how { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.38; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .hy-how b { font: 500 13px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); flex: none; margin-top: 1px; }
+
+    /* What is Google AI Edge / MediaPipe */
+    .ae-logo { position: absolute; right: 44px; top: 40px; height: 54px; width: auto; }
+    .ae-stack { position: absolute; left: 44px; top: 186px; width: 720px; display: grid; gap: 12px; }
+    .ae-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .ae-row .pc { font-size: 16px; line-height: 1.35; padding: 16px 18px; min-height: 150px; position: relative; }
+    .ae-row h3 { font-size: 24px; margin-bottom: 6px; }
+    .ae-hl { box-shadow: 6px 6px 0 var(--ink); }
+    .ae-tag { position: absolute; right: 12px; top: -14px; font: 500 12px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); }
+    .ae-hw { display: grid; grid-template-columns: 90px repeat(3, 1fr); border: 2.5px solid var(--ink); border-radius: 16px; overflow: hidden; background: #fff; }
+    .ae-hw span, .ae-tools > span { font: 400 14px/1 var(--mono); display: grid; place-items: center; }
+    .ae-hw b { text-align: center; font: 700 22px/1 var(--sans); padding: 14px 0; border-left: 2px solid var(--ink); background: var(--paper); }
+    .ae-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .ae-tools > span { width: 90px; flex: none; }
+    .ae-tools .chip { font-style: normal; font-size: 13.5px; }
+    .ae-side { position: absolute; left: 800px; top: 186px; width: 356px; display: flex; flex-direction: column; gap: 12px; }
+    .ae-sh { font: 700 22px/1.2 var(--sans); }
+    .ae-side ul.bl { font-size: 19px; }
+    .ae-try { font-size: 16px; line-height: 1.4; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .mp-feats { position: absolute; left: 44px; top: 178px; width: 1112px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .mp-feats figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .mp-feats img { width: 100%; height: auto; border-radius: 18px; border: 2px solid var(--ink); }
+    .mp-feats figcaption { font-size: 15px; line-height: 1.3; }
+    .mp-feats figcaption b { display: block; font-size: 19px; margin-bottom: 2px; }
+    .mp-pipe { position: absolute; left: 30px; top: 438px; width: 800px; height: auto; }
+    .mp-facts { position: absolute; left: 860px; top: 432px; width: 296px; display: flex; align-items: center; gap: 14px; padding: 12px 20px; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--p-green); box-sizing: border-box; }
+    .mp-facts b { font: 700 46px/1 var(--sans); }
+    .mp-facts span { display: block; font: 300 15px/1.35 var(--mono); }
+    .mp-facts p { font: 300 12.5px/1.4 var(--mono); color: var(--muted); margin-top: 8px !important; }
+
+    /* why on-device: numbered cards, revealed one per click */
+    .why-card { position: relative; }
+    .why-n { position: absolute; right: 16px; top: 14px; font: 300 30px/1 var(--mono); padding: 6px 12px; border: 2.5px solid var(--ink); border-radius: 14px; background: #fff; }
+
+    /* platforms slide */
+    .pl-grid { position: absolute; left: 44px; top: 190px; width: 1112px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .pl-card { display: flex; flex-direction: column; gap: 8px; height: 310px; padding: 18px 16px !important; }
+    .pl-card img { height: 72px; width: 72px; object-fit: contain; box-sizing: border-box; padding: 11px; background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; }
+    .pl-card img.ios { padding: 6px; }
+    .pl-card h3 { font-size: 26px; margin: 4px 0 0; }
+    .pl-card p { font-size: 17px; line-height: 1.35; flex: 1; }
+    .pl-card p span { font: 300 13.5px/1.4 var(--mono); }
+    .pl-card code { font: 400 12px/1.35 var(--mono); background: var(--ink); color: #fff; border-radius: 10px; padding: 8px 10px; word-break: break-all; }
+
+    /* model-size charts (log scale) */
+    .szc { display: grid; gap: 4px; }
+    .szc-row { display: grid; grid-template-columns: 230px 1fr 132px; align-items: center; gap: 14px; }
+    .szc-row > b { font: 500 17px/1.15 var(--sans); }
+    .szc-row > b small { display: block; font: 300 12px/1.3 var(--mono); color: var(--muted); margin-top: 2px; }
+    .szc-row > em { font: 400 14px/1 var(--mono); font-style: normal; text-align: right; white-space: nowrap; }
+    .szc-track { position: relative; height: 30px; }
+    .szc-track > i { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed #c8c8c8; }
+    .szc-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid #e0e0e0; }
+    .szc-bar { position: absolute; top: 6px; height: 18px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); box-sizing: border-box; min-width: 18px; }
+    .szc-axis .szc-track { height: 18px; }
+    .szc-axis .szc-track::before { display: none; }
+    .szc-axis .szc-track span { position: absolute; transform: translateX(-50%); font: 300 12px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+    .szc-all { position: absolute; left: 44px; top: 168px; width: 1112px; gap: 4px; }
+    .szc-all .szc-row { grid-template-columns: 220px 1fr 170px; }
+    .szc-all .szc-row > b { font-size: 22px; }
+    .szc-all .szc-track { height: 44px; }
+    .szc-all .szc-row > b small { display: inline; margin-left: 8px; }
+    .szc-all .szc-bar { top: 7px; height: 26px; }
+    .szc-all .szc-row:nth-child(2) .szc-bar { background: var(--g-green); }
+    .szc-all .szc-row:nth-child(3) .szc-bar { background: var(--g-yellow); }
+    .szc-all .szc-row:nth-child(4) .szc-bar { background: var(--g-red); }
+    .szc-all .szc-row:nth-child(5) .szc-bar { background: #a142f4; }
+    .szc-all .szc-row:nth-child(6) .szc-bar { background: var(--g-blue); }
+    .szc-all .szc-row > em { font-size: 16px; }
+    .sz-notes { position: absolute; left: 44px; top: 474px; width: 760px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sz-notes .pc { font-size: 15px; line-height: 1.35; padding: 12px 16px !important; }
+    .sz-notes .pc b { display: block; font: 700 19px/1.2 var(--sans); margin-bottom: 2px; }
+    .szc-dense { gap: 0; }
+    .szc-dense .szc-row > b { font-size: 14.5px; }
+    .szc-dense .szc-row > b small { display: none; }
+    .szc-dense .szc-row > b { white-space: nowrap; }
+    .szc-dense .szc-track { height: 25px; }
+    .szc-dense .szc-bar { top: 4px; height: 17px; }
+    .szc-dense .szc-row > em { font-size: 13px; }
+    /* category dividers */
+    .cat-ico { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .cat-ico svg { width: 120px; height: 120px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .cat-side { position: absolute; left: 70px; top: 456px; width: 230px; text-align: center; }
+    .cat-side b { display: block; font: 700 34px/1.1 var(--sans); }
+    .cat-side span { display: block; font: 300 15px/1.4 var(--mono); margin-top: 4px; }
+    .cat-in { padding: 30px 40px !important; }
+    .cat-h { font-size: 64px !important; }
+    .cat-take { font-size: 17px; line-height: 1.35; margin: 8px 0 16px !important; max-width: 760px; }
+    .szc-cat .szc-row { grid-template-columns: 200px 1fr 118px; }
+    .szc-cat .szc-row > b { font-size: 15.5px; }
+    .bg-green .szc-cat .szc-bar { background: var(--g-green); }
+    .bg-yellow .szc-cat .szc-bar { background: var(--g-yellow); }
+    .bg-red .szc-cat .szc-bar { background: var(--g-red); }
+
+    /* ---------- Try it: sample-image demo ---------- */
+    .try-stage { position: relative; width: 640px; height: 470px; flex: none; border: 2.5px solid var(--ink); border-radius: 24px; overflow: hidden; background: #1e1e1e; }
+    .try-stage canvas, .try-stage .try-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .try-stage canvas { z-index: 1; }
+    .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
+    .try-what { font-size: 18px; line-height: 1.35; }
+    .try-actions { display: flex; gap: 10px; }
+    .try-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; flex: 1; }
+    .try-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .try-tabs button { font: 500 15px/1 var(--sans); padding: 9px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .try-tabs button:hover { background: var(--p-blue); }
+    .try-tabs button.on { background: var(--g-blue); color: #fff; }
+    .try-tabs button:disabled { opacity: .5; cursor: progress; }
+    .reveal ol.try-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 17px/1.3 var(--mono); max-height: 200px; overflow: hidden; }
+    .try-results li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; border-radius: 10px; background: var(--paper); border: 1.5px solid #d0d0d0; }
+    .try-results li b { font-weight: 500; }
+    .try-status { font: 300 14px/1.4 var(--mono); color: var(--muted); }
+
+    /* ---------- slide 4: MediaPipe · Google AI Edge (real loops + logos) ---------- */
+    .s-what .wp { position: absolute; background: #fff; border: var(--stroke) solid var(--ink); border-radius: 30px; box-sizing: border-box; }
+    .s-what .wp-main { left: 40px; top: 96px; width: 1200px; padding: 22px 28px 26px; }
+    .s-what .wp-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+    .s-what .tag { font-size: 22px; padding: 8px 26px; background: var(--g-yellow); }
+    .s-what .lockups { display: flex; align-items: center; gap: 34px; }
+    .s-what .mp-lockup, .s-what .edge-lockup { display: flex; align-items: center; font-size: 50px; line-height: 1; white-space: nowrap; }
+    .s-what .mp-lockup { gap: 12px; font-weight: 500; color: #3c4043; }
+    .s-what .mp-lockup img { height: 50px; }
+    .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
+    .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
+    .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what figure { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 2.5px solid var(--ink); background: #f1f3f4; }
+    .s-what figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s-what figcaption { position: absolute; left: 8px; bottom: 7px; font: 500 13px/1 var(--sans); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); color: var(--ink); }
+    .s-what .wp-plat { left: 40px; bottom: 26px; display: flex; align-items: center; gap: 52px; padding: 14px 38px; }
+    .s-what .wp-plat span { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 500; color: #3c4043; }
+    .s-what .wp-plat img { height: 58px; }
+    .s-what .wp-plat img.ios { border-radius: 13px; box-shadow: 0 0 0 1px #dadce0; }
+
+    /* ================= Slide controls (shopio-style) ================= */
+    .reveal .controls, .reveal .progress, html:not(.print-pdf) .reveal .slide-number { display: none !important; }
+    #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; z-index: 40; background: linear-gradient(90deg, var(--g-blue), var(--g-green), var(--g-yellow), var(--g-red)); transition: width .6s cubic-bezier(.16,1,.3,1); }
+    #ctrl { position: fixed; right: 18px; bottom: 16px; z-index: 40; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(30,30,30,.86); backdrop-filter: blur(8px); color: #fff; font: 13px var(--sans); transition: opacity .4s; }
+    #ctrl button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0; }
+    #ctrl button:hover { background: rgba(255,255,255,.25); }
+    #ctrl button.on { background: var(--g-blue); }
+    #ctrl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #ctrl .cnt { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; cursor: pointer; }
+    body.idle #ctrl { opacity: 0; }
+    body.idle { cursor: none; }
+    #menu, #exportMenu { position: fixed; right: 18px; bottom: 64px; z-index: 41; padding: 8px; border-radius: 14px; background: rgba(30,30,30,.96); backdrop-filter: blur(10px); box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); font-family: var(--sans); display: none; }
+    #menu { width: 380px; max-height: 70vh; overflow: auto; }
+    #menu.open, #exportMenu.open { display: block; }
+    #menu a { display: flex; gap: 10px; color: #cfd2d6; text-decoration: none; font-size: 13px; padding: 7px 10px; border-radius: 8px; }
+    #menu a:hover, #menu a.cur { background: rgba(255,255,255,.12); color: #fff; }
+    #menu a span { opacity: .5; width: 22px; text-align: right; flex: none; }
+    #exportMenu { min-width: 230px; padding: 6px; }
+    #exportMenu button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 12px; border: 0; border-radius: 9px; background: transparent; color: #fff; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+    #exportMenu button:hover, #exportMenu button:focus-visible { background: #3a3a3a; outline: none; }
+    #exportMenu kbd { font-family: var(--mono); font-size: 11px; color: #9aa0a6; border: 1px solid #444; border-radius: 5px; padding: 1px 6px; }
+    #exportMenu .sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 12px; line-height: 1.5; margin-top: 2px; color: #9aa0a6; }
+    #exportMenu button > span { line-height: 1.3; }
+    /* all-slides overview (scrollable grid of live thumbnails) */
+    #ov { position: fixed; inset: 0; z-index: 45; background: #1e1e1e; overflow: auto; padding: 28px 32px 40px; display: none; font-family: var(--sans); }
+    #ov.open { display: block; }
+    #ov .ovh { display: flex; justify-content: space-between; align-items: center; color: #fff; max-width: 1700px; margin: 0 auto 18px; font-size: 18px; font-weight: 500; }
+    #ov .ovh button { border: 0; background: rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+    #ov .ovh button:hover { background: rgba(255,255,255,.25); }
+    #ov .ovg { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px 18px; max-width: 1700px; margin: 0 auto; }
+    #ov .ovt { cursor: pointer; color: #cfd2d6; font-size: 13px; }
+    #ov .fr { position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: var(--paper); outline: 2px solid #3a3a3a; outline-offset: 3px; transition: outline-color .15s; }
+    #ov .ovt:hover .fr { outline-color: rgba(255,255,255,.5); }
+    #ov .ovt.cur .fr { outline-color: var(--g-yellow); }
+    #ov .cap { display: flex; gap: 8px; margin-top: 10px; line-height: 1.35; }
+    #ov .cap span { opacity: .5; flex: none; }
+    #ov .fr > .reveal { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; pointer-events: none; overflow: hidden; }
+    #ov .fr > .reveal > .slides { position: absolute; inset: 0; width: 1280px; height: 720px; margin: 0; transform: none; zoom: 1; pointer-events: none; }
+    #ov .fr > .reveal > .slides > section { display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; }
+    #ov .fr .fragment { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+    #ov .fr pre code.fragment { display: none !important; }
+    #ov .fr .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    html.print-pdf #progress, html.print-pdf #ctrl, html.print-pdf #menu, html.print-pdf #exportMenu { display: none !important; }
+    @media print { #progress, #ctrl, #menu, #exportMenu { display: none !important; } }
+    /* print view: show the full code block, not the stacked line-highlight step clones */
+    html.print-pdf .reveal pre code.fragment { display: none !important; }
+    html.print-pdf .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    /* Build challenge (rules + 15-min countdown) */
+    .ch-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 26px; }
+    .ch-grid .pc { display: flex; flex-direction: column; gap: 10px; min-height: 300px; }
+    .ch-grid .pc h3 { font: 700 26px/1.1 var(--sans); margin: 0 0 4px; }
+    .ch-grid ol { margin: 0; padding-left: 22px; } .ch-grid ol li { margin-bottom: 8px; }
+    .ch-crit { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px dashed #9aa0a6; padding-bottom: 8px; }
+    .ch-crit em { font: 400 16px/1.4 var(--mono); font-style: normal; white-space: nowrap; }
+    .ch-prize { font: 700 30px/1.15 var(--sans); }
+    .ch-time { position: absolute; right: 44px; top: 34px; font: 300 22px/1 var(--mono); padding: 12px 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-yellow); }
+    .ch-clock { font: 300 230px/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin: 18px 0 10px; }
+    .ch-bar { height: 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; overflow: hidden; box-sizing: border-box; }
+    .ch-bar i { display: block; height: 100%; width: 100%; background: var(--g-green); transition: width .4s linear, background .4s; }
+    .ch-ctrl { display: flex; gap: 12px; margin-top: 26px; align-items: center; }
+    .ch-ctrl .btn.ghost { background: #fff; color: var(--ink); }
+    .ch-ctrl span { font: 400 17px/1.3 var(--mono); margin-left: 12px; }
+    .ch-warn .ch-clock { color: var(--g-red); }
+    .ch-warn .ch-bar i { background: var(--g-red); }
+    .ch-done .ch-clock { animation: chblink 1s steps(2) infinite; }
+    @keyframes chblink { 50% { opacity: .25; } }
+
+    /* ---------- Gemini Decisions deck ---------- */
+    .pc.stat { display: flex; flex-direction: column; gap: 8px; min-height: 160px; }
+    .pc.stat b { font: 700 54px/1 var(--sans); letter-spacing: -.02em; }
+    .pc.stat b small { font: 300 24px/1 var(--mono); margin-left: 6px; }
+    .pc.stat span { font-size: 19px; line-height: 1.3; }
+    .pc.qt { min-height: 300px; }
+    .pc.qt code, .pc.stat code { font: 400 18px/1 var(--mono); display: inline-block; padding: 6px 12px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; margin-bottom: 16px; }
+    .pc code { font-family: var(--mono); font-size: .9em; }
+    .chips.mm .chip, .chips.eco .chip { font-size: 22px; padding: 9px 22px; }
+    .rl { border-collapse: collapse; width: 100%; font: 400 17px/1.3 var(--mono); }
+    .rl th, .rl td { border-bottom: 2px solid var(--ink); padding: 7px 8px; text-align: left; }
+    .rl th { font-family: var(--sans); font-weight: 700; }
+    .rl tr:last-child td { border-bottom: 0; }
+    .lat { display: grid; gap: 12px; margin-top: 14px; }
+    .lat div { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 12px; font: 400 16px/1 var(--mono); }
+    .lat i { display: block; height: 26px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-blue); box-sizing: border-box; }
+  </style>
+</head>
+<body>
+  <!-- line-icon sprite (DevFest template style: 3px ink outlines, pastel fills) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 200 220"><path d="M100 8 L188 112 H138 V212 H62 V112 H12 Z" fill="var(--p-yellow)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-scallop" viewBox="0 0 240 40"><path d="M4 36 A36 30 0 0 1 80 36 A36 30 0 0 1 160 36 A36 30 0 0 1 236 36" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><ellipse cx="32" cy="32" rx="12" ry="28"/><path d="M4 32h56M9 18h46M9 46h46"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 120 90"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M2 2l20 20M8.5 16.4a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.3-1.7M2 8.8a15 15 0 0 1 4.2-2.7M22 8.8A15 15 0 0 0 10.7 5M12 20h.01"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18M7 6h1v4M16.7 13.9l.7.7-2.8 2.8"/></symbol>
+    <symbol id="i-next" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></symbol>
+  </svg>
+
+  <!-- Slide controls (shopio-style): progress · ‹ n/N › · overview · fullscreen · notes · export -->
+  <div id="progress"></div>
+  <div id="ctrl">
+    <button id="bPrev" title="Previous (←)">‹</button>
+    <span class="cnt" id="cnt" title="Slide list">1 / 16</span>
+    <button id="bNext" title="Next (→)">›</button>
+    <button id="bOv" title="All slides (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+    <button id="bFs" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    <button id="bNotes" title="Speaker notes (N / S)"><svg viewBox="0 0 24 24"><path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg></button>
+    <button id="bPdf" title="Export PDF (E = this slide, Shift+E = all)" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg></button>
+  </div>
+  <div id="menu"></div>
+  <div id="ov"><div class="ovh"><span>All slides</span><button id="ovX" title="Close (Esc)">✕</button></div><div class="ovg"></div></div>
+  <div id="exportMenu" role="menu">
+    <button role="menuitem" data-export="all"><span>All slides<span class="sub">PDF of every slide</span></span><kbd>Shift+E</kbd></button>
+    <button role="menuitem" data-export="slide"><span>This slide<span class="sub" id="exportCur">PDF of the current slide</span></span><kbd>E</kbd></button>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+
+      <!-- 1. Cover -->
+      <section class="s-cover" data-corner="off" data-title="Gemini Decisions API">
+        <div class="cv-pill"></div><div class="cv-dot"></div>
+        <div class="nc" style="left:40px; top:137px; width:799px; height:403px" data-br="199x87" data-r="48">
+          <div class="in" style="padding:54px 30px 0">
+            <p class="cv-kicker">Fast, calibrated multimodal decisions</p>
+            <h1 class="cv-title">Gemini<br>Decisions<br>API</h1>
+          </div>
+        </div>
+        <div class="cv-name"><b>Punsiri Boonyakiat</b><span>Google Developer Expert in Cloud AI</span></div>
+        <div class="cv-photo">
+          <img src="images/profile.jpeg" alt="Punsiri Boonyakiat">
+          <div class="gde">
+            <div class="gde-l"><img src="images/logos/gdg-mark.svg" alt=""><span>Experts</span><i>2025</i></div>
+            <div class="gde-r">Cloud AI</div>
+          </div>
+        </div>
+        <div class="cv-badge"><span class="bk" style="--bk: var(--p-blue)">{</span><span class="bw"><b>DevFest</b><i>Bangkok 2026</i></span><span class="bk" style="--bk: var(--p-green)">}</span></div>
+        <svg class="cv-blobs" viewBox="0 0 211 77"><g stroke="#1e1e1e" stroke-width="5" fill="none"><circle cx="38.5" cy="38.5" r="35.5"/><circle cx="105.5" cy="38.5" r="35.5"/><circle cx="172.5" cy="38.5" r="35.5"/></g><g fill="var(--p-yellow)"><circle cx="38.5" cy="38.5" r="33"/><circle cx="105.5" cy="38.5" r="33"/><circle cx="172.5" cy="38.5" r="33"/></g></svg>
+        <div class="cv-gdg"><img src="images/logos/gdg-mark.svg" alt="Google Developer Groups"></div>
+        <aside class="notes">สวัสดีครับ/ค่ะ • หัวข้อวันนี้คือ Gemini Decisions API ที่ Google ประกาศเมื่อ 11 พ.ย. 2026 ขับเคลื่อนด้วยโมเดลใหม่ Gemini Decision 1 • ไอเดียหลัก: งานหลายอย่างในแอป AI ไม่ต้องการให้โมเดล "เขียนคำตอบ" แต่ต้องการ "การตัดสินใจ" ที่เร็ว ถูก และบอกความมั่นใจได้</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda" data-title="Agenda">
+        <h2 class="ag-title">Agenda</h2>
+        <ol class="ag-list">
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>1</b><span>Why a Decisions API?</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>2</b><span>How it works: questions &amp; confidence</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>3</b><span>Code &amp; real-world use at Google</span></li>
+          <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>4</b><span>Get started &amp; ecosystem</span></li>
+        </ol>
+        <aside class="notes">วันนี้มี 4 ช่วง: (1) ทำไมต้องมี Decisions API (2) ทำงานยังไง ประเภทคำถาม และ confidence score (3) ดูโค้ดจริงและตัวอย่างที่ Google ใช้ในโปรดักต์ (4) วิธีเริ่มต้นและ integration ที่รองรับ</aside>
+      </section>
+
+      <!-- Section 01 -->
+      <section class="bg-yellow" data-title="01 · Why a Decisions API?">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Why a<br>Decisions API?</h1>
+            <p class="sub" style="margin-top:28px">Purpose-built primitives<br>for bounded choices</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • เริ่มจากปัญหา: ทำไมการใช้ LLM แบบ generate text มาตอบคำถามปิดถึงไม่คุ้ม</aside>
+      </section>
+
+      <!-- Generate vs Decide -->
+      <section data-title="Generate vs. decide">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">The problem</div>
+            <h2 style="margin-bottom:12px">Many AI calls are really closed-set decisions</h2>
+            <p class="sub" style="font-size:20px; margin-bottom:30px">Tool selection · policy checks · model routing · context grading</p>
+            <div class="grid g2" style="gap:28px; width:1000px">
+              <div class="pc fragment" style="height:270px">
+                <span class="tag">Generative model</span>
+                <ul class="bl" style="font-size:21px; margin-top:20px">
+                  <li>Writes the answer token by token</li>
+                  <li>Pay for output &amp; thinking tokens</li>
+                  <li>Parse free text back into a label</li>
+                  <li>No calibrated sense of "how sure"</li>
+                </ul>
+              </div>
+              <div class="pc green fragment" style="height:270px">
+                <span class="tag yellow">Gemini Decision 1</span>
+                <ul class="bl" style="font-size:21px; margin-top:20px">
+                  <li>Scores candidate options in <b>one forward pass</b></li>
+                  <li>Returns probabilities, not prose</li>
+                  <li>Confidence score from 0 to 1</li>
+                  <li>$0 for output tokens</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ในแอป AI จริง ๆ หลาย call เป็นคำถามปิด: จะเรียก tool ไหน, ผิด policy ไหม, ส่งไปโมเดลไหน, context นี้เกี่ยวข้องไหม • ถ้าใช้โมเดล generative ต้องรอมันเขียนทีละ token, จ่ายค่า output/thinking, แล้ว parse ข้อความกลับเป็น label และไม่รู้ว่ามั่นใจแค่ไหน • Gemini Decision 1 ให้คะแนนทุกตัวเลือกใน forward pass เดียว คืนค่าเป็นความน่าจะเป็นพร้อม confidence 0–1</aside>
+      </section>
+
+      <!-- At a glance numbers -->
+      <section data-title="At a glance">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Gemini Decision 1 · gemini-decision-1</div>
+            <h2 style="margin-bottom:34px">At a glance</h2>
+            <div class="grid g3" style="width:1000px; gap:22px">
+              <div class="pc blue stat fragment"><b>1,000</b><span>questions in a single request</span></div>
+              <div class="pc yellow stat fragment"><b>150–250<small>ms</small></b><span>end-to-end latency (50–100 ms median model compute)</span></div>
+              <div class="pc green stat fragment"><b>$0.10</b><span>per 1M input tokens · <strong>$0</strong> for output</span></div>
+              <div class="pc red stat fragment"><b>256K</b><span>tokens of multimodal input</span></div>
+              <div class="pc stat fragment"><b>0 → 1</b><span>confidence score on every answer</span></div>
+              <div class="pc blue stat fragment"><b>~5×</b><span>cheaper than Gemini 3.5 Flash-Lite + Interactions API*</span></div>
+            </div>
+            <p class="muted" style="font-size:15px; margin-top:16px">* across Google's shared benchmark suite · latency figure for contexts up to 16K tokens</p>
+          </div>
+        </div>
+        <aside class="notes">ตัวเลขสำคัญ: ถามได้ถึง 1,000 คำถามใน request เดียว • latency end-to-end 150–250 ms (เวลาโมเดลคำนวณ median 50–100 ms) สำหรับ context ไม่เกิน 16K tokens • ราคา $0.10 ต่อล้าน input tokens และ output ฟรี • รับ input ได้ถึง 256K tokens • ทุกคำตอบมี confidence 0–1 • Google บอกว่าถูกกว่า Gemini 3.5 Flash-Lite ที่ใช้ผ่าน Interactions API ราว 5 เท่าบน benchmark ชุดเดียวกัน และมี calibration error ต่ำที่สุดในชุดทดสอบ</aside>
+      </section>
+
+      <!-- Section 02 -->
+      <section class="bg-blue" data-title="02 · How it works">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">How it<br>works</h1>
+            <p class="sub" style="margin-top:28px">One input, many questions,<br>calibrated answers</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • ดูกลไกการทำงาน ประเภทคำถาม และการคิดค่าใช้จ่าย</aside>
+      </section>
+
+      <!-- Flow -->
+      <section data-title="One input → many decisions">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">The request</div>
+            <h2 style="margin-bottom:44px">One input → many decisions</h2>
+            <div class="flow" style="width:1088px">
+              <div class="pc blue node fragment"><b>Shared input</b>Text, image, audio, video, PDF<br><code>up to 256K tokens</code></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc yellow node fragment"><b>Questions</b>Yes/No, choice, rubric — mixed<br><code>up to 1,000</code></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc green node fragment"><b>Single pass</b>Scores every option at once<br><code>gemini-decision-1</code></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc red node fragment"><b>Answers</b>Probabilities + confidence<br><code>0 → 1</code></div>
+            </div>
+            <div class="pc fragment" style="margin-top:34px; width:1000px; display:flex; gap:20px; align-items:center">
+              <svg class="ico" style="width:42px; height:42px; margin:0; flex:none"><use href="#i-bolt"/></svg>
+              <span>Use the confidence score in code: act on clear cases, send ambiguous ones to a <b>fallback model or a human reviewer</b>.</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ส่ง input ก้อนเดียว (มัลติโมดัลได้) พร้อมคำถามอิสระได้ถึง 1,000 ข้อ • โมเดลไม่ได้ generate ข้อความ แต่ให้คะแนนตัวเลือกทั้งหมดใน forward pass เดียว • ได้ความน่าจะเป็นและ confidence กลับมา • จุดที่ทรงพลัง: เอา confidence มาเขียน logic ได้เลย เคสชัดก็ทำต่ออัตโนมัติ เคสกำกวมส่งไปโมเดลที่ใหญ่กว่าหรือให้คนตรวจ</aside>
+      </section>
+
+      <!-- Question types -->
+      <section data-title="Three question types">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Question types · mix them in one request</div>
+            <h2 style="margin-bottom:34px">Three question types</h2>
+            <div class="grid g3" style="width:1088px; gap:24px">
+              <div class="pc blue qt fragment"><code>"noul"</code><h3>Yes / No</h3>Probability that a condition holds. Optional <i>true</i> / <i>false</i> description criteria.</div>
+              <div class="pc yellow qt fragment"><code>"choice"</code><h3>Multiple choice</h3>Pick from <b>2 to 255</b> choices. Returns the winner + normalized probabilities for every candidate.</div>
+              <div class="pc green qt fragment"><code>"score"</code><h3>Ordered rubric</h3>Grade against an ordered rubric (starting at 0). Returns a continuous weighted score + per-level probabilities.</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">คำถามมี 3 แบบ: (1) noul = ใช่/ไม่ใช่ ได้ความน่าจะเป็นว่าเงื่อนไขเป็นจริง ใส่ criteria ของ true/false เพิ่มได้ (2) choice = เลือก 1 จาก 2–255 ตัวเลือก ได้ตัวที่ชนะพร้อม probability ของทุกตัวเลือก (3) score = ให้คะแนนตาม rubric ที่เรียงลำดับ เริ่มจาก 0 ได้คะแนนต่อเนื่องแบบถ่วงน้ำหนักและ probability ของแต่ละระดับ • ทั้ง 3 แบบผสมกันใน request เดียวได้</aside>
+      </section>
+
+      <!-- Multimodal -->
+      <section data-title="Natively multimodal">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Input</div>
+            <h2 style="margin-bottom:30px">Natively multimodal</h2>
+            <div class="chips mm" style="margin-bottom:34px">
+              <span class="chip" style="background:var(--p-blue)">Text</span><span class="chip" style="background:var(--p-yellow)">Images</span><span class="chip" style="background:var(--p-green)">Audio</span><span class="chip" style="background:var(--p-red)">Video</span><span class="chip">PDFs</span>
+            </div>
+            <div class="grid g3" style="width:1088px; gap:24px">
+              <div class="pc fragment"><h3>Combine modalities</h3>A call recording + account metadata, or a scanned PDF claim + damage photos — in one input.</div>
+              <div class="pc fragment"><h3>Tunable resolution</h3>Set image &amp; video resolution to trade visual detail against token cost.</div>
+              <div class="pc fragment"><h3>No extra pipelines</h3>No separate audio transcription or OCR step — and no separate bill for them.</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">สร้างบนสถาปัตยกรรมมัลติโมดัลของ Gemini: ส่งข้อความ รูป เสียง วิดีโอ PDF ได้ตรง ๆ • ผสมกันได้ เช่น ไฟล์เสียง call center + ข้อมูลบัญชีลูกค้า หรือ PDF เคลมประกัน + รูปความเสียหาย • ปรับ resolution ของรูป/วิดีโอเพื่อคุมคุณภาพกับค่า token • ไม่ต้องทำ OCR หรือถอดเสียงแยก และไม่มีค่าใช้จ่ายส่วนนั้นเพิ่ม</aside>
+      </section>
+
+      <!-- Pricing model -->
+      <section data-title="Predictable cost &amp; latency">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Pricing &amp; latency</div>
+            <h2 style="margin-bottom:34px">Predictable cost &amp; latency</h2>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:40px; width:1088px; align-items:start">
+              <ul class="bl">
+                <li class="fragment"><b>$0.10</b> per 1M input tokens, <b>$0</b> output</li>
+                <li class="fragment">Shared input billed <b>once per request</b>, however many questions</li>
+                <li class="fragment">Each question adds only its own instruction &amp; criteria tokens</li>
+                <li class="fragment">No variable thinking-token bills</li>
+              </ul>
+              <div class="pc yellow fragment">
+                <h3>Latency stays nearly flat</h3>
+                <div class="lat">
+                  <div><span>1 question</span><i style="width:62%"></i></div>
+                  <div><span>100 questions</span><i style="width:66%"></i></div>
+                </div>
+                <p style="font-size:18px; margin-top:14px">150–250 ms end-to-end, "nearly flat from 1 to 100 questions per request" (contexts up to 16K tokens).</p>
+                <p class="muted" style="font-size:14px; margin-top:6px">Bars are illustrative, not measured values.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">โมเดลราคาคาดเดาได้: input $0.10 ต่อล้าน tokens, output ฟรี • input ที่แชร์กันคิดเงินครั้งเดียวต่อ request ไม่ว่าจะถามกี่ข้อ แต่ละคำถามเพิ่มแค่ token ของคำสั่งและ criteria ของมันเอง • ไม่มีค่า thinking tokens ที่ผันผวน • latency แทบไม่เพิ่มเมื่อเพิ่มจาก 1 เป็น 100 คำถาม (บอกผู้ฟังว่ากราฟแท่งเป็นภาพประกอบ ไม่ใช่ค่าที่วัดจริง)</aside>
+      </section>
+
+      <!-- Section 03 -->
+      <section class="bg-green" data-title="03 · Code &amp; real-world use">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Code &amp;<br>real-world use</h1>
+            <p class="sub" style="margin-top:28px">From one Python call<br>to Google products</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • ดูโค้ดจริงจากบล็อก แล้วดูว่า Google เอาไปใช้ในโปรดักต์อะไรบ้าง</aside>
+      </section>
+
+      <section data-title="Example: breakroom spill check">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 48px">
+            <div class="eyebrow">Code · Python · 1/2 · google-genai SDK</div>
+            <h2 style="margin-bottom:20px; font-size:40px">Example: breakroom spill check</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <pre style="width:740px; flex:none; font-size:13px"><code class="language-python" data-trim>
+from google import genai
+
+client = genai.Client(http_options={"api_version": "v1beta"})
+
+result = client.decisions.create(
+    model="gemini-decision-1",
+    input=[
+        {"type": "image", "mime_type": "image/jpeg",
+         "uri": "https://storage.googleapis.com/generativeai-downloads/images/spill.jpg"},
+        {"type": "text",
+         "text": "Breakroom counter check before the 9 AM client meeting."},
+    ],
+    questions={
+        "has_spill": {
+            "type": "noul",
+            "instructions": "Is there an uncleaned liquid spill on the counter?",
+        },
+        "next_action": { ... },   # next slide
+        "severity":    { ... },   # next slide
+    },
+)
+              </code></pre>
+              <div style="display:grid; gap:14px; width:330px">
+                <div class="cmd">pip install google-genai</div>
+                <ul class="bl" style="font-size:19px">
+                  <li><code>client.decisions.create</code> with <code>gemini-decision-1</code></li>
+                  <li><code>input</code> uses the same Content blocks as the Interactions API</li>
+                  <li>Image + text context in one input</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่างจากบล็อก ส่วนที่ 1: สร้าง client ด้วย api_version v1beta แล้วเรียก client.decisions.create กับโมเดล gemini-decision-1 • input เป็นรูปเคาน์เตอร์ห้องพักพนักงาน + ข้อความบริบท ใช้ format Content แบบเดียวกับ Interactions API • คำถามแรก has_spill แบบ noul (ใช่/ไม่ใช่) ว่ามีน้ำหกที่ยังไม่เช็ดไหม</aside>
+      </section>
+
+      <section data-title="Choice &amp; rubric questions">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 48px">
+            <div class="eyebrow">Code · Python · 2/2</div>
+            <h2 style="margin-bottom:20px; font-size:40px">Choice &amp; rubric questions</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <pre style="width:740px; flex:none; font-size:13px"><code class="language-python" data-trim>
+"next_action": {
+    "type": "choice",
+    "instructions": "Which cleanup action fits the scene?",
+    "criteria": {
+        "wipe_with_cloth":
+            "Small counter spill with a cloth or towel already nearby.",
+        "dispatch_janitorial":
+            "Large floor hazard, broken glass, or active leak.",
+        "ready_for_meeting": "Counter is clean and ready.",
+    },
+},
+"severity": {
+    "type": "score",
+    "instructions": "Rate the severity of the counter mess.",
+    "criteria": [
+        "Clean and ready.",              # level 0
+        "Minor localized spill.",        # level 1
+        "Major spill or safety hazard.", # level 2
+    ],
+},
+              </code></pre>
+              <div style="display:grid; gap:14px; width:330px">
+                <ul class="bl" style="font-size:19px">
+                  <li><b>choice</b>: criteria is a dict — label → description</li>
+                  <li><b>score</b>: criteria is an ordered list, starting at level 0</li>
+                  <li>Named questions → named answers</li>
+                </ul>
+                <div class="pc green" style="font-size:18px; padding:16px 18px"><b>Result in the blog:</b> spill detected, <code>next_action</code> = <code>wipe_with_cloth</code></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ส่วนที่ 2 (อยู่ใน questions เดียวกัน): next_action แบบ choice มี 3 ตัวเลือกพร้อมคำอธิบายว่าเมื่อไหร่ควรเลือก • severity แบบ score ใช้ rubric เรียงลำดับ 0 = สะอาด, 1 = หกเล็กน้อย, 2 = หกมาก/อันตราย • ผลในบล็อก: ตรวจเจอน้ำหก และแนะนำ wipe_with_cloth</aside>
+      </section>
+
+      <section data-title="What comes back">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 48px">
+            <div class="eyebrow">Docs · response shape</div>
+            <h2 style="margin-bottom:22px; font-size:42px">What comes back</h2>
+            <div class="grid g3" style="width:1104px; gap:18px">
+              <div class="pc blue fragment" style="padding:18px"><h3><code>noul</code> · Yes/No</h3>
+<pre style="font-size:13px; background:#fff; margin-top:10px"><code class="language-json" data-trim>
+{"type": "noul",
+ "noul": 0.99,
+ "confidence": 0.99}
+</code></pre>
+<p style="font-size:16px; margin-top:10px">P(yes), clamped 0.01–0.99<br>confidence = max(p, 1 − p)</p></div>
+              <div class="pc yellow fragment" style="padding:18px"><h3><code>choice</code></h3>
+<pre style="font-size:13px; background:#fff; margin-top:10px"><code class="language-json" data-trim>
+{"type": "choice",
+ "choice": "billing",
+ "probabilities": {
+   "billing": 0.99,
+   "shipping": 0.004, ...},
+ "confidence": 0.99}
+</code></pre>
+<p style="font-size:16px; margin-top:10px">Probabilities sum to 1<br>confidence = top option</p></div>
+              <div class="pc green fragment" style="padding:18px"><h3><code>score</code> · rubric</h3>
+<pre style="font-size:13px; background:#fff; margin-top:10px"><code class="language-json" data-trim>
+{"type": "score",
+ "score": 1.12,
+ "legend": {"0": "...", ...},
+ "probabilities": {
+   "0": 0.03, "1": 0.83, "2": 0.15},
+ "confidence": 0.83}
+</code></pre>
+<p style="font-size:16px; margin-top:10px">Weighted average of levels —<br>can fall between levels</p></div>
+            </div>
+            <p class="mono" style="font-size:16px; margin-top:16px">Top level: <b>answers</b> (same keys you sent) + <b>usage</b> — <code>total_output_tokens: 0</code></p>
+          </div>
+        </div>
+        <aside class="notes">รูปแบบผลลัพธ์จาก docs: ได้ answers ที่ key ตรงกับคำถามที่ส่งไป + usage • noul = ความน่าจะเป็นว่า 'ใช่' อยู่ระหว่าง 0.01–0.99 และ confidence = max(p, 1−p) • choice = ตัวที่ชนะ + probabilities ของทุกตัวเลือกรวมกันได้ 1, confidence = ค่าของตัวที่ชนะ • score = ค่าเฉลี่ยถ่วงน้ำหนักของ level จึงออกมาเป็น 1.12 ได้ มี legend และ probabilities ต่อ level • usage แสดง output tokens เป็น 0 เสมอ (ตัวเลขในตัวอย่างมาจากตัวอย่างใน docs คนละเคสกัน)</aside>
+      </section>
+
+      <section data-title="Act on confidence">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px">
+            <div class="eyebrow">Docs · Python</div>
+            <h2 style="margin-bottom:22px; font-size:42px">Act on confidence</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <pre style="width:700px; flex:none; font-size:15px"><code class="language-python" data-trim data-line-numbers="1-6|8-10|12-14">
+a = result.answers
+
+spill = a["has_spill"]
+if spill.noul > 0.9 and spill.confidence > 0.6:
+    action = a["next_action"].choice
+    # → wipe_with_cloth / dispatch_janitorial / ...
+
+sev = a["severity"]
+level = max(sev.probabilities, key=sev.probabilities.get)
+print(sev.score, sev.legend[level])
+
+if a["next_action"].confidence < 0.7:
+    send_to_human_review()   # or a bigger model
+              </code></pre>
+              <div style="display:grid; gap:14px; width:350px">
+                <div class="pc yellow" style="font-size:18px; padding:18px"><b>Tune thresholds</b> on labeled examples from your own traffic — weigh false positives vs. false negatives.</div>
+                <div class="pc red" style="font-size:18px; padding:18px"><code>noul</code> tops out at <b>0.99</b> — a check like <code>&gt; 0.99</code> never matches.</div>
+                <p class="muted" style="font-size:14px">Thresholds shown are illustrations from the docs, not recommended values.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เอา confidence มาใช้ในโค้ด: (1) ถ้า has_spill มั่นใจว่าใช่ ค่อยอ่าน next_action ไปทำงานต่อ (2) score ถ้าอยากได้ level เป็นจำนวนเต็มให้เลือก level ที่ probability สูงสุด แล้วดูคำอธิบายจาก legend (3) ถ้า confidence ต่ำ ส่งให้คนตรวจหรือโมเดลใหญ่ • docs ย้ำว่า threshold ต้องตั้งจากข้อมูลจริงที่ label แล้ว ตัวเลข 0.9/0.6/0.7 เป็นแค่ตัวอย่าง • ระวัง noul สูงสุดแค่ 0.99 เช็ค > 0.99 จะไม่มีวันจริง • send_to_human_review เป็นฟังก์ชันสมมติของเราเอง</aside>
+      </section>
+
+      <section data-title="Same call: JavaScript &amp; REST">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px">
+            <div class="eyebrow">Docs · SDKs</div>
+            <h2 style="margin-bottom:22px; font-size:42px">Same call: JavaScript &amp; REST</h2>
+            <div class="grid g2" style="width:1104px; gap:22px; align-items:start">
+              <div><div class="cmd" style="margin-bottom:12px">npm install @google/genai@latest</div>
+<pre style="font-size:14px"><code class="language-javascript" data-trim>
+import { GoogleGenAI } from "@google/genai";
+const ai = new GoogleGenAI({ apiVersion: "v1beta" });
+
+const result = await ai.decisions.create({
+  model: "gemini-decision-1",
+  input: "...",
+  questions: {
+    is_damaged: { type: "noul",
+      instructions: "Did the item arrive damaged?" },
+  },
+});
+console.log(result.answers?.is_damaged?.noul);
+</code></pre></div>
+              <div><div class="cmd" style="margin-bottom:12px">POST /v1beta/decisions</div>
+<pre style="font-size:14px"><code class="language-bash" data-trim>
+curl -X POST \
+ "https://generativelanguage.googleapis.com/v1beta/decisions" \
+ -H "x-goog-api-key: $GEMINI_API_KEY" \
+ -H "Content-Type: application/json" \
+ -d '{
+  "model": "gemini-decision-1",
+  "input": "...",
+  "questions": {
+    "is_damaged": {"type": "noul",
+      "instructions": "Did the item arrive damaged?"}
+  }}'
+</code></pre>
+<p class="muted" style="font-size:15px; margin-top:10px">Python needs google-genai SDK 3.2+</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เรียกได้ทั้ง JavaScript ผ่าน @google/genai และ REST ที่ endpoint /v1beta/decisions ใช้ header x-goog-api-key • โครงสร้างเหมือน Python ทุกอย่าง: model, input, questions • ฝั่ง Python ต้องใช้ google-genai เวอร์ชัน 3.2 ขึ้นไป</aside>
+      </section>
+
+      <section data-title="Writing good questions">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px">
+            <div class="eyebrow">Docs · best practices</div>
+            <h2 style="margin-bottom:22px; font-size:42px">Writing good questions</h2>
+            <div class="grid g3" style="width:1104px; gap:18px">
+              <div class="pc blue fragment"><h3>One decision each</h3>Split independent checks into separate questions in the same request.</div>
+              <div class="pc yellow fragment"><h3>Full question in <code>instructions</code></h3>The model never sees the question key.</div>
+              <div class="pc green fragment"><h3>Describe every option</h3>Short descriptions for choices &amp; rubric levels. Keep score scales linear.</div>
+              <div class="pc red fragment"><h3>Plan for "none fit"</h3>Choice always spreads probability. Check confidence, add a scope check or an <code>"other"</code> key.</div>
+              <div class="pc fragment"><h3>Ask positively</h3>Avoid negated questions — subtract in code. Compare numbers &amp; dates in code too.</div>
+              <div class="pc blue fragment"><h3>Input is untrusted</h3>Explicit criteria, test adversarial inputs, keep a human on high-stakes actions.</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">tips จาก docs: (1) หนึ่งคำถามหนึ่งการตัดสินใจ ถ้ามีหลายเรื่องให้แยกเป็นหลายคำถามใน request เดียว (2) โมเดลไม่เห็น key ของคำถาม ต้องเขียนคำถามเต็มใน instructions (3) ใส่คำอธิบายสั้น ๆ ทุกตัวเลือกและทุก level, scale ของ score ต้องเป็นเชิงเส้นเพราะคิดค่าเฉลี่ยจาก index (4) choice จะกระจาย probability เสมอแม้ไม่มีตัวไหนตรง ให้เช็ค confidence หรือเพิ่ม key 'other' (docs บอกให้เลี่ยง none_of_the_above) (5) ถามเชิงบวก แล้วกลับค่าในโค้ด ส่วนการเทียบตัวเลข/วันที่ให้ทำในโค้ด (6) input ถือว่าไม่น่าไว้ใจ ทดสอบ prompt injection และให้คนตรวจงานเสี่ยงสูง</aside>
+      </section>
+
+      <!-- Use at Google -->
+      <section data-title="Already powering Google products">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">In production</div>
+            <h2 style="margin-bottom:30px">Already powering Google products</h2>
+            <div class="grid g2" style="width:1088px; gap:22px">
+              <div class="pc blue fragment"><h3>Gemini Notebook · model routing</h3>Real-time router picks the model tier &amp; thinking level — everyday queries with <b>up to 40% lower latency</b>.</div>
+              <div class="pc yellow fragment"><h3>Stitch Rapid · design iteration</h3>Generates playable wireframes of a product flow in seconds; voice or tap edits apply almost instantly.</div>
+              <div class="pc green fragment"><h3>CC (Google Labs) · emoji picks</h3>Chooses an emoji reaction from a palette of <b>200+ options</b> in a fraction of a second.</div>
+              <div class="pc red fragment"><h3>Search · MCP tool safety</h3>A safety layer that detects adversarial behavior &amp; content, within the latency envelope.</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Google ใช้จริงแล้วใน 4 ที่: (1) Gemini Notebook ใช้เป็น router เลือกโมเดลและระดับ thinking แบบ real-time คำถามทั่วไปเร็วขึ้นถึง 40% แล้วเก็บโมเดลใหญ่ไว้งานยาก (2) Stitch Rapid สร้าง wireframe ที่กดเล่นได้ทั้ง flow ในไม่กี่วินาที แก้ด้วยเสียงหรือแตะได้ทันที (3) CC ของ Google Labs เลือก emoji จากกว่า 200 ตัวในเสี้ยววินาที (4) Google Search ใช้เป็นชั้นความปลอดภัยของ MCP tools ตรวจจับพฤติกรรมและเนื้อหาที่เป็นอันตราย</aside>
+      </section>
+
+      <!-- Patterns -->
+      <section data-title="Patterns you can build">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Ideas</div>
+            <h2 style="margin-bottom:30px">Patterns you can build</h2>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:40px; width:1088px; align-items:start">
+              <ul class="bl">
+                <li><b>Tool selection</b> for agents</li>
+                <li><b>Model routing</b> — cheap vs. deep</li>
+                <li><b>Policy &amp; rule checks</b> on content</li>
+                <li><b>Context grading</b> — is this chunk relevant?</li>
+                <li><b>Content grading</b> with a rubric</li>
+              </ul>
+              <div class="pc">
+                <h3 style="margin-bottom:14px">Try the demo apps in AI Studio</h3>
+                <div style="display:grid; gap:12px; font-size:19px">
+                  <a href="https://aistudio.google.com/apps/bundled/doorstep-parcels-qa?fullscreenApplet=true" target="_blank"><span class="chip" style="background:var(--p-blue)">Doorstep Parcels</span></a>
+                  <a href="https://aistudio.google.com/apps/bundled/speed-sketch?fullscreenApplet=true" target="_blank"><span class="chip" style="background:var(--p-yellow)">Speed Sketch</span></a>
+                  <a href="https://aistudio.google.com/apps/bundled/find-the-zoo-keeper?fullscreenApplet=true" target="_blank"><span class="chip" style="background:var(--p-green)">Find the Zoo Keeper</span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เอาไปใช้ได้กับ pattern พวกนี้: เลือก tool ให้ agent, route ไปโมเดลถูกหรือโมเดลคิดลึก, ตรวจ policy, ให้คะแนนความเกี่ยวข้องของ context ใน RAG, ให้คะแนนเนื้อหาด้วย rubric • ลองเล่น demo apps ใน AI Studio: Doorstep Parcels, Speed Sketch, Find the Zoo Keeper (คลิกลิงก์ในสไลด์เปิดได้เลย)</aside>
+      </section>
+
+      <!-- Section 04 -->
+      <section class="bg-red" data-title="04 · Get started">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Get<br>started</h1>
+            <p class="sub" style="margin-top:28px">Gemini API · Google AI Studio<br>and your favorite frameworks</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 4 • เริ่มใช้ได้เลยวันนี้</aside>
+      </section>
+
+      <section data-title="Limits &amp; rate limits">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px">
+            <div class="eyebrow">Docs · limits</div>
+            <h2 style="margin-bottom:22px; font-size:42px">Limits &amp; rate limits</h2>
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:32px; width:1104px; align-items:start">
+              <ul class="bl" style="font-size:20px">
+                <li><b>262,144</b> tokens context — shared by input + all questions</li>
+                <li><b>1–1,000</b> questions · <b>2–255</b> choices · <b>2–255</b> rubric levels (2–10 recommended)</li>
+                <li>Inline base64 up to <b>100 MB</b> (PDF 50 MB) · public/signed URLs up to <b>15 MB</b></li>
+                <li>No YouTube URLs or <code>gs://</code> · text-only instructions</li>
+                <li>Resolution: <code>low</code> · <code>medium</code> · <code>high</code> · <code>ultra_high</code> (images only)</li>
+              </ul>
+              <div class="pc" style="padding:20px 24px">
+                <h3 style="margin-bottom:12px">Rate limits (per project)</h3>
+                <table class="rl">
+                  <tr><th>Tier</th><th>RPM</th><th>TPM</th><th>RPD</th></tr>
+                  <tr><td>Free</td><td>200</td><td>50K</td><td>10K</td></tr>
+                  <tr><td>Tier 1</td><td>1,500</td><td>1M</td><td>50K</td></tr>
+                  <tr><td>Tier 2</td><td>5,000</td><td>4M</td><td>∞</td></tr>
+                  <tr><td>Tier 3</td><td>15,000</td><td>10M</td><td>∞</td></tr>
+                </table>
+                <p class="muted" style="font-size:14px; margin-top:10px">Not yet supported: function calling, structured outputs, batch, caching, search grounding</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ข้อจำกัดจาก docs: context window 262,144 tokens ใช้ร่วมกันระหว่าง input และคำถามทั้งหมด • คำถาม 1–1,000 ข้อ, choice 2–255 ตัวเลือก, rubric 2–255 ระดับ (แนะนำ 2–10) • ไฟล์ inline ได้ถึง 100 MB (PDF 50 MB) URL ภายนอกไม่เกิน 15 MB ไม่รองรับ YouTube และ gs:// • ปรับ resolution ของรูป/วิดีโอได้ • rate limit ต่อ project: Free 200 RPM, Tier 1 1,500, Tier 2 5,000, Tier 3 15,000 • ยังไม่รองรับ function calling, structured outputs, batch, caching, search grounding</aside>
+      </section>
+
+      <!-- Ecosystem -->
+      <section data-title="Availability &amp; ecosystem">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Availability</div>
+            <h2 style="margin-bottom:30px">Availability &amp; ecosystem</h2>
+            <div class="grid g3" style="width:1088px; gap:22px; margin-bottom:30px">
+              <div class="pc green"><span class="tag">Available</span><h3 style="margin-top:14px">Gemini API</h3>Python, JavaScript &amp; REST</div>
+              <div class="pc green"><span class="tag">Available</span><h3 style="margin-top:14px">Google AI Studio</h3>No-cost tier for prototyping</div>
+              <div class="pc"><span class="tag yellow">Coming soon</span><h3 style="margin-top:14px">Gemini in Google Cloud</h3>Interest form linked in the blog</div>
+            </div>
+            <div class="eyebrow">Integrations rolling out</div>
+            <div class="chips eco">
+              <span class="chip">OpenRouter</span><span class="chip">LangChain</span><span class="chip">Vercel AI SDK</span><span class="chip">LiteLLM</span><span class="chip">Pydantic AI</span><span class="chip">Pipecat</span><span class="chip">LiveKit</span><span class="chip">OpenCode</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ใช้ได้แล้วผ่าน Gemini API (Python, JavaScript, REST) และ Google AI Studio ซึ่งมี tier ฟรีสำหรับทดลอง • Gemini บน Google Cloud กำลังจะตามมา มีฟอร์มลงชื่อในบล็อก • integration ที่กำลังทยอยรองรับ: OpenRouter, LangChain, Vercel AI SDK, LiteLLM, Pydantic AI, Pipecat, LiveKit, OpenCode</aside>
+      </section>
+
+      <!-- Resources -->
+      <section data-title="Get started today">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:52px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:34px">Get started today</h2>
+            <div class="grid g2" style="width:1088px">
+              <div class="pc blue"><h3>Docs</h3><a class="mono" style="font-size:18px" href="https://aistudio.google.com/docs/decisions-api" target="_blank">aistudio.google.com/docs/decisions-api</a></div>
+              <div class="pc yellow"><h3>Playground</h3><a class="mono" style="font-size:18px" href="https://aistudio.google.com/apps/bundled/gemini-decisions-api-playground?fullscreenApplet=true" target="_blank">AI Studio · Decisions API Playground</a></div>
+              <div class="pc green"><h3>API key</h3><a class="mono" style="font-size:18px" href="https://aistudio.google.com/api-keys" target="_blank">aistudio.google.com/api-keys</a></div>
+              <div class="pc red"><h3>Announcement</h3><a class="mono" style="font-size:18px" href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/" target="_blank">blog.google · Gemini Decisions API</a></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แหล่งเริ่มต้น: Docs มีคู่มือ Python, JavaScript, REST • Playground ใน AI Studio ลองได้ไม่ต้องเขียนโค้ด • สร้าง API key ที่ aistudio.google.com/api-keys • บทความประกาศบน blog.google (11 พ.ย. 2026 โดย Min Choi และ Felix Yu, Google DeepMind) • ให้เวลาผู้ฟังถ่ายรูปสไลด์นี้</aside>
+      </section>
+
+      <!-- Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="images/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <svg class="ico abs" style="left:930px; top:240px; width:200px; height:200px; stroke-width:4"><use href="#i-star"/></svg>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณทุกคนครับ/ค่ะ • เปิดถาม-ตอบ • ชวนลองเล่น Playground ใน AI Studio แล้วคิดว่างานไหนในแอปของเราเป็น "การตัดสินใจ" ที่ย้ายมาใช้ Decisions API ได้</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <!-- DevFest template shapes: notched/scalloped cards + GDG lockup on every slide -->
+  <script>
+    (function () {
+      const NS = "http://www.w3.org/2000/svg", S = 3, o = S / 2;
+      function cardPath(W, H, el) {
+        const r = +(el.dataset.r || 34);
+        const [a, b] = (el.dataset.tl || "0x0").split("x").map(Number);
+        const [c, d] = (el.dataset.br || "0x0").split("x").map(Number);
+        const n = +(el.dataset.scallop || 0);
+        const L = o, T = o, R = W - o, B = H - o, P = [];
+        if (n) P.push(`M${L},${T}`); else if (a && b) P.push(`M${L + a + r},${T}`); else P.push(`M${L + r},${T}`);
+        P.push(`H${R - r}`, `A${r},${r} 0 0 1 ${R},${T + r}`);
+        if (c && d) P.push(`V${B - d - r}`, `A${r},${r} 0 0 1 ${R - r},${B - d}`, `H${R - c + r}`, `A${r},${r} 0 0 0 ${R - c},${B - d + r}`, `V${B - r}`, `A${r},${r} 0 0 1 ${R - c - r},${B}`);
+        else P.push(`V${B - r}`, `A${r},${r} 0 0 1 ${R - r},${B}`);
+        if (n) { // scalloped left edge (statement slides)
+          P.push(`H${L}`); const h = (B - T) / n;
+          for (let i = 0; i < n; i++) P.push(`A${h / 2},${h / 2} 0 0 1 ${L},${B - h * (i + 1)}`);
+        } else {
+          P.push(`H${L + r}`, `A${r},${r} 0 0 1 ${L},${B - r}`);
+          if (a && b) P.push(`V${T + b + r}`, `A${r},${r} 0 0 1 ${L + r},${T + b}`, `H${L + a - r}`, `A${r},${r} 0 0 0 ${L + a},${T + b - r}`, `V${T + r}`, `A${r},${r} 0 0 1 ${L + a + r},${T}`);
+          else P.push(`V${T + r}`, `A${r},${r} 0 0 1 ${L + r},${T}`);
+        }
+        return P.join(" ") + " Z";
+      }
+      document.querySelectorAll(".reveal .nc").forEach((el) => {
+        const cs = getComputedStyle(el), W = parseFloat(cs.width), H = parseFloat(cs.height);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "nc-s"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+        svg.setAttribute("width", W); svg.setAttribute("height", H);
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", cardPath(W, H, el));
+        p.setAttribute("fill", el.dataset.fill || "#fff"); p.setAttribute("stroke", "#1e1e1e"); p.setAttribute("stroke-width", S);
+        svg.appendChild(p); el.prepend(svg);
+      });
+      document.querySelectorAll(".reveal .slides section:not([data-corner=off])").forEach((s) => {
+        s.insertAdjacentHTML("beforeend", '<div class="corner-logos"><img src="images/logos/build-with-gemini-light.png" alt="Build with Gemini"><img src="images/logos/devfest-gdg-lockup-light.png" alt="DevFest · Google Developer Groups"></div>');
+      });
+    })();
+  </script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      controls: false,     // replaced by the shopio-style #ctrl bar
+      overview: false,     // replaced by the scrollable #ov grid
+      progress: false,
+      slideNumber: "c/t",
+      showSlideNumber: "print", // page numbers only in exported PDF
+      transition: "fade",
+      backgroundTransition: "fade",
+      width: 1280,
+      height: 720,
+      margin: 0,
+      center: false,       // slides are absolutely laid out 1280×720 canvases
+      plugins: [RevealHighlight, RevealNotes],
+      // export: one page per slide, all fragments shown
+      view: /[?&]print-pdf\b/.test(location.search) ? "print" : null,
+      pdfSeparateFragments: false,
+      pdfMaxPagesPerSlide: 1,
+    });
+  </script>
+
+  <!-- Export PDF: All slides / This slide -->
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const isPrint = params.has("print-pdf");
+
+      if (isPrint) {
+        // ---- print view (opened in a new tab by the menu) ----
+        const only = params.get("slide");
+        Reveal.on("pdf-ready", async () => {
+          if (only !== null) {
+            const target = Reveal.getSlides()[+only]?.closest(".pdf-page");
+            if (target) document.querySelectorAll(".reveal .slides .pdf-page").forEach((p) => { if (p !== target) p.remove(); });
+            document.title = `Gemini Decisions API – slide ${+only + 1}`;
+          } else {
+            document.title = "Gemini Decisions API – all slides";
+          }
+          if (!params.has("autoprint")) return;
+          await document.fonts.ready;
+          addEventListener("afterprint", () => window.close());
+          setTimeout(() => window.print(), 300);
+        });
+        return;
+      }
+
+      // ---- normal view: shopio-style control bar ----
+      const $ = (id) => document.getElementById(id);
+      const slides = Reveal.getSlides(), N = slides.length;
+      const idx = () => slides.indexOf(Reveal.getCurrentSlide());
+      const cnt = $("cnt"), prog = $("progress"), list = $("menu"), xMenu = $("exportMenu"), bPdf = $("bPdf"), bNotes = $("bNotes");
+      const titleOf = (s, i) => s.dataset.title || s.querySelector("h1,h2")?.textContent.trim() || `Slide ${i + 1}`;
+
+      // slide list (click the counter)
+      list.innerHTML = slides.map((s, i) => `<a href="#" data-i="${i}"><span>${i + 1}</span>${titleOf(s, i).replace(/</g, "&lt;")}</a>`).join("");
+      function sync() {
+        const i = idx();
+        cnt.textContent = `${i + 1} / ${N}`;
+        prog.style.width = (N > 1 ? (i / (N - 1)) * 100 : 100) + "%";
+        list.querySelectorAll("a").forEach((a, k) => a.classList.toggle("cur", k === i));
+      }
+      Reveal.on("ready", sync); Reveal.on("slidechanged", sync); sync();
+
+      const menus = [list, xMenu];
+      function openOnly(m) {
+        const willOpen = m && !m.classList.contains("open");
+        menus.forEach((x) => x.classList.remove("open"));
+        if (willOpen) { m.classList.add("open"); wake(); }
+        bPdf.setAttribute("aria-expanded", xMenu.classList.contains("open"));
+        if (list.classList.contains("open")) list.querySelector("a.cur")?.scrollIntoView({ block: "center" });
+        if (xMenu.classList.contains("open")) $("exportCur").textContent = `PDF of slide ${idx() + 1} / ${N}`;
+      }
+
+      $("bPrev").onclick = () => Reveal.prev();
+      $("bNext").onclick = () => Reveal.next();
+      cnt.onclick = (e) => { e.stopPropagation(); openOnly(list); };
+      list.onclick = (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); Reveal.slide(+a.dataset.i); openOnly(null); };
+      // all-slides overview: clone each slide into a scaled 1280×720 thumbnail
+      const ov = $("ov"), ovg = ov.querySelector(".ovg");
+      function buildOv() {
+        const cur = idx();
+        ovg.innerHTML = "";
+        slides.forEach((s, i) => {
+          const t = document.createElement("div");
+          t.className = "ovt" + (i === cur ? " cur" : ""); t.dataset.i = i;
+          const fr = document.createElement("div"); fr.className = "fr";
+          const rv = document.createElement("div"); rv.className = "reveal";
+          const sl = document.createElement("div"); sl.className = "slides";
+          const c = s.cloneNode(true);
+          c.removeAttribute("hidden"); c.removeAttribute("aria-hidden");
+          c.classList.remove("past", "future"); c.classList.add("present");
+          c.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+          c.querySelectorAll("video").forEach((v) => v.remove());
+          c.querySelectorAll("aside.notes").forEach((n) => n.remove());
+          sl.appendChild(c); rv.appendChild(sl); fr.appendChild(rv);
+          const cap = document.createElement("div"); cap.className = "cap";
+          cap.innerHTML = `<span>${i + 1}</span>`; cap.append(titleOf(s, i));
+          t.append(fr, cap); ovg.appendChild(t);
+          // reveal only vertically-centres slides near the current one; centre every clone here
+          c.style.top = "0px";
+          c.style.top = Math.max((720 - c.offsetHeight) / 2, 0) + "px";
+        });
+        sizeOv();
+      }
+      function sizeOv() { ovg.querySelectorAll(".fr").forEach((fr) => { fr.firstChild.style.transform = `scale(${fr.clientWidth / 1280})`; }); }
+      const ovOpen = () => ov.classList.contains("open");
+      function toggleOv(force) {
+        const open = force ?? !ovOpen();
+        openOnly(null);
+        ov.classList.toggle("open", open);
+        $("bOv").classList.toggle("on", open);
+        if (open) { buildOv(); ovg.querySelector(".cur")?.scrollIntoView({ block: "center" }); }
+        else ovg.innerHTML = "";
+      }
+      $("bOv").onclick = () => toggleOv();
+      $("ovX").onclick = () => toggleOv(false);
+      ovg.onclick = (e) => { const t = e.target.closest(".ovt"); if (!t) return; Reveal.slide(+t.dataset.i); toggleOv(false); };
+      addEventListener("resize", () => { if (ovOpen()) sizeOv(); });
+      const toggleFs = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+      $("bFs").onclick = toggleFs;
+
+      // speaker notes → reveal's presenter window (current + next slide, timer, notes)
+      const notes = () => Reveal.getPlugin("notes");
+      bNotes.onclick = () => notes()?.open();
+
+      // export
+      function exportPdf(mode) {
+        const q = new URLSearchParams({ "print-pdf": "", autoprint: "" });
+        if (mode === "slide") q.set("slide", idx());
+        const url = location.pathname + "?" + q.toString().replace(/=(&|$)/g, "$1");
+        if (!window.open(url, "_blank")) location.href = url; // popup blocked → same tab
+        openOnly(null);
+      }
+      bPdf.onclick = (e) => { e.stopPropagation(); openOnly(xMenu); };
+      xMenu.onclick = (e) => { const b = e.target.closest("[data-export]"); if (b) exportPdf(b.dataset.export); };
+
+      // close menus on outside click; click on the slide = next (like shopio)
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("#ctrl,#menu,#exportMenu,#ov")) return;
+        const wasOpen = menus.some((m) => m.classList.contains("open"));
+        openOnly(null);
+        if (wasOpen) return;
+        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,video,canvas,pre,.demo-wrap")) return;
+        if (String(getSelection?.() || "").length) return;
+        Reveal.next();
+      }, true); // capture: read isOverview() before reveal handles the overview click
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menus.some((m) => m.classList.contains("open"))) { openOnly(null); e.stopPropagation(); e.preventDefault(); return; }
+        if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+        if (e.key === "o" || e.key === "O") { e.preventDefault(); e.stopPropagation(); toggleOv(); return; }
+        if (ovOpen()) { // overview owns the keyboard: Esc closes, arrows/space scroll the grid instead of changing slides
+          e.stopPropagation();
+          if (e.key === "Escape") { e.preventDefault(); toggleOv(false); }
+          return;
+        }
+        if (e.key === "e" || e.key === "E") { e.preventDefault(); e.stopPropagation(); exportPdf(e.shiftKey ? "all" : "slide"); }
+        else if (e.key === "n" || e.key === "N") { e.preventDefault(); e.stopPropagation(); notes()?.open(); }
+      }, true);
+
+      // hide the bar when the mouse is idle
+      let idle;
+      const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => { if (!menus.some((m) => m.classList.contains("open"))) document.body.classList.add("idle"); }, 2500); };
+      addEventListener("mousemove", wake); wake();
+    })();
+  </script>
+</body>
+</html>

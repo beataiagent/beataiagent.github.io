@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 176" width="360" height="176" role="img">
+  <defs>
+    <filter id="cardShadow" x="-6%" y="-8%" width="112%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#3c4043" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#1a73e8"/>
+    </marker>
+  </defs>
+  <rect width="360" height="176" rx="16" fill="#f4f8fe"/>
+  <!-- Three input running modes -->
+  <g filter="url(#cardShadow)">
+    <rect x="20" y="24" width="132" height="34" rx="9" fill="#ffffff" stroke="#dadce0"/>
+    <circle cx="35" cy="41" r="4.5" fill="#1a73e8"/>
+    <text x="47" y="39" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.8" font-weight="600" fill="#174ea6">IMAGE</text>
+    <text x="47" y="51" font-family="'Google Sans', 'Google Sans Text', Roboto, sans-serif" font-size="8.8" fill="#5f6368">Single frame</text>
+  </g>
+  <g filter="url(#cardShadow)">
+    <rect x="20" y="71" width="132" height="34" rx="9" fill="#ffffff" stroke="#dadce0"/>
+    <circle cx="35" cy="88" r="4.5" fill="#1a73e8"/>
+    <text x="47" y="86" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.8" font-weight="600" fill="#174ea6">VIDEO</text>
+    <text x="47" y="98" font-family="'Google Sans', 'Google Sans Text', Roboto, sans-serif" font-size="8.8" fill="#5f6368">Synced timestamps</text>
+  </g>
+  <g filter="url(#cardShadow)">
+    <rect x="20" y="118" width="132" height="34" rx="9" fill="#e8f0fe" stroke="#1a73e8" stroke-width="1.2"/>
+    <circle cx="35" cy="135" r="4.5" fill="#1e8e3e"/>
+    <text x="47" y="133" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="9.8" font-weight="600" fill="#174ea6">LIVE_STREAM</text>
+    <text x="47" y="145" font-family="'Google Sans', 'Google Sans Text', Roboto, sans-serif" font-size="8.8" fill="#3c4043">Async camera &amp; mic</text>
+  </g>
+  <!-- Connecting curves -->
+  <path d="M 152 41 C 184 41, 184 88, 210 88" fill="none" stroke="#8ab4f8" stroke-width="2"/>
+  <path d="M 152 88 L 210 88" fill="none" stroke="#1a73e8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+  <path d="M 152 135 C 184 135, 184 88, 210 88" fill="none" stroke="#8ab4f8" stroke-width="2"/>
+  <!-- Output low-latency card -->
+  <g filter="url(#cardShadow)">
+    <rect x="216" y="42" width="124" height="92" rx="14" fill="#ffffff" stroke="#1e8e3e" stroke-width="1.5"/>
+    <rect x="232" y="56" width="92" height="22" rx="11" fill="#e6f4ea"/>
+    <circle cx="245" cy="67" r="3.5" fill="#1e8e3e"/>
+    <text x="255" y="70.5" font-family="'Roboto Mono', ui-monospace, monospace" font-size="9.5" font-weight="600" fill="#137333">60 FPS ready</text>
+    <text x="278" y="99" text-anchor="middle" font-family="'Google Sans', 'Google Sans Text', Roboto, sans-serif" font-size="11.5" font-weight="600" fill="#202124">Real-Time Loop</text>
+    <text x="278" y="114" text-anchor="middle" font-family="'Google Sans', 'Google Sans Text', Roboto, sans-serif" font-size="9.2" fill="#5f6368">Frame tracking &amp;</text>
+    <text x="278" y="125" text-anchor="middle" font-family="'Google Sans', 'Google Sans Text', Roboto, sans-serif" font-size="9.2" fill="#5f6368">stream callbacks</text>
+  </g>
+</svg>

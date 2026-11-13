@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="400" height="225" role="img" aria-label="Universal Embedder preview">
+  <defs>
+    <linearGradient id="stageBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0f5ff"/>
+      <stop offset="50%" stop-color="#edf3fc"/>
+      <stop offset="100%" stop-color="#e9f1f4"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-4%" y="-5%" width="108%" height="114%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1a73e8" flood-opacity="0.07"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#3c4043" flood-opacity="0.05"/>
+    </filter>
+  </defs>
+  <style>
+
+    .ub { transform-box: fill-box; transform-origin: bottom center; }
+    .b0 { animation: ueBar 2.8s ease-in-out infinite; }
+    .b1 { animation: ueBar 2.8s ease-in-out 0.25s infinite; }
+    .b2 { animation: ueBar 2.8s ease-in-out 0.5s infinite; }
+    @keyframes ueBar { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.76); } }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <rect width="800" height="450" fill="url(#stageBg)"/>
+
+  <defs>
+    <clipPath id="birdClip"><rect x="84" y="96" width="192" height="136" rx="14"/></clipPath>
+  </defs>
+  <g filter="url(#cardShadow)">
+    <rect x="56" y="66" width="688" height="318" rx="16" fill="#ffffff" stroke="#e3e9f1" stroke-width="1.2"/>
+  </g>
+  <line x1="276" y1="164" x2="416" y2="218" stroke="#1a73e8" stroke-width="2"/>
+  <line x1="372" y1="292" x2="416" y2="234" stroke="#1e8e3e" stroke-width="2"/>
+
+  <image href="data:image/webp;base64,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" x="84" y="96" width="192" height="136" preserveAspectRatio="xMidYMid slice" clip-path="url(#birdClip)"/>
+  <rect x="84" y="96" width="192" height="136" rx="14" fill="none" stroke="#dce4ef" stroke-width="1.2"/>
+
+  <rect x="84" y="250" width="288" height="104" rx="12" fill="#f6f9fe" stroke="#dbe6f6" stroke-width="1.2"/>
+  <text x="102" y="280" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="12" font-weight="700" fill="#1a73e8" letter-spacing="0.6">TEXT QUERY</text>
+  <text x="102" y="310" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="13.8" font-weight="500" fill="#202124">“Small songbird perched outdoors”</text>
+
+  <rect x="416" y="96" width="300" height="258" rx="16" fill="#f8fafd" stroke="#e3eaf3" stroke-width="1.2"/>
+  <text x="440" y="130" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#5f6368" letter-spacing="0.6">SHARED MULTIMODAL SPACE</text>
+  <text x="440" y="174" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="30" font-weight="700" fill="#1a73e8">0.91</text>
+  <rect x="524" y="151" width="154" height="26" rx="13" fill="#e6f4ea" stroke="#cce8d4" stroke-width="1.1"/>
+  <text x="601" y="168.5" text-anchor="middle" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="12.5" font-weight="700" fill="#188038">Cross-modal match</text>
+    <rect x="440.0" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b0" x="440.0" y="224.8" width="10" height="67.2" rx="4" fill="#1a73e8"/>
+    <rect x="456.8" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b1" x="456.8" y="221.5" width="10" height="70.5" rx="4" fill="#1e8e3e"/>
+    <rect x="473.6" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b2" x="473.6" y="231.3" width="10" height="60.7" rx="4" fill="#1a73e8"/>
+    <rect x="490.4" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b0" x="490.4" y="249.4" width="10" height="42.6" rx="4" fill="#1e8e3e"/>
+    <rect x="507.2" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b1" x="507.2" y="252.6" width="10" height="39.4" rx="4" fill="#1a73e8"/>
+    <rect x="524.0" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b2" x="524.0" y="233.0" width="10" height="59.0" rx="4" fill="#1e8e3e"/>
+    <rect x="540.8" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b0" x="540.8" y="223.1" width="10" height="68.9" rx="4" fill="#1a73e8"/>
+    <rect x="557.6" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b1" x="557.6" y="222.3" width="10" height="69.7" rx="4" fill="#1e8e3e"/>
+    <rect x="574.4" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b2" x="574.4" y="236.2" width="10" height="55.8" rx="4" fill="#1a73e8"/>
+    <rect x="591.2" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b0" x="591.2" y="254.3" width="10" height="37.7" rx="4" fill="#1e8e3e"/>
+    <rect x="608.0" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b1" x="608.0" y="246.1" width="10" height="45.9" rx="4" fill="#1a73e8"/>
+    <rect x="624.8" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b2" x="624.8" y="233.0" width="10" height="59.0" rx="4" fill="#1e8e3e"/>
+    <rect x="641.6" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b0" x="641.6" y="223.1" width="10" height="68.9" rx="4" fill="#1a73e8"/>
+    <rect x="658.4" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b1" x="658.4" y="239.5" width="10" height="52.5" rx="4" fill="#1e8e3e"/>
+    <rect x="675.2" y="210" width="10" height="82" rx="4" fill="#eef3fd"/>
+    <rect class="ub b2" x="675.2" y="260.8" width="10" height="31.2" rx="4" fill="#1a73e8"/>
+  <text x="440" y="324" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="12.5" fill="#5f6368">Image + Text → unified vector</text>
+</svg>

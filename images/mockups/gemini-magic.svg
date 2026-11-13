@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" font-family="Roboto Mono, monospace">
+  <defs>
+    <linearGradient id="gm" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#4285f4"/><stop offset=".55" stop-color="#9b72cb"/><stop offset="1" stop-color="#d96570"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#9b72cb" stop-opacity=".75"/><stop offset="1" stop-color="#9b72cb" stop-opacity="0"/></radialGradient>
+    <clipPath id="win"><rect x="1" y="1" width="318" height="138" rx="11"/></clipPath>
+  </defs>
+  <g clip-path="url(#win)">
+    <rect width="320" height="140" fill="#1b1f2a"/>
+    <circle cx="232" cy="70" r="16" fill="#3a4250"/><path d="M196 145c4-34 18-48 36-48s32 14 36 48z" fill="#3a4250"/>
+    <!-- open palm skeleton -->
+    <g stroke="#34a853" stroke-width="2" stroke-linecap="round" fill="none">
+      <path d="M150 128 L132 112 L122 100 L114 90"/><path d="M150 128 L138 98 L134 82 L132 70"/><path d="M150 128 L150 96 L150 78 L150 64"/><path d="M150 128 L161 98 L164 82 L166 70"/><path d="M150 128 L170 104 L178 94 L184 86"/>
+    </g>
+    <g fill="#ea4335"><circle cx="150" cy="128" r="2.4"/><circle cx="132" cy="112" r="1.8"/><circle cx="122" cy="100" r="1.8"/><circle cx="114" cy="90" r="2"/><circle cx="138" cy="98" r="1.8"/><circle cx="134" cy="82" r="1.8"/><circle cx="132" cy="70" r="2"/><circle cx="150" cy="96" r="1.8"/><circle cx="150" cy="78" r="1.8"/><circle cx="150" cy="64" r="2"/><circle cx="161" cy="98" r="1.8"/><circle cx="164" cy="82" r="1.8"/><circle cx="166" cy="70" r="2"/><circle cx="170" cy="104" r="1.8"/><circle cx="178" cy="94" r="1.8"/><circle cx="184" cy="86" r="2"/></g>
+    <!-- sparkle burst -->
+    <circle cx="150" cy="44" r="40" fill="url(#glow)"/>
+    <path transform="translate(150 44)" d="M0,-30 Q0,0 30,0 Q0,0 0,30 Q0,0 -30,0 Q0,0 0,-30Z" fill="url(#gm)"/>
+    <path transform="translate(104 40)" d="M0,-8 Q0,0 8,0 Q0,0 0,8 Q0,0 -8,0 Q0,0 0,-8Z" fill="#4285f4" opacity=".85"/>
+    <path transform="translate(194 34)" d="M0,-10 Q0,0 10,0 Q0,0 0,10 Q0,0 -10,0 Q0,0 0,-10Z" fill="#d96570" opacity=".85"/>
+    <path transform="translate(186 62)" d="M0,-5 Q0,0 5,0 Q0,0 0,5 Q0,0 -5,0 Q0,0 0,-5Z" fill="#9b72cb"/>
+    <path transform="translate(116 66)" d="M0,-5 Q0,0 5,0 Q0,0 0,5 Q0,0 -5,0 Q0,0 0,-5Z" fill="#9b72cb"/>
+    <g fill="#fff" opacity=".7"><circle cx="124" cy="28" r="1.2"/><circle cx="178" cy="22" r="1.2"/><circle cx="96" cy="58" r="1"/><circle cx="204" cy="50" r="1"/></g>
+    <!-- gesture chip -->
+    <rect x="10" y="26" width="76" height="30" rx="7" fill="#fff"/>
+    <text x="48" y="38" font-size="7.5" fill="#1e1e1e" text-anchor="middle" font-weight="700">✊ → 🖐</text>
+    <text x="48" y="50" font-size="6.5" fill="#5f6368" text-anchor="middle">Open_Palm 0.97</text>
+    <rect x="252" y="26" width="60" height="16" rx="8" fill="#fff"/><text x="282" y="37" font-size="7" fill="#1e1e1e" text-anchor="middle">✨ × 12</text>
+    <rect width="320" height="18" fill="#fff"/>
+    <circle cx="10" cy="9" r="3" fill="#ea4335"/><circle cx="20" cy="9" r="3" fill="#fbbc04"/><circle cx="30" cy="9" r="3" fill="#34a853"/>
+    <text x="44" y="12.5" font-size="8" fill="#1e1e1e">Gemini Magic</text>
+    <text x="312" y="12.5" font-size="7" fill="#5f6368" text-anchor="end">LIVE</text>
+  </g>
+  <rect x="1" y="1" width="318" height="138" rx="11" fill="none" stroke="#1e1e1e" stroke-width="2"/>
+</svg>

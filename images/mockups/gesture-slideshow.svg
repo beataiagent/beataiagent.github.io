@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" font-family="Roboto Mono, monospace">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8ec5ff"/><stop offset="1" stop-color="#ffe7a5"/></linearGradient>
+    <clipPath id="win"><rect x="1" y="1" width="318" height="138" rx="11"/></clipPath>
+  </defs>
+  <g clip-path="url(#win)">
+    <rect width="320" height="140" fill="#1e1e1e"/>
+    <!-- photo -->
+    <rect x="14" y="26" width="212" height="100" rx="6" fill="url(#sky)"/>
+    <circle cx="180" cy="54" r="12" fill="#fbbc04"/>
+    <path d="M14 126 L70 66 L104 100 L138 62 L196 126 Z" fill="#34a853"/>
+    <path d="M14 126 L50 98 L86 126 Z" fill="#1e8e3e"/>
+    <path d="M70 66 L80 77 L62 76 Z M138 62 L150 75 L127 74 Z" fill="#fff"/>
+    <rect x="14" y="26" width="212" height="100" rx="6" fill="none" stroke="#fff" stroke-width="1.5"/>
+    <!-- nav arrows -->
+    <circle cx="26" cy="76" r="8" fill="#fff" opacity=".85"/><path d="M28 72l-4 4 4 4" stroke="#1e1e1e" stroke-width="1.6" fill="none"/>
+    <circle cx="214" cy="76" r="8" fill="#4285f4"/><path d="M212 72l4 4-4 4" stroke="#fff" stroke-width="1.8" fill="none"/>
+    <!-- slide dots -->
+    <g fill="#5f6368"><circle cx="100" cy="133" r="2"/><circle cx="108" cy="133" r="2"/><circle cx="116" cy="133" r="2" fill="#fff"/><circle cx="124" cy="133" r="2"/><circle cx="132" cy="133" r="2"/><circle cx="140" cy="133" r="2"/></g>
+    <!-- webcam corner -->
+    <rect x="236" y="26" width="76" height="62" rx="6" fill="#3a4250" stroke="#fff" stroke-width="1.5"/>
+    <circle cx="274" cy="48" r="9" fill="#4b5563"/>
+    <path d="M254 90c2-14 10-20 20-20s18 6 20 20z" fill="#4b5563"/>
+    <!-- thumbs up skeleton -->
+    <g stroke="#34a853" stroke-width="1.6" stroke-linecap="round" fill="none"><path d="M262 76 L260 64 L262 56 L264 50"/><path d="M262 76 L270 70 L276 70 L280 70 M262 76 L270 74 L278 74 M262 76 L270 78 L277 78"/></g>
+    <g fill="#ea4335"><circle cx="262" cy="76" r="1.8"/><circle cx="260" cy="64" r="1.6"/><circle cx="262" cy="56" r="1.6"/><circle cx="264" cy="50" r="1.8" fill="#fbbc04"/><circle cx="270" cy="70" r="1.5"/><circle cx="280" cy="70" r="1.5"/><circle cx="278" cy="74" r="1.5"/><circle cx="277" cy="78" r="1.5"/></g>
+    <!-- gesture label -->
+    <rect x="236" y="94" width="76" height="30" rx="7" fill="#fff"/>
+    <text x="274" y="106" font-size="7.5" fill="#1e1e1e" text-anchor="middle" font-weight="700">👍 Thumb_Up</text>
+    <rect x="243" y="111" width="62" height="5" rx="2.5" fill="#e8eaed"/><rect x="243" y="111" width="58" height="5" rx="2.5" fill="#34a853"/>
+    <text x="274" y="122.5" font-size="5.5" fill="#5f6368" text-anchor="middle">0.94 → next</text>
+    <!-- title bar -->
+    <rect width="320" height="18" fill="#fff"/>
+    <circle cx="10" cy="9" r="3" fill="#ea4335"/><circle cx="20" cy="9" r="3" fill="#fbbc04"/><circle cx="30" cy="9" r="3" fill="#34a853"/>
+    <text x="44" y="12.5" font-size="8" fill="#1e1e1e">Gesture Slideshow</text>
+    <text x="312" y="12.5" font-size="7" fill="#5f6368" text-anchor="end">3 / 6</text>
+  </g>
+  <rect x="1" y="1" width="318" height="138" rx="11" fill="none" stroke="#1e1e1e" stroke-width="2"/>
+</svg>

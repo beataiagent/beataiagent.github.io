@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 176" width="360" height="176" role="img">
+  <defs>
+    <filter id="cardShadow" x="-6%" y="-8%" width="112%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#3c4043" flood-opacity="0.08"/>
+    </filter>
+    <marker id="arrowBlue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#1a73e8"/>
+    </marker>
+    <marker id="arrowMuted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 1 1.5 L 8.5 5 L 1 8.5 z" fill="#5f6368"/>
+    </marker>
+  </defs>
+  <rect width="360" height="176" rx="16" fill="#f4f8fe"/>
+  <!-- Central .task bundle -->
+  <g filter="url(#cardShadow)">
+    <rect x="20" y="46" width="128" height="84" rx="14" fill="#ffffff" stroke="#1a73e8" stroke-width="1.5"/>
+    <rect x="34" y="60" width="34" height="34" rx="9" fill="#e8f0fe"/>
+    <path d="M 45 73 L 51 68 L 57 73 L 57 82 L 51 87 L 45 82 Z" fill="none" stroke="#1a73e8" stroke-width="2" stroke-linejoin="round"/>
+    <path d="M 45 73 L 51 78 L 57 73 M 51 78 L 51 87" fill="none" stroke="#1a73e8" stroke-width="1.6"/>
+    <text x="76" y="75" font-family="'Roboto Mono', ui-monospace, SFMono-Regular, Menlo, monospace" font-size="11.5" font-weight="600" fill="#174ea6">.task</text>
+    <text x="76" y="89" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="9.5" fill="#5f6368">Bundle</text>
+    <text x="34" y="114" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="10" font-weight="500" fill="#3c4043">Models + Metadata</text>
+  </g>
+  <path d="M 148 88 C 186 88, 186 37, 222 37" fill="none" stroke="#8ab4f8" stroke-width="2"/>
+  <circle cx="224" cy="37" r="3" fill="#1a73e8"/>
+  <path d="M 148 88 C 186 88, 186 75, 222 75" fill="none" stroke="#8ab4f8" stroke-width="2"/>
+  <circle cx="224" cy="75" r="3" fill="#1a73e8"/>
+  <path d="M 148 88 C 186 88, 186 113, 222 113" fill="none" stroke="#8ab4f8" stroke-width="2"/>
+  <circle cx="224" cy="113" r="3" fill="#1a73e8"/>
+  <path d="M 148 88 C 186 88, 186 151, 222 151" fill="none" stroke="#8ab4f8" stroke-width="2"/>
+  <circle cx="224" cy="151" r="3" fill="#1a73e8"/>
+  <g filter="url(#cardShadow)">
+    <rect x="226" y="22" width="114" height="30" rx="8" fill="#ffffff" stroke="#dadce0"/>
+    <text x="238" y="36" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600" fill="#202124">Web &amp; JS</text>
+    <text x="238" y="47" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="8.8" fill="#5f6368">WASM · WebGPU</text>
+  </g>
+  <g filter="url(#cardShadow)">
+    <rect x="226" y="60" width="114" height="30" rx="8" fill="#ffffff" stroke="#dadce0"/>
+    <text x="238" y="74" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600" fill="#202124">Android</text>
+    <text x="238" y="85" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="8.8" fill="#5f6368">Kotlin · Java</text>
+  </g>
+  <g filter="url(#cardShadow)">
+    <rect x="226" y="98" width="114" height="30" rx="8" fill="#ffffff" stroke="#dadce0"/>
+    <text x="238" y="112" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600" fill="#202124">iOS</text>
+    <text x="238" y="123" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="8.8" fill="#5f6368">Swift · Obj-C</text>
+  </g>
+  <g filter="url(#cardShadow)">
+    <rect x="226" y="136" width="114" height="30" rx="8" fill="#ffffff" stroke="#dadce0"/>
+    <text x="238" y="150" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="11" font-weight="600" fill="#202124">Python</text>
+    <text x="238" y="161" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="8.8" fill="#5f6368">Linux · macOS · Win</text>
+  </g>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 140" font-family="Roboto Mono, monospace">
+  <defs><clipPath id="win"><rect x="1" y="1" width="318" height="138" rx="11"/></clipPath></defs>
+  <g clip-path="url(#win)">
+    <rect width="320" height="140" fill="#1e2433"/>
+    <rect x="0" y="118" width="230" height="22" fill="#2a3245"/>
+    <!-- target outline: star pose -->
+    <g stroke="#fff" stroke-width="7" stroke-linecap="round" stroke-linejoin="round" fill="none" opacity=".22">
+      <path d="M118 50 L118 86 M118 58 L84 34 M118 58 L152 34 M118 86 L92 122 M118 86 L144 122"/>
+    </g>
+    <circle cx="118" cy="40" r="9" fill="none" stroke="#fff" stroke-width="1.5" stroke-dasharray="3 2" opacity=".6"/>
+    <g stroke="#fff" stroke-width="1.2" stroke-dasharray="3 2" fill="none" opacity=".6"><path d="M118 50 L118 86 M118 58 L84 34 M118 58 L152 34 M118 86 L92 122 M118 86 L144 122"/></g>
+    <!-- live skeleton -->
+    <g stroke="#34a853" stroke-width="2.4" stroke-linecap="round" fill="none"><path d="M120 52 L120 86 M120 60 L102 48 L88 38 M120 60 L138 46 L150 36 M120 86 L108 104 L96 120 M120 86 L132 104 L140 120 M112 86 L128 86"/></g>
+    <g fill="#fbbc04"><circle cx="120" cy="42" r="7" fill="none" stroke="#34a853" stroke-width="2"/><circle cx="120" cy="60" r="2"/><circle cx="102" cy="48" r="2"/><circle cx="88" cy="38" r="2.2"/><circle cx="138" cy="46" r="2"/><circle cx="150" cy="36" r="2.2"/><circle cx="120" cy="86" r="2"/><circle cx="108" cy="104" r="2"/><circle cx="96" cy="120" r="2.2"/><circle cx="132" cy="104" r="2"/><circle cx="140" cy="120" r="2.2"/></g>
+    <rect x="10" y="26" width="66" height="14" rx="7" fill="#fff"/><text x="43" y="35.5" font-size="6.5" fill="#1e1e1e" text-anchor="middle">Pose 3/5 · ⭐</text>
+    <!-- HUD -->
+    <rect x="236" y="26" width="76" height="46" rx="8" fill="#fff"/>
+    <text x="274" y="38" font-size="6.5" fill="#5f6368" text-anchor="middle">match</text>
+    <text x="274" y="55" font-size="14" fill="#1e1e1e" text-anchor="middle" font-weight="700">86%</text>
+    <rect x="244" y="61" width="60" height="5" rx="2.5" fill="#e8eaed"/><rect x="244" y="61" width="52" height="5" rx="2.5" fill="#34a853"/>
+    <rect x="236" y="78" width="76" height="20" rx="7" fill="#fbbc04"/><text x="274" y="91" font-size="7.5" fill="#1e1e1e" text-anchor="middle" font-weight="700">hold… 1.4s</text>
+    <text x="274" y="114" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">Score 240</text>
+    <rect width="320" height="18" fill="#fff"/>
+    <circle cx="10" cy="9" r="3" fill="#ea4335"/><circle cx="20" cy="9" r="3" fill="#fbbc04"/><circle cx="30" cy="9" r="3" fill="#34a853"/>
+    <text x="44" y="12.5" font-size="8" fill="#1e1e1e">Pose Match</text>
+    <text x="312" y="12.5" font-size="7" fill="#5f6368" text-anchor="end">⏱ 0:38</text>
+  </g>
+  <rect x="1" y="1" width="318" height="138" rx="11" fill="none" stroke="#1e1e1e" stroke-width="2"/>
+</svg>

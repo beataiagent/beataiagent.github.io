@@ -1,0 +1,8 @@
+loops/*  — official MediaPipe solution preview loops
+           https://developers.google.com/static/edge/mediapipe/images/solutions/loops/<name>
+           (listed on https://ai.google.dev/edge/mediapipe/solutions/guide)
+../logos/mediapipe-icon.svg — https://ai.google.dev/static/edge/images/edge-mediapipe-icon.svg
+../logos/google.svg         — https://upload.wikimedia.org/wikipedia/commons/2/2f/Google_2015_logo.svg
+../logos/ios.svg            — https://upload.wikimedia.org/wikipedia/commons/c/ca/IOS_logo.svg
+../logos/android.svg, python.svg, apple.svg — devicon v2.16.0 (jsdelivr)
+../logos/web.svg            — Material Symbols "language" (rounded, 400)

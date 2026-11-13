@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" width="400" height="225" role="img" aria-label="Text Proofreader preview">
+  <defs>
+    <linearGradient id="stageBg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f0f5ff"/>
+      <stop offset="50%" stop-color="#edf3fc"/>
+      <stop offset="100%" stop-color="#e9f1f4"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-4%" y="-5%" width="108%" height="114%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1a73e8" flood-opacity="0.07"/>
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#3c4043" flood-opacity="0.05"/>
+    </filter>
+  </defs>
+  <style>
+
+    .fix-w { animation: tpFix 3.6s ease-in-out infinite; }
+    @keyframes tpFix {
+      0%, 100% { fill: #137333; }
+      50% { fill: #1e8e3e; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation: none !important;
+        transition: none !important;
+      }
+    }
+  </style>
+  <rect width="800" height="450" fill="url(#stageBg)"/>
+
+  <g filter="url(#cardShadow)">
+    <rect x="56" y="66" width="688" height="318" rx="16" fill="#ffffff" stroke="#e3e9f1" stroke-width="1.2"/>
+  </g>
+  <text x="88" y="104" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="13" font-weight="700" fill="#1a73e8" letter-spacing="0.6">TEXT PROOFREADER · GRAMMAR &amp; SPELLING</text>
+
+  <rect x="88" y="122" width="624" height="76" rx="10" fill="#f8fafd" stroke="#e3eaf3" stroke-width="1.2"/>
+  <text x="110" y="167" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="19.5" font-weight="500" fill="#202124"><tspan fill="#d93025" font-weight="700" text-decoration="line-through">Their</tspan> going to <tspan fill="#d93025" font-weight="700" text-decoration="line-through">recieve</tspan> the update today.</text>
+
+  <rect x="88" y="220" width="624" height="118" rx="10" fill="#e8f5ec" stroke="#cfe8d6" stroke-width="1.2"/>
+  <text x="110" y="252" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="12" font-weight="700" fill="#188038" letter-spacing="0.6">CORRECTED ON-DEVICE</text>
+  <text x="110" y="298" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, Arial, sans-serif" font-size="19.5" font-weight="500" fill="#202124"><tspan class="fix-w" fill="#137333" font-weight="700">They’re</tspan> going to <tspan class="fix-w" fill="#137333" font-weight="700">receive</tspan> the update today.</text>
+</svg>
