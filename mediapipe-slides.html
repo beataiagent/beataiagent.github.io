@@ -418,6 +418,24 @@
     .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
     .try-what { font-size: 18px; line-height: 1.35; }
     .try-head { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .pp-left { width: 340px; flex: none; display: flex; flex-direction: column; gap: 12px; }
+    .pp-frame { height: 452px; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
+    .reveal .pp-shot { width: 100%; height: 100%; object-fit: cover; margin: 0; display: block; }
+    .pp-photos { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+    .pp-photos button { padding: 0; height: 64px; border-radius: 10px; border: 2px solid var(--ink); overflow: hidden; background: #fff; cursor: pointer; }
+    .reveal .pp-photos img { width: 100%; height: 100%; object-fit: cover; object-position: top; margin: 0; display: block; }
+    .pp-photos button.on { outline: 3px solid var(--g-blue); outline-offset: 2px; }
+    .pp-sum { font: 500 17px/1 var(--mono); padding: 11px 14px; border-radius: 12px; border: 2px solid var(--ink); background: var(--p-red); }
+    .pp-sum.ok { background: var(--p-green); }
+    .pp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .pp-card { position: relative; border: 2px solid var(--ink); border-radius: 12px; padding: 9px 11px 14px; background: var(--paper); min-height: 84px; box-sizing: border-box; }
+    .pp-card b { display: block; font-size: 15.5px; padding-right: 48px; }
+    .pp-card em { display: block; font-style: normal; font-size: 12.5px; line-height: 1.25; color: #3c4043; margin-top: 4px; }
+    .pp-tag { position: absolute; right: 8px; top: 8px; font: 700 11px/1 var(--mono); padding: 4px 6px; border-radius: 6px; }
+    .pp-card.ok { background: #f1faf2; } .pp-card.ok .pp-tag { background: var(--p-green); color: #137333; }
+    .pp-card.bad { background: #fdf1f1; } .pp-card.bad .pp-tag { background: var(--p-red); color: #b3261e; }
+    .pp-card i { position: absolute; left: 11px; right: 11px; bottom: 6px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--g-green) var(--p), #e0e0e0 var(--p)); }
+    .pp-card.bad i { background: linear-gradient(90deg, var(--g-red) var(--p), #e0e0e0 var(--p)); }
     .try-model { position: relative; font: 500 15px/1 var(--sans); padding: 9px 14px 9px 32px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); white-space: nowrap; }
     .try-model::before { content: ""; position: absolute; left: 12px; top: 50%; width: 11px; height: 11px; margin-top: -5.5px; border-radius: 50%; border: 1.5px solid var(--ink); box-sizing: border-box; background: #d0d0d0; }
     .try-model[data-state="loading"] { background: var(--p-yellow); }
@@ -1069,6 +1087,57 @@
           </div>
         </div>
         <aside class="notes">Decision Maker: ให้คะแนนตัวเลือก ตอบ yes/no หรือให้คะแนนตาม rubric ในการคำนวณรอบเดียว ไม่ต้องสร้างข้อความ (zero decoding) จึงเร็วมาก • ใช้ EmbeddingGemma 2 หรือ Gemma 4 E2B • เหมาะกับ routing หรือ classification แบบ custom • ชี้ไดอะแกรมด้านล่างให้เห็น flow จาก input → โมเดล → output • ตัวเลขในกล่องสีคือจุดเด่นที่ควรจำ • ขนาดโมเดล: EmbeddingGemma 2 · 270M 165 MB, 440M 388 MB, 740M 485 MB, Gemma 4 E2B 2.6 GB</aside>
+      </section>
+
+      <section data-state="trydemo" data-demo="decision" data-title="Live demo · Decision Maker">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 48px; display:flex; gap:32px">
+            <div class="try-panel">
+              <span class="try-label">A customer support message</span>
+              <textarea class="try-text" data-in="a" spellcheck="false">I was charged twice for my order, please refund me!!</textarea>
+              <div class="try-tabs">
+                <button data-set-a="I was charged twice for my order, please refund me!!">💳 Double charge</button>
+                <button data-set-a="Where is my package? It has been two weeks and the tracking never updates.">📦 Late package</button>
+                <button data-set-a="The app crashes every time I open the camera.">🔧 App crash</button>
+                <button data-set-a="Thanks, you guys are awesome!">👋 Thanks</button>
+              </div>
+            </div>
+            <div class="try-side">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:38px">Try it: Decision Maker</h2>
+              <p class="try-what">Route a message on-device before any LLM call</p>
+              <ol class="try-results"><li>Press Load model to start</li></ol>
+              <div class="try-actions"><button class="copy try-load">Load model · 388 MB</button></div>
+              <span class="try-status">EmbeddingGemma 2 Text-Vision · 440M from Hugging Face</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Live demo Decision Maker (EmbeddingGemma 2 Text-Vision · 440M ขนาด 388 MB + WASM 27 MB): กด Load model ก่อน ครั้งแรกโหลดนาน แนะนำให้กดโหลดไว้ก่อนขึ้นพูด เบราว์เซอร์จะ cache ไว้ • โมเดลเดียวรับได้ทั้งข้อความและรูป ตอบคำถามโดยไม่ต้องสร้างข้อความ (zero decoding) • ข้อความลูกค้า: (1) choice เรื่องอะไร shipping / billing / tech / chitchat (2) score อารมณ์ 1–5 แล้วตัดสินใจส่งต่อ: chitchat ตอบเองไม่ต้องเรียก LLM, อารมณ์แย่มาก (ต่ำกว่า 2) ส่งให้คน, ที่เหลือส่ง Gemini • นี่คือหลัก On-device first ในของจริง • หน้าถัดไปใช้โมเดลเดียวกันตรวจรูปติดบัตร</aside>
+      </section>
+
+      <section data-state="trydemo" data-demo="passport" data-title="Live demo · Passport photo check">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px; display:flex; gap:28px">
+            <div class="pp-left">
+              <div class="pp-frame"><img class="pp-shot" src="images/mediapipe-slides/id-photos/passport_compliant_female.webp" alt="ID photo"></div>
+              <div class="pp-photos">
+                <button class="on" data-photo="images/mediapipe-slides/id-photos/passport_compliant_female.webp"><img src="images/mediapipe-slides/id-photos/passport_compliant_female.webp" alt="compliant"></button>
+                <button data-photo="images/mediapipe-slides/id-photos/id_fail_glasses_smile.webp"><img src="images/mediapipe-slides/id-photos/id_fail_glasses_smile.webp" alt="glasses and smile"></button>
+                <button data-photo="images/mediapipe-slides/id-photos/id_fail_eyes_closed_hair.webp"><img src="images/mediapipe-slides/id-photos/id_fail_eyes_closed_hair.webp" alt="eyes closed"></button>
+                <button data-photo="images/mediapipe-slides/id-photos/id_fail_mask_hat.webp"><img src="images/mediapipe-slides/id-photos/id_fail_mask_hat.webp" alt="mask and hat"></button>
+              </div>
+            </div>
+            <div class="try-side" style="gap:12px">
+              <span class="tag yellow" style="align-self:flex-start">Live · in the browser</span>
+              <h2 style="font-size:34px">Try it: Passport photo check</h2>
+              <div class="pp-sum">9 rules · one photo · one forward pass</div>
+              <div class="pp-grid"><div class="pp-card"><b>Press Load model</b><em>or pick a photo after loading</em></div></div>
+              <div class="try-actions"><button class="copy try-load">Load model · 388 MB</button></div>
+              <span class="try-status">Decision Maker · EmbeddingGemma 2 Text-Vision 440M</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Live demo Decision Maker แบบรูป: ตรวจรูปติดบัตร/พาสปอร์ต 9 ข้อจากรูปเดียว ในการคำนวณรอบเดียว (evaluate ทั้ง schema) บนเครื่อง ไม่ส่งรูปขึ้น server • แต่ละข้อคือ choice ระหว่างคำอธิบายแบบผ่าน กับแบบไม่ผ่านหลายแบบ เช่น ยิ้มเห็นฟัน ใส่แว่น หลับตา ใส่หมวก/หน้ากาก • กดรูปตัวอย่าง 4 แบบ: รูปผ่าน, แว่น+ยิ้ม, หลับตา+ผมปิด, หน้ากาก+หมวก • ถ้าโหลดโมเดลในหน้าก่อนแล้ว หน้านี้ใช้ต่อได้ทันที (โมเดลเดียวกัน) • กติกาและรูปตัวอย่างดัดแปลงจาก mediapipe-samples-web (Apache-2.0) • ผลอาจผิดได้บ้าง เช่น รูปที่ไม่ผ่านมักโดน Head in Frame ไปด้วย เพราะโมเดลเล็ก ใช้เป็นด่านแรกก่อนส่งให้คนหรือระบบใหญ่ตรวจ</aside>
       </section>
 
       <!-- Section divider 2.4: Vision -->
@@ -1726,6 +1795,37 @@ Keep all video on-device — never upload frames.</pre></div>
         <aside class="notes">ทำแอปเสร็จแล้ว publish ให้คนอื่นเปิดใช้ได้: (1) ในหน้าแอปที่สร้าง เปิดแท็บ Publish ที่แถบขวา ข้าง Chat และ Share (2) ขั้นที่ 1 เลือก Google Cloud project ที่ผูก billing account แล้ว (ใช้เครดิตที่ redeem ไปตอนต้นได้) แล้วกด Continue (3) รอ AI Studio เตรียม Cloud project และ publish แอป ("Publishing your app") (4) ได้ลิงก์สาธารณะ ลองเปิดบนมือถือแล้วแชร์ได้เลย • ต่างจาก Share ที่เป็นการแชร์แอปใน AI Studio, Publish คือได้เว็บแอปจริงบน Google Cloud ของเรา</aside>
       </section>
 
+      <!-- On-device first: a small MediaPipe model as the gate in front of a cloud LLM -->
+      <section data-title="On-device first, LLM when needed">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 52px">
+            <div class="eyebrow">On-device first</div>
+            <h2 style="font-size:42px">Put on-device AI in front of your LLM</h2>
+            <p class="gate-sub">Every app can call an LLM today. Let a tiny model on the device check first, and only send what really needs the cloud.</p>
+            <div class="gate-rows">
+              <div class="gate-row fragment" data-fragment-index="1">
+                <div class="gate-in">💬 Chat message</div>
+                <svg class="gate-arr"><use href="#i-right"/></svg>
+                <div class="pc green gate-box"><span class="gate-tag">On-device · MediaPipe</span><b>Text Classifier · Language Detector</b>Spam? Toxic? Which language? Simple FAQ?<em>✕ stops here: never costs a token</em></div>
+                <div class="gate-pass"><span>only if needed</span><svg class="gate-arr"><use href="#i-right"/></svg></div>
+                <div class="pc blue gate-cloud"><svg class="ico"><use href="#i-cloud"/></svg><b>Cloud LLM</b>Gemini API</div>
+              </div>
+              <div class="gate-row fragment" data-fragment-index="2">
+                <div class="gate-in">📷 Camera frame</div>
+                <svg class="gate-arr"><use href="#i-right"/></svg>
+                <div class="pc green gate-box"><span class="gate-tag">On-device · MediaPipe</span><b>Face Detector</b>Is there one face? Sharp, centered, eyes open?<em>✕ stops here: empty or blurry frames</em></div>
+                <div class="gate-pass"><span>best frame only</span><svg class="gate-arr"><use href="#i-right"/></svg></div>
+                <div class="pc blue gate-cloud"><svg class="ico"><use href="#i-cloud"/></svg><b>Cloud check</b>Vision LLM · eKYC</div>
+              </div>
+            </div>
+            <div class="gate-wins fragment" data-fragment-index="3">
+              <span class="pc yellow">💸 Fewer API calls</span><span class="pc red">⚡ Instant feedback</span><span class="pc">🔒 Raw data stays on device</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ทุกวันนี้ใคร ๆ ก็ทำแอปที่เรียก LLM ได้แล้ว แต่ไม่จำเป็นต้องส่งทุกอย่างขึ้น cloud • ไอเดียคือเอาโมเดลเล็กบนเครื่อง (MediaPipe) มาเป็นด่านหน้า (คลิก 1) แชต: ก่อนส่งข้อความไป LLM ให้ Text Classifier / Language Detector เช็กก่อนบนเครื่อง ข้อความสแปม คำหยาบ หรือคำถามง่าย ๆ จบได้เลยไม่เสีย token ส่งไป LLM เฉพาะที่จำเป็น (คลิก 2) กล้อง: ก่อนส่งรูปไปตรวจบน cloud เช่น eKYC หรือ vision LLM ให้ Face Detector เช็กบนเครื่องก่อนว่ามีหน้าคน ชัด อยู่กลางเฟรม ส่งแค่เฟรมที่ดีที่สุด (คลิก 3) ผลคือประหยัดค่า API ตอบสนองทันที และข้อมูลดิบไม่ออกจากเครื่อง • แอปที่ทุกคนจะสร้างวันนี้ใช้หลักนี้ได้เลย ให้ MediaPipe ทำงานบนเครื่องก่อน แล้วค่อยเรียก Gemini เมื่อจำเป็น • หน้าถัดไปมีไอเดีย prompt ให้ลองต่อ</aside>
+      </section>
+
       <!-- AI Studio 3: more prompt ideas -->
       <section data-title="More MediaPipe prompt ideas">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
@@ -1807,37 +1907,6 @@ Keep all video on-device — never upload frames.</pre></div>
           </div>
         </div>
         <aside class="notes">ช่วงแข่งสร้างแอป 15 นาที • กติกา: เปิด AI Studio → Build ใช้ MediaPipe อย่างน้อย 1 task สั่งแก้ไปเรื่อย ๆ จนหมดเวลา แล้วยกมือออกมาเดโมบนเวที • ไม่มีการตัดสินหรือให้คะแนน: 3 คนแรกที่กล้าออกมาเดโมได้รางวัลเลย แอปยังไม่เสร็จหรือทำงานได้ครึ่งเดียวก็นับ • ทำคนเดียวหรือเป็นคู่ก็ได้ • ใช้ prompt จากหน้าก่อนเป็นจุดเริ่มต้นได้ • ไปหน้าถัดไปแล้วกด Start เพื่อเริ่มจับเวลา</aside>
-      </section>
-
-      <!-- On-device first: a small MediaPipe model as the gate in front of a cloud LLM -->
-      <section data-title="On-device first, LLM when needed">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 52px">
-            <div class="eyebrow">On-device first</div>
-            <h2 style="font-size:42px">Put on-device AI in front of your LLM</h2>
-            <p class="gate-sub">Every app can call an LLM today. Let a tiny model on the device check first, and only send what really needs the cloud.</p>
-            <div class="gate-rows">
-              <div class="gate-row fragment" data-fragment-index="1">
-                <div class="gate-in">💬 Chat message</div>
-                <svg class="gate-arr"><use href="#i-right"/></svg>
-                <div class="pc green gate-box"><span class="gate-tag">On-device · MediaPipe</span><b>Text Classifier · Language Detector</b>Spam? Toxic? Which language? Simple FAQ?<em>✕ stops here: never costs a token</em></div>
-                <div class="gate-pass"><span>only if needed</span><svg class="gate-arr"><use href="#i-right"/></svg></div>
-                <div class="pc blue gate-cloud"><svg class="ico"><use href="#i-cloud"/></svg><b>Cloud LLM</b>Gemini API</div>
-              </div>
-              <div class="gate-row fragment" data-fragment-index="2">
-                <div class="gate-in">📷 Camera frame</div>
-                <svg class="gate-arr"><use href="#i-right"/></svg>
-                <div class="pc green gate-box"><span class="gate-tag">On-device · MediaPipe</span><b>Face Detector</b>Is there one face? Sharp, centered, eyes open?<em>✕ stops here: empty or blurry frames</em></div>
-                <div class="gate-pass"><span>best frame only</span><svg class="gate-arr"><use href="#i-right"/></svg></div>
-                <div class="pc blue gate-cloud"><svg class="ico"><use href="#i-cloud"/></svg><b>Cloud check</b>Vision LLM · eKYC</div>
-              </div>
-            </div>
-            <div class="gate-wins fragment" data-fragment-index="3">
-              <span class="pc yellow">💸 Fewer API calls</span><span class="pc red">⚡ Instant feedback</span><span class="pc">🔒 Raw data stays on device</span>
-            </div>
-          </div>
-        </div>
-        <aside class="notes">ทุกวันนี้ใคร ๆ ก็ทำแอปที่เรียก LLM ได้แล้ว แต่ไม่จำเป็นต้องส่งทุกอย่างขึ้น cloud • ไอเดียคือเอาโมเดลเล็กบนเครื่อง (MediaPipe) มาเป็นด่านหน้า (คลิก 1) แชต: ก่อนส่งข้อความไป LLM ให้ Text Classifier / Language Detector เช็กก่อนบนเครื่อง ข้อความสแปม คำหยาบ หรือคำถามง่าย ๆ จบได้เลยไม่เสีย token ส่งไป LLM เฉพาะที่จำเป็น (คลิก 2) กล้อง: ก่อนส่งรูปไปตรวจบน cloud เช่น eKYC หรือ vision LLM ให้ Face Detector เช็กบนเครื่องก่อนว่ามีหน้าคน ชัด อยู่กลางเฟรม ส่งแค่เฟรมที่ดีที่สุด (คลิก 3) ผลคือประหยัดค่า API ตอบสนองทันที และข้อมูลดิบไม่ออกจากเครื่อง • ปิดท้าย: แอปที่ทุกคนสร้างวันนี้ใช้หลักนี้ได้เลย ให้ MediaPipe ทำงานบนเครื่องก่อน แล้วค่อยเรียก Gemini เมื่อจำเป็น</aside>
       </section>
 
       <!-- 15. Resources -->
@@ -2403,17 +2472,17 @@ const answer = await llm.generateResponse(
 
   <!-- Try it: text, audio and image-embedding demos (<section data-demo="…">) -->
   <script type="module">
-    const VER = "0.10.14", CDN = (p) => `https://cdn.jsdelivr.net/npm/@mediapipe/${p}@${VER}`;
+    const VER = "0.10.14", PKGVER = { "tasks-decision": "1.2.3" }, CDN = (p) => `https://cdn.jsdelivr.net/npm/@mediapipe/${p}@${PKGVER[p] || VER}`;
     const M = "https://storage.googleapis.com/mediapipe-models";
     const SAMPLES = window.MP_SAMPLES || {};
-    const LABEL = { lang: "Language Detector", textcls: "Text Classifier", textemb: "Text Embedder", audio: "Audio Classifier", imgemb: "Image Embedder" };
+    const LABEL = { lang: "Language Detector", textcls: "Text Classifier", textemb: "Text Embedder", audio: "Audio Classifier", imgemb: "Image Embedder", decision: "Decision Maker", passport: "Decision Maker" };
     if (!/[?&]print-pdf\b/.test(location.search)) {
       // memoised loaders; a failed download is forgotten so the next try retries
       const memo = {}, once = (k, f) => (memo[k] ??= f().catch((e) => { delete memo[k]; throw e; }));
       const runtime = (kind) => once(kind, async () => {
-        const pkg = { text: "tasks-text", audio: "tasks-audio", vision: "tasks-vision" }[kind];
+        const pkg = { text: "tasks-text", audio: "tasks-audio", vision: "tasks-vision", decision: "tasks-decision" }[kind];
         const m = await import(`${CDN(pkg)}/${kind}_bundle.mjs`);
-        const res = { text: "forTextTasks", audio: "forAudioTasks", vision: "forVisionTasks" }[kind];
+        const res = { text: "forTextTasks", audio: "forAudioTasks", vision: "forVisionTasks", decision: "forDecisionTasks" }[kind];
         return { m, fs: await m.FilesetResolver[res](`${CDN(pkg)}/wasm`) };
       });
       const model = (path, extra = {}) => ({ baseOptions: { modelAssetPath: `${M}/${path}` }, ...extra });
@@ -2422,14 +2491,18 @@ const answer = await llm.generateResponse(
         textcls: ["text",   (m, fs) => m.TextClassifier.createFromOptions(fs, model("text_classifier/average_word_classifier/float32/1/average_word_classifier.tflite", { maxResults: 2 }))],
         textemb: ["text",   (m, fs) => m.TextEmbedder.createFromOptions(fs, model("text_embedder/universal_sentence_encoder/float32/1/universal_sentence_encoder.tflite"))],
         audio:   ["audio",  (m, fs) => m.AudioClassifier.createFromOptions(fs, model("audio_classifier/yamnet/float32/1/yamnet.tflite", { maxResults: 5 }))],
+        // EmbeddingGemma 2 Text-Vision · 440M (388 MB, Hugging Face litert-community): text + images, scores options in one forward pass
+        decision: ["decision", (m, fs) => m.DecisionMaker.createFromOptions(fs, { baseOptions: { modelAssetPath: "https://huggingface.co/litert-community/embeddinggemma-2-text-vision-440m-litert-lm/resolve/main/embeddinggemma-2-text-vision-440m.litertlm" }, maxNumTokens: 256 })],
         imgemb:  ["vision", (m, fs) => m.ImageEmbedder.createFromOptions(fs, model("image_embedder/mobilenet_v3_small/float32/1/mobilenet_v3_small.tflite", { runningMode: "IMAGE" }))],
       };
+      const SHARE = { passport: "decision" }; // demos that reuse another demo's model
       const getTask = (key, status) => {
-        if (memo["task:" + key]) return memo["task:" + key];
-        const sec = status.closest("section"), t0 = performance.now();
+        const mk = SHARE[key] || key, sec = status.closest("section");
+        if (memo["task:" + mk]) { memo["task:" + mk].then(() => { if (sec.querySelector(".try-model")?.dataset.state !== "ready") mpModel(sec, "ready", "shared"); }, () => {}); return memo["task:" + mk]; }
+        const t0 = performance.now();
         mpModel(sec, "loading");
-        return once("task:" + key, async () => {
-          const [kind, make] = MAKERS[key];
+        return once("task:" + mk, async () => {
+          const [kind, make] = MAKERS[mk];
           status.textContent = "Loading MediaPipe runtime…";
           const { m, fs } = await runtime(kind);
           status.textContent = `Downloading ${LABEL[key]} model…`;
@@ -2449,6 +2522,9 @@ const answer = await llm.generateResponse(
       const langName = (() => { let dn; try { dn = new Intl.DisplayNames(["en"], { type: "language" }); } catch {} return (c) => { try { return dn?.of(c) || c; } catch { return c; } }; })();
       const val = (sec, k) => sec.querySelector(`.try-text[data-in="${k}"]`)?.value.trim() || "";
 
+      // passport photo rules, adapted from google-ai-edge/mediapipe-samples-web (Apache-2.0) decision-maker-vision
+      const PP_RULES = [{"id":"full_face","title":"Head in Frame","prompt":"Can you see the top of the person's hair and their shirt below the chin?","options":[{"label":"pass_frontal","description":"Portrait or webcam selfie showing the top of the head with hair, forehead, both eyes, chin, and shirt or shoulders."},{"label":"fail_cropped","description":"Tightly cropped macro close-up of only skin, eyes, nose, and lips filling the entire image."},{"label":"fail_top_cut","description":"Half-face crop cut off at the nose with only the lower face, beard or mouth, chin, and shirt visible and no eyes."}],"show":{"pass_frontal":"Full head & chin in frame","fail_cropped":"Head/chin clipped at edge","fail_top_cut":"Upper head / eyes cut off at top","fail_bottom_cut":"Face too low / chin cut off"}},{"id":"eyes_open","title":"Eyes Open","prompt":"Are the person's eyes open and looking straight ahead?","options":[{"label":"pass_open","description":"Front-facing portrait of a person with open eyes looking straight ahead at the camera."},{"label":"fail_looking_away","description":"Person with eyes cast downward looking down and away from the camera."},{"label":"fail_closed","description":"Woman with both eyes closed shut, sleeping or blinking with eyelids closed."},{"label":"fail_sunglasses","description":"Person wearing dark black sunglasses covering the eyes."}],"show":{"pass_open":"Open & looking at camera","fail_looking_away":"Looking away from camera","fail_closed":"Eyes closed / blinking","fail_sunglasses":"Hidden behind dark lenses","fail_top_cut":"Eyes cut off / not in frame","fail_bottom_cut":"Face too low / not in frame"}},{"id":"neutral_expression","title":"Neutral Face","prompt":"Does the person have a calm, neutral expression with mouth closed?","options":[{"label":"pass_neutral","description":"Calm, serious, neutral facial expression with lips and mouth closed."},{"label":"fail_smiling","description":"Happy person grinning and smiling broadly showing white teeth."}],"show":{"pass_neutral":"Neutral expression, mouth closed","fail_smiling":"Smiling / teeth visible","fail_bottom_cut":"Mouth & chin cut off at bottom"}},{"id":"neutral_background","title":"Plain BG","prompt":"Is the background a plain, simple wall or backdrop?","options":[{"label":"pass_white_bg","description":"Indoor portrait against a plain wall, simple neutral wall, or solid white studio background."},{"label":"fail_outdoor_street","description":"Outdoor street scene with green trees, autumn leaves, buildings, and sky in the background."},{"label":"fail_indoor_clutter","description":"Cluttered room background filled with bookshelves, books, and household items."}],"show":{"pass_white_bg":"Plain wall / backdrop","fail_indoor_clutter":"Cluttered room background","fail_outdoor_street":"Outdoor street background"}},{"id":"shoulders_visible","title":"Straight Pose","prompt":"How is the person positioned and framed in the photo?","options":[{"label":"pass_shoulders","description":"Level frontal portrait looking straight ahead with neck and upper chest or shoulders visible."},{"label":"fail_angled_selfie","description":"Tilted or high-angle selfie with the head angled and camera held above or to the side."},{"label":"fail_chin_up","description":"Person tilting their head back with chin raised high and looking down at the camera."},{"label":"fail_turned_away","description":"Person with their head turned sideways or looking away from the camera."},{"label":"fail_bottom_cutoff","description":"Tight face crop cut off right under the chin with no neck, collar, or shoulders visible."}],"show":{"pass_shoulders":"Upright & level head pose","fail_angled_selfie":"Level the camera (head tilted)","fail_chin_up":"Lower your chin","fail_turned_away":"Face straight ahead","fail_bottom_cutoff":"Show upper shoulders"}},{"id":"hair_clear","title":"Hair Clear","prompt":"Are the eyes clear of hair bangs?","options":[{"label":"pass_hair_clear","description":"Portrait where the person's eyes and face are clearly visible and not covered by bangs."},{"label":"fail_bangs_over_eyes","description":"Long messy hair bangs hanging down across the forehead and covering the eyes."}],"show":{"pass_hair_clear":"Eyes & brow unobstructed","fail_bangs_over_eyes":"Bangs covering eyes/brow"}},{"id":"no_glasses","title":"No Glasses","prompt":"Are the eyes bare and unobstructed by lenses?","options":[{"label":"pass_bare_eyes","description":"Close-up portrait of a person with bare eyes, eyebrows, and nose."},{"label":"fail_eyeglasses","description":"Eyeglass frames and corrective spectacle lenses worn over the eyes."},{"label":"fail_sunglasses","description":"Dark black sunglasses with opaque tinted lenses worn over the eyes."}],"show":{"pass_bare_eyes":"No glasses or frames","fail_eyeglasses":"Eyeglasses worn","fail_sunglasses":"Dark sunglasses worn"}},{"id":"framing_chest_up","title":"No Mask/Cap","prompt":"Is the lower face uncovered (no mask or cap)?","options":[{"label":"pass_chest_up","description":"Person with visible nose, mouth, lips, and chin, and bare hair with no cap or mask."},{"label":"fail_mask_hat","description":"Face hidden behind a protective face mask covering nose and mouth and wearing a cap."}],"show":{"pass_chest_up":"No mask, cap, or hat","fail_mask_hat":"Mask or cap covering face/head","fail_bottom_cut":"Lower face cut off at bottom"}},{"id":"occupancy_70_percent","title":"Good Distance","prompt":"Is the subject close enough to the camera (not standing far away)?","options":[{"label":"pass_70_pct","description":"Close-up headshot portrait of a person's face filling the frame."},{"label":"fail_too_small","description":"Distant person standing far away outdoors on a street with trees and buildings."}],"show":{"pass_70_pct":"Good close-up portrait scale","fail_too_small":"Subject too far from camera","fail_bottom_peek":"Subject not centered in frame"}}];
+
       // ---- text + image-embedding demos: run once per change ----
       const RUN = {
         async lang(sec, tk) {
@@ -2467,6 +2543,44 @@ const answer = await llm.generateResponse(
           const s = cosine(vec(tk.embed(a)), vec(tk.embed(b)));
           // this compact encoder scores unrelated sentences ≈ 0.75 and paraphrases ≈ 0.9+, so the bar spans 0.7 → 1
           list(sec, [["cosine similarity", s.toFixed(2), (s - 0.7) / 0.3], ["meaning", s >= 0.9 ? "very similar" : s >= 0.84 ? "related" : "different"], ["vector size", vec(tk.embed(a)).length]]);
+        },
+        async decision(sec, tk) {
+          const text = val(sec, "a"); if (!text) return list(sec, [["Type a message…", ""]]);
+          const TOPIC = { shipping: "📦 shipping", billing: "💳 billing", tech: "🔧 tech support", chitchat: "👋 chitchat" };
+          const c = await tk.evaluateChoice(text, { criteria: { shipping: "Delivery, package or tracking problems", billing: "Payments, charges or refunds", tech: "App bugs or technical problems", chitchat: "Thanks, greetings or small talk" } });
+          const sc = await tk.evaluateScore(text, { rubric: ["Very negative", "Negative", "Neutral", "Positive", "Very positive"] });
+          const top = Object.entries(c.probabilities).sort((a, b) => b[1] - a[1]);
+          const mood = 1 + sc.expectedScore; // rubric index 0..4 → 1..5
+          // on-device gate: only send what needs it
+          const route = top[0][0] === "chitchat" ? "🤖 auto-reply (no LLM)" : mood < 2 ? "🧑 human agent" : "✨ Gemini LLM";
+          list(sec, [
+            [`topic → ${TOPIC[top[0][0]] || top[0][0]}`, pct(top[0][1]), top[0][1]],
+            [`2nd: ${TOPIC[top[1][0]] || top[1][0]}`, pct(top[1][1]), top[1][1]],
+            ["mood (1 – 5)", mood.toFixed(1), (mood - 1) / 4],
+            ["send to →", route],
+          ]);
+        },
+        async passport(sec, tk) {
+          const btn = sec.querySelector(".pp-photos button.on") || sec.querySelector(".pp-photos button");
+          btn.classList.add("on");
+          const im = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = btn.dataset.photo; });
+          sec.querySelector(".pp-shot").src = btn.dataset.photo;
+          // encode as JPEG bytes, like the official sample
+          const cv = Object.assign(document.createElement("canvas"), { width: im.naturalWidth, height: im.naturalHeight });
+          cv.getContext("2d").drawImage(im, 0, 0);
+          const bytes = new Uint8Array(await (await new Promise((r) => cv.toBlob(r, "image/jpeg", 0.92))).arrayBuffer());
+          const schema = { context: "", questions: PP_RULES.map((r) => ({ id: r.id, type: "categorical", prompt: r.prompt, normalizePrior: false, options: r.options })) };
+          const res = await tk.evaluate({ text: "", imageBytes: bytes }, schema);
+          let passed = 0;
+          sec.querySelector(".pp-grid").innerHTML = PP_RULES.map((r) => {
+            const probs = res?.[r.id]?.probabilities || [], passLabel = r.options[0].label;
+            const pPass = probs.find((x) => x.label === passLabel)?.probability ?? 0;
+            const fail = probs.filter((x) => x.label !== passLabel).sort((a, b) => b.probability - a.probability)[0] || { label: r.options[1].label, probability: 1 - pPass };
+            const p = pPass + fail.probability > 0 ? pPass / (pPass + fail.probability) : 0.5, ok = p >= 0.5; if (ok) passed++;
+            return `<div class="pp-card ${ok ? "ok" : "bad"}"><b>${esc(r.title)}</b><span class="pp-tag">${ok ? "PASS" : "FAIL"}</span><em>${esc(r.show?.[ok ? passLabel : fail.label] || "")}</em><i style="--p:${Math.round(p * 100)}%"></i></div>`;
+          }).join("");
+          const sum = sec.querySelector(".pp-sum"); sum.classList.toggle("ok", passed === PP_RULES.length);
+          sum.textContent = `${passed === PP_RULES.length ? "✓ COMPLIANT" : "✕ NOT COMPLIANT"} · ${passed}/${PP_RULES.length} passed`;
         },
         async imgemb(sec, tk) {
           const pick = (k) => sec.querySelector(`[data-pick="${k}"] button.on`)?.dataset.img;
@@ -2490,11 +2604,12 @@ const answer = await llm.generateResponse(
       const busy = new WeakMap(), done = new WeakSet();
       async function run(sec) {
         const key = sec.dataset.demo; if (!RUN[key]) return;
+        if ((SHARE[key] || key) === "decision" && !sec._armed && !memo["task:decision"]) return setStatus(sec, "Press Load model first (388 MB download)");
         if (busy.get(sec)) return busy.set(sec, "again"); // coalesce fast typing
         busy.set(sec, true);
         try {
           const tk = await getTask(key, sec.querySelector(".try-status"));
-          const t0 = performance.now(); await RUN[key](sec, tk); timed(sec, key, t0); done.add(sec);
+          const t0 = performance.now(); await RUN[key](sec, tk); timed(sec, key, t0); done.add(sec); sec.querySelector(".try-load")?.remove();
         } catch (err) { console.error(err); setStatus(sec, "Could not run: " + (err?.message || err)); }
         const again = busy.get(sec) === "again"; busy.delete(sec);
         if (again) run(sec);
@@ -2598,10 +2713,13 @@ const answer = await llm.generateResponse(
           sec.querySelectorAll(".try-tabs button").forEach((x) => x.classList.toggle("on", x === b));
           return run(sec);
         }
+        if (b.dataset.photo) { b.parentElement.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); return run(sec); }
+        if (b.matches(".try-load")) { sec._armed = true; b.disabled = true; b.textContent = "Loading…"; return run(sec).then(() => { if (done.has(sec)) b.remove(); else { b.disabled = false; b.textContent = "Retry load"; } }); }
         if (b.dataset.img) { b.parentElement.querySelectorAll("button").forEach((x) => x.classList.toggle("on", x === b)); return run(sec); }
       }, true);
       const maybe = (sec) => {
         if (!sec?.dataset.demo || done.has(sec)) return;
+        if ((SHARE[sec.dataset.demo] || sec.dataset.demo) === "decision") { if (memo["task:decision"]) run(sec); return; } // big model: wait for Load model unless already loaded
         if (sec.dataset.demo !== "audio") return run(sec);
         // audio waits for a click (mic permission / sound), but preload the model so it starts instantly
         getTask("audio", sec.querySelector(".try-status"))

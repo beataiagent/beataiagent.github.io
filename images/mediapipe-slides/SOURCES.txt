@@ -8,3 +8,5 @@ loops/*  — official MediaPipe solution preview loops
 ../logos/web.svg            — Material Symbols "language" (rounded, 400)
 samples/face_woman.webp — Face Detector demo sample, cropped from "Smiling woman pink shirt (cropped).jpg"
            CC0, https://commons.wikimedia.org/wiki/File:Smiling_woman_pink_shirt_(cropped).jpg
+id-photos/*.webp — sample ID photos (resized) from google-ai-edge/mediapipe-samples-web, public/images/id_photos (Apache-2.0)
+           Passport rules in the Decision Maker demo are adapted from src/tasks/decision-maker-vision.ts in the same repo.
