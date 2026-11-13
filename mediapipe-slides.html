@@ -722,37 +722,6 @@
         <aside class="notes">ทำไมต้องรันบนเครื่อง? เปิดด้วยตัวอย่างจริง: เอฟเฟกต์ใน YouTube Shorts รันบนมือถือแบบ real-time ไม่ต้องส่งวิดีโอขึ้น server • คลิกทีละใบ: (1) Low latency ไม่ต้องรอ network ทำ real-time ได้ (2) Privacy ภาพและเสียงของผู้ใช้ไม่ออกจากเครื่อง (3) Offline ใช้ได้แม้ไม่มีเน็ต (4) Cost ไม่ต้องจ่ายค่า server ต่อ request • ถามผู้ฟัง: แอปแบบไหนที่ privacy สำคัญมาก? (สุขภาพ, เด็ก, ธนาคาร)</aside>
       </section>
 
-      <!-- On-device first: a small MediaPipe model as the gate in front of a cloud LLM -->
-      <section data-title="On-device first, LLM when needed">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 52px">
-            <div class="eyebrow">On-device first</div>
-            <h2 style="font-size:42px">Put on-device AI in front of your LLM</h2>
-            <p class="gate-sub">Every app can call an LLM today. Let a tiny model on the device check first, and only send what really needs the cloud.</p>
-            <div class="gate-rows">
-              <div class="gate-row fragment" data-fragment-index="1">
-                <div class="gate-in">💬 Chat message</div>
-                <svg class="gate-arr"><use href="#i-right"/></svg>
-                <div class="pc green gate-box"><span class="gate-tag">On-device · MediaPipe</span><b>Text Classifier · Language Detector</b>Spam? Toxic? Which language? Simple FAQ?<em>✕ stops here: never costs a token</em></div>
-                <div class="gate-pass"><span>only if needed</span><svg class="gate-arr"><use href="#i-right"/></svg></div>
-                <div class="pc blue gate-cloud"><svg class="ico"><use href="#i-cloud"/></svg><b>Cloud LLM</b>Gemini API</div>
-              </div>
-              <div class="gate-row fragment" data-fragment-index="2">
-                <div class="gate-in">📷 Camera frame</div>
-                <svg class="gate-arr"><use href="#i-right"/></svg>
-                <div class="pc green gate-box"><span class="gate-tag">On-device · MediaPipe</span><b>Face Detector</b>Is there one face? Sharp, centered, eyes open?<em>✕ stops here: empty or blurry frames</em></div>
-                <div class="gate-pass"><span>best frame only</span><svg class="gate-arr"><use href="#i-right"/></svg></div>
-                <div class="pc blue gate-cloud"><svg class="ico"><use href="#i-cloud"/></svg><b>Cloud check</b>Vision LLM · eKYC</div>
-              </div>
-            </div>
-            <div class="gate-wins fragment" data-fragment-index="3">
-              <span class="pc yellow">💸 Fewer API calls</span><span class="pc red">⚡ Instant feedback</span><span class="pc">🔒 Raw data stays on device</span>
-            </div>
-          </div>
-        </div>
-        <aside class="notes">ทุกวันนี้ใคร ๆ ก็ทำแอปที่เรียก LLM ได้แล้ว แต่ไม่จำเป็นต้องส่งทุกอย่างขึ้น cloud • ไอเดียคือเอาโมเดลเล็กบนเครื่อง (MediaPipe) มาเป็นด่านหน้า (คลิก 1) แชต: ก่อนส่งข้อความไป LLM ให้ Text Classifier / Language Detector เช็กก่อนบนเครื่อง ข้อความสแปม คำหยาบ หรือคำถามง่าย ๆ จบได้เลยไม่เสีย token ส่งไป LLM เฉพาะที่จำเป็น (คลิก 2) กล้อง: ก่อนส่งรูปไปตรวจบน cloud เช่น eKYC หรือ vision LLM ให้ Face Detector เช็กบนเครื่องก่อนว่ามีหน้าคน ชัด อยู่กลางเฟรม ส่งแค่เฟรมที่ดีที่สุด (คลิก 3) ผลคือประหยัดค่า API ตอบสนองทันที และข้อมูลดิบไม่ออกจากเครื่อง • ต่อไปเราจะดูว่า MediaPipe มีโมเดลอะไรให้ใช้เป็นด่านหน้าได้บ้าง</aside>
-      </section>
-
       <!-- Section divider 02 -->
       <section class="bg-blue" data-title="02 · What's inside">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
@@ -1856,6 +1825,37 @@ Keep all video on-device — never upload frames.</pre></div>
           </div>
         </div>
         <aside class="notes">ช่วงแข่งสร้างแอป 15 นาที • กติกา: เปิด AI Studio → Build ใช้ MediaPipe อย่างน้อย 1 task สั่งแก้ไปเรื่อย ๆ จนหมดเวลา แล้วยกมือออกมาเดโมบนเวที • ไม่มีการตัดสินหรือให้คะแนน: 3 คนแรกที่กล้าออกมาเดโมได้รางวัลเลย แอปยังไม่เสร็จหรือทำงานได้ครึ่งเดียวก็นับ • ทำคนเดียวหรือเป็นคู่ก็ได้ • ใช้ prompt จากหน้าก่อนเป็นจุดเริ่มต้นได้ • ไปหน้าถัดไปแล้วกด Start เพื่อเริ่มจับเวลา</aside>
+      </section>
+
+      <!-- On-device first: a small MediaPipe model as the gate in front of a cloud LLM -->
+      <section data-title="On-device first, LLM when needed">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 52px">
+            <div class="eyebrow">On-device first</div>
+            <h2 style="font-size:42px">Put on-device AI in front of your LLM</h2>
+            <p class="gate-sub">Every app can call an LLM today. Let a tiny model on the device check first, and only send what really needs the cloud.</p>
+            <div class="gate-rows">
+              <div class="gate-row fragment" data-fragment-index="1">
+                <div class="gate-in">💬 Chat message</div>
+                <svg class="gate-arr"><use href="#i-right"/></svg>
+                <div class="pc green gate-box"><span class="gate-tag">On-device · MediaPipe</span><b>Text Classifier · Language Detector</b>Spam? Toxic? Which language? Simple FAQ?<em>✕ stops here: never costs a token</em></div>
+                <div class="gate-pass"><span>only if needed</span><svg class="gate-arr"><use href="#i-right"/></svg></div>
+                <div class="pc blue gate-cloud"><svg class="ico"><use href="#i-cloud"/></svg><b>Cloud LLM</b>Gemini API</div>
+              </div>
+              <div class="gate-row fragment" data-fragment-index="2">
+                <div class="gate-in">📷 Camera frame</div>
+                <svg class="gate-arr"><use href="#i-right"/></svg>
+                <div class="pc green gate-box"><span class="gate-tag">On-device · MediaPipe</span><b>Face Detector</b>Is there one face? Sharp, centered, eyes open?<em>✕ stops here: empty or blurry frames</em></div>
+                <div class="gate-pass"><span>best frame only</span><svg class="gate-arr"><use href="#i-right"/></svg></div>
+                <div class="pc blue gate-cloud"><svg class="ico"><use href="#i-cloud"/></svg><b>Cloud check</b>Vision LLM · eKYC</div>
+              </div>
+            </div>
+            <div class="gate-wins fragment" data-fragment-index="3">
+              <span class="pc yellow">💸 Fewer API calls</span><span class="pc red">⚡ Instant feedback</span><span class="pc">🔒 Raw data stays on device</span>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ทุกวันนี้ใคร ๆ ก็ทำแอปที่เรียก LLM ได้แล้ว แต่ไม่จำเป็นต้องส่งทุกอย่างขึ้น cloud • ไอเดียคือเอาโมเดลเล็กบนเครื่อง (MediaPipe) มาเป็นด่านหน้า (คลิก 1) แชต: ก่อนส่งข้อความไป LLM ให้ Text Classifier / Language Detector เช็กก่อนบนเครื่อง ข้อความสแปม คำหยาบ หรือคำถามง่าย ๆ จบได้เลยไม่เสีย token ส่งไป LLM เฉพาะที่จำเป็น (คลิก 2) กล้อง: ก่อนส่งรูปไปตรวจบน cloud เช่น eKYC หรือ vision LLM ให้ Face Detector เช็กบนเครื่องก่อนว่ามีหน้าคน ชัด อยู่กลางเฟรม ส่งแค่เฟรมที่ดีที่สุด (คลิก 3) ผลคือประหยัดค่า API ตอบสนองทันที และข้อมูลดิบไม่ออกจากเครื่อง • ปิดท้าย: แอปที่ทุกคนสร้างวันนี้ใช้หลักนี้ได้เลย ให้ MediaPipe ทำงานบนเครื่องก่อน แล้วค่อยเรียก Gemini เมื่อจำเป็น</aside>
       </section>
 
       <!-- 15. Resources -->
