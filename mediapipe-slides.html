@@ -457,6 +457,8 @@
     .pp-card.bad { background: #fdf1f1; } .pp-card.bad .pp-tag { background: var(--p-red); color: #b3261e; }
     .pp-card i { position: absolute; left: 11px; right: 11px; bottom: 6px; height: 4px; border-radius: 2px; background: linear-gradient(90deg, var(--g-green) var(--p), #e0e0e0 var(--p)); }
     .pp-card.bad i { background: linear-gradient(90deg, var(--g-red) var(--p), #e0e0e0 var(--p)); }
+    .demo-mp { position: absolute; right: 48px; top: 8px; z-index: 3; display: flex; align-items: center; gap: 7px; font: 500 17px/1 var(--sans); color: #3c4043; }
+    .reveal .demo-mp img { height: 22px; width: auto; margin: 0; }
     .try-model { position: relative; font: 500 15px/1 var(--sans); padding: 9px 14px 9px 32px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); white-space: nowrap; }
     .try-model::before { content: ""; position: absolute; left: 12px; top: 50%; width: 11px; height: 11px; margin-top: -5.5px; border-radius: 50%; border: 1.5px solid var(--ink); box-sizing: border-box; background: #d0d0d0; }
     .try-model[data-state="loading"] { background: var(--p-yellow); }
@@ -897,6 +899,7 @@
 
       <!-- Live demo for Text Classifier -->
       <section data-state="trydemo" data-demo="textcls" data-title="Live demo · Text Classifier">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-panel">
@@ -941,6 +944,7 @@
 
       <!-- Live demo for Text Embedder -->
       <section data-state="trydemo" data-demo="textemb" data-title="Live demo · Text Embedder">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-panel">
@@ -986,6 +990,7 @@
 
       <!-- Live demo for Language Detector -->
       <section data-state="trydemo" data-demo="lang" data-title="Live demo · Language Detector">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-panel">
@@ -1065,6 +1070,7 @@
 
       <!-- Live demo for Audio Classifier -->
       <section data-state="trydemo" data-demo="audio" data-title="Live demo · Audio Classifier">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-stage">
@@ -1157,6 +1163,7 @@
       </section>
 
       <section data-state="trydemo" data-demo="decision" data-title="Live demo · Decision Maker">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-panel">
@@ -1194,6 +1201,7 @@
       </section>
 
       <section data-state="trydemo" data-demo="passport" data-title="Live demo · Passport photo check">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:36px 44px; display:flex; gap:28px">
             <div class="pp-left">
@@ -1278,6 +1286,7 @@
 
       <!-- Live demo for Object Detector (real model on the official sample image) -->
       <section data-state="trydemo" data-try="object" data-title="Live demo · Object Detector">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-stage">
@@ -1320,6 +1329,7 @@
 
       <!-- Live demo for Image Segmenter (real model on the official sample image) -->
       <section data-state="trydemo" data-try="segment" data-title="Live demo · Image Segmenter">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-stage">
@@ -1380,6 +1390,7 @@
 
       <!-- Live demo for Hand Landmarker (real model on the official sample image) -->
       <section data-state="trydemo" data-try="hands" data-title="Live demo · Hand Landmarker">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-stage">
@@ -1421,6 +1432,7 @@
 
       <!-- Live demo for Face Detector (real model on the official sample image) -->
       <section data-state="trydemo" data-try="facedet" data-title="Live demo · Face Detector">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-stage">
@@ -1462,6 +1474,7 @@
 
       <!-- Live demo for Face Landmarker (real model on the official sample image) -->
       <section data-state="trydemo" data-try="face" data-title="Live demo · Face Landmarker">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-stage">
@@ -1503,6 +1516,7 @@
 
       <!-- Live demo for Pose Landmarker (real model on the official sample image) -->
       <section data-state="trydemo" data-try="pose" data-title="Live demo · Pose Landmarker">
+        <span class="demo-mp"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe</span>
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-stage">
