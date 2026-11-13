@@ -434,6 +434,8 @@
     .reveal .cmp3 ul.bl { font-size: 18px; margin-top: 16px; }
     .reveal .cmp3 ul.bl li { margin-bottom: 8px; }
     .cmp3 .cmp-tag { font-size: 15px; }
+    .cmp-gemma { display: inline-flex; align-items: center; gap: 5px; margin-left: 8px; font: 500 13px/1 var(--sans); padding: 5px 9px 5px 6px; border-radius: 999px; background: #fff; border: 1.5px solid #8ab4f8; color: #1a5fd0; vertical-align: middle; }
+    .reveal .cmp-gemma img { width: 18px; height: 18px; margin: 0; }
     .reveal .cmp-tag img.ts { border-radius: 5px; }
     .reveal .cmp-tag img { height: 20px; width: auto; margin: 0 8px 0 0; vertical-align: -4px; }
     .reveal p.cmp-tip { margin: 26px 0 0; font-size: 18px; display: inline-block; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-yellow); }
@@ -1117,7 +1119,7 @@
             <p class="sub" style="font-size:19px; margin:6px 0 24px">All three score your options in one pass · no text generation</p>
             <div class="grid cmp3">
               <div class="pc green fragment">
-                <span class="tag cmp-tag"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe Decision Maker</span>
+                <span class="tag cmp-tag"><img src="images/mediapipe-slides/logos/mediapipe-icon.svg" alt="">MediaPipe Decision Maker</span><span class="cmp-gemma"><img src="images/mediapipe-slides/logos/gemma.png" alt="Gemma">EmbeddingGemma 2</span>
                 <ul class="bl">
                   <li>Runs <b>on the device</b>, even offline</li>
                   <li>Data never leaves the device</li>
@@ -1147,7 +1149,7 @@
             <p class="cmp-tip fragment"><b>Combine them:</b> decide on-device first, send only low-confidence cases to a cloud decision API</p>
           </div>
         </div>
-        <aside class="notes">เทียบโมเดลตัดสินใจ 3 ตัว ทุกตัวใช้หลักเดียวกัน: ให้คะแนนตัวเลือกที่เรากำหนดในรอบเดียว ไม่ generate ข้อความ ได้ความน่าจะเป็นออกมา • (คลิก 1) MediaPipe Decision Maker: ตัวเดียวที่รันบนเครื่อง ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง ฟรีหลังโหลดโมเดล • (คลิก 2) Gemini Decisions API ของ Google: cloud รับ input หลากหลายสุด (วิดีโอ PDF) ได้ถึง 256K tokens ถามได้ 1,000 คำถาม $0.10 ต่อ 1M input tokens • (คลิก 3) Jev ของ TypeSafe (ออกเดือน ก.ย. 2026): cloud API รับข้อความเป็นหลัก (รูปยังทดลอง) 64K tokens คำถามแบบ Noul / choice / score $0.042 ต่อ 1M input tokens • ข้อควรระวังที่รีวิวพูดถึง: คำตอบอยู่ในรูปแบบที่กำหนดเสมอ แต่ก็ผิดได้ ควรทดสอบกับข้อมูลจริง • (คลิก 4) ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป API บน cloud • ข้อมูล Jev จาก flaviocopes.com/jev และ composio.dev (ราคาและ latency เป็นตัวเลขจากผู้ผลิต)</aside>
+        <aside class="notes">เทียบโมเดลตัดสินใจ 3 ตัว ทุกตัวใช้หลักเดียวกัน: ให้คะแนนตัวเลือกที่เรากำหนดในรอบเดียว ไม่ generate ข้อความ ได้ความน่าจะเป็นออกมา • (คลิก 1) MediaPipe Decision Maker: ใช้โมเดล EmbeddingGemma 2 ของตระกูล Gemma ตัวเดียวที่รันบนเครื่อง ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง ฟรีหลังโหลดโมเดล • (คลิก 2) Gemini Decisions API ของ Google: cloud รับ input หลากหลายสุด (วิดีโอ PDF) ได้ถึง 256K tokens ถามได้ 1,000 คำถาม $0.10 ต่อ 1M input tokens • (คลิก 3) Jev ของ TypeSafe (ออกเดือน ก.ย. 2026): cloud API รับข้อความเป็นหลัก (รูปยังทดลอง) 64K tokens คำถามแบบ Noul / choice / score $0.042 ต่อ 1M input tokens • ข้อควรระวังที่รีวิวพูดถึง: คำตอบอยู่ในรูปแบบที่กำหนดเสมอ แต่ก็ผิดได้ ควรทดสอบกับข้อมูลจริง • (คลิก 4) ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป API บน cloud • ข้อมูล Jev จาก flaviocopes.com/jev และ composio.dev (ราคาและ latency เป็นตัวเลขจากผู้ผลิต)</aside>
       </section>
 
       <section data-state="trydemo" data-demo="decision" data-title="Live demo · Decision Maker">
