@@ -250,6 +250,9 @@
     .copy:hover { background: var(--g-yellow); }
     .copy.done { background: var(--g-green); color: #fff; }
     .copy.try-cam.on { background: var(--g-red); color: #fff; }
+    .as-body::after { content: ""; display: block; clear: both; }
+    .reveal .as-body .as-pmock { float: right; width: 300px; height: auto; margin: 14px 16px 8px 14px; border-radius: 12px; }
+    .reveal .as-body pre.as-text { font-size: 15px; line-height: 1.5; overflow: visible; display: block; }
     .as-ideas { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
     .as-idea { display: flex; flex-direction: column; gap: 8px; height: 392px; min-width: 0; padding: 14px 14px !important; }
     .as-idea .as-mock { display: block; width: 100%; height: auto; }
@@ -1707,20 +1710,21 @@ for det in result.detections:
                 <li class="pc"><b>5 · Rules</b>On-device only, errors, mobile-friendly</li>
               </ul>
               <div class="as-prompt">
-                <div class="as-ph"><span>Example prompt · Pose Landmarker</span><button class="copy" data-copy="pr-squat">Copy prompt</button></div>
-                <pre class="as-text" id="pr-squat">Build a web app called "Squat Coach".
-Use MediaPipe Pose Landmarker (@mediapipe/tasks-vision) on my webcam, running fully in the browser.
-Draw the 33 body landmarks and skeleton over the video.
-Count squats: one rep = knee angle drops below 90° and comes back above 160°.
-Show the rep count and live knee angle in big text.
-After each rep, show "Good rep!" with a short animation.
-Add Start / Stop camera buttons and a friendly message if camera permission is denied.
-Keep all video on-device — never upload frames.</pre>
+                <div class="as-ph"><span>Example prompt · Face Landmarker</span><button class="copy" data-copy="pr-balloon">Copy prompt</button></div>
+                <div class="as-body"><img class="as-pmock" src="images/mediapipe-slides/mockups/balloon-blow.svg" alt="Example: Balloon Blow app">
+                <pre class="as-text" id="pr-balloon">Build a web game called "Balloon Blow".
+Use MediaPipe Face Landmarker with blendshapes on my webcam, fully in the browser.
+Attach a balloon to my lips using the mouth landmarks.
+Puff my cheeks (cheekPuff) or pucker (mouthPucker) to inflate it; when I stop, it slowly deflates.
+Past the dashed limit it pops with confetti and I score +1.
+Show a blendshape meter, the score and a 30-second timer.
+Add Start / Stop camera buttons and handle a denied camera permission.
+Keep all video on-device — never upload frames.</pre></div>
               </div>
             </div>
           </div>
         </div>
-        <aside class="notes">สูตรเขียน prompt 5 ส่วน: (1) Goal แอปทำอะไร (2) ระบุชื่อ MediaPipe task ให้ชัด (3) Input กล้อง/รูป/วิดีโอ (4) Output &amp; UI จะวาดอะไร นับอะไร แสดงอะไร (5) Rules เช่น on-device เท่านั้น จัดการ error • กด Copy prompt ตัวอย่าง Squat Coach ไปวางใน Build → New app แล้วให้ผู้ฟังลองสั่งแก้ต่อ เช่น 'make the skeleton thicker' หรือ 'add a 30-second timer'</aside>
+        <aside class="notes">สูตรเขียน prompt 5 ส่วน: (1) Goal แอปทำอะไร (2) ระบุชื่อ MediaPipe task ให้ชัด (3) Input กล้อง/รูป/วิดีโอ (4) Output &amp; UI จะวาดอะไร นับอะไร แสดงอะไร (5) Rules เช่น on-device เท่านั้น จัดการ error • กด Copy prompt ตัวอย่าง Balloon Blow (ป่องแก้มเป่าลูกโป่ง ใช้ blendshapes ของ Face Landmarker) ไปวางใน Build → New app แล้วให้ผู้ฟังลองสั่งแก้ต่อ เช่น 'make the balloon red' หรือ 'add a high score'</aside>
       </section>
 
       <!-- AI Studio 3: more prompt ideas -->
@@ -1755,9 +1759,9 @@ Keep all video on-device — never upload frames.</pre>
             <div class="eyebrow">Google AI Studio · Try these prompts</div>
             <h2 style="font-size:40px; margin-bottom:22px">Even more prompt ideas</h2>
             <div class="as-ideas">
-              <div class="pc red as-idea"><div class="as-ih"><b>🎈 Balloon Blow</b><span class="chip">Face Landmarker</span><button class="copy" data-copy="pr-balloon">Copy prompt</button></div>
-                <img class="as-mock" src="images/mediapipe-slides/mockups/balloon-blow.svg" alt="Example: Balloon Blow app">
-                <p class="as-text" id="pr-balloon">Make a balloon-blowing game with MediaPipe Face Landmarker on my webcam. Attach a balloon to my lips using the mouth landmarks. While I puff my cheeks (cheekPuff blendshape) or pucker my lips (mouthPucker), inflate the balloon; when I stop, it slowly deflates. If it grows past the dashed limit, pop it with a bang and confetti and add 1 to my score. Show a live meter of the blendshape value, the score, and a 30-second timer with a final score screen.</p></div>
+              <div class="pc red as-idea"><div class="as-ih"><b>🏋️ Squat Coach</b><span class="chip">Pose Landmarker</span><button class="copy" data-copy="pr-squat">Copy prompt</button></div>
+                <img class="as-mock" src="images/mediapipe-slides/mockups/squat-coach.svg" alt="Example: Squat Coach app">
+                <p class="as-text" id="pr-squat">Build a web app called "Squat Coach" with MediaPipe Pose Landmarker on my webcam, running fully in the browser. Draw the 33 body landmarks and skeleton over the video. Count squats: one rep = knee angle drops below 90° and comes back above 160°. Show the rep count and live knee angle in big text, and after each rep show "Good rep!" with a short animation. Add Start / Stop camera buttons and a friendly message if camera permission is denied. Keep all video on-device — never upload frames.</p></div>
               <div class="pc blue as-idea"><div class="as-ih"><b>💇 Hair Color</b><span class="chip">Image Segmenter</span><button class="copy" data-copy="pr-hair">Copy prompt</button></div>
                 <img class="as-mock" src="images/mediapipe-slides/mockups/hair-color.svg" alt="Example: Hair Color Try-On app">
                 <p class="as-text" id="pr-hair">Build a hair color try-on app with MediaPipe Image Segmenter using the selfie_multiclass_256x256 model on my webcam. Use the hair category mask to tint only my hair with the selected color, with soft edges and blending so the texture still looks natural. Add color swatches (pink, blue, purple, blonde, green), a rainbow gradient mode and an intensity slider. Add a draggable before/after split line and a button to save a photo. Keep everything on-device.</p></div>
@@ -1771,7 +1775,7 @@ Keep all video on-device — never upload frames.</pre>
             <p class="as-tip"><b>Tip</b> Long prompt? Scroll inside the box — Copy prompt grabs the whole thing.</p>
           </div>
         </div>
-        <aside class="notes">อีก 4 ไอเดียสำหรับคนที่อยากลองอย่างอื่น: Balloon Blow (Face — ป่องแก้มเป่าลูกโป่ง), Hair Color (Image Segmenter — ใช้ hair mask ของโมเดล multiclass เปลี่ยนสีผม), Pose Match (Pose — ทำท่าให้ตรงกรอบ), Scavenger Hunt (Object Detector — หาของรอบตัวมาโชว์กล้อง) • prompt ยาวเลื่อนดูในกล่องได้ ปุ่ม Copy ก๊อปทั้งหมด</aside>
+        <aside class="notes">อีก 4 ไอเดียสำหรับคนที่อยากลองอย่างอื่น: Squat Coach (Pose — นับจำนวน squat จากมุมเข่า), Hair Color (Image Segmenter — ใช้ hair mask ของโมเดล multiclass เปลี่ยนสีผม), Pose Match (Pose — ทำท่าให้ตรงกรอบ), Scavenger Hunt (Object Detector — หาของรอบตัวมาโชว์กล้อง) • prompt ยาวเลื่อนดูในกล่องได้ ปุ่ม Copy ก๊อปทั้งหมด</aside>
       </section>
 
       <!-- Build challenge: rules & prizes -->
