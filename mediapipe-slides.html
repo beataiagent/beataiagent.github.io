@@ -438,9 +438,7 @@
     .reveal .cmp-gemma img { width: 18px; height: 18px; margin: 0; }
     .reveal .cmp-tag img.ts { border-radius: 5px; }
     .reveal .cmp-tag img { height: 20px; width: auto; margin: 0 8px 0 0; vertical-align: -4px; }
-    .reveal p.cmp-bench { margin: 22px 0 0; font: 400 15px/1.45 var(--mono); color: #3c4043; max-width: 760px; padding: 10px 14px; border: 2px dashed #9aa0a6; border-radius: 14px; }
-    .cmp-bench b { font-family: var(--sans); font-weight: 700; color: var(--ink); }
-    .cmp-bench .ok { color: #137333; font-weight: 700; } .cmp-bench .hard { color: #b3261e; font-weight: 700; }
+    .reveal p.cmp-bench { margin: 20px 0 0; font: 400 13px/1.4 var(--mono); color: var(--muted); max-width: 760px; }
     .reveal p.cmp-tip { margin: 26px 0 0; font-size: 18px; display: inline-block; padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-yellow); }
     .ad-phone { position: absolute; left: 44px; top: 36px; width: 318px; height: 566px; border: 3px solid var(--ink); border-radius: 26px; overflow: hidden; background: #000; }
     .reveal .ad-phone video { width: 100%; height: 100%; max-width: none !important; max-height: none !important; margin: 0; object-fit: cover; display: block; }
@@ -1207,10 +1205,10 @@
                 </ul>
               </div>
             </div>
-            <p class="cmp-bench fragment"><b>Our test</b> · JevBench public split, 231 questions · EmbeddingGemma 2 440M in the browser: <span class="ok">easy 98% ≈ cloud</span> · <span class="hard">hard 37%</span> → keep easy decisions on-device, send hard reasoning to the cloud</p>
+            <p class="cmp-bench">Quick test (JevBench public split): on-device handles simple decisions well, but trails the cloud models on hard reasoning.</p>
           </div>
         </div>
-        <aside class="notes">เทียบโมเดลตัดสินใจ 3 ตัว ทุกตัวใช้หลักเดียวกัน: ให้คะแนนตัวเลือกที่เรากำหนดในรอบเดียว ไม่ generate ข้อความ ได้ความน่าจะเป็นออกมา • (คลิก 1) MediaPipe Decision Maker: ใช้โมเดล EmbeddingGemma 2 ของตระกูล Gemma ตัวเดียวที่รันบนเครื่อง ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง ฟรีหลังโหลดโมเดล • (คลิก 2) Gemini Decisions API ของ Google: cloud รับ input หลากหลายสุด (วิดีโอ PDF) ได้ถึง 256K tokens ถามได้ 1,000 คำถาม $0.10 ต่อ 1M input tokens • (คลิก 3) Jev ของ TypeSafe (ออกเดือน ก.ย. 2026): cloud API รับข้อความเป็นหลัก (รูปยังทดลอง) 64K tokens คำถามแบบ Noul / choice / score $0.042 ต่อ 1M input tokens • ข้อควรระวังที่รีวิวพูดถึง: คำตอบอยู่ในรูปแบบที่กำหนดเสมอ แต่ก็ผิดได้ ควรทดสอบกับข้อมูลจริง • (คลิก 4) ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป API บน cloud • ข้อมูล Jev จาก flaviocopes.com/jev และ composio.dev (ราคาและ latency เป็นตัวเลขจากผู้ผลิต) • (คลิกสุดท้าย) ผลที่ผมวัดเอง: รัน JevBench ชุด public 231 ข้อ กับ EmbeddingGemma 2 440M ในเบราว์เซอร์ ข้อง่าย (คัดแยกเจตนา ตอบใช่/ไม่ใช่จากข้อมูลที่ให้) ได้ 98% พอ ๆ กับ cloud แต่ข้อยากที่ต้องคิดหลายขั้นได้แค่ 37% ใกล้เดาสุ่ม รวมทั้งหมด 56% (ตัว cloud ราว 86–92%) • สรุป: งานง่ายจบบนเครื่อง งานยากส่ง cloud • ถ้าถูกถาม: ไม่ใช่คะแนนทางการ วัดเองบน laptop จำกัด 1,024 tokens ข้อยาวโดนตัด</aside>
+        <aside class="notes">เทียบโมเดลตัดสินใจ 3 ตัว ทุกตัวใช้หลักเดียวกัน: ให้คะแนนตัวเลือกที่เรากำหนดในรอบเดียว ไม่ generate ข้อความ ได้ความน่าจะเป็นออกมา • (คลิก 1) MediaPipe Decision Maker: ใช้โมเดล EmbeddingGemma 2 ของตระกูล Gemma ตัวเดียวที่รันบนเครื่อง ออฟไลน์ได้ ข้อมูลไม่ออกจากเครื่อง ฟรีหลังโหลดโมเดล • (คลิก 2) Gemini Decisions API ของ Google: cloud รับ input หลากหลายสุด (วิดีโอ PDF) ได้ถึง 256K tokens ถามได้ 1,000 คำถาม $0.10 ต่อ 1M input tokens • (คลิก 3) Jev ของ TypeSafe (ออกเดือน ก.ย. 2026): cloud API รับข้อความเป็นหลัก (รูปยังทดลอง) 64K tokens คำถามแบบ Noul / choice / score $0.042 ต่อ 1M input tokens • ข้อควรระวังที่รีวิวพูดถึง: คำตอบอยู่ในรูปแบบที่กำหนดเสมอ แต่ก็ผิดได้ ควรทดสอบกับข้อมูลจริง • (คลิก 4) ใช้ร่วมกัน: ตัดสินใจบนเครื่องก่อน เคสที่ confidence ต่ำค่อยส่งไป API บน cloud • ข้อมูล Jev จาก flaviocopes.com/jev และ composio.dev (ราคาและ latency เป็นตัวเลขจากผู้ผลิต) • (บรรทัดเล็กด้านล่าง ไม่ต้องเน้น) ผลที่ผมวัดเอง: รัน JevBench ชุด public 231 ข้อ กับ EmbeddingGemma 2 440M ในเบราว์เซอร์ ข้อง่าย (คัดแยกเจตนา ตอบใช่/ไม่ใช่จากข้อมูลที่ให้) ได้ 98% พอ ๆ กับ cloud แต่ข้อยากที่ต้องคิดหลายขั้นได้แค่ 37% ใกล้เดาสุ่ม รวมทั้งหมด 56% (ตัว cloud ราว 86–92%) • สรุป: งานง่ายจบบนเครื่อง งานยากส่ง cloud • ถ้าถูกถาม: ไม่ใช่คะแนนทางการ วัดเองบน laptop จำกัด 1,024 tokens ข้อยาวโดนตัด</aside>
       </section>
 
       <section data-state="trydemo" data-demo="decision" data-title="Live demo · Decision Maker">
