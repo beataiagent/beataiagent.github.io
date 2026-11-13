@@ -239,6 +239,21 @@
     .as-steps li:nth-child(1) b { background: var(--p-blue); } .as-steps li:nth-child(2) b { background: var(--p-green); }
     .as-steps li:nth-child(3) b { background: var(--p-yellow); } .as-steps li:nth-child(4) b { background: var(--p-red); }
     .as-steps li span { padding-top: 6px; }
+    .pub-left { top: 128px; width: 640px; }
+    .pub-mock { width: 100%; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 18px; background: #fff; padding: 16px 22px 20px; font-family: var(--sans); display: flex; flex-direction: column; align-items: center; gap: 12px; box-shadow: 0 6px 0 var(--ink); }
+    .pub-tabs { align-self: stretch; display: flex; gap: 8px; }
+    .pub-tabs span { font-size: 15px; padding: 7px 13px; border: 1.5px solid #dadce0; border-radius: 999px; color: #3c4043; }
+    .pub-tabs span.on { background: #e8eaed; border-color: #9aa0a6; font-weight: 500; color: var(--ink); }
+    .pub-title { align-self: stretch; font-size: 20px; font-weight: 500; }
+    .pub-bars { align-self: stretch; display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; }
+    .pub-bars i { height: 4px; border-radius: 2px; background: #bdc1c6; } .pub-bars i.on { background: var(--g-blue); }
+    .pub-step { align-self: stretch; font-size: 16px; } .pub-step span { color: #5f6368; margin-right: 6px; }
+    .pub-cloud { width: 84px; height: 64px; margin: 4px 0; }
+    .pub-proj { width: 78%; display: grid; grid-template-columns: 1fr auto; padding: 10px 16px; border: 1.5px solid #dadce0; border-radius: 12px; }
+    .pub-proj b { font-weight: 500; font-size: 16px; } .pub-proj span { grid-column: 1; font-size: 13px; color: #5f6368; } .pub-proj em { grid-row: 1 / span 2; grid-column: 2; align-self: center; font-style: normal; color: #5f6368; }
+    .pub-btn { width: 78%; text-align: center; padding: 10px 0; border: 1.5px solid #9aa0a6; border-radius: 999px; font-size: 16px; font-weight: 500; }
+    .as-steps li small { display: block; font-size: 15px; color: var(--muted); margin-top: 2px; }
+    .reveal p.pub-note { position: absolute; left: 44px; top: 532px; width: 760px; margin: 0; font: 400 15px/1.4 var(--mono); color: var(--ink); }
     .as-recipe { display: flex; gap: 22px; align-items: flex-start; }
     .reveal ul.as-parts { list-style: none; margin: 0; padding: 0; width: 330px; flex: none; display: grid; gap: 9px; }
     .as-parts li { padding: 10px 16px !important; font-size: 15.5px; line-height: 1.3; border-radius: 16px !important; }
@@ -1316,7 +1331,7 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:40px 48px; display:flex; gap:32px">
             <div class="try-stage">
-              <img class="try-fallback" src="images/mediapipe-slides/samples/face_man.webp" alt="">
+              <img class="try-fallback" src="images/mediapipe-slides/samples/face_woman.webp" alt="">
               <canvas class="try-canvas"></canvas>
               <span class="try-pill">Face Detector</span>
             </div>
@@ -1536,46 +1551,6 @@ function loop() {
           </div>
         </div>
         <aside class="notes">คลิกไล่ highlight โค้ดทีละส่วน: (1) import จาก @mediapipe/tasks-vision (2) โหลด WASM runtime (3) สร้าง HandLandmarker ใช้ GPU, โหมด VIDEO, 2 มือ (4) loop เรียก detectForVideo ทุกเฟรม ได้ 21 จุดต่อมือ • ย้ำว่าทั้งหมดไม่ถึง 25 บรรทัด และรันในเบราว์เซอร์ล้วน ๆ</aside>
-      </section>
-
-      <!-- 9. Code: Python -->
-      <section data-title="Object Detection with Python">
-        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:36px 48px">
-            <div class="eyebrow">Code · Python</div>
-            <h2 style="margin-bottom:20px; font-size:40px">Object Detection with Python</h2>
-            <div style="display:flex; gap:24px; align-items:flex-start">
-              <pre style="width:760px; flex:none"><code class="language-python" data-trim data-line-numbers="1-3|5-10|12-14|15-17">
-import mediapipe as mp
-from mediapipe.tasks import python
-from mediapipe.tasks.python import vision
-
-options = vision.ObjectDetectorOptions(
-    base_options=python.BaseOptions(
-        model_asset_path="efficientdet_lite0.tflite"),
-    score_threshold=0.5,
-)
-detector = vision.ObjectDetector.create_from_options(options)
-
-image = mp.Image.create_from_file("cat_and_dog.jpg")
-result = detector.detect(image)
-
-for det in result.detections:
-    cat = det.categories[0]
-    print(cat.category_name, round(cat.score, 2), det.bounding_box)
-              </code></pre>
-              <div style="display:grid; gap:14px; width:310px">
-                <div class="cmd">pip install mediapipe</div>
-                <ul class="bl" style="font-size:19px">
-                  <li>Same Tasks API as web &amp; mobile</li>
-                  <li>Runs on desktop &amp; Raspberry Pi</li>
-                  <li>Boxes + labels + scores</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-        <aside class="notes">เวอร์ชัน Python ใช้ API แบบเดียวกัน: (1) import (2) ตั้งค่าโมเดล EfficientDet-Lite0 และ score threshold (3) โหลดรูปแล้วเรียก detect (4) วนลูปพิมพ์ชื่อวัตถุ คะแนน และกรอบ • เหมาะกับงานบน desktop, server หรือ Raspberry Pi</aside>
       </section>
 
 
@@ -1805,6 +1780,35 @@ Keep all video on-device — never upload frames.</pre></div>
         <aside class="notes">ช่วงแข่งสร้างแอป 15 นาที • กติกา: เปิด AI Studio → Build ใช้ MediaPipe อย่างน้อย 1 task สั่งแก้ไปเรื่อย ๆ จนหมดเวลา แล้วยกมือออกมาเดโมบนเวที • ไม่มีการตัดสินหรือให้คะแนน: 3 คนแรกที่กล้าออกมาเดโมได้รางวัลเลย แอปยังไม่เสร็จหรือทำงานได้ครึ่งเดียวก็นับ • ทำคนเดียวหรือเป็นคู่ก็ได้ • ใช้ prompt จากหน้าก่อนเป็นจุดเริ่มต้นได้ • ไปหน้าถัดไปแล้วกด Start เพื่อเริ่มจับเวลา</aside>
       </section>
 
+      <!-- AI Studio: publish your app (Publish tab → Cloud project + billing → live URL) -->
+      <section data-title="Publish your app from AI Studio">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Google AI Studio · Publish</div>
+            <h2 style="font-size:40px">Done building? Publish it 🚀</h2>
+            <div class="as-left pub-left">
+              <div class="pub-mock" aria-label="AI Studio Publish panel">
+                <div class="pub-tabs"><span>Chat</span><span>Share</span><span class="on">● Publish</span><span>Versions</span><span>GitHub</span></div>
+                <div class="pub-title">Publish your app</div>
+                <div class="pub-bars"><i class="on"></i><i></i><i></i></div>
+                <div class="pub-step"><span>Step 1</span> Confirm project and billing</div>
+                <svg class="pub-cloud" viewBox="0 0 120 90" aria-hidden="true"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z" fill="#fff" stroke="#4285f4" stroke-width="7" stroke-linejoin="round"/></svg>
+                <div class="pub-proj"><b>my-devfest-project</b><span>My billing account ✓</span><em>▾</em></div>
+                <div class="pub-btn">Continue</div>
+              </div>
+            </div>
+            <ol class="as-steps">
+              <li><b>1</b><span>In your app, open the <strong>Publish</strong> tab (next to Chat · Share)</span></li>
+              <li><b>2</b><span>Pick your <strong>Google Cloud project</strong> with a billing account → <strong>Continue</strong><br><small>Use the credits you redeemed today</small></span></li>
+              <li><b>3</b><span>Wait for <strong>"Publishing your app"</strong> while AI Studio prepares the project</span></li>
+              <li><b>4</b><span>Copy the <strong>public link</strong>, open it on your phone and share it</span></li>
+            </ol>
+            <p class="pub-note"><b>Share</b> = invite people to the app in AI Studio &nbsp;·&nbsp; <b>Publish</b> = a live web app on your Google Cloud project</p>
+          </div>
+        </div>
+        <aside class="notes">ทำแอปเสร็จแล้ว publish ให้คนอื่นเปิดใช้ได้: (1) ในหน้าแอปที่สร้าง เปิดแท็บ Publish ที่แถบขวา ข้าง Chat และ Share (2) ขั้นที่ 1 เลือก Google Cloud project ที่ผูก billing account แล้ว (ใช้เครดิตที่ redeem ไปตอนต้นได้) แล้วกด Continue (3) รอ AI Studio เตรียม Cloud project และ publish แอป ("Publishing your app") (4) ได้ลิงก์สาธารณะ ลองเปิดบนมือถือแล้วแชร์ได้เลย • ต่างจาก Share ที่เป็นการแชร์แอปใน AI Studio, Publish คือได้เว็บแอปจริงบน Google Cloud ของเรา</aside>
+      </section>
+
       <!-- On-device first: a small MediaPipe model as the gate in front of a cloud LLM -->
       <section data-title="On-device first, LLM when needed">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
@@ -1879,6 +1883,46 @@ Keep all video on-device — never upload frames.</pre></div>
         </div>
         <aside class="notes">ภาคผนวก: Model Maker และ LLM Inference API สำหรับเปิดดูเพิ่มเติมหรือตอบคำถาม</aside>
       </section>
+      <!-- 9. Code: Python -->
+      <section data-title="Object Detection with Python">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 48px">
+            <div class="eyebrow">Code · Python</div>
+            <h2 style="margin-bottom:20px; font-size:40px">Object Detection with Python</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <pre style="width:760px; flex:none"><code class="language-python" data-trim data-line-numbers="1-3|5-10|12-14|15-17">
+import mediapipe as mp
+from mediapipe.tasks import python
+from mediapipe.tasks.python import vision
+
+options = vision.ObjectDetectorOptions(
+    base_options=python.BaseOptions(
+        model_asset_path="efficientdet_lite0.tflite"),
+    score_threshold=0.5,
+)
+detector = vision.ObjectDetector.create_from_options(options)
+
+image = mp.Image.create_from_file("cat_and_dog.jpg")
+result = detector.detect(image)
+
+for det in result.detections:
+    cat = det.categories[0]
+    print(cat.category_name, round(cat.score, 2), det.bounding_box)
+              </code></pre>
+              <div style="display:grid; gap:14px; width:310px">
+                <div class="cmd">pip install mediapipe</div>
+                <ul class="bl" style="font-size:19px">
+                  <li>Same Tasks API as web &amp; mobile</li>
+                  <li>Runs on desktop &amp; Raspberry Pi</li>
+                  <li>Boxes + labels + scores</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">[Appendix: ใช้อ้างอิง ไม่ต้องเดโม] เวอร์ชัน Python ใช้ API แบบเดียวกัน: (1) import (2) ตั้งค่าโมเดล EfficientDet-Lite0 และ score threshold (3) โหลดรูปแล้วเรียก detect (4) วนลูปพิมพ์ชื่อวัตถุ คะแนน และกรอบ • เหมาะกับงานบน desktop, server หรือ Raspberry Pi</aside>
+      </section>
+
       <!-- 12. Model Maker -->
       <section data-title="Model Maker — train on your own data">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
@@ -2171,14 +2215,14 @@ const answer = await llm.generateResponse(
   </script>
 
   <!-- Try it: run real MediaPipe Tasks on the official demo sample images -->
-  <script src="images/mediapipe-slides/samples/samples.js"></script>
+  <script src="images/mediapipe-slides/samples/samples.js?v=2"></script>
   <script type="module">
     // Live demos: every <section data-try="…"> runs that MediaPipe task on its sample image when the slide opens.
     // "Open camera" switches the same slide to the webcam (VIDEO running mode), drawing with the same code.
     const TASKS = "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14";
     const M = "https://storage.googleapis.com/mediapipe-models";
     const SAMPLES = window.MP_SAMPLES || {};
-    const SAMPLE_KEY = { facedet: "face" };
+    const SAMPLE_KEY = {};
     const LABEL = { object: "Object Detector", classify: "Image Classifier", pose: "Pose Landmarker", hands: "Hand Landmarker", face: "Face Landmarker", facedet: "Face Detector", gesture: "Gesture Recognizer", segment: "Image Segmenter" };
     if (!/[?&]print-pdf\b/.test(location.search)) {
       let mod, fileset, RM = "IMAGE", cam = null; const cache = {}, imgs = {}, done = new WeakSet();

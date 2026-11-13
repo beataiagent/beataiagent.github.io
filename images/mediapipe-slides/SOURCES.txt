@@ -6,3 +6,5 @@ loops/*  — official MediaPipe solution preview loops
 ../logos/ios.svg            — https://upload.wikimedia.org/wikipedia/commons/c/ca/IOS_logo.svg
 ../logos/android.svg, python.svg, apple.svg — devicon v2.16.0 (jsdelivr)
 ../logos/web.svg            — Material Symbols "language" (rounded, 400)
+samples/face_woman.webp — Face Detector demo sample, cropped from "Smiling woman pink shirt (cropped).jpg"
+           CC0, https://commons.wikimedia.org/wiki/File:Smiling_woman_pink_shirt_(cropped).jpg
