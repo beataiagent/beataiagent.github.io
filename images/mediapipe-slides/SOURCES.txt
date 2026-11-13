@@ -11,3 +11,4 @@ samples/face_woman.webp — Face Detector demo sample, cropped from "Smiling wom
 id-photos/id-photos.js — sample ID photos (resized JPEG data URLs) from google-ai-edge/mediapipe-samples-web, public/images/id_photos (Apache-2.0)
            Passport rules in the Decision Maker demo are adapted from src/tasks/decision-maker-vision.ts in the same repo.
 ../logos/gemini.svg       — https://www.gstatic.com/images/branding/productlogos/gemini_2026/v1/192px.svg
+../logos/typesafe.png     — TypeSafe icon from typesafe.ai (apple-touch-icon), resized to 64 px
