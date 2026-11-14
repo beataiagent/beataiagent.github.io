@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" role="img" aria-label="Sparky cheering with pom-poms">
+  <defs>
+    <radialGradient id="body" cx="45%" cy="62%" r="65%">
+      <stop offset="0" stop-color="#FFD54A"/>
+      <stop offset=".7" stop-color="#FFC107"/>
+      <stop offset="1" stop-color="#F9A825"/>
+    </radialGradient>
+    <g id="pom">
+      <circle r="13" cx="0" cy="-17"/><circle r="13" cx="15" cy="-8"/><circle r="13" cx="15" cy="9"/>
+      <circle r="13" cx="0" cy="18"/><circle r="13" cx="-15" cy="9"/><circle r="13" cx="-15" cy="-8"/>
+      <circle r="16"/>
+    </g>
+  </defs>
+
+  <!-- confetti -->
+  <g>
+    <rect x="22" y="40" width="10" height="18" rx="2" fill="#4285F4" transform="rotate(-25 27 49)"/>
+    <rect x="70" y="18" width="9" height="16" rx="2" fill="#EA4335" transform="rotate(30 74 26)"/>
+    <rect x="236" y="22" width="9" height="16" rx="2" fill="#34A853" transform="rotate(-35 240 30)"/>
+    <rect x="288" y="62" width="10" height="18" rx="2" fill="#FBBC04" transform="rotate(20 293 71)"/>
+    <rect x="14" y="118" width="9" height="15" rx="2" fill="#34A853" transform="rotate(40 18 125)"/>
+    <rect x="296" y="140" width="9" height="15" rx="2" fill="#4285F4" transform="rotate(-20 300 147)"/>
+    <circle cx="112" cy="20" r="5" fill="#FBBC04"/>
+    <circle cx="206" cy="12" r="5" fill="#4285F4"/>
+    <circle cx="300" cy="104" r="4" fill="#EA4335"/>
+    <circle cx="44" cy="88" r="4" fill="#EA4335"/>
+    <path d="M160 4 C162 14 166 18 176 20 C166 22 162 26 160 36 C158 26 154 22 144 20 C154 18 158 14 160 4Z" fill="#4285F4"/>
+    <path d="M268 100 C269 106 271 108 277 109 C271 110 269 112 268 118 C267 112 265 110 259 109 C265 108 267 106 268 100Z" fill="#EA4335"/>
+    <path d="M40 160 C41 166 43 168 49 169 C43 170 41 172 40 178 C39 172 37 170 31 169 C37 168 39 166 40 160Z" fill="#FBBC04"/>
+  </g>
+
+  <!-- ground shadow -->
+  <ellipse cx="160" cy="306" rx="78" ry="9" fill="#000" opacity=".08"/>
+
+  <!-- arms raised -->
+  <g fill="none" stroke="#C8690C" stroke-width="17" stroke-linecap="round">
+    <path d="M96 226 C72 212 60 180 62 146"/>
+    <path d="M224 226 C248 212 260 180 258 146"/>
+  </g>
+
+  <!-- body (flame) -->
+  <path fill="url(#body)" d="M160 300
+    C98 300 70 262 72 214
+    C73 182 84 160 96 138
+    C102 152 110 158 118 152
+    C114 118 128 86 152 58
+    C154 84 166 98 178 96
+    C182 82 186 72 194 62
+    C206 92 202 116 210 132
+    C220 126 228 116 232 104
+    C250 140 250 180 248 214
+    C246 262 222 300 160 300Z"/>
+  <!-- soft highlight -->
+  <path fill="#FFE082" opacity=".55" d="M112 230 C108 196 118 172 134 156 C126 182 126 206 134 232 C128 240 116 240 112 230Z"/>
+
+  <!-- face -->
+  <g fill="none" stroke="#3E2723" stroke-width="6" stroke-linecap="round">
+    <path d="M124 204 Q134 190 144 204"/>
+    <path d="M176 204 Q186 190 196 204"/>
+    <path d="M122 182 Q132 176 142 180"/>
+    <path d="M178 180 Q188 176 198 182"/>
+  </g>
+  <circle cx="114" cy="222" r="11" fill="#FF8A3D" opacity=".75"/>
+  <circle cx="206" cy="222" r="11" fill="#FF8A3D" opacity=".75"/>
+  <path d="M138 220 Q160 222 182 220 Q180 254 160 256 Q140 254 138 220Z" fill="#5D2B12"/>
+  <path d="M146 244 Q160 234 174 244 Q168 255 160 255 Q152 255 146 244Z" fill="#F4511E"/>
+  <path d="M142 221 Q160 223 178 221 L177 228 Q160 230 143 228Z" fill="#fff"/>
+
+  <!-- pom-poms -->
+  <g transform="translate(60 132)" fill="#EA4335"><use href="#pom"/></g>
+  <g transform="translate(60 132)" fill="#4285F4" opacity=".9"><circle r="9" cx="-6" cy="-6"/><circle r="7" cx="8" cy="6"/></g>
+  <g transform="translate(260 132)" fill="#34A853"><use href="#pom"/></g>
+  <g transform="translate(260 132)" fill="#4285F4" opacity=".9"><circle r="9" cx="6" cy="-6"/><circle r="7" cx="-8" cy="6"/></g>
+</svg>

@@ -229,6 +229,14 @@
     .rc-steps li:nth-child(1) b { background: var(--p-blue); } .rc-steps li:nth-child(2) b { background: var(--p-green); } .rc-steps li:nth-child(3) b { background: var(--p-yellow); }
     .rc-qr { display: flex; align-items: center; gap: 18px; margin-top: 4px; }
     .reveal .rc-qr img { width: 176px; height: 176px; margin: 0; padding: 12px; background: #fff; border: 2.5px solid var(--ink); border-radius: 20px; flex: none; }
+    .sb-steps { position: absolute; left: 44px; top: 170px; width: 640px; }
+    .reveal .sb-steps ol.rc-steps { gap: 18px; }
+    .sb-steps .rc-steps li { font-size: 24px; }
+    .sb-steps .rc-steps li b { width: 44px; height: 44px; font-size: 22px; }
+    .sb-qr { position: absolute; right: 52px; top: 70px; width: 340px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 28px; background: #fff; padding: 26px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+    .reveal .sb-qr img { display: block; width: 270px; height: 270px; margin: 0; }
+    .reveal .sb-sparky { position: absolute; left: 560px; top: 380px; width: 250px; height: 250px; margin: 0; }
+    .sb-qr .as-link { font-size: 15px; white-space: nowrap; }
     .rc-qr .as-link { font-size: 14px; line-height: 1.4; border-radius: 16px; white-space: nowrap; }
     .as-left { position: absolute; left: 44px; top: 132px; width: 690px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
     .as-shot { width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 18px; display: block; }
@@ -1923,6 +1931,30 @@ Keep all video on-device — never upload frames.</pre></div>
           </div>
         </div>
         <aside class="notes">ช่วงแข่งสร้างแอป 15 นาที • กติกา: เปิด AI Studio → Build ใช้ MediaPipe อย่างน้อย 1 task สั่งแก้ไปเรื่อย ๆ จนหมดเวลา แล้วยกมือออกมาเดโมบนเวที • ไม่มีการตัดสินหรือให้คะแนน: 3 คนแรกที่กล้าออกมาเดโมได้รางวัลเลย แอปยังไม่เสร็จหรือทำงานได้ครึ่งเดียวก็นับ • ทำคนเดียวหรือเป็นคู่ก็ได้ • ใช้ prompt จากหน้าก่อนเป็นจุดเริ่มต้นได้ • ไปหน้าถัดไปแล้วกด Start เพื่อเริ่มจับเวลา</aside>
+      </section>
+
+      <!-- Build challenge: submit your published app (Google Form + QR) -->
+      <section data-title="Submit your app">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 44px">
+            <div class="eyebrow">Hands-on · Build Challenge</div>
+            <h2 style="font-size:46px">Submit your app 📮</h2>
+            <div class="sb-steps">
+              <ol class="rc-steps">
+                <li><b>1</b><span><strong>Publish</strong> your app in AI Studio and copy the public link</span></li>
+                <li><b>2</b><span>Scan the QR or open the form</span></li>
+                <li><b>3</b><span>Paste your app link, add your name and hit <strong>Submit</strong></span></li>
+              </ol>
+              <p style="font-size:18px; margin-top:28px">Half-working apps count too · submit even if you don't demo on stage</p>
+            </div>
+            <img class="sb-sparky" src="images/mediapipe-slides/sparky-cheer.svg" alt="Sparky cheering with pom-poms">
+            <div class="sb-qr">
+              <img src="images/mediapipe-slides/qr-submit.svg" alt="QR code: Build Challenge submission form">
+              <a class="as-link" href="https://docs.google.com/forms/d/e/1FAIpQLSe0-Afm7onqOBkdjz7zTa-qD43oSV0VjKjPh7_Tcp9BxrSGgQ/viewform?usp=header" target="_blank">Open the submission form ↗</a>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ส่งผลงาน: (1) Publish แอปจาก AI Studio ตามหน้าที่แล้ว แล้วก๊อปลิงก์สาธารณะ (2) สแกน QR หรือเปิดลิงก์ฟอร์ม (3) วางลิงก์แอป ใส่ชื่อ แล้วกด Submit • แอปยังไม่เสร็จก็ส่งได้ ส่งได้แม้ไม่ได้ออกมาเดโมบนเวที • เปิดหน้านี้ค้างไว้ให้ทุกคนสแกนก่อนไปต่อ</aside>
       </section>
 
       <!-- On-device first: a small MediaPipe model as the gate in front of a cloud LLM -->
