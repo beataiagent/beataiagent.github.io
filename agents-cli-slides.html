@@ -1,0 +1,1429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>From Prompt to Production · Agents CLI</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="images/shared/logos/gdg-favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="images/shared/logos/gdg-favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="images/shared/logos/gdg-apple-touch-180.png" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="fonts/fonts.css" rel="stylesheet" />
+
+  <style>
+    /* ================= DevFest 2026 theme tokens (from the official template) ================= */
+    :root {
+      --ink: #1e1e1e;            /* Black 02 */
+      --paper: #f0f0f0;          /* Off-White */
+      --white: #fff;
+      --g-blue: #4285f4; --g-green: #34a853; --g-red: #ea4335; --g-yellow: #fbbc04;      /* Google 500 */
+      --h-blue: #57caff; --h-green: #5cdb6d; --h-red: #ff7daf; --h-yellow: #ffd427;      /* Halftone */
+      --p-blue: #c3ecf6; --p-green: #ccf6c5; --p-red: #f8d8d8; --p-yellow: #ffe7a5;      /* Pastel */
+      --muted: #5f6368;
+      --stroke: 3px;
+      --sans: "Google Sans", "Product Sans", system-ui, sans-serif;
+      --mono: "Roboto Mono", ui-monospace, monospace;
+
+      --r-background-color: var(--paper);
+      --r-main-font: var(--sans);
+      --r-heading-font: var(--sans);
+      --r-code-font: var(--mono);
+      --r-main-color: var(--ink);
+      --r-heading-color: var(--ink);
+      --r-heading-text-transform: none;
+      --r-heading-font-weight: 700;
+      --r-heading-letter-spacing: -0.01em;
+      --r-link-color: #1a73e8;
+      --r-link-color-hover: #174ea6;
+      --r-main-font-size: 28px;
+    }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--paper); }
+    .reveal { color: var(--ink); }
+    .reveal strong, .reveal b { font-weight: 700; }
+
+    /* every slide is a fixed 1280×720 canvas, laid out absolutely like the Slides template */
+    .reveal .slides section { width: 1280px; height: 720px; padding: 0; box-sizing: border-box; text-align: left; background: var(--paper); line-height: 1.3; }
+    .reveal .slides section.bg-blue { background: var(--p-blue); }
+    .reveal .slides section.bg-green { background: var(--p-green); }
+    .reveal .slides section.bg-yellow { background: var(--p-yellow); }
+    .reveal .slides section.bg-red { background: var(--p-red); }
+    .reveal h1, .reveal h2, .reveal h3 { margin: 0; text-transform: none; color: var(--ink); line-height: 1.12; }
+    .reveal h1 { font-size: 84px; font-weight: 700; letter-spacing: -.015em; }
+    .reveal h2 { font-size: 46px; font-weight: 700; }
+    .reveal h3 { font-size: 26px; font-weight: 700; }
+    .reveal p { margin: 0; }
+    .reveal .slides img { margin: 0; max-width: none; max-height: none; }
+    .reveal a { text-decoration: none; }
+    .abs { position: absolute; }
+    .mono { font-family: var(--mono); font-weight: 300; }
+    .sub { font-family: var(--mono); font-weight: 300; font-size: 22px; line-height: 1.35; color: var(--ink); }
+    .muted { color: var(--muted); }
+
+    /* ---------- notched card (shape drawn by dfShapes(): data-tl / data-br notches, data-scallop) ---------- */
+    .nc { position: absolute; }
+    .nc > svg.nc-s { position: absolute; inset: 0; overflow: visible; z-index: 0; pointer-events: none; }
+    .nc > .in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; padding: 40px 52px; }
+
+    /* ---------- DevFest badge: { DevFest / location } ---------- */
+    .badge { position: absolute; display: flex; align-items: center; gap: 4px; --bk: var(--g-yellow); }
+    .badge .bk { font: 700 92px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .badge b { font: 700 50px/1 var(--sans); letter-spacing: -.01em; }
+    .badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 6px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .badge.sm .bk { font-size: 64px; -webkit-text-stroke-width: 2.5px; }
+    .badge.sm b { font-size: 34px; }
+    .badge.sm i { font-size: 11px; padding: 4px 0; margin-top: 5px; border-width: 2px; }
+
+    /* ---------- corner logos: Build with Gemini + DevFest/GDG lockup (auto-added bottom-right of every slide) ---------- */
+    .corner-logos { position: absolute; right: 40px; bottom: 38px; display: flex; align-items: flex-end; gap: 14px; z-index: 2; pointer-events: none; }
+    .corner-logos img { height: 94px; width: auto; display: block; }
+
+    /* ---------- line icons (sprite at top of <body>) ---------- */
+    .ico { display: block; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .dots { position: absolute; display: flex; gap: 14px; }
+    .dots i { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--ink); background: var(--dc, var(--g-blue)); box-sizing: border-box; }
+    .numbox { position: absolute; border: var(--stroke) solid var(--ink); border-radius: 28px; background: #fff; font: 300 64px/1 var(--mono); display: flex; align-items: center; padding: 0 28px; box-sizing: border-box; }
+
+    /* ---------- content atoms ---------- */
+    .pc { border: 2.5px solid var(--ink); border-radius: 24px; padding: 22px 24px; background: #fff; box-sizing: border-box; font-size: 20px; line-height: 1.38; }
+    .pc.blue { background: var(--p-blue); } .pc.green { background: var(--p-green); } .pc.yellow { background: var(--p-yellow); } .pc.red { background: var(--p-red); }
+    .pc h3 { margin-bottom: 8px; }
+    .pc .ico { width: 46px; height: 46px; margin-bottom: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 5px 13px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; font-size: 15px; line-height: 1.3; }
+    .tag { display: inline-block; padding: 7px 20px; border-radius: 999px; border: 2.5px solid var(--ink); background: #fff; font: 500 18px/1.2 var(--sans); }
+    .tag.red { background: var(--p-red); } .tag.yellow { background: var(--g-yellow); }
+    .eyebrow { font: 400 17px/1 var(--mono); letter-spacing: .02em; color: var(--ink); margin-bottom: 12px; }
+    .grid { display: grid; gap: 20px; }
+    .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+    .reveal ul.bl { list-style: none; margin: 0; padding: 0; display: block; font-size: 25px; line-height: 1.35; }
+    .reveal ul.bl li { position: relative; padding-left: 34px; margin: 0 0 16px; }
+    .reveal ul.bl li::before { content: ""; position: absolute; left: 2px; top: .38em; width: 15px; height: 15px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--g-blue); }
+    .reveal ul.bl li:nth-child(4n+2)::before { background: var(--g-red); }
+    .reveal ul.bl li:nth-child(4n+3)::before { background: var(--g-yellow); }
+    .reveal ul.bl li:nth-child(4n+4)::before { background: var(--g-green); }
+    .placeholder { border: 2.5px dashed #9aa0a6; border-radius: 24px; display: grid; place-items: center; color: var(--muted); font-size: 18px; text-align: center; padding: 20px; background: var(--paper); box-sizing: border-box; }
+
+    /* code */
+    .reveal pre { width: auto; margin: 0; box-shadow: none; font-size: 15px; line-height: 1.42; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--paper); overflow: hidden; }
+    .reveal pre code { max-height: none; padding: 16px 22px; background: transparent; font-family: var(--mono); font-weight: 400; }
+    .reveal .hljs { background: transparent; color: #1e1e1e; }
+    .reveal .hljs-ln-numbers { color: #9aa0a6; }
+    .cmd { font: 400 15px/1.4 var(--mono); padding: 12px 16px; border-radius: 16px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; }
+    /* "ask your coding agent" prompt bar at the bottom of each step slide */
+    .ask { position: absolute; left: 56px; right: 56px; bottom: 30px; display: flex; align-items: center; gap: 16px; padding: 12px 18px; border: 2px dashed var(--h-yellow); border-radius: 16px; background: #2a2b2f; }
+    .ask b { flex: none; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; border-radius: 999px; background: var(--h-yellow); color: #202124; white-space: nowrap; }
+    .ask span { font: 400 16px/1.4 var(--mono); color: #e8eaed; }
+    .ag-steps .pc { display: flex; flex-direction: column; gap: 12px; }
+    .ag-steps .pc .num { width: 38px; height: 38px; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; font: 500 19px/1 var(--sans); color: #fff; }
+    .ag-steps .pc.blue .num { color: var(--h-blue); } .ag-steps .pc.green .num { color: var(--h-green); } .ag-steps .pc.yellow .num { color: var(--h-yellow); }
+    .ag-steps .pc p { margin: 0; font-size: 17px; }
+
+    /* flow (slide 7) */
+    .flow { display: flex; align-items: center; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 26px 18px; }
+    .flow .node b { display: block; font-size: 24px; margin-bottom: 8px; }
+    .flow .node code { font-family: var(--mono); font-size: 16px; white-space: nowrap; }
+    .flow .arr { width: 46px; flex: none; }
+
+    /* demo */
+    .demo-wrap { position: relative; width: 520px; aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; border: 2.5px solid var(--ink); background: #1e1e1e; }
+    .reveal .demo-wrap video, .reveal .demo-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; object-fit: cover; transform: scaleX(-1); }
+    .demo-ui { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn { font: 500 18px/1 var(--sans); padding: 13px 26px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); color: #fff; cursor: pointer; }
+    .btn.ghost { background: #fff; color: var(--ink); }
+    .btn:disabled { opacity: .45; cursor: default; }
+    #demoStatus { font: 300 16px/1.4 var(--mono); color: var(--ink); }
+    .gesture { position: absolute; left: 14px; top: 12px; font: 500 20px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); z-index: 2; }
+
+    /* ---------- slide 1: speaker cover ---------- */
+    .reveal .slides section.s-cover { overflow: hidden; }
+    .s-cover .cv-pill { position: absolute; left: 129px; top: 44px; width: 556px; height: 93px; border-radius: 999px; background: var(--ink); }
+    .s-cover .cv-dot { position: absolute; left: 670px; top: 44px; width: 91px; height: 91px; border-radius: 50%; background: var(--g-blue); border: 3px solid var(--ink); box-sizing: border-box; }
+    .s-cover .cv-kicker { font: 700 38px/1.1 var(--sans); color: var(--g-blue); margin-bottom: 8px; }
+    .s-cover .cv-title { font-size: 86px; line-height: 1.04; letter-spacing: -.015em; }
+    .s-cover .cv-name { position: absolute; left: 88px; top: 542px; width: 346px; height: 97px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 999px; background: #fff; display: flex; flex-direction: column; justify-content: center; padding: 0 24px; z-index: 2; }
+    .s-cover .cv-name b { font: 700 29px/1.15 var(--sans); white-space: nowrap; }
+    .s-cover .cv-name span { font: 400 15px/1.3 var(--sans); white-space: nowrap; margin-top: 3px; }
+    .s-cover .cv-photo { position: absolute; left: 761px; top: 40px; width: 479px; height: 370px; border: 3px solid #555; border-radius: 66px; overflow: hidden; background: #efeeef; box-sizing: border-box; }
+    .s-cover .cv-photo > img { position: absolute; left: 92px; top: 30px; width: 334px; height: 334px; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); }
+    .s-cover .gde { position: absolute; left: 128px; top: 262px; display: flex; height: 79px; border: 2px solid #c6dafc; border-radius: 9px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .s-cover .gde-l { width: 108px; display: flex; flex-direction: column; align-items: center; padding-top: 8px; position: relative; }
+    .s-cover .gde-l img { width: 36px; height: 18px; object-fit: contain; }
+    .s-cover .gde-l span { font: 400 17px/1 var(--sans); color: #5f6368; margin-top: 4px; }
+    .s-cover .gde-l i { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: #4a86e8; color: #fff; font: 400 12px/18px var(--sans); text-align: center; font-style: normal; }
+    .s-cover .gde-r { width: 108px; display: grid; place-items: center; font: 500 12px/1 var(--sans); color: #3c4043; border-left: 6px solid #e8f0fe; background: #fff; }
+    .s-cover .cv-badge { position: absolute; left: 696px; top: 505px; width: 313px; height: 124px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 42px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .s-cover .cv-badge .bk { font: 700 82px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .s-cover .cv-badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .s-cover .cv-badge b { font: 700 45px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover .cv-badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 5px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .s-cover .cv-blobs { position: absolute; left: 1010px; top: 501px; width: 211px; height: 77px; }
+    .s-cover .cv-gdg { position: absolute; left: 1007px; top: 578px; width: 132px; height: 87px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 44px; background: #fff; display: grid; place-items: center; }
+    .s-cover .cv-gdg img { width: 90px; height: 45px; object-fit: contain; }
+
+    /* ---------- slide 2: agenda ---------- */
+    .s-agenda .ag-title { position: absolute; left: 41px; top: 40px; font-size: 56px; font-weight: 400; }
+    .reveal .s-agenda ol.ag-list { position: absolute; left: 41px; top: 168px; margin: 0; padding: 0; list-style: none; display: grid; gap: 22px; }
+    .s-agenda .ag-list li { position: relative; display: flex; align-items: center; gap: 18px; height: 84px; }
+    .s-agenda .ag-list svg { position: absolute; left: 0; top: -6px; width: 96px; height: 96px; fill: none; stroke: var(--ink); stroke-width: 2.5; }
+    .s-agenda .ag-list b { width: 96px; text-align: center; font: 500 54px/1 var(--sans); flex: none; }
+    .s-agenda .ag-list span { width: 688px; height: 84px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 999px; background: #d3e3f3; display: flex; align-items: center; padding: 0 26px; font: 400 34px/1 var(--sans); }
+
+    /* tasks slide: Text · Audio · Decision · Retrieval / Vision · GenAI */
+    .tasks-grid { display: grid; grid-template-columns: 1.3fr 1.25fr .95fr 1.1fr; grid-template-rows: auto auto; gap: 14px; }
+    .tasks-grid .pc { padding: 16px 16px; }
+    .tasks-grid .pc.span3 { grid-column: span 3; }
+    .tasks-grid h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 24px; }
+    .tasks-grid .ord { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid var(--ink); background: #fff; display: grid; place-items: center; font: 500 16px/1 var(--sans); box-sizing: border-box; }
+    .tasks-grid .tcount { font: 300 13px/1 var(--mono); margin-left: auto; padding-left: 6px; white-space: nowrap; }
+    .tasks-grid .chips { gap: 6px; }
+    .tasks-grid .chip { font-size: 13.5px; padding: 4px 10px; }
+
+    /* ---------- task deep-dive slides ---------- */
+    .tk { padding: 34px 44px !important; }
+    .tk-head { position: absolute; left: 44px; top: 30px; right: 44px; }
+    .tk-head .eyebrow { margin-bottom: 6px; }
+    .tk-head h2 { font-size: 40px; }
+    .tk-desc { font-size: 19px; line-height: 1.35; margin-top: 6px !important; }
+    .tk-media { position: absolute; left: 44px; top: 150px; width: 400px; height: 225px; margin: 0; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
+    .tk-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tk-info { position: absolute; left: 474px; top: 156px; right: 44px; display: flex; flex-direction: column; gap: 10px; }
+    .tk-io { display: flex; align-items: flex-start; gap: 12px; }
+    .tk-io > b { width: 64px; flex: none; font: 400 14px/28px var(--mono); }
+    .tk-io .chips { gap: 6px; }
+    .tk-io .chip { font-size: 15px; padding: 4px 12px; }
+    .tk-diagram { position: absolute; left: 30px; top: 392px; width: 800px; height: auto; }
+    .tk-stat { position: absolute; left: 872px; top: 400px; width: 284px; height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 12px 22px !important; }
+    .tk-stat b { font: 700 46px/1 var(--sans); letter-spacing: -.02em; }
+    .tk-stat span { font: 300 15px/1.3 var(--mono); margin-top: 6px; }
+    .tk-stat i { font: 300 11px/1.3 var(--mono); font-style: normal; color: var(--muted); margin-top: 6px; white-space: nowrap; }
+    .tk-size .chip.sz { background: var(--p-yellow); font-size: 14px; }
+    .tk-size .chip.sz em { font: 500 12.5px/1 var(--mono); font-style: normal; margin-left: 4px; }
+
+    /* section dividers: MediaPipe logo tile */
+    .div-logo { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .div-logo img { width: 150px; height: 150px; object-fit: contain; }
+
+
+    /* ---------- AI Studio how-to slides ---------- */
+    .as-left { position: absolute; left: 44px; top: 132px; width: 690px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+    .as-shot { width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 18px; display: block; }
+    .as-link { font: 400 16px/1 var(--mono); padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-blue); color: var(--ink) !important; }
+    .reveal ol.as-steps { position: absolute; left: 766px; top: 128px; width: 390px; margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+    .as-steps li { display: flex; gap: 14px; align-items: flex-start; font-size: 19px; line-height: 1.35; }
+    .as-steps li b { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid var(--ink); display: grid; place-items: center; font: 500 20px/1 var(--sans); background: #fff; box-sizing: border-box; }
+    .as-steps li:nth-child(1) b { background: var(--p-blue); } .as-steps li:nth-child(2) b { background: var(--p-green); }
+    .as-steps li:nth-child(3) b { background: var(--p-yellow); } .as-steps li:nth-child(4) b { background: var(--p-red); }
+    .as-steps li span { padding-top: 6px; }
+    .as-recipe { display: flex; gap: 22px; align-items: flex-start; }
+    .reveal ul.as-parts { list-style: none; margin: 0; padding: 0; width: 330px; flex: none; display: grid; gap: 9px; }
+    .as-parts li { padding: 10px 16px !important; font-size: 15.5px; line-height: 1.3; border-radius: 16px !important; }
+    .as-parts li b { display: block; font-size: 18px; margin-bottom: 2px; }
+    .as-prompt { flex: 1; border: 2.5px solid var(--ink); border-radius: 20px; background: var(--ink); color: #fff; overflow: hidden; max-width: 740px; }
+    .as-ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 10px 18px; font: 400 14px/1 var(--mono); color: #c4c7c5; border-bottom: 1px solid #3c3c3c; }
+    .reveal pre.as-text { margin: 0; padding: 14px 18px 18px; border: 0; border-radius: 0; background: transparent; color: #fff; white-space: pre-wrap; font: 400 15px/1.5 var(--mono); }
+    .copy { font: 500 13px/1 var(--sans); padding: 8px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .copy:hover { background: var(--g-yellow); }
+    .copy.done { background: var(--g-green); color: #fff; }
+    .as-ideas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .as-idea { display: flex; flex-direction: column; gap: 10px; height: 338px; padding: 18px 20px !important; }
+    .as-ih { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+    .as-ih b { font-size: 22px; }
+    .as-ih .chip { font-size: 13px; padding: 3px 10px; }
+    .as-idea .as-text { flex: 1; margin: 0; font: 400 13.5px/1.42 var(--mono); background: #fff; border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; }
+    .as-idea .copy { align-self: flex-start; }
+    .as-tip { margin-top: 16px !important; font-size: 17px; max-width: 800px; }
+    .as-tip b { font: 500 13px/1 var(--mono); padding: 4px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); margin-right: 8px; }
+    .as-tip code { font-family: var(--mono); font-size: 15px; }
+
+    /* thank-you: round speaker photo + name */
+    .ty-who { display: flex; align-items: center; gap: 20px; margin-top: 44px; }
+    .ty-who img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 3px solid var(--ink); background: #fff; flex: none; }
+    .ty-who .sub { margin: 0; }
+
+    /* Hydrogen slide */
+    .hy-word { background: linear-gradient(90deg, #0b1f5c, #2f6fd6 55%, #7cc7f5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    html.print-pdf .hy-word { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #2f6fd6; }
+    .hy-left { position: absolute; left: 44px; top: 128px; width: 620px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .hy-right { position: absolute; left: 696px; top: 128px; width: 460px; display: flex; flex-direction: column; gap: 16px; }
+    .hy-badge { align-self: flex-start; font: 500 18px/1 var(--sans); letter-spacing: .22em; color: #fff; padding: 12px 34px; border-radius: 999px; border: 2.5px solid var(--ink); background: linear-gradient(90deg, #0b1f5c, #2f6fd6 60%, #a8dcfb); }
+    .reveal ul.hy-facts { font-size: 18.5px; line-height: 1.32; }
+    .reveal ul.hy-facts li { margin-bottom: 8px; }
+    .hy-how { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.38; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .hy-how b { font: 500 13px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); flex: none; margin-top: 1px; }
+
+    /* What is Google AI Edge / MediaPipe */
+    .ae-logo { position: absolute; right: 44px; top: 40px; height: 54px; width: auto; }
+    .ae-stack { position: absolute; left: 44px; top: 186px; width: 720px; display: grid; gap: 12px; }
+    .ae-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .ae-row .pc { font-size: 16px; line-height: 1.35; padding: 16px 18px; min-height: 150px; position: relative; }
+    .ae-row h3 { font-size: 24px; margin-bottom: 6px; }
+    .ae-hl { box-shadow: 6px 6px 0 var(--ink); }
+    .ae-tag { position: absolute; right: 12px; top: -14px; font: 500 12px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); }
+    .ae-hw { display: grid; grid-template-columns: 90px repeat(3, 1fr); border: 2.5px solid var(--ink); border-radius: 16px; overflow: hidden; background: #fff; }
+    .ae-hw span, .ae-tools > span { font: 400 14px/1 var(--mono); display: grid; place-items: center; }
+    .ae-hw b { text-align: center; font: 700 22px/1 var(--sans); padding: 14px 0; border-left: 2px solid var(--ink); background: var(--paper); }
+    .ae-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .ae-tools > span { width: 90px; flex: none; }
+    .ae-tools .chip { font-style: normal; font-size: 13.5px; }
+    .ae-side { position: absolute; left: 800px; top: 186px; width: 356px; display: flex; flex-direction: column; gap: 12px; }
+    .ae-sh { font: 700 22px/1.2 var(--sans); }
+    .ae-side ul.bl { font-size: 19px; }
+    .ae-try { font-size: 16px; line-height: 1.4; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .mp-feats { position: absolute; left: 44px; top: 178px; width: 1112px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .mp-feats figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .mp-feats img { width: 100%; height: auto; border-radius: 18px; border: 2px solid var(--ink); }
+    .mp-feats figcaption { font-size: 15px; line-height: 1.3; }
+    .mp-feats figcaption b { display: block; font-size: 19px; margin-bottom: 2px; }
+    .mp-pipe { position: absolute; left: 30px; top: 438px; width: 800px; height: auto; }
+    .mp-facts { position: absolute; left: 860px; top: 432px; width: 296px; display: flex; align-items: center; gap: 14px; padding: 12px 20px; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--p-green); box-sizing: border-box; }
+    .mp-facts b { font: 700 46px/1 var(--sans); }
+    .mp-facts span { display: block; font: 300 15px/1.35 var(--mono); }
+    .mp-facts p { font: 300 12.5px/1.4 var(--mono); color: var(--muted); margin-top: 8px !important; }
+
+    /* why on-device: numbered cards, revealed one per click */
+    .why-card { position: relative; }
+    .why-n { position: absolute; right: 16px; top: 14px; font: 300 30px/1 var(--mono); padding: 6px 12px; border: 2.5px solid var(--ink); border-radius: 14px; background: #fff; }
+
+    /* platforms slide */
+    .pl-grid { position: absolute; left: 44px; top: 190px; width: 1112px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .pl-card { display: flex; flex-direction: column; gap: 8px; height: 310px; padding: 18px 16px !important; }
+    .pl-card img { height: 72px; width: 72px; object-fit: contain; box-sizing: border-box; padding: 11px; background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; }
+    .pl-card img.ios { padding: 6px; }
+    .pl-card h3 { font-size: 26px; margin: 4px 0 0; }
+    .pl-card p { font-size: 17px; line-height: 1.35; flex: 1; }
+    .pl-card p span { font: 300 13.5px/1.4 var(--mono); }
+    .pl-card code { font: 400 12px/1.35 var(--mono); background: var(--ink); color: #fff; border-radius: 10px; padding: 8px 10px; word-break: break-all; }
+
+    /* model-size charts (log scale) */
+    .szc { display: grid; gap: 4px; }
+    .szc-row { display: grid; grid-template-columns: 230px 1fr 132px; align-items: center; gap: 14px; }
+    .szc-row > b { font: 500 17px/1.15 var(--sans); }
+    .szc-row > b small { display: block; font: 300 12px/1.3 var(--mono); color: var(--muted); margin-top: 2px; }
+    .szc-row > em { font: 400 14px/1 var(--mono); font-style: normal; text-align: right; white-space: nowrap; }
+    .szc-track { position: relative; height: 30px; }
+    .szc-track > i { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed #c8c8c8; }
+    .szc-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid #e0e0e0; }
+    .szc-bar { position: absolute; top: 6px; height: 18px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); box-sizing: border-box; min-width: 18px; }
+    .szc-axis .szc-track { height: 18px; }
+    .szc-axis .szc-track::before { display: none; }
+    .szc-axis .szc-track span { position: absolute; transform: translateX(-50%); font: 300 12px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+    .szc-all { position: absolute; left: 44px; top: 168px; width: 1112px; gap: 4px; }
+    .szc-all .szc-row { grid-template-columns: 220px 1fr 170px; }
+    .szc-all .szc-row > b { font-size: 22px; }
+    .szc-all .szc-track { height: 44px; }
+    .szc-all .szc-row > b small { display: inline; margin-left: 8px; }
+    .szc-all .szc-bar { top: 7px; height: 26px; }
+    .szc-all .szc-row:nth-child(2) .szc-bar { background: var(--g-green); }
+    .szc-all .szc-row:nth-child(3) .szc-bar { background: var(--g-yellow); }
+    .szc-all .szc-row:nth-child(4) .szc-bar { background: var(--g-red); }
+    .szc-all .szc-row:nth-child(5) .szc-bar { background: #a142f4; }
+    .szc-all .szc-row:nth-child(6) .szc-bar { background: var(--g-blue); }
+    .szc-all .szc-row > em { font-size: 16px; }
+    .sz-notes { position: absolute; left: 44px; top: 474px; width: 760px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sz-notes .pc { font-size: 15px; line-height: 1.35; padding: 12px 16px !important; }
+    .sz-notes .pc b { display: block; font: 700 19px/1.2 var(--sans); margin-bottom: 2px; }
+    .szc-dense { gap: 0; }
+    .szc-dense .szc-row > b { font-size: 14.5px; }
+    .szc-dense .szc-row > b small { display: none; }
+    .szc-dense .szc-row > b { white-space: nowrap; }
+    .szc-dense .szc-track { height: 25px; }
+    .szc-dense .szc-bar { top: 4px; height: 17px; }
+    .szc-dense .szc-row > em { font-size: 13px; }
+    /* category dividers */
+    .cat-ico { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .cat-ico svg { width: 120px; height: 120px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .cat-side { position: absolute; left: 70px; top: 456px; width: 230px; text-align: center; }
+    .cat-side b { display: block; font: 700 34px/1.1 var(--sans); }
+    .cat-side span { display: block; font: 300 15px/1.4 var(--mono); margin-top: 4px; }
+    .cat-in { padding: 30px 40px !important; }
+    .cat-h { font-size: 64px !important; }
+    .cat-take { font-size: 17px; line-height: 1.35; margin: 8px 0 16px !important; max-width: 760px; }
+    .szc-cat .szc-row { grid-template-columns: 200px 1fr 118px; }
+    .szc-cat .szc-row > b { font-size: 15.5px; }
+    .bg-green .szc-cat .szc-bar { background: var(--g-green); }
+    .bg-yellow .szc-cat .szc-bar { background: var(--g-yellow); }
+    .bg-red .szc-cat .szc-bar { background: var(--g-red); }
+
+    /* ---------- Try it: sample-image demo ---------- */
+    .try-stage { position: relative; width: 640px; height: 470px; flex: none; border: 2.5px solid var(--ink); border-radius: 24px; overflow: hidden; background: #1e1e1e; }
+    .try-stage canvas, .try-stage .try-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .try-stage canvas { z-index: 1; }
+    .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
+    .try-what { font-size: 18px; line-height: 1.35; }
+    .try-actions { display: flex; gap: 10px; }
+    .try-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; flex: 1; }
+    .try-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .try-tabs button { font: 500 15px/1 var(--sans); padding: 9px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .try-tabs button:hover { background: var(--p-blue); }
+    .try-tabs button.on { background: var(--g-blue); color: #fff; }
+    .try-tabs button:disabled { opacity: .5; cursor: progress; }
+    .reveal ol.try-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 17px/1.3 var(--mono); max-height: 200px; overflow: hidden; }
+    .try-results li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; border-radius: 10px; background: var(--paper); border: 1.5px solid #d0d0d0; }
+    .try-results li b { font-weight: 500; }
+    .try-status { font: 300 14px/1.4 var(--mono); color: var(--muted); }
+
+    /* ---------- slide 4: MediaPipe · Google AI Edge (real loops + logos) ---------- */
+    .s-what .wp { position: absolute; background: #fff; border: var(--stroke) solid var(--ink); border-radius: 30px; box-sizing: border-box; }
+    .s-what .wp-main { left: 40px; top: 96px; width: 1200px; padding: 22px 28px 26px; }
+    .s-what .wp-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+    .s-what .tag { font-size: 22px; padding: 8px 26px; background: var(--g-yellow); }
+    .s-what .lockups { display: flex; align-items: center; gap: 34px; }
+    .s-what .mp-lockup, .s-what .edge-lockup { display: flex; align-items: center; font-size: 50px; line-height: 1; white-space: nowrap; }
+    .s-what .mp-lockup { gap: 12px; font-weight: 500; color: #3c4043; }
+    .s-what .mp-lockup img { height: 50px; }
+    .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
+    .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
+    .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what figure { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 2.5px solid var(--ink); background: #f1f3f4; }
+    .s-what figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s-what figcaption { position: absolute; left: 8px; bottom: 7px; font: 500 13px/1 var(--sans); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); color: var(--ink); }
+    .s-what .wp-plat { left: 40px; bottom: 26px; display: flex; align-items: center; gap: 52px; padding: 14px 38px; }
+    .s-what .wp-plat span { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 500; color: #3c4043; }
+    .s-what .wp-plat img { height: 58px; }
+    .s-what .wp-plat img.ios { border-radius: 13px; box-shadow: 0 0 0 1px #dadce0; }
+
+    /* ================= Slide controls (shopio-style) ================= */
+    .reveal .controls, .reveal .progress, html:not(.print-pdf) .reveal .slide-number { display: none !important; }
+    #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; z-index: 40; background: linear-gradient(90deg, var(--g-blue), var(--g-green), var(--g-yellow), var(--g-red)); transition: width .6s cubic-bezier(.16,1,.3,1); }
+    #ctrl { position: fixed; right: 18px; bottom: 16px; z-index: 40; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(30,30,30,.86); backdrop-filter: blur(8px); color: #fff; font: 13px var(--sans); transition: opacity .4s; }
+    #ctrl button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0; }
+    #ctrl button:hover { background: rgba(255,255,255,.25); }
+    #ctrl button.on { background: var(--g-blue); }
+    #ctrl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #ctrl .cnt { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; cursor: pointer; }
+    body.idle #ctrl { opacity: 0; }
+    body.idle { cursor: none; }
+    #menu, #exportMenu { position: fixed; right: 18px; bottom: 64px; z-index: 41; padding: 8px; border-radius: 14px; background: rgba(30,30,30,.96); backdrop-filter: blur(10px); box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); font-family: var(--sans); display: none; }
+    #menu { width: 380px; max-height: 70vh; overflow: auto; }
+    #menu.open, #exportMenu.open { display: block; }
+    #menu a { display: flex; gap: 10px; color: #cfd2d6; text-decoration: none; font-size: 13px; padding: 7px 10px; border-radius: 8px; }
+    #menu a:hover, #menu a.cur { background: rgba(255,255,255,.12); color: #fff; }
+    #menu a span { opacity: .5; width: 22px; text-align: right; flex: none; }
+    #exportMenu { min-width: 230px; padding: 6px; }
+    #exportMenu button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 12px; border: 0; border-radius: 9px; background: transparent; color: #fff; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+    #exportMenu button:hover, #exportMenu button:focus-visible { background: #3a3a3a; outline: none; }
+    #exportMenu kbd { font-family: var(--mono); font-size: 11px; color: #9aa0a6; border: 1px solid #444; border-radius: 5px; padding: 1px 6px; }
+    #exportMenu .sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 12px; line-height: 1.5; margin-top: 2px; color: #9aa0a6; }
+    #exportMenu button > span { line-height: 1.3; }
+    /* all-slides overview (scrollable grid of live thumbnails) */
+    #ov { position: fixed; inset: 0; z-index: 45; background: #1e1e1e; overflow: auto; padding: 28px 32px 40px; display: none; font-family: var(--sans); }
+    #ov.open { display: block; }
+    #ov .ovh { display: flex; justify-content: space-between; align-items: center; color: #fff; max-width: 1700px; margin: 0 auto 18px; font-size: 18px; font-weight: 500; }
+    #ov .ovh button { border: 0; background: rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+    #ov .ovh button:hover { background: rgba(255,255,255,.25); }
+    #ov .ovg { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px 18px; max-width: 1700px; margin: 0 auto; }
+    #ov .ovt { cursor: pointer; color: #cfd2d6; font-size: 13px; }
+    #ov .fr { position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: var(--paper); outline: 2px solid #3a3a3a; outline-offset: 3px; transition: outline-color .15s; }
+    #ov .ovt:hover .fr { outline-color: rgba(255,255,255,.5); }
+    #ov .ovt.cur .fr { outline-color: var(--g-yellow); }
+    #ov .cap { display: flex; gap: 8px; margin-top: 10px; line-height: 1.35; }
+    #ov .cap span { opacity: .5; flex: none; }
+    #ov .fr > .reveal { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; pointer-events: none; overflow: hidden; }
+    #ov .fr > .reveal > .slides { position: absolute; inset: 0; width: 1280px; height: 720px; margin: 0; transform: none; zoom: 1; pointer-events: none; }
+    #ov .fr > .reveal > .slides > section { display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; }
+    #ov .fr .fragment { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+    #ov .fr pre code.fragment { display: none !important; }
+    #ov .fr .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    html.print-pdf #progress, html.print-pdf #ctrl, html.print-pdf #menu, html.print-pdf #exportMenu { display: none !important; }
+    @media print { #progress, #ctrl, #menu, #exportMenu { display: none !important; } }
+    /* print view: show the full code block, not the stacked line-highlight step clones */
+    html.print-pdf .reveal pre code.fragment { display: none !important; }
+    html.print-pdf .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    /* Build challenge (rules + 15-min countdown) */
+    .ch-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 26px; }
+    .ch-grid .pc { display: flex; flex-direction: column; gap: 10px; min-height: 300px; }
+    .ch-grid .pc h3 { font: 700 26px/1.1 var(--sans); margin: 0 0 4px; }
+    .ch-grid ol { margin: 0; padding-left: 22px; } .ch-grid ol li { margin-bottom: 8px; }
+    .ch-crit { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px dashed #9aa0a6; padding-bottom: 8px; }
+    .ch-crit em { font: 400 16px/1.4 var(--mono); font-style: normal; white-space: nowrap; }
+    .ch-prize { font: 700 30px/1.15 var(--sans); }
+    .ch-time { position: absolute; right: 44px; top: 34px; font: 300 22px/1 var(--mono); padding: 12px 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-yellow); }
+    .ch-clock { font: 300 230px/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin: 18px 0 10px; }
+    .ch-bar { height: 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; overflow: hidden; box-sizing: border-box; }
+    .ch-bar i { display: block; height: 100%; width: 100%; background: var(--g-green); transition: width .4s linear, background .4s; }
+    .ch-ctrl { display: flex; gap: 12px; margin-top: 26px; align-items: center; }
+    .ch-ctrl .btn.ghost { background: #fff; color: var(--ink); }
+    .ch-ctrl span { font: 400 17px/1.3 var(--mono); margin-left: 12px; }
+    .ch-warn .ch-clock { color: var(--g-red); }
+    .ch-warn .ch-bar i { background: var(--g-red); }
+    .ch-done .ch-clock { animation: chblink 1s steps(2) infinite; }
+    @keyframes chblink { 50% { opacity: .25; } }
+
+    /* ---------- Gemini Decisions deck ---------- */
+    .pc.stat { display: flex; flex-direction: column; gap: 8px; min-height: 160px; }
+    .pc.stat b { font: 700 54px/1 var(--sans); letter-spacing: -.02em; }
+    .pc.stat b small { font: 300 24px/1 var(--mono); margin-left: 6px; }
+    .pc.stat span { font-size: 19px; line-height: 1.3; }
+    .pc.qt { min-height: 300px; }
+    .pc.qt code, .pc.stat code { font: 400 18px/1 var(--mono); display: inline-block; padding: 6px 12px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; margin-bottom: 16px; }
+    .pc code { font-family: var(--mono); font-size: .9em; }
+    .chips.mm .chip, .chips.eco .chip { font-size: 22px; padding: 9px 22px; }
+    .rl { border-collapse: collapse; width: 100%; font: 400 17px/1.3 var(--mono); }
+    .rl th, .rl td { border-bottom: 2px solid var(--ink); padding: 7px 8px; text-align: left; }
+    .rl th { font-family: var(--sans); font-weight: 700; }
+    .rl tr:last-child td { border-bottom: 0; }
+    .lat { display: grid; gap: 12px; margin-top: 14px; }
+    .lat div { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 12px; font: 400 16px/1 var(--mono); }
+    .lat i { display: block; height: 26px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-blue); box-sizing: border-box; }
+    /* ---------- Agents CLI deck ---------- */
+    .lc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 1088px; }
+    .lc .pc { padding: 14px 16px 16px; font-size: 16px; line-height: 1.3; position: relative; }
+    .lc .pc > b { position: absolute; right: 14px; top: 10px; font: 700 26px/1 var(--sans); opacity: .35; }
+    .lc .pc h3 { font-size: 21px; margin: 0 0 4px; }
+    .lc code, .cm code { font-size: .92em; }
+    .cm { display: grid; grid-template-columns: 170px 1fr; width: 1088px; border: 2.5px solid var(--ink); border-radius: 18px; overflow: hidden; font-size: 18px; }
+    .cm > * { padding: 11px 16px; border-top: 1.5px solid #dadce0; }
+    .cm > b:first-child, .cm > b:first-child + span { border-top: 0; }
+    .cm > b { background: var(--paper); font: 500 16px/1.3 var(--mono); }
+    .cm-metrics { grid-template-columns: 380px 1fr; }
+    .sk { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 1088px; }
+    .sk .pc { padding: 14px 16px; font-size: 16px; line-height: 1.3; }
+    .sk .pc b { display: block; font: 700 19px/1.2 var(--mono); margin-bottom: 6px; }
+    .cm-metrics > b { font: 500 17px/1.3 var(--sans); }
+
+    /* ===================== Dark theme (DevFest 2026 dark template) ===================== */
+    :root { --dk-bg: #202124; --dk-card: #2a2b2f; --dk-line: #5f6368; --dk-text: #e8eaed; --dk-sub: #bdc1c6;
+      --r-background-color: var(--dk-bg); --r-main-color: var(--dk-text); --r-heading-color: #fff; --r-link-color: var(--h-blue); --r-link-color-hover: #8ab4f8; }
+    body, .reveal .slides section, .reveal .slides section.bg-blue, .reveal .slides section.bg-green,
+    .reveal .slides section.bg-yellow, .reveal .slides section.bg-red { background: var(--dk-bg); color: var(--dk-text); }
+    .nc > svg.nc-s { display: none; }
+    .reveal h1, .reveal h2, .reveal h3 { color: #fff; }
+    .reveal h1 { font-weight: 500; } .reveal h2 { font-weight: 400; }
+    .sub { color: var(--dk-sub); } .muted { color: #9aa0a6 !important; }
+    .eyebrow { color: var(--h-blue); }
+    .pc { background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 16px; color: var(--dk-text); }
+    .pc.blue { background: var(--dk-card); border-color: var(--h-blue); }
+    .pc.green { background: var(--dk-card); border-color: var(--h-green); }
+    .pc.yellow { background: var(--dk-card); border-color: var(--h-yellow); }
+    .pc.red { background: var(--dk-card); border-color: var(--h-red); }
+    .pc h3, .pc b { color: #fff; }
+    .tag { background: var(--h-yellow); color: #202124; border: 0; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; }
+    .tag.yellow { background: var(--h-blue); } .tag.red { background: var(--h-red); }
+    .pc code, .cm code, p code, li code, .lc code { background: #3c4043; color: var(--dk-text); padding: 1px 6px; border-radius: 6px; font-size: .9em; }
+    .cmd { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre code { color: var(--dk-text); }
+    .ico { stroke: var(--dk-text); }
+    .reveal ul.bl li::before { border-color: var(--dk-bg); }
+    .numbox { background: transparent; border: 2px solid var(--dk-line); color: #fff; }
+    .bg-blue .numbox { color: var(--h-blue); border-color: var(--h-blue); } .bg-green .numbox { color: var(--h-green); border-color: var(--h-green); }
+    .bg-yellow .numbox { color: var(--h-yellow); border-color: var(--h-yellow); } .bg-red .numbox { color: var(--h-red); border-color: var(--h-red); }
+    .dots i { border-color: var(--dk-bg); }
+    .reveal .slides section[class*="bg-"] .numbox { top: 92px !important; }
+    .reveal .slides section[class*="bg-"] svg.ico.abs { top: 260px !important; }
+    .reveal .slides section[class*="bg-"] .dots { top: 548px !important; }
+    .cm { border: 2px solid var(--dk-line); } .cm > * { border-top-color: #3c4043; } .cm > b { background: var(--dk-card); color: var(--dk-sub); }
+    .lc .pc > b { color: #fff; }
+    .badge { display: none; }
+    .ty-who p { color: var(--dk-sub); }
+    /* logos: GDG top-left, Build with Gemini top-right (as in the dark template) */
+    .corner-logos { display: none; }
+    .top-gdg { position: absolute; left: 44px; top: 22px; z-index: 3; display: flex; align-items: center; gap: 10px; font: 500 17px/1.15 var(--sans); color: var(--dk-text); pointer-events: none; }
+    .top-gdg img { height: 24px; width: auto; }
+    .top-gdg small { display: block; font: 400 12px/1.2 var(--sans); color: #9aa0a6; }
+    .reveal .top-bwg { position: absolute; right: 40px; top: 14px; height: 54px; width: auto; margin: 0; z-index: 3; pointer-events: none; }
+    /* cover */
+    .s-cover-dk .chev-rows { position: absolute; left: 50px; top: 92px; right: 0; display: grid; gap: 26px; overflow: hidden; }
+    .s-cover-dk .cr { display: flex; align-items: center; gap: 22px; white-space: nowrap; }
+    .s-cover-dk .ch { width: 46px; height: 78px; color: #fff; flex: none; }
+    .s-cover-dk .ch.cb { color: #1fa3a3; } .s-cover-dk .ch.cg { color: #1fa3a3; } .s-cover-dk .ch.cp { color: #1fa3a3; }
+    .s-cover-dk .w { font: 400 84px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover-dk .w.b { color: var(--h-blue); } .s-cover-dk .w.g { color: var(--h-green); } .s-cover-dk .w.p { color: var(--h-red); }
+    .s-cover-dk .cv-sub-dk { position: absolute; right: 56px; top: 470px; text-align: right; font: 400 22px/1.4 var(--sans); color: var(--dk-text); }
+    .s-cover-dk .cv-sub-dk b { display: block; font: 500 34px/1.2 var(--sans); color: #fff; margin-bottom: 4px; }
+    .s-cover-dk .cv-who-dk { position: absolute; left: 56px; bottom: 44px; display: flex; align-items: center; gap: 14px; }
+    .reveal .s-cover-dk .cv-who-dk img { width: 62px; height: 62px; border-radius: 50%; object-fit: cover; margin: 0; border: 2px solid var(--dk-line); }
+    .s-cover-dk .cv-who-dk span { font: 400 15px/1.35 var(--mono); color: var(--dk-sub); } .s-cover-dk .cv-who-dk b { display: block; font: 500 21px/1.2 var(--sans); color: #fff; }
+    /* agenda */
+    .s-agenda-dk .agd-title { position: absolute; left: 56px; top: 110px; font: 300 96px/1 var(--sans); color: #fff; }
+    .s-agenda-dk .agd-arrow { position: absolute; left: 20px; top: 300px; width: 330px; height: 330px; }
+    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 480px; top: 104px; width: 740px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .s-agenda-dk .agd-list li { display: flex; align-items: center; gap: 22px; padding: 18px 24px; background: var(--dk-card); border-radius: 10px; border-left: 6px solid var(--c); }
+    .s-agenda-dk .agd-list b { font: 500 34px/1 var(--sans); color: var(--c); width: 48px; }
+    .s-agenda-dk .agd-list strong { display: block; font: 500 30px/1.15 var(--sans); color: var(--c); }
+    .s-agenda-dk .agd-list span { display: block; font: 400 17px/1.3 var(--sans); color: var(--dk-sub); margin-top: 4px; }
+    .s-agenda-dk .c1 { --c: var(--h-blue); } .s-agenda-dk .c2 { --c: var(--h-green); } .s-agenda-dk .c3 { --c: var(--h-yellow); } .s-agenda-dk .c4 { --c: var(--h-red); }
+  </style>
+</head>
+<body>
+  <!-- line-icon sprite (DevFest template style: 3px ink outlines, pastel fills) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 200 220"><path d="M100 8 L188 112 H138 V212 H62 V112 H12 Z" fill="var(--p-yellow)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-scallop" viewBox="0 0 240 40"><path d="M4 36 A36 30 0 0 1 80 36 A36 30 0 0 1 160 36 A36 30 0 0 1 236 36" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><ellipse cx="32" cy="32" rx="12" ry="28"/><path d="M4 32h56M9 18h46M9 46h46"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 120 90"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M2 2l20 20M8.5 16.4a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.3-1.7M2 8.8a15 15 0 0 1 4.2-2.7M22 8.8A15 15 0 0 0 10.7 5M12 20h.01"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18M7 6h1v4M16.7 13.9l.7.7-2.8 2.8"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-next" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></symbol>
+  </svg>
+
+  <!-- Slide controls (shopio-style): progress · ‹ n/N › · overview · fullscreen · notes · export -->
+  <div id="progress"></div>
+  <div id="ctrl">
+    <button id="bPrev" title="Previous (←)">‹</button>
+    <span class="cnt" id="cnt" title="Slide list">1 / 16</span>
+    <button id="bNext" title="Next (→)">›</button>
+    <button id="bOv" title="All slides (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+    <button id="bFs" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    <button id="bNotes" title="Speaker notes (N / S)"><svg viewBox="0 0 24 24"><path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg></button>
+    <button id="bPdf" title="Export PDF (E = this slide, Shift+E = all)" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg></button>
+  </div>
+  <div id="menu"></div>
+  <div id="ov"><div class="ovh"><span>All slides</span><button id="ovX" title="Close (Esc)">✕</button></div><div class="ovg"></div></div>
+  <div id="exportMenu" role="menu">
+    <button role="menuitem" data-export="all"><span>All slides<span class="sub">PDF of every slide</span></span><kbd>Shift+E</kbd></button>
+    <button role="menuitem" data-export="slide"><span>This slide<span class="sub" id="exportCur">PDF of the current slide</span></span><kbd>E</kbd></button>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+      <!-- 1. Cover -->
+      <section class="s-cover-dk" data-corner="off" data-title="From Prompt to Production">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Build</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Evaluate</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><span class="w p">Deploy</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="cv-sub-dk"><b>From Prompt to Production</b>Build, Evaluate, and Deploy AI Agents with Google Agents CLI</div>
+        <div class="cv-who-dk"><img src="images/shared/profile.jpeg" alt=""><span><b>Punsiri Boonyakiat</b>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • หัวข้อวันนี้: From Prompt to Production สร้าง (Build) วัดผล (Evaluate) และ deploy AI agent ด้วย Google Agents CLI • ปัญหาที่ทุกคนเจอ: agent ทำงานดีตอนลองใน prompt แต่พอจะขึ้น production ต้องมีทั้ง eval, infra, CI/CD, monitoring • Agents CLI คือเครื่องมือที่พาเราจาก prompt ไปถึง production ในเส้นทางเดียว</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" x1="0" x2="1"><stop offset="0" stop-color="#ff7daf"/><stop offset="1" stop-color="#7b61ff"/></linearGradient></defs><path d="M0 150 H280 M120 20 C120 110 190 150 280 150 C190 150 120 190 120 280 M240 120 L282 150 L240 180" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>The prototype gap</strong><span>Why "it worked in my prompt" is not enough</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Meet Agents CLI</strong><span>Command line + Agent Skills · two ways to use it</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Build &amp; evaluate</strong><span>Scaffold, ADK, the quality flywheel · let AI build it</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Deploy, publish &amp; observe</strong><span>Agent Runtime, Gemini Enterprise, traces</span></div></li>
+        </ol>
+        <aside class="notes">วันนี้มี 4 ช่วง: (1) ช่องว่างระหว่าง prototype กับ production (2) รู้จัก Agents CLI และวิธีใช้ 2 แบบ (3) สร้าง agent วัดผลด้วย eval และให้ AI ช่วยสร้าง (4) deploy, publish ไป Gemini Enterprise และ monitor</aside>
+      </section>
+
+      <!-- Section 01 -->
+      <section class="bg-yellow" data-title="01 · The prototype gap">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">The prototype<br>gap</h1>
+            <p class="sub" style="margin-top:28px">"It worked in my prompt"<br>is not a release plan</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • เริ่มจากปัญหาที่ทุกคนเคยเจอ</aside>
+      </section>
+
+      <!-- Gap -->
+      <section data-title="Prompt vs production">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">The problem</div>
+            <h2 style="margin-bottom:12px">A demo agent is easy. A production agent is not.</h2>
+            <p class="sub" style="font-size:20px; margin-bottom:28px">Most of the work happens after the first prompt works</p>
+            <div class="grid g2" style="gap:28px; width:1000px">
+              <div class="pc fragment" style="height:270px">
+                <span class="tag">Prompt prototype</span>
+                <ul class="bl" style="font-size:21px; margin-top:20px">
+                  <li>Works for the prompts you tried</li>
+                  <li>Runs on your laptop</li>
+                  <li>No idea if a change made it worse</li>
+                  <li>No logs when something goes wrong</li>
+                </ul>
+              </div>
+              <div class="pc green fragment" style="height:270px">
+                <span class="tag yellow">Production agent</span>
+                <ul class="bl" style="font-size:21px; margin-top:20px">
+                  <li><b>Evals</b> that catch regressions</li>
+                  <li><b>Infra &amp; CI/CD</b> to ship safely</li>
+                  <li><b>Sessions &amp; memory</b> that persist</li>
+                  <li><b>Tracing &amp; logging</b> in production</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">(คลิก 1) prototype: ทำงานกับ prompt ที่เราลอง รันบนเครื่องเรา แก้แล้วไม่รู้ว่าดีขึ้นหรือแย่ลง พังแล้วไม่มี log • (คลิก 2) production ต้องมี eval กัน regression, infra และ CI/CD, session/memory ที่อยู่ถาวร, tracing และ logging • งานส่วนใหญ่อยู่หลังจาก prompt แรกใช้ได้แล้ว</aside>
+      </section>
+
+      <!-- Section 02 -->
+      <section class="bg-blue" data-title="02 · Meet Agents CLI">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Meet<br>Agents CLI</h1>
+            <p class="sub" style="margin-top:28px">One toolkit from scaffold<br>to production</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • รู้จัก Google Agents CLI</aside>
+      </section>
+
+      <!-- What is it -->
+      <section data-title="What is Agents CLI?">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:46px 56px">
+            <div class="eyebrow">Launched at Google Cloud Next '26 · April 22, 2026</div>
+            <h2 style="margin-bottom:10px">Agents CLI = Command Line + Agent Skills</h2>
+            <p class="sub" style="font-size:20px; margin-bottom:26px">"CLI and skills for building agents on Google Cloud"</p>
+            <div class="grid g3" style="width:1088px; gap:22px">
+              <div class="pc blue fragment"><h3>Command line</h3>Commands for the whole agent lifecycle: scaffold, run, eval, deploy, publish</div>
+              <div class="pc yellow fragment"><h3>Agent Skills</h3>Teach your <b>AI coding agent</b> (Antigravity, Claude Code, Cursor, Codex…) how to build agents the right way</div>
+              <div class="pc green fragment"><h3>ADK under the hood</h3>Agents are built with the <b>Agent Development Kit</b>, A2A built in</div>
+            </div>
+            <div class="flow fragment" style="width:1000px; margin-top:30px">
+              <div class="pc node" style="padding:12px"><b>Build</b></div><svg class="ico arr" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc node" style="padding:12px"><b>Run</b></div><svg class="ico arr" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc yellow node" style="padding:12px"><b>Evaluate</b></div><svg class="ico arr" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc green node" style="padding:12px"><b>Deploy</b></div><svg class="ico arr" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc red node" style="padding:12px"><b>Observe</b></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Agents CLI เปิดตัวที่งาน Google Cloud Next '26 วันที่ 22 เม.ย. 2026 • สูตรง่าย ๆ: Agents CLI = Command Line + Agent Skills • (คลิก 1) ชุดคำสั่งครอบคลุมทั้ง lifecycle (คลิก 2) Agent Skills ติดตั้งเข้า AI coding agent ที่เราใช้อยู่ เช่น Antigravity, Claude Code, Cursor, Codex ทำให้ AI รู้ขั้นตอนสร้าง agent บน Google Cloud แบบ best practice (คลิก 3) ตัว agent สร้างด้วย ADK และรองรับ A2A • (คลิก 4) ดูแล Agent Development Lifecycle (ADLC) ตั้งแต่ Build → Run → Evaluate → Deploy → Observe • Google เรียกมันว่า unified programmatic backbone ของ ADLC บน Google Cloud</aside>
+      </section>
+
+      <!-- Two ways to use it -->
+      <section data-title="Two ways to use it">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">How Agents CLI works</div>
+            <h2 style="margin-bottom:30px">Two ways to use it</h2>
+            <div class="grid g2" style="gap:28px; width:1000px">
+              <div class="pc blue fragment" style="height:300px">
+                <span class="tag">1 · You run the commands</span>
+                <div class="cmd" style="margin-top:20px; font-size:16px">uvx google-agents-cli setup</div>
+                <div class="cmd" style="margin-top:10px; font-size:16px">agents-cli --help</div>
+                <p style="font-size:19px; margin-top:14px">Full control of every step from your terminal</p>
+              </div>
+              <div class="pc green fragment" style="height:300px">
+                <span class="tag yellow">2 · Your AI coding agent runs them</span>
+                <ul class="bl" style="font-size:19px; margin-top:20px">
+                  <li>Install the <b>Agent Skills</b> into Claude Code, Antigravity, Cursor or Codex</li>
+                  <li>Describe the agent in plain language</li>
+                  <li>The AI picks the right skill and command for each step</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ใช้งานได้ 2 แบบ: (คลิก 1) รันคำสั่งเองผ่าน command line ติดตั้งด้วย uvx google-agents-cli setup แล้วดูคำสั่งทั้งหมดด้วย agents-cli --help คุมเองได้ทุกขั้น • (คลิก 2) ให้ AI coding agent รันให้ ติดตั้ง Agent Skills เข้า Claude Code, Antigravity, Cursor หรือ Codex แล้วอธิบาย agent ที่อยากได้ด้วยภาษาธรรมชาติ AI จะเลือก skill และคำสั่งที่ถูกต้องเองในแต่ละขั้น ไม่ต้องอาศัยแค่ความรู้ของ LLM</aside>
+      </section>
+
+      <!-- 7 skills -->
+      <section data-title="7 Agent Skills">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Agent Skills · cover the whole lifecycle</div>
+            <h2 style="margin-bottom:24px">7 skills your coding agent gets</h2>
+            <div class="sk">
+              <div class="pc fragment"><b>workflow</b>The playbook: phases, model choice, code quality</div>
+              <div class="pc blue fragment"><b>adk-code</b>ADK docs for Python: agents, tools, multi-agent, callbacks, state</div>
+              <div class="pc blue fragment"><b>scaffold</b>New project structure, config and sample code</div>
+              <div class="pc yellow fragment"><b>eval</b>Datasets, metrics, LLM-as-a-judge, compare</div>
+              <div class="pc green fragment"><b>deploy</b>Agent Runtime, Cloud Run, GKE · CI/CD · secrets</div>
+              <div class="pc green fragment"><b>publish</b>Register the agent in Gemini Enterprise</div>
+              <div class="pc red fragment"><b>observability</b>Cloud Trace, logging, analytics for debugging</div>
+            </div>
+            <p class="muted" style="font-size:15px; margin-top:14px">Each skill is named <code>google-agents-cli-&lt;name&gt;</code> · check them in Claude Code with <code>/skills</code></p>
+          </div>
+        </div>
+        <aside class="notes">Agents CLI มี 7 skills ครอบคลุม ADLC: workflow คู่มือการพัฒนาตั้งแต่ต้นจนจบ รวมการเลือกโมเดลและคุณภาพโค้ด / adk-code รวมเอกสาร ADK สำหรับ Python ทั้ง agent, tool, multi-agent, callback, state / scaffold สร้างโครงโปรเจกต์ / eval สร้าง dataset วัดด้วย metric ใช้ LLM-as-a-judge / deploy ขึ้น Agent Runtime, Cloud Run หรือ GKE พร้อม CI/CD และ secrets / publish ลงทะเบียนกับ Gemini Enterprise / observability ติดตามผ่าน Cloud Trace และ logging • ใน Claude Code เช็กว่าติดตั้งครบด้วยคำสั่ง /skills</aside>
+      </section>
+
+      <!-- Lifecycle -->
+      <section data-title="The agent lifecycle">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">The workflow</div>
+            <h2 style="margin-bottom:30px">From prompt to production in 8 steps</h2>
+            <div class="lc">
+              <div class="pc fragment"><b>0</b><h3>Understand</h3>Agree the spec first</div>
+              <div class="pc fragment"><b>1</b><h3>Samples</h3>Study a matching sample</div>
+              <div class="pc blue fragment"><b>2</b><h3>Scaffold</h3><code>scaffold create</code></div>
+              <div class="pc blue fragment"><b>3</b><h3>Build</h3><code>run</code> · <code>playground</code></div>
+              <div class="pc yellow fragment"><b>4</b><h3>Evaluate</h3><code>eval run</code></div>
+              <div class="pc green fragment"><b>5</b><h3>Deploy</h3><code>deploy</code></div>
+              <div class="pc green fragment"><b>6</b><h3>Publish</h3><code>publish gemini-enterprise</code></div>
+              <div class="pc red fragment"><b>7</b><h3>Observe</h3>Traces · logs · analytics</div>
+            </div>
+            <p class="muted fragment" style="font-size:17px; margin-top:22px"><b>Evaluate is the most important step</b>: expect 5–10+ iterations before a case passes</p>
+          </div>
+        </div>
+        <aside class="notes">ขั้นตอนตาม Agents CLI 8 ขั้น: (0) ทำความเข้าใจ ตกลง spec ก่อนเขียนโค้ด (1) ดู sample ที่ใกล้เคียง (2) scaffold โปรเจกต์ (3) build และทดสอบเร็ว ๆ ด้วย run หรือ playground (4) evaluate ขั้นสำคัญที่สุด (5) deploy (6) publish ไป Gemini Enterprise ถ้าต้องการ (7) observe ใน production • ขั้น eval ปกติต้องวนแก้ 5–10 รอบขึ้นไป เป็นเรื่องปกติ</aside>
+      </section>
+
+      <!-- Command map -->
+      <section data-title="Commands at a glance">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Cheat sheet</div>
+            <h2 style="margin-bottom:24px">Commands at a glance</h2>
+            <div class="cm">
+              <b>Setup</b><span><code>setup</code> · <code>update</code></span>
+              <b>Scaffold</b><span><code>scaffold create &lt;name&gt;</code> · <code>scaffold enhance .</code> · <code>scaffold upgrade</code></span>
+              <b>Develop</b><span><code>run "prompt"</code> · <code>playground</code> · <code>lint</code> · <code>install</code></span>
+              <b>Evaluate</b><span><code>eval run</code> · <code>eval generate</code> · <code>eval grade</code> · <code>eval compare</code> · <code>eval analyze</code> · <code>eval optimize</code></span>
+              <b>Deploy</b><span><code>deploy</code> · <code>infra cicd</code> · <code>infra single-project</code></span>
+              <b>Publish</b><span><code>publish gemini-enterprise</code></span>
+              <b>Info</b><span><code>info</code> · <code>login --status</code></span>
+            </div>
+            <p class="muted" style="font-size:15px; margin-top:16px">Every command: <code>agents-cli &lt;command&gt; --help</code> for the current flags</p>
+          </div>
+        </div>
+        <aside class="notes">สรุปคำสั่งหลักตามแต่ละขั้น ให้ผู้ฟังถ่ายรูปเก็บไว้ได้ • ทุกคำสั่งดู flag ล่าสุดด้วย --help เพราะ flag อาจเปลี่ยนตามเวอร์ชัน</aside>
+      </section>
+
+      <!-- CLI walkthrough -->
+      <section data-title="Hands-on from the terminal">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Way 1 · from the command line</div>
+            <h2 style="margin-bottom:20px; font-size:40px">Your first agent in five commands</h2>
+            <pre style="width:1000px; font-size:17px"><code class="language-bash" data-trim>
+# 1 · install the CLI and skills
+uvx google-agents-cli setup
+
+# 2 · sign in and pick a Google Cloud project
+gcloud auth login
+gcloud config set project PROJECT_ID
+agents-cli login -i
+
+# 3 · create a project ready for Agent Runtime
+agents-cli create my-first-agent -y --deployment-target agent_runtime
+
+# 4 · install dependencies and chat with it in the web playground
+cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
+            </code></pre>
+          </div>
+        </div>
+        <aside class="notes">ลองจาก terminal (ตามบทความ Medium ของเรา): (1) ติดตั้ง CLI และ skills (2) login กับ Google Cloud ด้วย gcloud ตั้ง project แล้ว agents-cli login -i ให้ CLI รู้ว่าใช้ project ไหน (3) agents-cli create สร้างโปรเจกต์พร้อมค่าสำหรับ Agent Runtime ทั้งโครงไฟล์ deployment และ config (4) agents-cli install ติดตั้ง dependency แล้ว agents-cli playground เปิดหน้าเว็บ ADK คุยกับ agent ได้ทันที • ต่อไป eval run วัดผล แล้ว infra single-project และ deploy ขึ้น Agent Runtime</aside>
+      </section>
+
+      <!-- Section 03 -->
+      <section class="bg-green" data-title="03 · Build &amp; evaluate">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Build &amp;<br>evaluate</h1>
+            <p class="sub" style="margin-top:28px">Scaffold, code with ADK,<br>then prove it works</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • scaffold, เขียน agent ด้วย ADK แล้วพิสูจน์ด้วย eval</aside>
+      </section>
+
+      <!-- Scaffold -->
+      <section data-title="Scaffold a project">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 2 · Scaffold</div>
+            <h2 style="margin-bottom:24px">Start with a scaffold, prototype first</h2>
+            <div style="display:flex; gap:28px; align-items:flex-start">
+              <div style="width:640px; flex:none; display:grid; gap:14px">
+                <div class="cmd">agents-cli scaffold create my-agent --agent adk --prototype</div>
+                <p class="muted" style="font-size:16px; margin:0 0 6px">Later, when the agent works, add deployment:</p>
+                <div class="cmd">agents-cli scaffold enhance . --deployment-target agent_runtime</div>
+              </div>
+              <div class="pc blue" style="flex:1">
+                <h3>You get</h3>
+                <ul class="bl" style="font-size:18px">
+                  <li>ADK agent code (A2A built in)</li>
+                  <li><code>tests/eval/</code> dataset + config</li>
+                  <li>Terraform &amp; CI/CD when you add a target</li>
+                  <li>A guidance file for your coding agent</li>
+                </ul>
+              </div>
+            </div>
+            <p class="pc yellow fragment" style="margin-top:26px; width:1000px; font-size:19px"><b>Why scaffold?</b> Setting up by hand misses the eval boilerplate, CI/CD config and project conventions.</p>
+          </div>
+          <div class="ask fragment"><b>✦ Ask your agent</b><span>"Scaffold a new ADK agent called my-agent in prototype mode. Skip deployment for now."</span></div>
+        </div>
+        <aside class="notes">เริ่มด้วย scaffold create เลือก template adk และ --prototype เพื่อข้าม CI/CD และ Terraform ไปก่อน โฟกัสให้ agent ทำงานได้ • พอ agent ใช้ได้แล้วค่อยเพิ่ม deployment ด้วย scaffold enhance . --deployment-target (agent_runtime, cloud_run หรือ gke) • ได้โค้ด ADK พร้อม A2A, โฟลเดอร์ eval พร้อม dataset และ config, Terraform กับ CI/CD เมื่อเพิ่ม target และไฟล์คำแนะนำให้ coding agent (GEMINI.md, CLAUDE.md หรือ AGENTS.md) • อย่าตั้งค่าเอง จะพลาด eval boilerplate และ CI/CD</aside>
+      </section>
+
+      <!-- Build with ADK -->
+      <section data-title="Build with ADK">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Step 3 · Build · Python · ADK</div>
+            <h2 style="margin-bottom:20px; font-size:40px">An agent is instructions + tools</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <pre style="width:660px; flex:none; font-size:15px"><code class="language-python" data-trim>
+from google.adk.agents import Agent
+
+def get_weather(city: str) -> dict:
+    """Get current weather for a city."""
+    return {"city": city, "temp": "22°C", "condition": "sunny"}
+
+root_agent = Agent(
+    name="weather_agent",
+    model=MODEL,  # the scaffold sets a current Gemini model
+    instruction="You help travellers plan around the weather.",
+    tools=[get_weather],
+)
+              </code></pre>
+              <div style="display:grid; gap:14px; flex:1">
+                <div class="cmd">agents-cli run "Weather in Bangkok?"</div>
+                <div class="cmd">agents-cli playground</div>
+                <ul class="bl" style="font-size:18px">
+                  <li><code>run</code>: one-shot smoke test (<code>-v</code> shows JSON events)</li>
+                  <li><code>playground</code>: web UI to chat with your agent</li>
+                  <li>The docstring tells the model when to use the tool</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>✦ Ask your agent</b><span>"Add a get_weather tool to the agent, then smoke-test it with 'Weather in Bangkok?'"</span></div>
+        </div>
+        <aside class="notes">agent ใน ADK คือ instruction + tools • tool คือฟังก์ชัน Python ธรรมดา docstring สำคัญมาก เพราะโมเดลอ่านเพื่อตัดสินใจว่าจะเรียก tool ไหน • model ให้ใช้ค่าที่ scaffold ตั้งไว้ ไม่ต้องเปลี่ยนเอง • ทดสอบเร็วด้วย agents-cli run "prompt" (ใส่ -v ดู event แบบ JSON เช่น tool call) หรือเปิด playground คุยผ่านเว็บ</aside>
+      </section>
+
+      <!-- run vs pytest vs eval -->
+      <section data-title="Smoke test, unit test, eval">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Know the difference</div>
+            <h2 style="margin-bottom:30px">Three ways to test, three different jobs</h2>
+            <div class="grid g3" style="width:1088px; gap:22px">
+              <div class="pc fragment"><h3><code>agents-cli run</code></h3>Quick <b>smoke test</b> while you code. One prompt, one answer.</div>
+              <div class="pc blue fragment"><h3><code>uv run pytest</code></h3>Tests <b>code correctness</b>: imports, types, API contracts.</div>
+              <div class="pc green fragment"><h3><code>agents-cli eval</code></h3>Tests <b>agent behaviour</b>: answer quality, tool use, safety.</div>
+            </div>
+            <p class="pc red fragment" style="margin-top:30px; width:1000px; font-size:19px"><b>Don't</b> write pytest that checks what the LLM says. Outputs are non-deterministic: use eval with an LLM judge instead.</p>
+          </div>
+        </div>
+        <aside class="notes">แยกให้ชัด 3 แบบ: (คลิก 1) run ใช้ลองเร็ว ๆ ระหว่างเขียน (คลิก 2) pytest ทดสอบความถูกต้องของโค้ด เช่น import, type (คลิก 3) eval ทดสอบพฤติกรรม agent คุณภาพคำตอบ การใช้ tool ความปลอดภัย • (คลิก 4) อย่าเขียน pytest เช็กว่า LLM ตอบคำนี้หรือไม่ เพราะผลไม่แน่นอน ใช้ eval ที่มี LLM เป็นกรรมการแทน</aside>
+      </section>
+
+      <!-- Quality flywheel -->
+      <section data-title="The quality flywheel">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 4 · Evaluate</div>
+            <h2 style="margin-bottom:26px">The quality flywheel</h2>
+            <div class="flow" style="width:1088px">
+              <div class="pc blue node fragment"><b>1 · Data</b>1–2 cases first<br><code>eval dataset synthesize</code></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc node fragment"><b>2 · Run</b>Agent → traces<br><code>eval generate</code></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc yellow node fragment"><b>3 · Grade</b>Score traces<br><code>eval grade</code></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc red node fragment"><b>4 · Analyze</b>Cluster failures<br><code>eval analyze</code></div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc green node fragment"><b>5 · Fix</b>Prompts, tools<br><code>eval optimize</code></div>
+            </div>
+            <div class="grid g2 fragment" style="width:1000px; gap:20px; margin-top:28px">
+              <div class="cmd">agents-cli eval run</div>
+              <div class="cmd">agents-cli eval compare old.json new.json</div>
+            </div>
+            <p class="muted fragment" style="font-size:16px; margin-top:12px"><code>eval run</code> = generate + grade · <code>eval compare</code> checks a fix didn't break other metrics · loop until it passes</p>
+          </div>
+          <div class="ask fragment"><b>✦ Ask your agent</b><span>"Write 2 eval cases for weather questions, run the evals and tell me which metrics fail."</span></div>
+        </div>
+        <aside class="notes">วงจรคุณภาพ 5 ขั้น: (1) เตรียมข้อมูล เริ่มแค่ 1–2 เคส หรือให้ eval dataset synthesize จำลองบทสนทนาหลายรอบ (2) รัน agent กับ dataset ได้ traces (3) ให้คะแนน traces (4) วิเคราะห์ความล้มเหลว ถ้าเคสพังเยอะใช้ eval analyze จัดกลุ่ม (5) แก้ prompt หรือ tool หรือใช้ eval optimize (GEPA) ซึ่งใช้เวลาและค่าใช้จ่ายสูง ใช้ครั้งเดียวตอนท้าย • eval run รวมขั้น 2+3 • eval compare เช็กว่าแก้แล้วตัวอื่นไม่แย่ลง • วนจนผ่าน แล้วค่อยเพิ่มเคส</aside>
+      </section>
+
+      <!-- Metrics -->
+      <section data-title="Pick the right metrics">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 4 · Evaluate · built-in metrics</div>
+            <h2 style="margin-bottom:22px">Pick metrics by what you want to know</h2>
+            <div class="cm cm-metrics">
+              <b>Did it reach the user's goal?</b><span><code>multi_turn_task_success</code></span>
+              <b>Was the path logical and efficient?</b><span><code>multi_turn_trajectory_quality</code></span>
+              <b>Were the tools used well?</b><span><code>multi_turn_tool_use_quality</code></span>
+              <b>Is the final answer good?</b><span><code>final_response_quality</code></span>
+              <b>Any made-up claims?</b><span><code>hallucination</code></span>
+              <b>Safe?</b><span><code>safety</code></span>
+              <b>Something only you can check</b><span>custom <code>LLMMetric</code> (judge) or <code>CodeExecutionMetric</code> (Python)</span>
+            </div>
+            <p class="muted" style="font-size:15px; margin-top:14px"><code>agents-cli eval metric list</code> shows all built-ins</p>
+          </div>
+        </div>
+        <aside class="notes">เลือก metric ตามคำถามที่อยากรู้: agent ทำงานสำเร็จไหม (task success) ทางเดินสมเหตุสมผลไหม (trajectory) ใช้ tool ดีไหม คำตอบสุดท้ายดีไหม (ไม่ต้องมีคำตอบอ้างอิง) มีเรื่องที่แต่งขึ้นไหม (hallucination เหมาะกับ RAG) ปลอดภัยไหม • ถ้าไม่มี metric ไหนตรง เขียนเองได้ทั้งแบบให้ LLM ตัดสิน หรือโค้ด Python ที่ผลแน่นอน</aside>
+      </section>
+
+      <!-- Fix -->
+      <section data-title="When a score fails">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 4 · Evaluate · eval-fix loop</div>
+            <h2 style="margin-bottom:24px">When a score fails, fix the agent</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc fragment"><b>Task success low</b><br>Fix orchestration, missing or wrong tool calls</div>
+              <div class="pc fragment"><b>Tool use low</b><br>Fix tool descriptions and parameter docstrings</div>
+              <div class="pc fragment"><b>Hallucination low</b><br>Keep answers grounded in tool output</div>
+              <div class="pc fragment"><b>Safety low</b><br>Add guardrails to the instructions</div>
+            </div>
+            <p class="pc red fragment" style="margin-top:24px; width:1000px; font-size:19px"><b>Never</b> lower the threshold to make it pass, and don't delete a flaky case: it's telling you something.</p>
+          </div>
+          <div class="ask fragment"><b>✦ Ask your agent</b><span>"Tool use scored low. Read the grade results, fix the tool docstrings, rerun the evals and compare with the last run."</span></div>
+        </div>
+        <aside class="notes">ดูผลใน artifacts/grade_results ทั้งไฟล์ html และ json มีเหตุผลของกรรมการทุกเคส • task success ต่ำ: แก้ลำดับการทำงาน tool ที่ขาดหรือเรียกผิด • tool use ต่ำ: แก้คำอธิบาย tool และ docstring • hallucination ต่ำ: บังคับให้ตอบจากผล tool • safety ต่ำ: เพิ่ม guardrail ใน instruction • ห้ามลด threshold ให้ผ่าน และอย่าลบเคสที่ผลไม่นิ่ง เพราะนั่นคือสัญญาณว่า agent มีปัญหา</aside>
+      </section>
+
+      <!-- Way 2: let AI build the agent -->
+      <section class="bg-blue" data-title="Let AI build your AI agent">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">✦</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:70px">Let AI build<br>your AI agent</h1>
+            <p class="sub" style="margin-top:28px">Claude Code or Antigravity<br>+ Agents CLI skills, from one prompt</p>
+          </div>
+        </div>
+        <aside class="notes">ทางที่ 2: ให้ AI ช่วยสร้าง AI agent • ในตัวอย่างใช้ Claude Code กับ Agents CLI skills แทบไม่ต้องพิมพ์คำสั่ง agents-cli เองเลย • ใช้กับ Antigravity ได้เหมือนกัน</aside>
+      </section>
+
+      <!-- Set up skills in Antigravity -->
+      <section data-title="Set up skills in Antigravity">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Way 2 · set up skills in Antigravity (AGY)</div>
+            <h2 style="margin-bottom:26px">Give Antigravity the Agents CLI skills</h2>
+            <div class="grid g3 ag-steps" style="width:1088px; gap:20px">
+              <div class="pc blue fragment">
+                <span class="num">1</span>
+                <h3 style="margin:0">Install</h3>
+                <div class="cmd">uvx google-agents-cli setup</div>
+                <p>Detects Antigravity and installs the 7 skills globally</p>
+              </div>
+              <div class="pc green fragment">
+                <span class="num">2</span>
+                <h3 style="margin:0">Check</h3>
+                <div class="cmd">ls ~/.gemini/config/skills</div>
+                <p>You should see the <code>google-agents-cli-*</code> folders. Then restart Antigravity.</p>
+              </div>
+              <div class="pc yellow fragment">
+                <span class="num">3</span>
+                <h3 style="margin:0">Ask</h3>
+                <div class="cmd">"Which Agents CLI skills can you use?"</div>
+                <p>Open the Agent panel and confirm it lists them</p>
+              </div>
+            </div>
+            <p class="muted fragment" style="font-size:15px; margin-top:22px; line-height:1.5">Skills are stored in <code>~/.agents/skills</code> and linked into <code>~/.gemini/config/skills</code> (IDE) and <code>~/.gemini/antigravity-cli/skills</code> (CLI)<br>Project only: <code>agents-cli setup --workspace</code> · Update: <code>uv tool upgrade google-agents-cli</code>, then run <code>setup</code> again</p>
+          </div>
+        </div>
+        <aside class="notes">ตั้งค่า skills ใน Antigravity (AGY): (คลิก 1) รัน uvx google-agents-cli setup คำสั่งนี้ติดตั้ง CLI และตรวจเจอ coding agent ที่มีในเครื่อง รวมถึง Antigravity แล้วติดตั้ง 7 skills ให้แบบ global (คลิก 2) เช็กว่า link แล้วด้วย ls ~/.gemini/config/skills ต้องเห็นโฟลเดอร์ google-agents-cli-* แล้วปิดเปิด Antigravity ใหม่ (คลิก 3) เปิด Agent panel ถามว่ามี Agents CLI skills อะไรบ้าง • skills ตัวจริงเก็บที่ ~/.agents/skills แล้ว setup จะ link เข้า ~/.gemini/config/skills สำหรับ IDE และ ~/.gemini/antigravity-cli/skills สำหรับ CLI • ถ้าอยากติดตั้งเฉพาะโปรเจกต์ใช้ --workspace • อัปเดตด้วย uv tool upgrade google-agents-cli แล้วรัน setup อีกรอบ</aside>
+      </section>
+
+      <section data-title="One prompt, one agent">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Way 2 · Claude Code + Agents CLI skills</div>
+            <h2 style="margin-bottom:18px; font-size:40px">Describe the agent, not the commands</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <div style="width:250px; flex:none; display:grid; gap:12px">
+                <div class="cmd">claude</div>
+                <div class="cmd">/skills</div>
+                <p class="muted" style="font-size:15px; margin:0">Open Claude Code, check the Agents CLI skills are installed, then send the prompt</p>
+              </div>
+              <pre style="flex:1; font-size:15.5px"><code class="language-markdown" data-trim>
+Create a weight loss assistant using Agents CLI
+
+The agent should:
+- Collect the user's profile and weight-loss goals.
+- Estimate daily calorie needs.
+- Recommend healthy meals with calorie estimates.
+- Support Thai and English.
+- Generate evaluation datasets and tests.
+- Follow Google Agents CLI and ADK best practices.
+- Prepare the project for local testing and deployment to Google Cloud.
+              </code></pre>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เปิด Claude Code ด้วยคำสั่ง claude แล้วพิมพ์ /skills เช็กว่ามี Agents CLI skills ครบ • จากนั้นส่ง prompt อธิบาย agent ที่อยากได้ ตัวอย่างคือ Weight Loss Assistant: เก็บโปรไฟล์และเป้าหมาย ประเมินแคลอรี่ต่อวัน แนะนำเมนูพร้อมแคลอรี่ รองรับไทยและอังกฤษ สร้าง eval dataset และ test ทำตาม best practice ของ Agents CLI และ ADK และเตรียมพร้อม deploy ขึ้น Google Cloud • สังเกตว่าเราเขียนแค่ว่าอยากได้อะไร ไม่ต้องบอกคำสั่ง</aside>
+      </section>
+
+      <section data-title="What the coding agent does">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Way 2 · what happens next</div>
+            <h2 style="margin-bottom:28px">From prompt to a deployed agent</h2>
+            <div class="flow" style="width:1088px">
+              <div class="pc node fragment"><b>Asks</b>Project location, data sources, safety guardrails</div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc blue node fragment"><b>Suggests</b>Agent Runtime, Cloud Run or GKE, with trade-offs</div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc yellow node fragment"><b>Builds</b>Scaffold + ADK code, following the skills</div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc green node fragment"><b>Ships</b>Evals, then deploy to Agent Runtime</div>
+            </div>
+            <p class="pc yellow fragment" style="margin-top:30px; width:1000px; font-size:19px"><b>Create → Evaluate → Deploy</b> almost entirely through the coding agent, without touching code or the command line. It doesn't replace agent design: you still own the business logic.</p>
+          </div>
+        </div>
+        <aside class="notes">หลังส่ง prompt: (1) Claude Code โหลด skills แล้วถามเพิ่ม เช่น จะสร้างโปรเจกต์ที่ไหน ใช้ข้อมูลอะไร guardrail ด้านความปลอดภัย (2) แนะนำ deployment target พร้อมข้อดีข้อเสีย (3) เขียนโค้ดตาม best practice ใน skills (4) ทำ eval แล้ว deploy ขึ้น Agent Runtime • ตอนลองเอง ตกใจมาก ตั้งแต่ create ถึง deploy ทำผ่าน Claude Code ได้แทบทั้งหมด ยังไม่แตะโค้ดหรือ command line เลย • แต่ไม่ได้มาแทนความรู้ด้านการออกแบบ agent ช่วยลดงานซ้ำ ให้เราโฟกัส business logic</aside>
+      </section>
+
+      <!-- Section 04 -->
+      <section class="bg-red" data-title="04 · Deploy, publish &amp; observe">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:70px">Deploy, publish<br>&amp; observe</h1>
+            <p class="sub" style="margin-top:28px">Ship it to Google Cloud<br>and watch it run</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 4 • ขึ้น Google Cloud แล้ว monitor</aside>
+      </section>
+
+      <!-- Targets -->
+      <section data-title="Choose a deployment target">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 5 · Deploy · all three are container-based</div>
+            <h2 style="margin-bottom:24px">Choose a deployment target</h2>
+            <div class="grid g3" style="width:1088px; gap:20px">
+              <div class="pc green fragment"><h3>Agent Runtime</h3><code>agent_runtime</code><ul class="bl" style="font-size:17px; margin-top:12px"><li>Managed, built for agents</li><li>Sessions handled for you</li><li>Lowest ops, not billed when idle</li></ul></div>
+              <div class="pc blue fragment"><h3>Cloud Run</h3><code>cloud_run</code><ul class="bl" style="font-size:17px; margin-top:12px"><li>Full networking control</li><li>Pub/Sub &amp; Eventarc triggers</li><li>Cloud SQL or managed sessions</li></ul></div>
+              <div class="pc yellow fragment"><h3>GKE</h3><code>gke</code><ul class="bl" style="font-size:17px; margin-top:12px"><li>Full Kubernetes control</li><li>Autopilot cluster</li><li>Needs Kubernetes skills</li></ul></div>
+            </div>
+            <p class="muted fragment" style="font-size:16px; margin-top:16px">"Agent Engine" is now <b>Agent Runtime</b> · agents that need OAuth user consent → Agent Runtime with Gemini Enterprise</p>
+          </div>
+          <div class="ask fragment"><b>✦ Ask your agent</b><span>"Compare Agent Runtime, Cloud Run and GKE for this agent and recommend one."</span></div>
+        </div>
+        <aside class="notes">เลือกที่ deploy 3 แบบ ทุกแบบเป็น container: (1) Agent Runtime จัดการให้ทั้งหมด สร้างมาเพื่อ agent session จัดการให้ ไม่คิดเงินตอนว่าง เหมาะกับคนอยากดูแลน้อย (2) Cloud Run คุม network ได้เต็มที่ ต่อ Pub/Sub, Eventarc ได้ session ใช้ Cloud SQL หรือแบบ managed (3) GKE คุม Kubernetes เต็มที่ แต่ต้องมีความรู้ Kubernetes • ชื่อเดิม Agent Engine ตอนนี้คือ Agent Runtime • ถ้า agent ต้องขอสิทธิ์ผู้ใช้แบบ OAuth เช่น Drive, Calendar ให้ใช้ Agent Runtime กับ Gemini Enterprise</aside>
+      </section>
+
+      <!-- Deploy flow -->
+      <section data-title="Deploy with one command">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 5 · Deploy</div>
+            <h2 style="margin-bottom:26px">Deploy when the evals pass</h2>
+            <div class="flow" style="width:1088px">
+              <div class="pc yellow node fragment"><b>Evals pass</b>Thresholds met</div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc red node fragment"><b>Human OK</b>Never deploy without approval</div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc green node fragment"><b>Deploy</b><code>agents-cli deploy</code></div>
+            </div>
+            <div class="grid g2 fragment" style="width:1088px; gap:20px; margin-top:30px">
+              <div class="pc"><h3><code>infra cicd</code></h3>Pipeline on <b>GitHub Actions</b> (default) or <b>Cloud Build</b></div>
+              <div class="pc"><h3><code>deploy --status</code></h3>Agent Runtime deploys take 5–10 min and keep running if your terminal times out</div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>✦ Ask your agent</b><span>"Add Agent Runtime deployment and show me the plan. Wait for my OK before you deploy."</span></div>
+        </div>
+        <aside class="notes">ลำดับ: eval ผ่านเกณฑ์ → ให้คนอนุมัติก่อนเสมอ ห้ามให้ coding agent deploy เอง → agents-cli deploy • ถ้าต้องการ CI/CD ใช้ infra cicd เลือก GitHub Actions หรือ Cloud Build • Agent Runtime ใช้เวลา deploy 5–10 นาที ถ้า terminal หมดเวลา การ deploy ยังทำต่อบน server เช็กด้วย deploy --status</aside>
+      </section>
+
+      <!-- Publish & observe -->
+      <section data-title="Publish &amp; observe">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Steps 6–7 · Publish &amp; observe</div>
+            <h2 style="margin-bottom:24px">Put it in front of users, then watch it</h2>
+            <div style="display:flex; gap:24px; align-items:flex-start">
+              <div class="pc blue fragment" style="width:420px; flex:none">
+                <h3>Publish (optional)</h3>
+                <div class="cmd" style="font-size:15px">agents-cli publish gemini-enterprise</div>
+                <p style="font-size:17px; margin-top:12px">Register the agent in <b>Gemini Enterprise</b> so people in your company can use it. Every scaffolded agent speaks <b>A2A</b>.</p>
+              </div>
+              <div class="grid g2" style="flex:1; gap:14px">
+                <div class="pc green fragment"><b>Cloud Trace</b><br>Always on · latency &amp; errors per step</div>
+                <div class="pc yellow fragment"><b>Prompt-response logging</b><br>On when deployed · audit &amp; compliance</div>
+                <div class="pc fragment"><b>BigQuery Agent Analytics</b><br>Opt-in · LLM calls, tool use, outcomes</div>
+                <div class="pc red fragment"><b>Third-party</b><br>AgentOps, Phoenix, MLflow…</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>✦ Ask your agent</b><span>"Publish the deployed agent to Gemini Enterprise and turn on BigQuery Agent Analytics."</span></div>
+        </div>
+        <aside class="notes">Publish ไม่บังคับ: agents-cli publish gemini-enterprise ลงทะเบียน agent ให้คนในองค์กรใช้ผ่าน Gemini Enterprise ทุก agent ที่ scaffold รองรับ A2A • Observe มี 4 ระดับ ใช้ร่วมกันได้: Cloud Trace เปิดตลอด ดู latency และ error ทีละขั้น / prompt-response logging เปิดเมื่อ deploy ใช้ตรวจสอบย้อนหลัง / BigQuery Agent Analytics ต้องเปิดเอง เก็บ event การเรียก LLM และ tool / เครื่องมือภายนอกเช่น AgentOps, Phoenix, MLflow</aside>
+      </section>
+
+      <!-- Recap -->
+      <section data-title="Prompt to production, recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:24px">From prompt to production</h2>
+            <pre style="width:900px; font-size:17px"><code class="language-bash" data-trim>
+uvx google-agents-cli setup                          # install CLI + skills
+agents-cli scaffold create my-agent --agent adk --prototype
+agents-cli run "Weather in Bangkok?"                 # smoke test
+agents-cli eval run                                  # evaluate, fix, repeat
+agents-cli scaffold enhance . --deployment-target agent_runtime
+agents-cli deploy                                    # after human approval
+agents-cli publish gemini-enterprise                 # optional
+            </code></pre>
+            <p class="sub" style="font-size:20px; margin-top:20px">Scaffold first · evaluate always · deploy with approval</p>
+          </div>
+        </div>
+        <aside class="notes">สรุปทั้งเส้นทางใน 7 คำสั่ง: ติดตั้ง → scaffold แบบ prototype → ลองเร็ว ๆ ด้วย run → eval วนแก้จนผ่าน → เพิ่ม deployment target → deploy หลังได้รับอนุมัติ → publish ถ้าต้องการ • จำ 3 ข้อ: scaffold ก่อนเขียนโค้ด, eval ทุกครั้ง, deploy เมื่อคนอนุมัติ</aside>
+      </section>
+
+      <!-- Get started -->
+      <section data-title="Get started today">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:28px">Get started today</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc blue"><h3>Quickstart</h3><a class="mono" style="font-size:16px" href="https://google.github.io/agents-cli/guide/quickstart-tutorial/" target="_blank">google.github.io/agents-cli</a></div>
+              <div class="pc yellow"><h3>Announcement</h3><a class="mono" style="font-size:16px" href="https://developers.googleblog.com/agents-cli-in-agent-platform-create-to-production-in-one-cli/" target="_blank">developers.googleblog.com · Agents CLI</a></div>
+              <div class="pc green"><h3>Coding with AI (ADK)</h3><a class="mono" style="font-size:16px" href="https://adk.dev/tutorials/coding-with-ai/#agents-cli" target="_blank">adk.dev/tutorials/coding-with-ai</a></div>
+              <div class="pc red"><h3>Step by step (Thai)</h3><a class="mono" style="font-size:16px" href="https://medium.com/@punsiriboonyakiat/b58003223fd1" target="_blank">Medium · ใช้ AI ช่วยสร้าง AI Agent ด้วย Agents CLI</a></div>
+            </div>
+            <div class="cmd" style="margin-top:22px; width:520px">uvx google-agents-cli setup</div>
+          </div>
+        </div>
+        <aside class="notes">แหล่งเริ่มต้น: Quickstart ทางการที่ google.github.io/agents-cli • บทความประกาศบน Google Developers Blog • ADK tutorial เรื่องเขียนโค้ดด้วย AI ส่วน Agents CLI • บทความภาษาไทยของเราบน Medium ทำตามทีละขั้นพร้อมภาพหน้าจอ • ติดตั้งด้วย uvx google-agents-cli setup • ให้เวลาผู้ฟังถ่ายรูปสไลด์นี้</aside>
+      </section>
+
+      <!-- Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <svg class="ico abs" style="left:930px; top:240px; width:200px; height:200px; stroke-width:4"><use href="#i-star"/></svg>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณทุกคนครับ/ค่ะ • เปิดถาม-ตอบ • ชวนลอง uvx google-agents-cli setup แล้ว scaffold agent ตัวแรกด้วย coding agent ที่ตัวเองใช้</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <!-- DevFest template shapes: notched/scalloped cards + GDG lockup on every slide -->
+  <script>
+    (function () {
+      const NS = "http://www.w3.org/2000/svg", S = 3, o = S / 2;
+      function cardPath(W, H, el) {
+        const r = +(el.dataset.r || 34);
+        const [a, b] = (el.dataset.tl || "0x0").split("x").map(Number);
+        const [c, d] = (el.dataset.br || "0x0").split("x").map(Number);
+        const n = +(el.dataset.scallop || 0);
+        const L = o, T = o, R = W - o, B = H - o, P = [];
+        if (n) P.push(`M${L},${T}`); else if (a && b) P.push(`M${L + a + r},${T}`); else P.push(`M${L + r},${T}`);
+        P.push(`H${R - r}`, `A${r},${r} 0 0 1 ${R},${T + r}`);
+        if (c && d) P.push(`V${B - d - r}`, `A${r},${r} 0 0 1 ${R - r},${B - d}`, `H${R - c + r}`, `A${r},${r} 0 0 0 ${R - c},${B - d + r}`, `V${B - r}`, `A${r},${r} 0 0 1 ${R - c - r},${B}`);
+        else P.push(`V${B - r}`, `A${r},${r} 0 0 1 ${R - r},${B}`);
+        if (n) { // scalloped left edge (statement slides)
+          P.push(`H${L}`); const h = (B - T) / n;
+          for (let i = 0; i < n; i++) P.push(`A${h / 2},${h / 2} 0 0 1 ${L},${B - h * (i + 1)}`);
+        } else {
+          P.push(`H${L + r}`, `A${r},${r} 0 0 1 ${L},${B - r}`);
+          if (a && b) P.push(`V${T + b + r}`, `A${r},${r} 0 0 1 ${L + r},${T + b}`, `H${L + a - r}`, `A${r},${r} 0 0 0 ${L + a},${T + b - r}`, `V${T + r}`, `A${r},${r} 0 0 1 ${L + a + r},${T}`);
+          else P.push(`V${T + r}`, `A${r},${r} 0 0 1 ${L + r},${T}`);
+        }
+        return P.join(" ") + " Z";
+      }
+      document.querySelectorAll(".reveal .nc").forEach((el) => {
+        const cs = getComputedStyle(el), W = parseFloat(cs.width), H = parseFloat(cs.height);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "nc-s"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+        svg.setAttribute("width", W); svg.setAttribute("height", H);
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", cardPath(W, H, el));
+        p.setAttribute("fill", el.dataset.fill || "#fff"); p.setAttribute("stroke", "#1e1e1e"); p.setAttribute("stroke-width", S);
+        svg.appendChild(p); el.prepend(svg);
+      });
+      document.querySelectorAll(".reveal .slides section:not([data-corner=off])").forEach((s) => {
+        s.insertAdjacentHTML("beforeend", '<div class="top-gdg"><img src="images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok</small></span></div><img class="top-bwg" src="images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">');
+      });
+    })();
+  </script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      controls: false,     // replaced by the shopio-style #ctrl bar
+      overview: false,     // replaced by the scrollable #ov grid
+      progress: false,
+      slideNumber: "c/t",
+      showSlideNumber: "print", // page numbers only in exported PDF
+      transition: "fade",
+      backgroundTransition: "fade",
+      width: 1280,
+      height: 720,
+      margin: 0,
+      center: false,       // slides are absolutely laid out 1280×720 canvases
+      plugins: [RevealHighlight, RevealNotes],
+      // export: one page per slide, all fragments shown
+      view: /[?&]print-pdf\b/.test(location.search) ? "print" : null,
+      pdfSeparateFragments: false,
+      pdfMaxPagesPerSlide: 1,
+    });
+  </script>
+
+  <!-- Export PDF: All slides / This slide -->
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const isPrint = params.has("print-pdf");
+
+      if (isPrint) {
+        // ---- print view (opened in a new tab by the menu) ----
+        const only = params.get("slide");
+        Reveal.on("pdf-ready", async () => {
+          if (only !== null) {
+            const target = Reveal.getSlides()[+only]?.closest(".pdf-page");
+            if (target) document.querySelectorAll(".reveal .slides .pdf-page").forEach((p) => { if (p !== target) p.remove(); });
+            document.title = `From Prompt to Production – slide ${+only + 1}`;
+          } else {
+            document.title = "From Prompt to Production – all slides";
+          }
+          if (!params.has("autoprint")) return;
+          await document.fonts.ready;
+          addEventListener("afterprint", () => window.close());
+          setTimeout(() => window.print(), 300);
+        });
+        return;
+      }
+
+      // ---- normal view: shopio-style control bar ----
+      const $ = (id) => document.getElementById(id);
+      const slides = Reveal.getSlides(), N = slides.length;
+      const idx = () => slides.indexOf(Reveal.getCurrentSlide());
+      const cnt = $("cnt"), prog = $("progress"), list = $("menu"), xMenu = $("exportMenu"), bPdf = $("bPdf"), bNotes = $("bNotes");
+      const titleOf = (s, i) => s.dataset.title || s.querySelector("h1,h2")?.textContent.trim() || `Slide ${i + 1}`;
+
+      // slide list (click the counter)
+      list.innerHTML = slides.map((s, i) => `<a href="#" data-i="${i}"><span>${i + 1}</span>${titleOf(s, i).replace(/</g, "&lt;")}</a>`).join("");
+      function sync() {
+        const i = idx();
+        cnt.textContent = `${i + 1} / ${N}`;
+        prog.style.width = (N > 1 ? (i / (N - 1)) * 100 : 100) + "%";
+        list.querySelectorAll("a").forEach((a, k) => a.classList.toggle("cur", k === i));
+      }
+      Reveal.on("ready", sync); Reveal.on("slidechanged", sync); sync();
+
+      const menus = [list, xMenu];
+      function openOnly(m) {
+        const willOpen = m && !m.classList.contains("open");
+        menus.forEach((x) => x.classList.remove("open"));
+        if (willOpen) { m.classList.add("open"); wake(); }
+        bPdf.setAttribute("aria-expanded", xMenu.classList.contains("open"));
+        if (list.classList.contains("open")) list.querySelector("a.cur")?.scrollIntoView({ block: "center" });
+        if (xMenu.classList.contains("open")) $("exportCur").textContent = `PDF of slide ${idx() + 1} / ${N}`;
+      }
+
+      $("bPrev").onclick = () => Reveal.prev();
+      $("bNext").onclick = () => Reveal.next();
+      cnt.onclick = (e) => { e.stopPropagation(); openOnly(list); };
+      list.onclick = (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); Reveal.slide(+a.dataset.i); openOnly(null); };
+      // all-slides overview: clone each slide into a scaled 1280×720 thumbnail
+      const ov = $("ov"), ovg = ov.querySelector(".ovg");
+      function buildOv() {
+        const cur = idx();
+        ovg.innerHTML = "";
+        slides.forEach((s, i) => {
+          const t = document.createElement("div");
+          t.className = "ovt" + (i === cur ? " cur" : ""); t.dataset.i = i;
+          const fr = document.createElement("div"); fr.className = "fr";
+          const rv = document.createElement("div"); rv.className = "reveal";
+          const sl = document.createElement("div"); sl.className = "slides";
+          const c = s.cloneNode(true);
+          c.removeAttribute("hidden"); c.removeAttribute("aria-hidden");
+          c.classList.remove("past", "future"); c.classList.add("present");
+          c.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+          c.querySelectorAll("video").forEach((v) => v.remove());
+          c.querySelectorAll("aside.notes").forEach((n) => n.remove());
+          sl.appendChild(c); rv.appendChild(sl); fr.appendChild(rv);
+          const cap = document.createElement("div"); cap.className = "cap";
+          cap.innerHTML = `<span>${i + 1}</span>`; cap.append(titleOf(s, i));
+          t.append(fr, cap); ovg.appendChild(t);
+          // reveal only vertically-centres slides near the current one; centre every clone here
+          c.style.top = "0px";
+          c.style.top = Math.max((720 - c.offsetHeight) / 2, 0) + "px";
+        });
+        sizeOv();
+      }
+      function sizeOv() { ovg.querySelectorAll(".fr").forEach((fr) => { fr.firstChild.style.transform = `scale(${fr.clientWidth / 1280})`; }); }
+      const ovOpen = () => ov.classList.contains("open");
+      function toggleOv(force) {
+        const open = force ?? !ovOpen();
+        openOnly(null);
+        ov.classList.toggle("open", open);
+        $("bOv").classList.toggle("on", open);
+        if (open) { buildOv(); ovg.querySelector(".cur")?.scrollIntoView({ block: "center" }); }
+        else ovg.innerHTML = "";
+      }
+      $("bOv").onclick = () => toggleOv();
+      $("ovX").onclick = () => toggleOv(false);
+      ovg.onclick = (e) => { const t = e.target.closest(".ovt"); if (!t) return; Reveal.slide(+t.dataset.i); toggleOv(false); };
+      addEventListener("resize", () => { if (ovOpen()) sizeOv(); });
+      const toggleFs = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+      $("bFs").onclick = toggleFs;
+
+      // speaker notes → reveal's presenter window (current + next slide, timer, notes)
+      const notes = () => Reveal.getPlugin("notes");
+      bNotes.onclick = () => notes()?.open();
+
+      // export
+      function exportPdf(mode) {
+        const q = new URLSearchParams({ "print-pdf": "", autoprint: "" });
+        if (mode === "slide") q.set("slide", idx());
+        const url = location.pathname + "?" + q.toString().replace(/=(&|$)/g, "$1");
+        if (!window.open(url, "_blank")) location.href = url; // popup blocked → same tab
+        openOnly(null);
+      }
+      bPdf.onclick = (e) => { e.stopPropagation(); openOnly(xMenu); };
+      xMenu.onclick = (e) => { const b = e.target.closest("[data-export]"); if (b) exportPdf(b.dataset.export); };
+
+      // close menus on outside click; click on the slide = next (like shopio)
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("#ctrl,#menu,#exportMenu,#ov")) return;
+        const wasOpen = menus.some((m) => m.classList.contains("open"));
+        openOnly(null);
+        if (wasOpen) return;
+        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,video,canvas,pre,.demo-wrap")) return;
+        if (String(getSelection?.() || "").length) return;
+        Reveal.next();
+      }, true); // capture: read isOverview() before reveal handles the overview click
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menus.some((m) => m.classList.contains("open"))) { openOnly(null); e.stopPropagation(); e.preventDefault(); return; }
+        if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+        if (e.key === "o" || e.key === "O") { e.preventDefault(); e.stopPropagation(); toggleOv(); return; }
+        if (ovOpen()) { // overview owns the keyboard: Esc closes, arrows/space scroll the grid instead of changing slides
+          e.stopPropagation();
+          if (e.key === "Escape") { e.preventDefault(); toggleOv(false); }
+          return;
+        }
+        if (e.key === "e" || e.key === "E") { e.preventDefault(); e.stopPropagation(); exportPdf(e.shiftKey ? "all" : "slide"); }
+        else if (e.key === "n" || e.key === "N") { e.preventDefault(); e.stopPropagation(); notes()?.open(); }
+      }, true);
+
+      // hide the bar when the mouse is idle
+      let idle;
+      const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => { if (!menus.some((m) => m.classList.contains("open"))) document.body.classList.add("idle"); }, 2500); };
+      addEventListener("mousemove", wake); wake();
+    })();
+  </script>
+</body>
+</html>
