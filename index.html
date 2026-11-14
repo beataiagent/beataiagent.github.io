@@ -4,23 +4,108 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Beat AI Agent Slides</title>
+  <link rel="icon" type="image/png" sizes="32x32" href="images/shared/logos/gdg-favicon-32.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="images/shared/logos/gdg-apple-touch-180.png">
+  <link href="fonts/fonts.css" rel="stylesheet">
   <style>
-    :root { --bg:#fff; --fg:#1f1f1f; --muted:#5f6368; --card:#f6f8fc; --accent:#1a73e8; }
-    @media (prefers-color-scheme: dark) { :root { --bg:#121212; --fg:#e8eaed; --muted:#9aa0a6; --card:#1e1f22; --accent:#8ab4f8; } }
-    body { margin:0; background:var(--bg); color:var(--fg); font-family:system-ui,-apple-system,"Segoe UI",sans-serif; }
-    main { max-width:720px; margin:0 auto; padding:48px 16px; }
-    h1 { margin:0 0 8px; } p { color:var(--muted); margin:0 0 32px; }
-    a.card { display:block; padding:20px; margin-bottom:16px; border-radius:12px; background:var(--card); color:var(--fg); text-decoration:none; border:1px solid transparent; }
-    a.card:hover { border-color:var(--accent); }
-    a.card strong { color:var(--accent); display:block; margin-bottom:4px; }
+    /* same tokens as the DevFest 2026 dark template used in the decks */
+    :root {
+      --bg: #202124; --card: #2a2b2f; --line: #5f6368; --text: #e8eaed; --sub: #bdc1c6;
+      --h-blue: #57caff; --h-green: #5cdb6d; --h-red: #ff7daf; --h-yellow: #ffd427;
+      --sans: "Google Sans", "Product Sans", system-ui, sans-serif;
+      --mono: "Roboto Mono", ui-monospace, monospace;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); }
+    main { max-width: 1000px; overflow-x: clip; margin: 0 auto; padding: 32px 16px 64px; }
+
+    header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .gdg { display: flex; align-items: center; gap: 10px; font: 500 17px/1.15 var(--sans); }
+    .gdg img { width: 40px; height: auto; }
+    .gdg small { display: block; font: 400 13px/1.3 var(--sans); color: var(--sub); }
+    .bwg { height: 48px; width: auto; }
+
+    .hero { position: relative; margin: 40px 0 120px; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 32px; }
+    .hero::before { content: ""; position: absolute; right: -60px; top: -80px; width: 520px; height: 520px; border-radius: 50%; background: radial-gradient(circle, rgba(87,202,255,.14), transparent 65%); pointer-events: none; }
+    .rows { display: grid; gap: 6px; -webkit-mask-image: linear-gradient(90deg, #000 80%, transparent); mask-image: linear-gradient(90deg, #000 80%, transparent); overflow: hidden; }
+    .rows .chev span.g { color: var(--h-green); } .rows .chev span.r { color: var(--h-red); }
+    .lead { margin-top: 22px; font: 400 20px/1.45 var(--sans); color: var(--sub); max-width: 460px; }
+    .lead b { color: #fff; font-weight: 500; }
+    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+    .stats i { font: 400 14px/1 var(--mono); font-style: normal; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .me { position: relative; width: 300px; height: 300px; flex: none; margin: 0 40px 0 0 !important; }
+    .me .orbit { position: absolute; inset: -34px; border-radius: 50%; border: 2px dashed var(--line); animation: spin 60s linear infinite; }
+    .me .orbit i { position: absolute; width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--bg); }
+    .me .ring { position: absolute; inset: 0; border-radius: 50%; padding: 8px; background: conic-gradient(from -45deg, var(--h-blue) 0 25%, var(--h-red) 0 50%, var(--h-yellow) 0 75%, var(--h-green) 0 100%); box-shadow: 0 18px 50px rgba(0,0,0,.5); }
+    .me .ring > div { width: 100%; height: 100%; border-radius: 50%; padding: 6px; background: var(--bg); }
+    .me img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; }
+    .me figcaption { position: absolute; left: 50%; bottom: -92px; transform: translateX(-50%); text-align: center; white-space: nowrap; }
+    .me figcaption b { display: block; font: 500 22px/1.2 var(--sans); color: #fff; }
+    .me figcaption span { display: inline-block; margin-top: 8px; font: 400 13px/1 var(--mono); color: var(--sub); padding: 7px 13px; border: 1.5px solid var(--line); border-radius: 999px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (prefers-reduced-motion: reduce) { .me .orbit { animation: none; } }
+    @media (max-width: 720px) {
+      .hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+      .hero > div:first-child { order: 2; width: 100%; }
+      .rows .chev { justify-content: center; } .rows { -webkit-mask-image: none; mask-image: none; }
+      .lead { margin-left: auto; margin-right: auto; } .stats { justify-content: center; }
+      .me { width: 220px; height: 220px; margin: 40px 0 110px !important; }
+    }
+    .chev { display: flex; align-items: center; gap: 14px; white-space: nowrap; font: 400 clamp(40px, 7.5vw, 68px)/1.1 var(--sans); letter-spacing: -.01em; color: #fff; }
+    .chev svg { width: clamp(20px, 3vw, 30px); height: clamp(34px, 5vw, 50px); flex: none; color: #fff; }
+    .chev svg.t { color: #1fa3a3; }
+    .chev span { color: var(--h-blue); }
+
+    .eyebrow { font: 400 15px/1 var(--mono); color: var(--h-blue); margin: 0 0 16px; letter-spacing: .02em; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 400px), 1fr)); gap: 16px; }
+    a.card { --c: var(--h-blue); position: relative; display: flex; flex-direction: column; gap: 10px; min-height: 150px; padding: 22px 24px 20px; border-radius: 16px; background: var(--card); border: 2px solid var(--line); border-left: 6px solid var(--c); color: var(--text); text-decoration: none; transition: border-color .15s, transform .15s; }
+    a.card:hover, a.card:focus-visible { border-color: var(--c); transform: translateY(-2px); outline: none; }
+    a.card .num { font: 500 15px/1 var(--mono); color: var(--c); }
+    a.card strong { font: 500 24px/1.2 var(--sans); color: #fff; }
+    a.card span { font: 400 15px/1.4 var(--sans); color: var(--sub); }
+    a.card .go { margin-top: auto; font: 400 14px/1 var(--mono); color: var(--c); }
+    a.card.c1 { --c: var(--h-blue); } a.card.c2 { --c: var(--h-green); } a.card.c3 { --c: var(--h-yellow); } a.card.c4 { --c: var(--h-red); }
+
+    footer { margin-top: 48px; display: flex; align-items: center; gap: 12px; color: var(--sub); font: 400 14px/1.35 var(--mono); }
+    footer img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; border: 2px solid var(--line); }
+    footer b { display: block; font: 500 16px/1.2 var(--sans); color: #fff; }
   </style>
 </head>
 <body>
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </svg>
   <main>
-    <h1>Slides</h1>
-    <p>Talk decks</p>
-    <a class="card" href="mediapipe-slides.html"><strong>MediaPipe On-device ML</strong>DevFest Bangkok 2026</a>
-    <a class="card" href="gemini-decisions-slides.html"><strong>Gemini Decisions API</strong>Slides</a>
+    <header>
+      <div class="gdg"><img src="images/shared/logos/gdg-mark.svg" alt=""><div>Google Developer Group<small>Bangkok · DevFest 2026</small></div></div>
+      <img class="bwg" src="images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+    </header>
+
+    <section class="hero">
+      <div>
+        <div class="rows">
+          <div class="chev"><svg><use href="#ch-r"/></svg><span>Build</span><svg><use href="#ch-r"/></svg><svg class="t"><use href="#ch-r"/></svg></div>
+          <div class="chev"><svg><use href="#ch-r"/></svg><svg class="t"><use href="#ch-r"/></svg><span class="g">with AI</span><svg><use href="#ch-r"/></svg></div>
+          <div class="chev"><svg class="t"><use href="#ch-r"/></svg><svg><use href="#ch-r"/></svg><svg><use href="#ch-r"/></svg><span class="r">Slides</span></div>
+        </div>
+        <p class="lead">Talk decks on <b>on-device ML</b>, <b>Gemini</b> and <b>AI agents</b> on Google Cloud.</p>
+        <div class="stats"><i style="--c:var(--h-blue)">4 decks</i><i style="--c:var(--h-green)">F · fullscreen</i><i style="--c:var(--h-yellow)">O · all slides</i></div>
+      </div>
+      <figure class="me" style="margin:0">
+        <div class="orbit"><i style="left:22px; top:40px; background:var(--h-yellow)"></i><i style="right:-6px; top:130px; background:var(--h-blue)"></i><i style="left:20px; bottom:46px; background:var(--h-green)"></i><i style="right:-4px; top:220px; background:var(--h-red)"></i></div>
+        <div class="ring"><div><img src="images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <figcaption><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></figcaption>
+      </figure>
+    </section>
+
+    <p class="eyebrow">Decks</p>
+    <div class="grid">
+      <a class="card c1" href="slides/mediapipe-slides.html"><em class="num">01</em><strong>MediaPipe On-device ML</strong><span>DevFest Bangkok 2026</span><em class="go">Open deck →</em></a>
+      <a class="card c2" href="slides/gemini-decisions-slides.html"><em class="num">02</em><strong>Gemini Decisions API</strong><span>Slides</span><em class="go">Open deck →</em></a>
+      <a class="card c3" href="slides/agents-cli-slides.html"><em class="num">03</em><strong>From Prompt to Production</strong><span>Build, evaluate and deploy AI agents with Agents CLI</span><em class="go">Open deck →</em></a>
+      <a class="card c4" href="slides/hermes-cloudrun-slides.html"><em class="num">04</em><strong>Hermes Agent on Cloud Run</strong><span>A persistent, always-on AI agent on Cloud Run Instances</span><em class="go">Open deck →</em></a>
+    </div>
+
   </main>
 </body>
 </html>
