@@ -551,7 +551,10 @@
     /* agenda */
     .s-agenda-dk .agd-title { position: absolute; left: 56px; top: 110px; font: 300 96px/1 var(--sans); color: #fff; }
     .s-agenda-dk .agd-arrow { position: absolute; left: 20px; top: 300px; width: 330px; height: 330px; }
-    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 480px; top: 104px; width: 740px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 420px; top: 104px; width: 560px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .s-agenda-dk .agd-qr { position: absolute; left: 1004px; top: 104px; width: 236px; box-sizing: border-box; padding: 16px 16px 14px; border-radius: 16px; background: #fff; text-align: center; }
+    .reveal .s-agenda-dk .agd-qr img { display: block; width: 204px; height: 204px; margin: 0; }
+    .s-agenda-dk .agd-qr b { display: block; margin-top: 10px; font: 500 17px/1.25 var(--sans); color: #202124; }
     .s-agenda-dk .agd-list li { display: flex; align-items: center; gap: 22px; padding: 18px 24px; background: var(--dk-card); border-radius: 10px; border-left: 6px solid var(--c); }
     .s-agenda-dk .agd-list b { font: 500 34px/1 var(--sans); color: var(--c); width: 48px; }
     .s-agenda-dk .agd-list strong { display: block; font: 500 30px/1.15 var(--sans); color: var(--c); }
@@ -924,6 +927,10 @@
           <li class="c4"><b>04</b><div><strong>Build the RAG pipeline</strong><span>Index → retrieve → generate, with a worked example</span></div></li>
           <li class="c1"><b>05</b><div><strong>Tune &amp; ship</strong><span>Design choices, gotchas, Gemini Embedding 2</span></div></li>
         </ol>
+        <div class="agd-qr">
+          <img src="../images/embeddinggemma2-rag-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
         <aside class="notes">5 ช่วง: (1) ทำไมต้อง multimodal RAG (2) รู้จัก EmbeddingGemma 2 (3) ใช้งานใน Python ทีละสื่อ (4) สร้าง RAG pipeline ครบ 3 ขั้น พร้อมตัวอย่าง (5) เลือกค่าต่าง ๆ ข้อควรระวัง และเทียบกับ Gemini Embedding 2</aside>
       </section>
 

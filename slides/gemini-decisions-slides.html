@@ -167,6 +167,9 @@
     .s-agenda .ag-list li { position: relative; display: flex; align-items: center; gap: 18px; height: 84px; }
     .s-agenda .ag-list svg { position: absolute; left: 0; top: -6px; width: 96px; height: 96px; fill: none; stroke: var(--ink); stroke-width: 2.5; }
     .s-agenda .ag-list b { width: 96px; text-align: center; font: 500 54px/1 var(--sans); flex: none; }
+    .s-agenda .ag-qr { position: absolute; left: 940px; top: 168px; width: 300px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 28px; background: #fff; padding: 22px 22px 18px; text-align: center; }
+    .reveal .s-agenda .ag-qr img { display: block; width: 252px; height: 252px; margin: 0 auto; }
+    .s-agenda .ag-qr b { display: block; margin-top: 16px; font: 500 24px/1.2 var(--sans); }
     .s-agenda .ag-list span { width: 688px; height: 84px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 999px; background: #d3e3f3; display: flex; align-items: center; padding: 0 26px; font: 400 34px/1 var(--sans); }
 
     /* tasks slide: Text · Audio · Decision · Retrieval / Vision · GenAI */
@@ -537,6 +540,10 @@
           <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>3</b><span>Code &amp; real-world use at Google</span></li>
           <li><svg viewBox="0 0 96 96"><path d="M57.1,5 A44,44 0 0 1 57.1,91 M38.9,91 A44,44 0 0 1 38.9,5"/></svg><b>4</b><span>Get started &amp; ecosystem</span></li>
         </ol>
+        <div class="ag-qr">
+          <img src="../images/gemini-decisions-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
         <aside class="notes">วันนี้มี 4 ช่วง: (1) ทำไมต้องมี Decisions API (2) ทำงานยังไง ประเภทคำถาม และ confidence score (3) ดูโค้ดจริงและตัวอย่างที่ Google ใช้ในโปรดักต์ (4) วิธีเริ่มต้นและ integration ที่รองรับ</aside>
       </section>
 

@@ -572,7 +572,10 @@
     /* agenda */
     .s-agenda-dk .agd-title { position: absolute; left: 56px; top: 110px; font: 300 96px/1 var(--sans); color: #fff; }
     .s-agenda-dk .agd-arrow { position: absolute; left: 20px; top: 300px; width: 330px; height: 330px; }
-    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 480px; top: 104px; width: 740px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 420px; top: 104px; width: 560px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .s-agenda-dk .agd-qr { position: absolute; left: 1004px; top: 104px; width: 236px; box-sizing: border-box; padding: 16px 16px 14px; border-radius: 16px; background: #fff; text-align: center; }
+    .reveal .s-agenda-dk .agd-qr img { display: block; width: 204px; height: 204px; margin: 0; }
+    .s-agenda-dk .agd-qr b { display: block; margin-top: 10px; font: 500 17px/1.25 var(--sans); color: #202124; }
     .s-agenda-dk .agd-list li { display: flex; align-items: center; gap: 22px; padding: 18px 24px; background: var(--dk-card); border-radius: 10px; border-left: 6px solid var(--c); }
     .s-agenda-dk .agd-list b { font: 500 34px/1 var(--sans); color: var(--c); width: 48px; }
     .s-agenda-dk .agd-list strong { display: block; font: 500 30px/1.15 var(--sans); color: var(--c); }
@@ -677,6 +680,10 @@
           <li class="c3"><b>03</b><div><strong>Build &amp; evaluate</strong><span>Scaffold, ADK, the quality flywheel · let AI build it</span></div></li>
           <li class="c4"><b>04</b><div><strong>Deploy, publish &amp; observe</strong><span>Agent Runtime, Gemini Enterprise, traces</span></div></li>
         </ol>
+        <div class="agd-qr">
+          <img src="../images/agents-cli-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
         <aside class="notes">วันนี้มี 4 ช่วง: (1) ช่องว่างระหว่าง prototype กับ production (2) รู้จัก Agents CLI และวิธีใช้ 2 แบบ (3) สร้าง agent วัดผลด้วย eval และให้ AI ช่วยสร้าง (4) deploy, publish ไป Gemini Enterprise และ monitor</aside>
       </section>
 
