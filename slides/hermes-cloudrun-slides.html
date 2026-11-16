@@ -613,6 +613,7 @@
     .hx-ln { position: absolute; fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
     .hx-cap { position: absolute; left: 820px; top: 110px; width: 260px; font: 400 14px/1.3 var(--mono); color: var(--dk-sub); }
     .reveal pre code.hljs { color: var(--dk-text); }
+    .grid > * { min-width: 0; }
     .reveal ol.hx-steps { list-style: none; margin: 0; padding: 0; width: 470px; flex: none; display: grid; gap: 8px; }
     .hx-steps li { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; font-size: 16px; line-height: 1.35; }
     .hx-steps li code { padding: 0 4px; }
@@ -849,12 +850,13 @@ gcloud services enable \
             <div class="grid g2" style="width:1088px; gap:22px">
               <div class="fragment">
                 <span class="tag" style="margin-bottom:12px">hermes-sa → Vertex AI user</span>
-                <pre style="font-size:13.5px; margin-top:12px"><code class="language-bash" data-trim>
+                <pre style="font-size:12.5px; margin-top:12px"><code class="language-bash" data-trim>
 export SERVICE_ACCOUNT_NAME="hermes-sa"
 gcloud iam service-accounts create ${SERVICE_ACCOUNT_NAME} \
   --display-name="Hermes Service Account"
 
-export SERVICE_ACCOUNT="${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
+export SERVICE_ACCOUNT=\
+"${SERVICE_ACCOUNT_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 
 gcloud projects add-iam-policy-binding ${PROJECT_ID} \
   --member="serviceAccount:${SERVICE_ACCOUNT}" \
@@ -863,15 +865,16 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
               </div>
               <div class="fragment">
                 <span class="tag red" style="margin-bottom:12px">Dashboard password → Secret Manager</span>
-                <pre style="font-size:13.5px; margin-top:12px"><code class="language-bash" data-trim>
+                <pre style="font-size:12.5px; margin-top:12px"><code class="language-bash" data-trim>
 export DASHBOARD_PASSWORD=$(openssl rand -hex 16)
-echo "Generated Hermes Dashboard Password: ${DASHBOARD_PASSWORD}"
+echo "Password: ${DASHBOARD_PASSWORD}"
 
-echo -n "${DASHBOARD_PASSWORD}" | gcloud secrets create \
-  hermes-dashboard-password \
+echo -n "${DASHBOARD_PASSWORD}" | \
+  gcloud secrets create hermes-dashboard-password \
   --data-file=- --replication-policy="automatic"
 
-gcloud secrets add-iam-policy-binding hermes-dashboard-password \
+gcloud secrets add-iam-policy-binding \
+  hermes-dashboard-password \
   --member="serviceAccount:${SERVICE_ACCOUNT}" \
   --role="roles/secretmanager.secretAccessor"
                 </code></pre>
@@ -904,7 +907,7 @@ gcloud secrets add-iam-policy-binding hermes-dashboard-password \
             <div class="eyebrow">Step 4 · The agent's home: /opt/data</div>
             <h2 style="margin-bottom:22px">A bucket and a config file</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre class="fragment" style="width:600px; font-size:14px"><code class="language-bash" data-trim>
+              <pre class="fragment" style="width:600px; font-size:13px"><code class="language-bash" data-trim>
 gcloud storage buckets create gs://${BUCKET_NAME} \
   --location=${REGION}
 
@@ -1050,7 +1053,7 @@ gcloud storage cp \
             <div class="eyebrow">Step 7 · gcloud beta run instances deploy</div>
             <h2 style="margin-bottom:18px">Deploy with one command</h2>
             <div style="display:flex; gap:20px; width:1088px; align-items:flex-start">
-              <pre style="width:700px; font-size:12.5px"><code class="language-bash" data-trim>
+              <pre style="width:716px; font-size:12px"><code class="language-bash" data-trim>
 gcloud beta run instances deploy hermes-instance \
   --image nousresearch/hermes-agent:latest \
   --service-account ${SERVICE_ACCOUNT} \
@@ -1255,6 +1258,8 @@ gcloud iam service-accounts delete ${SERVICE_ACCOUNT} --quiet
   <script>
     Reveal.initialize({
       hash: true,
+      hashOneBasedIndex: true,  // URL #/7 = slide 7, same as the counter
+      fragmentInURL: false,     // keep the URL to just the slide number
       controls: false,     // replaced by the shopio-style #ctrl bar
       overview: false,     // replaced by the scrollable #ov grid
       progress: false,

@@ -562,7 +562,7 @@
             <h2 style="margin-bottom:12px">Many AI calls are really closed-set decisions</h2>
             <p class="sub" style="font-size:20px; margin-bottom:30px">Tool selection · policy checks · model routing · context grading</p>
             <div class="grid g2" style="gap:28px; width:1000px">
-              <div class="pc fragment" style="height:270px">
+              <div class="pc fragment" style="height:300px">
                 <span class="tag">Generative model</span>
                 <ul class="bl" style="font-size:21px; margin-top:20px">
                   <li>Writes the answer token by token</li>
@@ -571,7 +571,7 @@
                   <li>No calibrated sense of "how sure"</li>
                 </ul>
               </div>
-              <div class="pc green fragment" style="height:270px">
+              <div class="pc green fragment" style="height:300px">
                 <span class="tag yellow">Gemini Decision 1</span>
                 <ul class="bl" style="font-size:21px; margin-top:20px">
                   <li>Scores candidate options in <b>one forward pass</b></li>
@@ -736,7 +736,8 @@ result = client.decisions.create(
     model="gemini-decision-1",
     input=[
         {"type": "image", "mime_type": "image/jpeg",
-         "uri": "https://storage.googleapis.com/generativeai-downloads/images/gemini-decisions-slides/spill.jpg"},
+         "uri": "https://storage.googleapis.com/generativeai-downloads/"
+                "images/gemini-decisions-slides/spill.jpg"},
         {"type": "text",
          "text": "Breakroom counter check before the 9 AM client meeting."},
     ],
@@ -1127,6 +1128,8 @@ curl -X POST \
   <script>
     Reveal.initialize({
       hash: true,
+      hashOneBasedIndex: true,  // URL #/7 = slide 7, same as the counter
+      fragmentInURL: false,     // keep the URL to just the slide number
       controls: false,     // replaced by the shopio-style #ctrl bar
       overview: false,     // replaced by the scrollable #ov grid
       progress: false,

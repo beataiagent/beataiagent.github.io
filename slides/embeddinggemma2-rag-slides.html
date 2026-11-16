@@ -1,0 +1,1804 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Multimodal RAG with EmbeddingGemma 2</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/gdg-favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/gdg-favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/gdg-apple-touch-180.png" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+
+  <style>
+    /* ================= DevFest 2026 theme tokens (from the official template) ================= */
+    :root {
+      --ink: #1e1e1e;            /* Black 02 */
+      --paper: #f0f0f0;          /* Off-White */
+      --white: #fff;
+      --g-blue: #4285f4; --g-green: #34a853; --g-red: #ea4335; --g-yellow: #fbbc04;      /* Google 500 */
+      --h-blue: #57caff; --h-green: #5cdb6d; --h-red: #ff7daf; --h-yellow: #ffd427;      /* Halftone */
+      --p-blue: #c3ecf6; --p-green: #ccf6c5; --p-red: #f8d8d8; --p-yellow: #ffe7a5;      /* Pastel */
+      --muted: #5f6368;
+      --stroke: 3px;
+      --sans: "Google Sans", "Product Sans", system-ui, sans-serif;
+      --mono: "Roboto Mono", ui-monospace, monospace;
+
+      --r-background-color: var(--paper);
+      --r-main-font: var(--sans);
+      --r-heading-font: var(--sans);
+      --r-code-font: var(--mono);
+      --r-main-color: var(--ink);
+      --r-heading-color: var(--ink);
+      --r-heading-text-transform: none;
+      --r-heading-font-weight: 700;
+      --r-heading-letter-spacing: -0.01em;
+      --r-link-color: #1a73e8;
+      --r-link-color-hover: #174ea6;
+      --r-main-font-size: 28px;
+    }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--paper); }
+    .reveal { color: var(--ink); }
+    .reveal strong, .reveal b { font-weight: 700; }
+
+    /* every slide is a fixed 1280×720 canvas, laid out absolutely like the Slides template */
+    .reveal .slides section { width: 1280px; height: 720px; padding: 0; box-sizing: border-box; text-align: left; background: var(--paper); line-height: 1.3; }
+    .reveal .slides section.bg-blue { background: var(--p-blue); }
+    .reveal .slides section.bg-green { background: var(--p-green); }
+    .reveal .slides section.bg-yellow { background: var(--p-yellow); }
+    .reveal .slides section.bg-red { background: var(--p-red); }
+    .reveal h1, .reveal h2, .reveal h3 { margin: 0; text-transform: none; color: var(--ink); line-height: 1.12; }
+    .reveal h1 { font-size: 84px; font-weight: 700; letter-spacing: -.015em; }
+    .reveal h2 { font-size: 46px; font-weight: 700; }
+    .reveal h3 { font-size: 26px; font-weight: 700; }
+    .reveal p { margin: 0; }
+    .reveal .slides img { margin: 0; max-width: none; max-height: none; }
+    .reveal a { text-decoration: none; }
+    .abs { position: absolute; }
+    .mono { font-family: var(--mono); font-weight: 300; }
+    .sub { font-family: var(--mono); font-weight: 300; font-size: 22px; line-height: 1.35; color: var(--ink); }
+    .muted { color: var(--muted); }
+
+    /* ---------- notched card (shape drawn by dfShapes(): data-tl / data-br notches, data-scallop) ---------- */
+    .nc { position: absolute; }
+    .nc > svg.nc-s { position: absolute; inset: 0; overflow: visible; z-index: 0; pointer-events: none; }
+    .nc > .in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; padding: 40px 52px; }
+
+    /* ---------- DevFest badge: { DevFest / location } ---------- */
+    .badge { position: absolute; display: flex; align-items: center; gap: 4px; --bk: var(--g-yellow); }
+    .badge .bk { font: 700 92px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .badge b { font: 700 50px/1 var(--sans); letter-spacing: -.01em; }
+    .badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 6px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .badge.sm .bk { font-size: 64px; -webkit-text-stroke-width: 2.5px; }
+    .badge.sm b { font-size: 34px; }
+    .badge.sm i { font-size: 11px; padding: 4px 0; margin-top: 5px; border-width: 2px; }
+
+    /* ---------- corner logos: Build with Gemini + DevFest/GDG lockup (auto-added bottom-right of every slide) ---------- */
+    .corner-logos { position: absolute; right: 40px; bottom: 38px; display: flex; align-items: flex-end; gap: 14px; z-index: 2; pointer-events: none; }
+    .corner-logos img { height: 94px; width: auto; display: block; }
+
+    /* ---------- line icons (sprite at top of <body>) ---------- */
+    .ico { display: block; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .dots { position: absolute; display: flex; gap: 14px; }
+    .dots i { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--ink); background: var(--dc, var(--g-blue)); box-sizing: border-box; }
+    .numbox { position: absolute; border: var(--stroke) solid var(--ink); border-radius: 28px; background: #fff; font: 300 64px/1 var(--mono); display: flex; align-items: center; padding: 0 28px; box-sizing: border-box; }
+
+    /* ---------- content atoms ---------- */
+    .pc { border: 2.5px solid var(--ink); border-radius: 24px; padding: 22px 24px; background: #fff; box-sizing: border-box; font-size: 20px; line-height: 1.38; }
+    .pc.blue { background: var(--p-blue); } .pc.green { background: var(--p-green); } .pc.yellow { background: var(--p-yellow); } .pc.red { background: var(--p-red); }
+    .pc h3 { margin-bottom: 8px; }
+    .pc .ico { width: 46px; height: 46px; margin-bottom: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 5px 13px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; font-size: 15px; line-height: 1.3; }
+    .tag { display: inline-block; padding: 7px 20px; border-radius: 999px; border: 2.5px solid var(--ink); background: #fff; font: 500 18px/1.2 var(--sans); }
+    .tag.red { background: var(--p-red); } .tag.yellow { background: var(--g-yellow); }
+    .eyebrow { font: 400 17px/1 var(--mono); letter-spacing: .02em; color: var(--ink); margin-bottom: 12px; }
+    .grid { display: grid; gap: 20px; }
+    .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+    .reveal ul.bl { list-style: none; margin: 0; padding: 0; display: block; font-size: 25px; line-height: 1.35; }
+    .reveal ul.bl li { position: relative; padding-left: 34px; margin: 0 0 16px; }
+    .reveal ul.bl li::before { content: ""; position: absolute; left: 2px; top: .38em; width: 15px; height: 15px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--g-blue); }
+    .reveal ul.bl li:nth-child(4n+2)::before { background: var(--g-red); }
+    .reveal ul.bl li:nth-child(4n+3)::before { background: var(--g-yellow); }
+    .reveal ul.bl li:nth-child(4n+4)::before { background: var(--g-green); }
+    .placeholder { border: 2.5px dashed #9aa0a6; border-radius: 24px; display: grid; place-items: center; color: var(--muted); font-size: 18px; text-align: center; padding: 20px; background: var(--paper); box-sizing: border-box; }
+
+    /* code */
+    .reveal pre { width: auto; margin: 0; box-shadow: none; font-size: 15px; line-height: 1.42; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--paper); overflow: hidden; }
+    .reveal pre code { max-height: none; padding: 16px 22px; background: transparent; font-family: var(--mono); font-weight: 400; }
+    .reveal .hljs { background: transparent; color: #1e1e1e; }
+    .reveal .hljs-ln-numbers { color: #9aa0a6; }
+    .cmd { font: 400 15px/1.4 var(--mono); padding: 12px 16px; border-radius: 16px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; }
+    /* "ask your coding agent" prompt bar at the bottom of each step slide */
+    .ask { position: absolute; left: 56px; right: 56px; bottom: 30px; display: flex; align-items: center; gap: 16px; padding: 12px 18px; border: 2px dashed var(--h-yellow); border-radius: 16px; background: #2a2b2f; }
+    .ask b { flex: none; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; border-radius: 999px; background: var(--h-yellow); color: #202124; white-space: nowrap; }
+    .ask span { font: 400 16px/1.4 var(--mono); color: #e8eaed; }
+    .ag-steps .pc { display: flex; flex-direction: column; gap: 12px; }
+    .ag-steps .pc .num { width: 38px; height: 38px; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; font: 500 19px/1 var(--sans); color: #fff; }
+    .ag-steps .pc.blue .num { color: var(--h-blue); } .ag-steps .pc.green .num { color: var(--h-green); } .ag-steps .pc.yellow .num { color: var(--h-yellow); }
+    .ag-steps .pc p { margin: 0; font-size: 17px; }
+    .ag-steps .pc.red .num { color: var(--h-red); }
+    .st4 .pc { height: 310px; padding: 18px; }
+    .st4 .pc .num { flex: none; }
+    .st4 .cmd { font-size: 13.5px; }
+    .st4 .pc p { font-size: 15.5px; line-height: 1.4; }
+
+    /* flow (slide 7) */
+    .flow { display: flex; align-items: center; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 26px 18px; }
+    .flow .node b { display: block; font-size: 24px; margin-bottom: 8px; }
+    .flow .node code { font-family: var(--mono); font-size: 16px; white-space: nowrap; }
+    .flow .arr { width: 46px; flex: none; }
+
+    /* demo */
+    .demo-wrap { position: relative; width: 520px; aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; border: 2.5px solid var(--ink); background: #1e1e1e; }
+    .reveal .demo-wrap video, .reveal .demo-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; object-fit: cover; transform: scaleX(-1); }
+    .demo-ui { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn { font: 500 18px/1 var(--sans); padding: 13px 26px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); color: #fff; cursor: pointer; }
+    .btn.ghost { background: #fff; color: var(--ink); }
+    .btn:disabled { opacity: .45; cursor: default; }
+    #demoStatus { font: 300 16px/1.4 var(--mono); color: var(--ink); }
+    .gesture { position: absolute; left: 14px; top: 12px; font: 500 20px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); z-index: 2; }
+
+    /* ---------- slide 1: speaker cover ---------- */
+    .reveal .slides section.s-cover { overflow: hidden; }
+    .s-cover .cv-pill { position: absolute; left: 129px; top: 44px; width: 556px; height: 93px; border-radius: 999px; background: var(--ink); }
+    .s-cover .cv-dot { position: absolute; left: 670px; top: 44px; width: 91px; height: 91px; border-radius: 50%; background: var(--g-blue); border: 3px solid var(--ink); box-sizing: border-box; }
+    .s-cover .cv-kicker { font: 700 38px/1.1 var(--sans); color: var(--g-blue); margin-bottom: 8px; }
+    .s-cover .cv-title { font-size: 86px; line-height: 1.04; letter-spacing: -.015em; }
+    .s-cover .cv-name { position: absolute; left: 88px; top: 542px; width: 346px; height: 97px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 999px; background: #fff; display: flex; flex-direction: column; justify-content: center; padding: 0 24px; z-index: 2; }
+    .s-cover .cv-name b { font: 700 29px/1.15 var(--sans); white-space: nowrap; }
+    .s-cover .cv-name span { font: 400 15px/1.3 var(--sans); white-space: nowrap; margin-top: 3px; }
+    .s-cover .cv-photo { position: absolute; left: 761px; top: 40px; width: 479px; height: 370px; border: 3px solid #555; border-radius: 66px; overflow: hidden; background: #efeeef; box-sizing: border-box; }
+    .s-cover .cv-photo > img { position: absolute; left: 92px; top: 30px; width: 334px; height: 334px; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); }
+    .s-cover .gde { position: absolute; left: 128px; top: 262px; display: flex; height: 79px; border: 2px solid #c6dafc; border-radius: 9px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .s-cover .gde-l { width: 108px; display: flex; flex-direction: column; align-items: center; padding-top: 8px; position: relative; }
+    .s-cover .gde-l img { width: 36px; height: 18px; object-fit: contain; }
+    .s-cover .gde-l span { font: 400 17px/1 var(--sans); color: #5f6368; margin-top: 4px; }
+    .s-cover .gde-l i { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: #4a86e8; color: #fff; font: 400 12px/18px var(--sans); text-align: center; font-style: normal; }
+    .s-cover .gde-r { width: 108px; display: grid; place-items: center; font: 500 12px/1 var(--sans); color: #3c4043; border-left: 6px solid #e8f0fe; background: #fff; }
+    .s-cover .cv-badge { position: absolute; left: 696px; top: 505px; width: 313px; height: 124px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 42px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .s-cover .cv-badge .bk { font: 700 82px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .s-cover .cv-badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .s-cover .cv-badge b { font: 700 45px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover .cv-badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 5px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .s-cover .cv-blobs { position: absolute; left: 1010px; top: 501px; width: 211px; height: 77px; }
+    .s-cover .cv-gdg { position: absolute; left: 1007px; top: 578px; width: 132px; height: 87px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 44px; background: #fff; display: grid; place-items: center; }
+    .s-cover .cv-gdg img { width: 90px; height: 45px; object-fit: contain; }
+
+    /* ---------- slide 2: agenda ---------- */
+    .s-agenda .ag-title { position: absolute; left: 41px; top: 40px; font-size: 56px; font-weight: 400; }
+    .reveal .s-agenda ol.ag-list { position: absolute; left: 41px; top: 168px; margin: 0; padding: 0; list-style: none; display: grid; gap: 22px; }
+    .s-agenda .ag-list li { position: relative; display: flex; align-items: center; gap: 18px; height: 84px; }
+    .s-agenda .ag-list svg { position: absolute; left: 0; top: -6px; width: 96px; height: 96px; fill: none; stroke: var(--ink); stroke-width: 2.5; }
+    .s-agenda .ag-list b { width: 96px; text-align: center; font: 500 54px/1 var(--sans); flex: none; }
+    .s-agenda .ag-list span { width: 688px; height: 84px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 999px; background: #d3e3f3; display: flex; align-items: center; padding: 0 26px; font: 400 34px/1 var(--sans); }
+
+    /* tasks slide: Text · Audio · Decision · Retrieval / Vision · GenAI */
+    .tasks-grid { display: grid; grid-template-columns: 1.3fr 1.25fr .95fr 1.1fr; grid-template-rows: auto auto; gap: 14px; }
+    .tasks-grid .pc { padding: 16px 16px; }
+    .tasks-grid .pc.span3 { grid-column: span 3; }
+    .tasks-grid h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 24px; }
+    .tasks-grid .ord { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid var(--ink); background: #fff; display: grid; place-items: center; font: 500 16px/1 var(--sans); box-sizing: border-box; }
+    .tasks-grid .tcount { font: 300 13px/1 var(--mono); margin-left: auto; padding-left: 6px; white-space: nowrap; }
+    .tasks-grid .chips { gap: 6px; }
+    .tasks-grid .chip { font-size: 13.5px; padding: 4px 10px; }
+
+    /* ---------- task deep-dive slides ---------- */
+    .tk { padding: 34px 44px !important; }
+    .tk-head { position: absolute; left: 44px; top: 30px; right: 44px; }
+    .tk-head .eyebrow { margin-bottom: 6px; }
+    .tk-head h2 { font-size: 40px; }
+    .tk-desc { font-size: 19px; line-height: 1.35; margin-top: 6px !important; }
+    .tk-media { position: absolute; left: 44px; top: 150px; width: 400px; height: 225px; margin: 0; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
+    .tk-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tk-info { position: absolute; left: 474px; top: 156px; right: 44px; display: flex; flex-direction: column; gap: 10px; }
+    .tk-io { display: flex; align-items: flex-start; gap: 12px; }
+    .tk-io > b { width: 64px; flex: none; font: 400 14px/28px var(--mono); }
+    .tk-io .chips { gap: 6px; }
+    .tk-io .chip { font-size: 15px; padding: 4px 12px; }
+    .tk-diagram { position: absolute; left: 30px; top: 392px; width: 800px; height: auto; }
+    .tk-stat { position: absolute; left: 872px; top: 400px; width: 284px; height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 12px 22px !important; }
+    .tk-stat b { font: 700 46px/1 var(--sans); letter-spacing: -.02em; }
+    .tk-stat span { font: 300 15px/1.3 var(--mono); margin-top: 6px; }
+    .tk-stat i { font: 300 11px/1.3 var(--mono); font-style: normal; color: var(--muted); margin-top: 6px; white-space: nowrap; }
+    .tk-size .chip.sz { background: var(--p-yellow); font-size: 14px; }
+    .tk-size .chip.sz em { font: 500 12.5px/1 var(--mono); font-style: normal; margin-left: 4px; }
+
+    /* section dividers: MediaPipe logo tile */
+    .div-logo { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .div-logo img { width: 150px; height: 150px; object-fit: contain; }
+
+
+    /* ---------- AI Studio how-to slides ---------- */
+    .as-left { position: absolute; left: 44px; top: 132px; width: 690px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+    .as-shot { width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 18px; display: block; }
+    .as-link { font: 400 16px/1 var(--mono); padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-blue); color: var(--ink) !important; }
+    .reveal ol.as-steps { position: absolute; left: 766px; top: 128px; width: 390px; margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+    .as-steps li { display: flex; gap: 14px; align-items: flex-start; font-size: 19px; line-height: 1.35; }
+    .as-steps li b { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid var(--ink); display: grid; place-items: center; font: 500 20px/1 var(--sans); background: #fff; box-sizing: border-box; }
+    .as-steps li:nth-child(1) b { background: var(--p-blue); } .as-steps li:nth-child(2) b { background: var(--p-green); }
+    .as-steps li:nth-child(3) b { background: var(--p-yellow); } .as-steps li:nth-child(4) b { background: var(--p-red); }
+    .as-steps li span { padding-top: 6px; }
+    .as-recipe { display: flex; gap: 22px; align-items: flex-start; }
+    .reveal ul.as-parts { list-style: none; margin: 0; padding: 0; width: 330px; flex: none; display: grid; gap: 9px; }
+    .as-parts li { padding: 10px 16px !important; font-size: 15.5px; line-height: 1.3; border-radius: 16px !important; }
+    .as-parts li b { display: block; font-size: 18px; margin-bottom: 2px; }
+    .as-prompt { flex: 1; border: 2.5px solid var(--ink); border-radius: 20px; background: var(--ink); color: #fff; overflow: hidden; max-width: 740px; }
+    .as-ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 10px 18px; font: 400 14px/1 var(--mono); color: #c4c7c5; border-bottom: 1px solid #3c3c3c; }
+    .reveal pre.as-text { margin: 0; padding: 14px 18px 18px; border: 0; border-radius: 0; background: transparent; color: #fff; white-space: pre-wrap; font: 400 15px/1.5 var(--mono); }
+    .copy { font: 500 13px/1 var(--sans); padding: 8px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .copy:hover { background: var(--g-yellow); }
+    .copy.done { background: var(--g-green); color: #fff; }
+    .as-ideas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .as-idea { display: flex; flex-direction: column; gap: 10px; height: 338px; padding: 18px 20px !important; }
+    .as-ih { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+    .as-ih b { font-size: 22px; }
+    .as-ih .chip { font-size: 13px; padding: 3px 10px; }
+    .as-idea .as-text { flex: 1; margin: 0; font: 400 13.5px/1.42 var(--mono); background: #fff; border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; }
+    .as-idea .copy { align-self: flex-start; }
+    .as-tip { margin-top: 16px !important; font-size: 17px; max-width: 800px; }
+    .as-tip b { font: 500 13px/1 var(--mono); padding: 4px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); margin-right: 8px; }
+    .as-tip code { font-family: var(--mono); font-size: 15px; }
+
+    /* thank-you: round speaker photo + name */
+    .ty-who { display: flex; align-items: center; gap: 20px; margin-top: 44px; }
+    .ty-who img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 3px solid var(--ink); background: #fff; flex: none; }
+    .ty-who .sub { margin: 0; }
+
+    /* Hydrogen slide */
+    .hy-word { background: linear-gradient(90deg, #0b1f5c, #2f6fd6 55%, #7cc7f5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    html.print-pdf .hy-word { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #2f6fd6; }
+    .hy-left { position: absolute; left: 44px; top: 128px; width: 620px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .hy-right { position: absolute; left: 696px; top: 128px; width: 460px; display: flex; flex-direction: column; gap: 16px; }
+    .hy-badge { align-self: flex-start; font: 500 18px/1 var(--sans); letter-spacing: .22em; color: #fff; padding: 12px 34px; border-radius: 999px; border: 2.5px solid var(--ink); background: linear-gradient(90deg, #0b1f5c, #2f6fd6 60%, #a8dcfb); }
+    .reveal ul.hy-facts { font-size: 18.5px; line-height: 1.32; }
+    .reveal ul.hy-facts li { margin-bottom: 8px; }
+    .hy-how { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.38; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .hy-how b { font: 500 13px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); flex: none; margin-top: 1px; }
+
+    /* What is Google AI Edge / MediaPipe */
+    .ae-logo { position: absolute; right: 44px; top: 40px; height: 54px; width: auto; }
+    .ae-stack { position: absolute; left: 44px; top: 186px; width: 720px; display: grid; gap: 12px; }
+    .ae-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .ae-row .pc { font-size: 16px; line-height: 1.35; padding: 16px 18px; min-height: 150px; position: relative; }
+    .ae-row h3 { font-size: 24px; margin-bottom: 6px; }
+    .ae-hl { box-shadow: 6px 6px 0 var(--ink); }
+    .ae-tag { position: absolute; right: 12px; top: -14px; font: 500 12px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); }
+    .ae-hw { display: grid; grid-template-columns: 90px repeat(3, 1fr); border: 2.5px solid var(--ink); border-radius: 16px; overflow: hidden; background: #fff; }
+    .ae-hw span, .ae-tools > span { font: 400 14px/1 var(--mono); display: grid; place-items: center; }
+    .ae-hw b { text-align: center; font: 700 22px/1 var(--sans); padding: 14px 0; border-left: 2px solid var(--ink); background: var(--paper); }
+    .ae-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .ae-tools > span { width: 90px; flex: none; }
+    .ae-tools .chip { font-style: normal; font-size: 13.5px; }
+    .ae-side { position: absolute; left: 800px; top: 186px; width: 356px; display: flex; flex-direction: column; gap: 12px; }
+    .ae-sh { font: 700 22px/1.2 var(--sans); }
+    .ae-side ul.bl { font-size: 19px; }
+    .ae-try { font-size: 16px; line-height: 1.4; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .mp-feats { position: absolute; left: 44px; top: 178px; width: 1112px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .mp-feats figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .mp-feats img { width: 100%; height: auto; border-radius: 18px; border: 2px solid var(--ink); }
+    .mp-feats figcaption { font-size: 15px; line-height: 1.3; }
+    .mp-feats figcaption b { display: block; font-size: 19px; margin-bottom: 2px; }
+    .mp-pipe { position: absolute; left: 30px; top: 438px; width: 800px; height: auto; }
+    .mp-facts { position: absolute; left: 860px; top: 432px; width: 296px; display: flex; align-items: center; gap: 14px; padding: 12px 20px; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--p-green); box-sizing: border-box; }
+    .mp-facts b { font: 700 46px/1 var(--sans); }
+    .mp-facts span { display: block; font: 300 15px/1.35 var(--mono); }
+    .mp-facts p { font: 300 12.5px/1.4 var(--mono); color: var(--muted); margin-top: 8px !important; }
+
+    /* why on-device: numbered cards, revealed one per click */
+    .why-card { position: relative; }
+    .why-n { position: absolute; right: 16px; top: 14px; font: 300 30px/1 var(--mono); padding: 6px 12px; border: 2.5px solid var(--ink); border-radius: 14px; background: #fff; }
+
+    /* platforms slide */
+    .pl-grid { position: absolute; left: 44px; top: 190px; width: 1112px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .pl-card { display: flex; flex-direction: column; gap: 8px; height: 310px; padding: 18px 16px !important; }
+    .pl-card img { height: 72px; width: 72px; object-fit: contain; box-sizing: border-box; padding: 11px; background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; }
+    .pl-card img.ios { padding: 6px; }
+    .pl-card h3 { font-size: 26px; margin: 4px 0 0; }
+    .pl-card p { font-size: 17px; line-height: 1.35; flex: 1; }
+    .pl-card p span { font: 300 13.5px/1.4 var(--mono); }
+    .pl-card code { font: 400 12px/1.35 var(--mono); background: var(--ink); color: #fff; border-radius: 10px; padding: 8px 10px; word-break: break-all; }
+
+    /* model-size charts (log scale) */
+    .szc { display: grid; gap: 4px; }
+    .szc-row { display: grid; grid-template-columns: 230px 1fr 132px; align-items: center; gap: 14px; }
+    .szc-row > b { font: 500 17px/1.15 var(--sans); }
+    .szc-row > b small { display: block; font: 300 12px/1.3 var(--mono); color: var(--muted); margin-top: 2px; }
+    .szc-row > em { font: 400 14px/1 var(--mono); font-style: normal; text-align: right; white-space: nowrap; }
+    .szc-track { position: relative; height: 30px; }
+    .szc-track > i { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed #c8c8c8; }
+    .szc-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid #e0e0e0; }
+    .szc-bar { position: absolute; top: 6px; height: 18px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); box-sizing: border-box; min-width: 18px; }
+    .szc-axis .szc-track { height: 18px; }
+    .szc-axis .szc-track::before { display: none; }
+    .szc-axis .szc-track span { position: absolute; transform: translateX(-50%); font: 300 12px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+    .szc-all { position: absolute; left: 44px; top: 168px; width: 1112px; gap: 4px; }
+    .szc-all .szc-row { grid-template-columns: 220px 1fr 170px; }
+    .szc-all .szc-row > b { font-size: 22px; }
+    .szc-all .szc-track { height: 44px; }
+    .szc-all .szc-row > b small { display: inline; margin-left: 8px; }
+    .szc-all .szc-bar { top: 7px; height: 26px; }
+    .szc-all .szc-row:nth-child(2) .szc-bar { background: var(--g-green); }
+    .szc-all .szc-row:nth-child(3) .szc-bar { background: var(--g-yellow); }
+    .szc-all .szc-row:nth-child(4) .szc-bar { background: var(--g-red); }
+    .szc-all .szc-row:nth-child(5) .szc-bar { background: #a142f4; }
+    .szc-all .szc-row:nth-child(6) .szc-bar { background: var(--g-blue); }
+    .szc-all .szc-row > em { font-size: 16px; }
+    .sz-notes { position: absolute; left: 44px; top: 474px; width: 760px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sz-notes .pc { font-size: 15px; line-height: 1.35; padding: 12px 16px !important; }
+    .sz-notes .pc b { display: block; font: 700 19px/1.2 var(--sans); margin-bottom: 2px; }
+    .szc-dense { gap: 0; }
+    .szc-dense .szc-row > b { font-size: 14.5px; }
+    .szc-dense .szc-row > b small { display: none; }
+    .szc-dense .szc-row > b { white-space: nowrap; }
+    .szc-dense .szc-track { height: 25px; }
+    .szc-dense .szc-bar { top: 4px; height: 17px; }
+    .szc-dense .szc-row > em { font-size: 13px; }
+    /* category dividers */
+    .cat-ico { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .cat-ico svg { width: 120px; height: 120px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .cat-side { position: absolute; left: 70px; top: 456px; width: 230px; text-align: center; }
+    .cat-side b { display: block; font: 700 34px/1.1 var(--sans); }
+    .cat-side span { display: block; font: 300 15px/1.4 var(--mono); margin-top: 4px; }
+    .cat-in { padding: 30px 40px !important; }
+    .cat-h { font-size: 64px !important; }
+    .cat-take { font-size: 17px; line-height: 1.35; margin: 8px 0 16px !important; max-width: 760px; }
+    .szc-cat .szc-row { grid-template-columns: 200px 1fr 118px; }
+    .szc-cat .szc-row > b { font-size: 15.5px; }
+    .bg-green .szc-cat .szc-bar { background: var(--g-green); }
+    .bg-yellow .szc-cat .szc-bar { background: var(--g-yellow); }
+    .bg-red .szc-cat .szc-bar { background: var(--g-red); }
+
+    /* ---------- Try it: sample-image demo ---------- */
+    .try-stage { position: relative; width: 640px; height: 470px; flex: none; border: 2.5px solid var(--ink); border-radius: 24px; overflow: hidden; background: #1e1e1e; }
+    .try-stage canvas, .try-stage .try-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .try-stage canvas { z-index: 1; }
+    .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
+    .try-what { font-size: 18px; line-height: 1.35; }
+    .try-actions { display: flex; gap: 10px; }
+    .try-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; flex: 1; }
+    .try-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .try-tabs button { font: 500 15px/1 var(--sans); padding: 9px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .try-tabs button:hover { background: var(--p-blue); }
+    .try-tabs button.on { background: var(--g-blue); color: #fff; }
+    .try-tabs button:disabled { opacity: .5; cursor: progress; }
+    .reveal ol.try-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 17px/1.3 var(--mono); max-height: 200px; overflow: hidden; }
+    .try-results li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; border-radius: 10px; background: var(--paper); border: 1.5px solid #d0d0d0; }
+    .try-results li b { font-weight: 500; }
+    .try-status { font: 300 14px/1.4 var(--mono); color: var(--muted); }
+
+    /* ---------- slide 4: MediaPipe · Google AI Edge (real loops + logos) ---------- */
+    .s-what .wp { position: absolute; background: #fff; border: var(--stroke) solid var(--ink); border-radius: 30px; box-sizing: border-box; }
+    .s-what .wp-main { left: 40px; top: 96px; width: 1200px; padding: 22px 28px 26px; }
+    .s-what .wp-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+    .s-what .tag { font-size: 22px; padding: 8px 26px; background: var(--g-yellow); }
+    .s-what .lockups { display: flex; align-items: center; gap: 34px; }
+    .s-what .mp-lockup, .s-what .edge-lockup { display: flex; align-items: center; font-size: 50px; line-height: 1; white-space: nowrap; }
+    .s-what .mp-lockup { gap: 12px; font-weight: 500; color: #3c4043; }
+    .s-what .mp-lockup img { height: 50px; }
+    .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
+    .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
+    .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what figure { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 2.5px solid var(--ink); background: #f1f3f4; }
+    .s-what figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s-what figcaption { position: absolute; left: 8px; bottom: 7px; font: 500 13px/1 var(--sans); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); color: var(--ink); }
+    .s-what .wp-plat { left: 40px; bottom: 26px; display: flex; align-items: center; gap: 52px; padding: 14px 38px; }
+    .s-what .wp-plat span { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 500; color: #3c4043; }
+    .s-what .wp-plat img { height: 58px; }
+    .s-what .wp-plat img.ios { border-radius: 13px; box-shadow: 0 0 0 1px #dadce0; }
+
+    /* ================= Slide controls (shopio-style) ================= */
+    .reveal .controls, .reveal .progress, html:not(.print-pdf) .reveal .slide-number { display: none !important; }
+    #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; z-index: 40; background: linear-gradient(90deg, var(--g-blue), var(--g-green), var(--g-yellow), var(--g-red)); transition: width .6s cubic-bezier(.16,1,.3,1); }
+    #ctrl { position: fixed; right: 18px; bottom: 16px; z-index: 40; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(30,30,30,.86); backdrop-filter: blur(8px); color: #fff; font: 13px var(--sans); transition: opacity .4s; }
+    #ctrl button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0; }
+    #ctrl button:hover { background: rgba(255,255,255,.25); }
+    #ctrl button.on { background: var(--g-blue); }
+    #ctrl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #ctrl .cnt { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; cursor: pointer; }
+    body.idle #ctrl { opacity: 0; }
+    body.idle { cursor: none; }
+    #menu, #exportMenu { position: fixed; right: 18px; bottom: 64px; z-index: 41; padding: 8px; border-radius: 14px; background: rgba(30,30,30,.96); backdrop-filter: blur(10px); box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); font-family: var(--sans); display: none; }
+    #menu { width: 380px; max-height: 70vh; overflow: auto; }
+    #menu.open, #exportMenu.open { display: block; }
+    #menu a { display: flex; gap: 10px; color: #cfd2d6; text-decoration: none; font-size: 13px; padding: 7px 10px; border-radius: 8px; }
+    #menu a:hover, #menu a.cur { background: rgba(255,255,255,.12); color: #fff; }
+    #menu a span { opacity: .5; width: 22px; text-align: right; flex: none; }
+    #exportMenu { min-width: 230px; padding: 6px; }
+    #exportMenu button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 12px; border: 0; border-radius: 9px; background: transparent; color: #fff; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+    #exportMenu button:hover, #exportMenu button:focus-visible { background: #3a3a3a; outline: none; }
+    #exportMenu kbd { font-family: var(--mono); font-size: 11px; color: #9aa0a6; border: 1px solid #444; border-radius: 5px; padding: 1px 6px; }
+    #exportMenu .sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 12px; line-height: 1.5; margin-top: 2px; color: #9aa0a6; }
+    #exportMenu button > span { line-height: 1.3; }
+    /* all-slides overview (scrollable grid of live thumbnails) */
+    #ov { position: fixed; inset: 0; z-index: 45; background: #1e1e1e; overflow: auto; padding: 28px 32px 40px; display: none; font-family: var(--sans); }
+    #ov.open { display: block; }
+    #ov .ovh { display: flex; justify-content: space-between; align-items: center; color: #fff; max-width: 1700px; margin: 0 auto 18px; font-size: 18px; font-weight: 500; }
+    #ov .ovh button { border: 0; background: rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+    #ov .ovh button:hover { background: rgba(255,255,255,.25); }
+    #ov .ovg { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px 18px; max-width: 1700px; margin: 0 auto; }
+    #ov .ovt { cursor: pointer; color: #cfd2d6; font-size: 13px; }
+    #ov .fr { position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: var(--paper); outline: 2px solid #3a3a3a; outline-offset: 3px; transition: outline-color .15s; }
+    #ov .ovt:hover .fr { outline-color: rgba(255,255,255,.5); }
+    #ov .ovt.cur .fr { outline-color: var(--g-yellow); }
+    #ov .cap { display: flex; gap: 8px; margin-top: 10px; line-height: 1.35; }
+    #ov .cap span { opacity: .5; flex: none; }
+    #ov .fr > .reveal { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; pointer-events: none; overflow: hidden; }
+    #ov .fr > .reveal > .slides { position: absolute; inset: 0; width: 1280px; height: 720px; margin: 0; transform: none; zoom: 1; pointer-events: none; }
+    #ov .fr > .reveal > .slides > section { display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; }
+    #ov .fr .fragment { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+    #ov .fr pre code.fragment { display: none !important; }
+    #ov .fr .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    html.print-pdf #progress, html.print-pdf #ctrl, html.print-pdf #menu, html.print-pdf #exportMenu { display: none !important; }
+    @media print { #progress, #ctrl, #menu, #exportMenu { display: none !important; } }
+    /* print view: show the full code block, not the stacked line-highlight step clones */
+    html.print-pdf .reveal pre code.fragment { display: none !important; }
+    html.print-pdf .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    /* Build challenge (rules + 15-min countdown) */
+    .ch-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 26px; }
+    .ch-grid .pc { display: flex; flex-direction: column; gap: 10px; min-height: 300px; }
+    .ch-grid .pc h3 { font: 700 26px/1.1 var(--sans); margin: 0 0 4px; }
+    .ch-grid ol { margin: 0; padding-left: 22px; } .ch-grid ol li { margin-bottom: 8px; }
+    .ch-crit { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px dashed #9aa0a6; padding-bottom: 8px; }
+    .ch-crit em { font: 400 16px/1.4 var(--mono); font-style: normal; white-space: nowrap; }
+    .ch-prize { font: 700 30px/1.15 var(--sans); }
+    .ch-time { position: absolute; right: 44px; top: 34px; font: 300 22px/1 var(--mono); padding: 12px 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-yellow); }
+    .ch-clock { font: 300 230px/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin: 18px 0 10px; }
+    .ch-bar { height: 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; overflow: hidden; box-sizing: border-box; }
+    .ch-bar i { display: block; height: 100%; width: 100%; background: var(--g-green); transition: width .4s linear, background .4s; }
+    .ch-ctrl { display: flex; gap: 12px; margin-top: 26px; align-items: center; }
+    .ch-ctrl .btn.ghost { background: #fff; color: var(--ink); }
+    .ch-ctrl span { font: 400 17px/1.3 var(--mono); margin-left: 12px; }
+    .ch-warn .ch-clock { color: var(--g-red); }
+    .ch-warn .ch-bar i { background: var(--g-red); }
+    .ch-done .ch-clock { animation: chblink 1s steps(2) infinite; }
+    @keyframes chblink { 50% { opacity: .25; } }
+
+    /* ---------- Gemini Decisions deck ---------- */
+    .pc.stat { display: flex; flex-direction: column; gap: 8px; min-height: 160px; }
+    .pc.stat b { font: 700 54px/1 var(--sans); letter-spacing: -.02em; }
+    .pc.stat b small { font: 300 24px/1 var(--mono); margin-left: 6px; }
+    .pc.stat span { font-size: 19px; line-height: 1.3; }
+    .pc.qt { min-height: 300px; }
+    .pc.qt code, .pc.stat code { font: 400 18px/1 var(--mono); display: inline-block; padding: 6px 12px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; margin-bottom: 16px; }
+    .pc code { font-family: var(--mono); font-size: .9em; }
+    .chips.mm .chip, .chips.eco .chip { font-size: 22px; padding: 9px 22px; }
+    .rl { border-collapse: collapse; width: 100%; font: 400 17px/1.3 var(--mono); }
+    .rl th, .rl td { border-bottom: 2px solid var(--ink); padding: 7px 8px; text-align: left; }
+    .rl th { font-family: var(--sans); font-weight: 700; }
+    .rl tr:last-child td { border-bottom: 0; }
+    .lat { display: grid; gap: 12px; margin-top: 14px; }
+    .lat div { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 12px; font: 400 16px/1 var(--mono); }
+    .lat i { display: block; height: 26px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-blue); box-sizing: border-box; }
+    /* ---------- Agents CLI deck ---------- */
+    .lc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 1088px; }
+    .lc .pc { padding: 14px 16px 16px; font-size: 16px; line-height: 1.3; position: relative; }
+    .lc .pc > b { position: absolute; right: 14px; top: 10px; font: 700 26px/1 var(--sans); opacity: .35; }
+    .lc .pc h3 { font-size: 21px; margin: 0 0 4px; }
+    .lc code, .cm code { font-size: .92em; }
+    .cm { display: grid; grid-template-columns: 170px 1fr; width: 1088px; border: 2.5px solid var(--ink); border-radius: 18px; overflow: hidden; font-size: 18px; }
+    .cm > * { padding: 11px 16px; border-top: 1.5px solid #dadce0; }
+    .cm > b:first-child, .cm > b:first-child + span { border-top: 0; }
+    .cm > b { background: var(--paper); font: 500 16px/1.3 var(--mono); }
+    .cm-metrics { grid-template-columns: 380px 1fr; }
+    .sk { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 1088px; }
+    .sk .pc { padding: 14px 16px; font-size: 16px; line-height: 1.3; }
+    .sk .pc b { display: block; font: 700 19px/1.2 var(--mono); margin-bottom: 6px; }
+    .cm-metrics > b { font: 500 17px/1.3 var(--sans); }
+
+    /* ===================== Dark theme (DevFest 2026 dark template) ===================== */
+    :root { --dk-bg: #202124; --dk-card: #2a2b2f; --dk-line: #5f6368; --dk-text: #e8eaed; --dk-sub: #bdc1c6;
+      --r-background-color: var(--dk-bg); --r-main-color: var(--dk-text); --r-heading-color: #fff; --r-link-color: var(--h-blue); --r-link-color-hover: #8ab4f8; }
+    body, .reveal .slides section, .reveal .slides section.bg-blue, .reveal .slides section.bg-green,
+    .reveal .slides section.bg-yellow, .reveal .slides section.bg-red { background: var(--dk-bg); color: var(--dk-text); }
+    .nc > svg.nc-s { display: none; }
+    .reveal h1, .reveal h2, .reveal h3 { color: #fff; }
+    .reveal h1 { font-weight: 500; } .reveal h2 { font-weight: 400; }
+    .sub { color: var(--dk-sub); } .muted { color: #9aa0a6 !important; }
+    .eyebrow { color: var(--h-blue); }
+    .pc { background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 16px; color: var(--dk-text); }
+    .pc.blue { background: var(--dk-card); border-color: var(--h-blue); }
+    .pc.green { background: var(--dk-card); border-color: var(--h-green); }
+    .pc.yellow { background: var(--dk-card); border-color: var(--h-yellow); }
+    .pc.red { background: var(--dk-card); border-color: var(--h-red); }
+    .pc h3, .pc b { color: #fff; }
+    .tag { background: var(--h-yellow); color: #202124; border: 0; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; }
+    .tag.yellow { background: var(--h-blue); } .tag.red { background: var(--h-red); }
+    .pc code, .cm code, p code, li code, .lc code { background: #3c4043; color: var(--dk-text); padding: 1px 6px; border-radius: 6px; font-size: .9em; }
+    .cmd { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre code { color: var(--dk-text); }
+    .ico { stroke: var(--dk-text); }
+    .reveal ul.bl li::before { border-color: var(--dk-bg); }
+    .numbox { background: transparent; border: 2px solid var(--dk-line); color: #fff; }
+    .bg-blue .numbox { color: var(--h-blue); border-color: var(--h-blue); } .bg-green .numbox { color: var(--h-green); border-color: var(--h-green); }
+    .bg-yellow .numbox { color: var(--h-yellow); border-color: var(--h-yellow); } .bg-red .numbox { color: var(--h-red); border-color: var(--h-red); }
+    .dots i { border-color: var(--dk-bg); }
+    .reveal .slides section[class*="bg-"] .numbox { top: 92px !important; }
+    .reveal .slides section[class*="bg-"] svg.ico.abs { top: 260px !important; }
+    .reveal .slides section[class*="bg-"] .dots { top: 548px !important; }
+    .cm { border: 2px solid var(--dk-line); } .cm > * { border-top-color: #3c4043; } .cm > b { background: var(--dk-card); color: var(--dk-sub); }
+    .lc .pc > b { color: #fff; }
+    .badge { display: none; }
+    .ty-who p { color: var(--dk-sub); }
+    /* logos: GDG top-left, Build with Gemini top-right (as in the dark template) */
+    .corner-logos { display: none; }
+    .top-gdg { position: absolute; left: 44px; top: 22px; z-index: 3; display: flex; align-items: center; gap: 10px; font: 500 17px/1.15 var(--sans); color: var(--dk-text); pointer-events: none; }
+    .top-gdg img { height: 24px; width: auto; }
+    .top-gdg small { display: block; font: 400 12px/1.2 var(--sans); color: #9aa0a6; }
+    .reveal .top-bwg { position: absolute; right: 40px; top: 14px; height: 54px; width: auto; margin: 0; z-index: 3; pointer-events: none; }
+    /* cover */
+    .s-cover-dk .chev-rows { position: absolute; left: 50px; top: 92px; right: 0; display: grid; gap: 26px; overflow: hidden; }
+    .s-cover-dk .cr { display: flex; align-items: center; gap: 22px; white-space: nowrap; }
+    .s-cover-dk .ch { width: 46px; height: 78px; color: #fff; flex: none; }
+    .s-cover-dk .ch.cb { color: #1fa3a3; } .s-cover-dk .ch.cg { color: #1fa3a3; } .s-cover-dk .ch.cp { color: #1fa3a3; }
+    .s-cover-dk .w { font: 400 84px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover-dk .w.b { color: var(--h-blue); } .s-cover-dk .w.g { color: var(--h-green); } .s-cover-dk .w.p { color: var(--h-red); }
+    .s-cover-dk .cv-sub-dk { position: absolute; right: 56px; top: 456px; text-align: right; font: 400 28px/1.4 var(--sans); color: var(--dk-text); }
+    .s-cover-dk .cv-sub-dk b { display: block; font: 500 46px/1.2 var(--sans); color: #fff; margin-bottom: 6px; }
+    .s-cover-dk .cv-who-dk { position: absolute; left: 56px; bottom: 44px; display: flex; align-items: center; gap: 14px; }
+    .reveal .s-cover-dk .cv-who-dk img { width: 62px; height: 62px; border-radius: 50%; object-fit: cover; margin: 0; border: 2px solid var(--dk-line); }
+    .s-cover-dk .cv-who-dk span { font: 400 15px/1.35 var(--mono); color: var(--dk-sub); } .s-cover-dk .cv-who-dk b { display: block; font: 500 21px/1.2 var(--sans); color: #fff; }
+    /* agenda */
+    .s-agenda-dk .agd-title { position: absolute; left: 56px; top: 110px; font: 300 96px/1 var(--sans); color: #fff; }
+    .s-agenda-dk .agd-arrow { position: absolute; left: 20px; top: 300px; width: 330px; height: 330px; }
+    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 480px; top: 104px; width: 740px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .s-agenda-dk .agd-list li { display: flex; align-items: center; gap: 22px; padding: 18px 24px; background: var(--dk-card); border-radius: 10px; border-left: 6px solid var(--c); }
+    .s-agenda-dk .agd-list b { font: 500 34px/1 var(--sans); color: var(--c); width: 48px; }
+    .s-agenda-dk .agd-list strong { display: block; font: 500 30px/1.15 var(--sans); color: var(--c); }
+    .s-agenda-dk .agd-list span { display: block; font: 400 17px/1.3 var(--sans); color: var(--dk-sub); margin-top: 4px; }
+    /* coding-agent strip: agents-cli + Skills → Antigravity · Claude Code · Gemini CLI · Codex */
+    .ac-strip { position: relative; display: flex; align-items: center; gap: 18px; height: 64px; }
+    .reveal .ac-strip img { height: 58px; width: auto; position: relative; z-index: 1; }
+    .ac-strip .ac-name { font: 500 30px/1 var(--mono); color: #202124; background: #e8eaed; padding: 6px 12px; border-radius: 8px; position: relative; z-index: 1; }
+    .ac-strip .ac-plus { font: 700 30px/1 var(--sans); color: var(--h-green); position: relative; z-index: 1; margin-right: 14px; }
+    .ac-strip .ac-arrow { flex: 1; align-self: stretch; position: relative; display: flex; align-items: center; justify-content: space-evenly; padding-right: 60px; }
+    .ac-strip .ac-arrow::before { content: ""; position: absolute; left: 0; right: 26px; top: 50%; height: 18px; transform: translateY(-50%); background: #4a4b4f; }
+    .ac-strip .ac-arrow::after { content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%); border: 26px solid transparent; border-left: 28px solid #4a4b4f; border-right: 0; }
+    .ac-strip .ac-arrow figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; z-index: 1; }
+    .ac-strip .ac-arrow figcaption { font: 400 12px/1 var(--mono); color: var(--dk-sub); }
+    /* Gemini Enterprise Agent Platform */
+    .gp { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 1088px; }
+    .gp .pc { --c: var(--h-blue); border-top: 6px solid var(--c); padding: 18px 20px; height: 370px; display: flex; flex-direction: column; gap: 14px; }
+    .gp .pc.green { --c: var(--h-green); } .gp .pc.yellow { --c: var(--h-yellow); } .gp .pc.red { --c: var(--h-red); }
+    .gp-h { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .gp-h i { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--c); color: #202124; display: grid; place-items: center; font: 500 20px/1 var(--sans); font-style: normal; }
+    .gp-h b { display: block; font: 500 28px/1.05 var(--sans); color: var(--c) !important; }
+    .gp-h span { display: block; font: 400 15px/1.3 var(--sans); color: var(--dk-sub); margin-top: 3px; }
+    .gp-it { font-size: 17px; line-height: 1.3; display: flex; align-items: flex-start; gap: 10px; min-height: 40px; }
+    .gp-it::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c); margin-top: 6px; }
+    .gp-key { font: 500 16px/1.2 var(--sans); text-align: center; padding: 10px 12px; border: 2px solid var(--c); border-radius: 999px; color: #fff; background: color-mix(in srgb, var(--c) 18%, transparent); }
+    .gp-pills { display: flex; gap: 12px; }
+    .gp-pills span { font: 500 17px/1 var(--sans); padding: 9px 20px; border-radius: 999px; color: #fff; }
+    /* architecture: agents-cli covers the whole stack */
+    .arch { position: relative; width: 1088px; height: 412px; }
+    .arch > svg.arch-l { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .arch-l path { fill: none; stroke: #9aa0a6; stroke-width: 2; }
+    .arch-l marker path { fill: #e8eaed; stroke: none; }
+    .arch .bx { position: absolute; box-sizing: border-box; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; padding: 8px 12px; }
+    .arch .bx > h4 { margin: 0 0 6px; font: 500 17px/1.2 var(--sans); color: #fff; }
+    .arch .it { display: flex; align-items: center; gap: 10px; box-sizing: border-box; border: 1.5px solid #80868b; border-radius: 8px; padding: 6px 10px; font: 400 14px/1.25 var(--sans); color: var(--dk-text); background: #202124; }
+    .arch .it + .it { margin-top: 6px; }
+    .arch .it i { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--h-blue)); }
+    .arch .row { display: flex; gap: 6px; } .arch .row .it { flex: 1; margin: 0; }
+    .arch .user { position: absolute; left: 30px; top: 70px; width: 80px; text-align: center; font: 500 17px/1 var(--sans); color: #fff; }
+    .arch .user svg { display: block; width: 64px; height: 64px; margin: 8px auto 0; }
+    .s-agenda-dk .c1 { --c: var(--h-blue); } .s-agenda-dk .c2 { --c: var(--h-green); } .s-agenda-dk .c3 { --c: var(--h-yellow); } .s-agenda-dk .c4 { --c: var(--h-red); }
+  </style>
+  <style>
+    /* ---------- Hermes deck extras ---------- */
+    .hx-arch { position: relative; width: 1088px; height: 440px; }
+    .hx-arch .pc { position: absolute; padding: 14px 18px; }
+    .hx-arch .pc h3 { font-size: 22px; margin-bottom: 6px; }
+    .hx-arch .pc p { font-size: 16px; line-height: 1.4; }
+    .hx-user { left: 0; top: 40px; width: 230px; }
+    .hx-inst { left: 306px; top: 10px; width: 500px; height: 190px; }
+    .hx-sup { font: 400 15px/1.3 var(--mono); color: var(--dk-sub); margin: 4px 0 12px; }
+    .hx-sup b { color: var(--h-blue); font-weight: 500; }
+    .hx-row { display: flex; gap: 12px; }
+    .hx-box { flex: 1; border: 1.5px solid #80868b; border-radius: 10px; padding: 14px 10px; text-align: center; font: 500 17px/1.35 var(--sans); background: #202124; }
+    .hx-box.hy { border-color: var(--h-yellow); border-style: dashed; font-weight: 400; font-size: 15px; }
+    .hx-gcs { left: 886px; top: 10px; width: 202px; height: 190px; }
+    .hx-vx { left: 306px; top: 228px; width: 240px; }
+    .hx-sm { left: 566px; top: 228px; width: 240px; }
+    .hx-ln { position: absolute; fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .hx-cap { position: absolute; left: 820px; top: 110px; width: 260px; font: 400 14px/1.3 var(--mono); color: var(--dk-sub); }
+    .reveal pre code.hljs { color: var(--dk-text); }
+    .grid > * { min-width: 0; }
+    .reveal ol.hx-steps { list-style: none; margin: 0; padding: 0; width: 470px; flex: none; display: grid; gap: 8px; }
+    .hx-steps li { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; font-size: 16px; line-height: 1.35; }
+    .hx-steps li code { padding: 0 4px; }
+    .hx-steps li b { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--h-yellow); color: var(--h-yellow); display: grid; place-items: center; font: 500 16px/1 var(--sans); }
+    .hx-flags { flex: 1; display: grid; gap: 12px; }
+    .hx-flags .pc { padding: 12px 16px; font-size: 16px; }
+    .hx-flags .pc b { display: block; font: 500 15px/1.3 var(--mono); margin-bottom: 4px; }
+    /* ---------- Hermes cover: round speaker photo ---------- */
+    .s-cover-dk.hx-cover .chev-rows { top: 104px; right: auto; width: 730px; gap: 16px; -webkit-mask-image: linear-gradient(90deg, #000 78%, transparent); mask-image: linear-gradient(90deg, #000 78%, transparent); }
+    .s-cover-dk.hx-cover .ch { width: 38px; height: 66px; }
+    .s-cover-dk.hx-cover .cr { gap: 18px; }
+    .s-cover-dk.hx-cover .w { font-size: 72px; }
+    .hx-cover .hx-title { position: absolute; left: 56px; top: 400px; width: 700px; }
+    .hx-cover .hx-title b { display: block; font: 500 46px/1.15 var(--sans); color: #fff; letter-spacing: -.01em; }
+    .hx-cover .hx-title span { display: block; font: 400 22px/1.4 var(--sans); color: var(--dk-sub); margin-top: 12px; }
+    .hx-cover .hx-chips { position: absolute; left: 56px; top: 600px; display: flex; gap: 10px; }
+    .hx-cover .hx-chips i { font: 400 15px/1 var(--mono); font-style: normal; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .hx-cover .hx-orbit { position: absolute; left: 800px; top: 76px; width: 420px; height: 420px; border-radius: 50%; border: 2px dashed #5f6368; box-sizing: border-box; }
+    .hx-cover .hx-orbit i { position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--dk-bg); }
+    .hx-cover .hx-ring { position: absolute; left: 836px; top: 112px; width: 348px; height: 348px; border-radius: 50%; padding: 9px; box-sizing: border-box; background: conic-gradient(from -45deg, var(--h-blue) 0 25%, var(--h-red) 0 50%, var(--h-yellow) 0 75%, var(--h-green) 0 100%); box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+    .hx-cover .hx-ring > div { width: 100%; height: 100%; border-radius: 50%; padding: 7px; box-sizing: border-box; background: var(--dk-bg); }
+    .reveal .hx-cover .hx-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; margin: 0; }
+    .hx-cover .hx-who { position: absolute; left: 790px; top: 520px; width: 440px; text-align: center; }
+    .hx-cover .hx-who b { display: block; font: 500 30px/1.2 var(--sans); color: #fff; }
+    .hx-cover .hx-who span { display: inline-block; margin-top: 10px; font: 400 15px/1 var(--mono); color: var(--dk-sub); padding: 8px 16px; border: 1.5px solid var(--dk-line); border-radius: 999px; }
+  </style>
+  <style>
+    /* ---------- EmbeddingGemma deck ---------- */
+    .ic { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; vertical-align: middle; }
+    .m-t { color: var(--h-blue); } .m-i { color: var(--h-green); } .m-a { color: var(--h-red); } .m-v { color: var(--h-yellow); }
+    .flow .node .ic { display: block; margin: 0 auto 8px; width: 34px; height: 34px; }
+    .s-agenda-dk ol.eg-agenda { top: 70px; gap: 12px; }
+    .s-agenda-dk .eg-agenda li { padding: 14px 24px; }
+    /* problem */
+    .eg-prob { display: flex; gap: 24px; width: 1088px; }
+    .eg-src { width: 320px; flex: none; display: grid; gap: 10px; align-content: start; }
+    .eg-srcitem { display: flex; align-items: center; gap: 12px; padding: 11px 14px; border: 2px solid var(--dk-line); border-radius: 12px; background: var(--dk-card); font-size: 18px; }
+    .eg-srcitem.m-t, .eg-srcitem.m-i, .eg-srcitem.m-a, .eg-srcitem.m-v { color: var(--dk-text); } .eg-srcitem .ic { color: inherit; }
+    .eg-src .m-i .ic { color: var(--h-green); } .eg-src .m-a .ic { color: var(--h-red); } .eg-src .m-v .ic { color: var(--h-yellow); } .eg-src .m-t .ic { color: var(--h-blue); }
+    .eg-paths { flex: 1; display: grid; gap: 20px; }
+    .eg-path { border: 2px solid var(--h-red); border-radius: 16px; padding: 18px 20px; background: var(--dk-card); }
+    .eg-path.ok { border-color: var(--h-green); }
+    .eg-path p { font-size: 17px; color: var(--dk-sub); margin-top: 12px; }
+    .eg-chain { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; }
+    .eg-chain i { font: 400 15px/1 var(--mono); font-style: normal; padding: 9px 12px; border-radius: 10px; border: 1.5px dashed #80868b; }
+    .eg-chain i.t { border-style: solid; border-color: var(--h-blue); color: #fff; }
+    .eg-chain em { font-style: normal; font-size: 22px; color: var(--dk-sub); }
+    /* embedding concept */
+    .eg-items { width: 250px; flex: none; display: grid; gap: 8px; }
+    .eg-items div { display: flex; align-items: center; gap: 10px; padding: 8px 12px; border-radius: 10px; background: var(--dk-card); border: 1.5px solid var(--dk-line); font-size: 16px; }
+    .eg-items div span, .eg-items div { color: var(--dk-text); } .eg-items .ic { color: inherit; }
+    .eg-items .m-t .ic { color: var(--h-blue); } .eg-items .m-i .ic { color: var(--h-green); } .eg-items .m-a .ic { color: var(--h-red); } .eg-items .m-v .ic { color: var(--h-yellow); }
+    .eg-enc { width: 220px; flex: none; text-align: center; padding: 20px 14px; border: 2px solid var(--h-blue); border-radius: 16px; background: var(--dk-card); }
+    .eg-enc b { display: block; font-size: 22px; margin-bottom: 12px; }
+    .eg-enc code { display: block; font: 400 13px/1.4 var(--mono); color: var(--h-blue); }
+    .eg-enc span { display: block; font-size: 14px; color: var(--dk-sub); margin-top: 8px; }
+    .eg-plot { width: 540px; height: 366px; flex: none; margin-left: auto; }
+    .eg-clu { fill: none; stroke: #80868b; stroke-width: 2; stroke-dasharray: 6 6; }
+    .eg-lbl { font: 500 18px var(--sans); fill: #fff; }
+    .eg-pt { font: 400 14px var(--sans); fill: var(--dk-text); }
+    .eg-note { font: 400 13px var(--mono); fill: var(--dk-sub); }
+    .eg-far { stroke: #9aa0a6; stroke-width: 1.5; stroke-dasharray: 3 5; }
+    /* facts */
+    .eg-facts .pc { padding: 18px 20px; }
+    .eg-facts em { display: block; font: 500 40px/1 var(--sans); font-style: normal; color: #fff; }
+    .eg-facts b { display: block; font: 400 15px/1 var(--mono); color: var(--dk-sub); margin: 6px 0 10px; }
+    .eg-facts span { display: block; font-size: 16px; line-height: 1.4; }
+    /* shared space */
+    .eg-space { display: flex; align-items: center; gap: 0; width: 1088px; height: 330px; }
+    .eg-ins { width: 210px; flex: none; display: grid; gap: 18px; }
+    .eg-ins div { display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 12px; background: var(--dk-card); border: 2px solid currentColor; font-size: 17px; }
+    .eg-wires { width: 70px; height: 300px; flex: none; fill: none; stroke: #9aa0a6; stroke-width: 2.5; }
+    .eg-model { width: 300px; flex: none; padding: 16px 18px; border: 2px solid var(--h-green); border-radius: 16px; background: var(--dk-card); }
+    .eg-model b { display: block; font-size: 22px; margin-bottom: 12px; }
+    .eg-encs { display: grid; gap: 8px; }
+    .eg-encs span { font: 400 14px/1 var(--mono); padding: 9px 10px; border: 1.5px solid currentColor; border-radius: 8px; }
+    .eg-model small { display: block; margin-top: 12px; font-size: 13px; color: var(--dk-sub); }
+    .eg-ball { width: 330px; height: 330px; flex: none; margin-left: auto; }
+    /* modular bars */
+    .eg-bars { display: grid; gap: 14px; width: 1088px; }
+    .eg-bars > div { display: flex; align-items: center; gap: 16px; }
+    .eg-bars b { width: 150px; flex: none; font-size: 18px; }
+    .eg-bars > div > div { display: flex; flex: 1; }
+    .eg-bars i { display: block; height: 44px; box-sizing: border-box; border: 2px solid currentColor; background: color-mix(in srgb, currentColor 22%, transparent); font: 400 14px/40px var(--mono); font-style: normal; padding-left: 10px; white-space: nowrap; overflow: hidden; }
+    .eg-bars i + i { border-left: none; }
+    .eg-bars i:first-child { border-radius: 10px 0 0 10px; } .eg-bars i:last-child { border-radius: 0 10px 10px 0; } .eg-bars i:only-child { border-radius: 10px; }
+    .eg-bars em { width: 70px; text-align: right; font: 500 20px/1 var(--sans); font-style: normal; color: #fff; }
+    /* inputs */
+    .eg-in { padding: 16px 20px; }
+    .eg-in h3 { display: flex; align-items: center; gap: 10px; font-size: 22px; margin-bottom: 6px; }
+    .eg-in p { font-size: 16px; line-height: 1.4; }
+    .eg-tok { display: flex; align-items: flex-end; gap: 8px; margin: 10px 0 6px; height: 34px; }
+    .eg-tok i { display: block; font: 400 12px/1 var(--mono); font-style: normal; text-align: center; padding: 8px 0; border-radius: 6px; border: 1.5px solid var(--h-green); color: var(--h-green); }
+    .eg-frames { display: flex; gap: 6px; align-items: center; margin-top: 10px; }
+    .eg-frames i { width: 34px; height: 24px; border-radius: 4px; border: 1.5px solid var(--h-yellow); background: rgba(255,212,39,.12); }
+    .eg-frames span { font: 400 12px var(--mono); color: var(--dk-sub); margin-left: 6px; }
+    .eg-wave { width: 100%; height: 40px; margin-top: 10px; fill: none; stroke: var(--h-red); stroke-width: 2; }
+    /* MRL */
+    .eg-mrl { display: grid; gap: 12px; width: 1088px; }
+    .eg-mrl > div { display: grid; grid-template-columns: 70px 500px 170px 1fr; align-items: center; gap: 14px; }
+    .eg-mrlh span { font: 400 13px/1 var(--mono); color: var(--dk-sub); }
+    .eg-mrl b { font: 500 26px/1 var(--sans); color: #fff; }
+    .eg-mrl i { display: block; height: 34px; border-radius: 8px; background: linear-gradient(90deg, var(--h-blue), var(--h-green) 60%, var(--h-yellow)); background-size: 480px 100%; }
+    .eg-mrl > div > span { font-size: 16px; }
+    .eg-mrl > div > span:nth-of-type(1) { font: 400 15px var(--mono); color: var(--dk-sub); }
+    /* scores */
+    .eg-scores { flex: 1; }
+    .eg-scores > div { padding: 12px 14px; border: 1.5px solid var(--dk-line); border-radius: 12px; background: var(--dk-card); margin-bottom: 10px; }
+    .eg-scores span { display: flex; align-items: center; gap: 8px; font-size: 15px; }
+    .eg-scores b { display: block; font-size: 15px; font-weight: 400; color: var(--dk-sub); margin: 4px 0 8px; }
+    .eg-scores i { display: block; font: 500 14px/24px var(--mono); font-style: normal; color: #202124; padding-left: 8px; width: var(--w); border-radius: 6px; background: var(--h-blue); }
+    /* interleaved strip */
+    .eg-inter { display: flex; align-items: center; gap: 10px; margin-top: 22px; width: 1088px; flex-wrap: wrap; }
+    .eg-inter span { display: flex; align-items: center; gap: 8px; padding: 10px 14px; border-radius: 10px; border: 2px solid currentColor; font-size: 16px; background: var(--dk-card); }
+    .eg-inter em { font-style: normal; font-size: 26px; color: var(--dk-sub); }
+    .eg-inter b { padding: 10px 18px; border-radius: 999px; background: var(--h-green); color: #202124; font-size: 17px; }
+    /* architecture */
+    .eg-arch { position: relative; width: 1088px; height: 400px; }
+    .eg-lane { position: absolute; left: 0; font: 400 13px/1 var(--mono); color: var(--dk-sub); letter-spacing: .04em; }
+    .eg-arch .eg-b { position: absolute; width: 192px; height: 100px; padding: 12px 14px; box-sizing: border-box; z-index: 1; }
+    .eg-b > b { display: flex; align-items: center; gap: 6px; font-size: 16px; margin-bottom: 6px; white-space: nowrap; }
+    .eg-b > span { display: block; font-size: 13.5px; line-height: 1.35; color: var(--dk-sub); }
+    .eg-b span i { font-style: normal; }
+    .eg-arch .eg-db { height: 84px; border-color: var(--h-blue); }
+    .eg-arch .eg-note2 { position: absolute; width: 384px; height: 100px; padding: 12px 16px; box-sizing: border-box; border-style: dashed; }
+    .eg-note2 > b { display: block; font-size: 16px; margin-bottom: 6px; } .eg-note2 > span { display: block; font-size: 15px; line-height: 1.45; color: var(--dk-text); }
+    .eg-arr { position: absolute; inset: 0; width: 1088px; height: 400px; fill: none; stroke: var(--dk-text); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    /* hits */
+    .eg-hits { flex: 1; }
+    .eg-hits > div { display: flex; align-items: center; gap: 12px; padding: 9px 14px; margin-bottom: 8px; border-radius: 10px; border: 1.5px solid currentColor; background: var(--dk-card); }
+    .eg-hits b { font: 500 16px var(--mono); color: #fff; }
+    .eg-hits span { font: 400 14px var(--mono); color: var(--dk-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    /* worked example */
+    .eg-ex { width: 1088px; }
+    .eg-exq { width: 520px; margin: 0 auto; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 14px 20px; font-size: 21px; }
+    .eg-exw { display: block; width: 1088px; height: 50px; fill: none; stroke: #9aa0a6; stroke-width: 2.5; }
+    .eg-ev { padding: 14px 16px; }
+    .eg-thumb { height: 74px; margin-bottom: 10px; }
+    .eg-thumb svg { height: 74px; width: auto; fill: none; stroke: currentColor; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .eg-ev.green .eg-thumb { color: var(--h-green); } .eg-ev.yellow .eg-thumb { color: var(--h-yellow); } .eg-ev.red .eg-thumb { color: var(--h-red); }
+    .eg-ev b { display: block; font-size: 18px; } .eg-ev span { display: block; font-size: 15px; color: var(--dk-sub); margin: 4px 0 8px; } .eg-ev em { font: 400 14px var(--mono); font-style: normal; }
+    .eg-ans { margin-top: 18px; padding: 14px 18px; font-size: 17px; line-height: 1.45; border-color: var(--h-yellow); }
+    .eg-ans b { display: inline-flex; align-items: center; gap: 6px; margin-right: 6px; }
+    /* knobs */
+    .eg-knobs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 14px; width: 1088px; }
+    .eg-knobs .pc { padding: 16px; height: 330px; }
+    .eg-knobs em { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 2px solid currentColor; font: 500 17px/1 var(--sans); font-style: normal; margin-bottom: 12px; color: #fff; }
+    .eg-knobs b { display: block; font-size: 20px; margin-bottom: 8px; }
+    .eg-knobs span { font-size: 15.5px; line-height: 1.45; }
+  </style>
+</head>
+
+<body>
+  <!-- line-icon sprite (DevFest template style: 3px ink outlines, pastel fills) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 200 220"><path d="M100 8 L188 112 H138 V212 H62 V112 H12 Z" fill="var(--p-yellow)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-scallop" viewBox="0 0 240 40"><path d="M4 36 A36 30 0 0 1 80 36 A36 30 0 0 1 160 36 A36 30 0 0 1 236 36" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><ellipse cx="32" cy="32" rx="12" ry="28"/><path d="M4 32h56M9 18h46M9 46h46"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 120 90"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M2 2l20 20M8.5 16.4a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.3-1.7M2 8.8a15 15 0 0 1 4.2-2.7M22 8.8A15 15 0 0 0 10.7 5M12 20h.01"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18M7 6h1v4M16.7 13.9l.7.7-2.8 2.8"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="eg-text" viewBox="0 0 24 24"><path d="M4 6h16M4 11h16M4 16h10"/></symbol>
+    <symbol id="eg-img" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="2"/><path d="M21 17l-5-5-9 8"/></symbol>
+    <symbol id="eg-aud" viewBox="0 0 24 24"><path d="M3 12h1M7 8v8M11 4v16M15 9v6M19 6v12M22 12h-1"/></symbol>
+    <symbol id="eg-vid" viewBox="0 0 24 24"><rect x="2" y="5" width="15" height="14" rx="2"/><path d="M17 10l5-3v10l-5-3z"/></symbol>
+    <symbol id="eg-doc" viewBox="0 0 24 24"><path d="M14 3H6a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V8z"/><path d="M14 3v5h5M8 13h8M8 17h5"/></symbol>
+    <symbol id="eg-q" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-5-5"/></symbol>
+    <symbol id="eg-spark" viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></symbol>
+    <symbol id="eg-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-next" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></symbol>
+  </svg>
+
+  <!-- Slide controls (shopio-style): progress · ‹ n/N › · overview · fullscreen · notes · export -->
+  <div id="progress"></div>
+  <div id="ctrl">
+    <button id="bPrev" title="Previous (←)">‹</button>
+    <span class="cnt" id="cnt" title="Slide list">1 / 16</span>
+    <button id="bNext" title="Next (→)">›</button>
+    <button id="bOv" title="All slides (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+    <button id="bFs" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    <button id="bNotes" title="Speaker notes (N / S)"><svg viewBox="0 0 24 24"><path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg></button>
+    <button id="bPdf" title="Export PDF (E = this slide, Shift+E = all)" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg></button>
+  </div>
+  <div id="menu"></div>
+  <div id="ov"><div class="ovh"><span>All slides</span><button id="ovX" title="Close (Esc)">✕</button></div><div class="ovg"></div></div>
+  <div id="exportMenu" role="menu">
+    <button role="menuitem" data-export="all"><span>All slides<span class="sub">PDF of every slide</span></span><kbd>Shift+E</kbd></button>
+    <button role="menuitem" data-export="slide"><span>This slide<span class="sub" id="exportCur">PDF of the current slide</span></span><kbd>E</kbd></button>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Multimodal RAG with EmbeddingGemma 2">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Embedding</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Gemma 2</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Multimodal RAG</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Build Multimodal RAG<br>with EmbeddingGemma 2</b><span>Search text, images, audio and video in one vector space</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-blue)">Open · Apache 2.0</i><i style="--c:var(--h-green)">740M params</i><i style="--c:var(--h-red)">Runs locally</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:-4px; top:250px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • หัวข้อวันนี้: สร้าง Multimodal RAG ด้วย EmbeddingGemma 2 • ความรู้ในองค์กรไม่ได้มีแค่ข้อความ มีทั้งสไลด์ รูป คู่มือ PDF เสียงประชุม วิดีโอสอนงาน • EmbeddingGemma 2 เป็นโมเดล embedding แบบ open ของ Google ที่เอาทุกสื่อมาอยู่ใน vector space เดียวกัน และรันบนเครื่องเราเองได้</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list eg-agenda">
+          <li class="c1"><b>01</b><div><strong>Why multimodal RAG?</strong><span>Knowledge lives in slides, photos, calls and videos</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Meet EmbeddingGemma 2</strong><span>One vector space · modular encoders · Matryoshka</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Use it in Python</strong><span>sentence-transformers: text, image, audio, video</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Build the RAG pipeline</strong><span>Index → retrieve → generate, with a worked example</span></div></li>
+          <li class="c1"><b>05</b><div><strong>Tune &amp; ship</strong><span>Design choices, gotchas, Gemini Embedding 2</span></div></li>
+        </ol>
+        <aside class="notes">5 ช่วง: (1) ทำไมต้อง multimodal RAG (2) รู้จัก EmbeddingGemma 2 (3) ใช้งานใน Python ทีละสื่อ (4) สร้าง RAG pipeline ครบ 3 ขั้น พร้อมตัวอย่าง (5) เลือกค่าต่าง ๆ ข้อควรระวัง และเทียบกับ Gemini Embedding 2</aside>
+      </section>
+
+      <!-- Section 01 -->
+      <section class="bg-blue" data-title="01 · Why multimodal RAG?">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Why multimodal<br>RAG?</h1>
+            <p class="sub" style="margin-top:28px">Your knowledge is not<br>only text</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • ทำไมต้อง multimodal RAG</aside>
+      </section>
+
+      <!-- RAG refresher -->
+      <section data-title="RAG in one picture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Refresher</div>
+            <h2 style="margin-bottom:12px">RAG = Retrieval-Augmented Generation</h2>
+            <p class="sub" style="font-size:20px; margin-bottom:30px">Find the right pieces first, then let the model answer from them</p>
+            <div class="flow" style="width:1088px">
+              <div class="pc blue node fragment"><svg class="ic m-t"><use href="#eg-q"/></svg><b>1 · Question</b>"How do I descale the X200?"</div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc green node fragment"><svg class="ic m-i"><use href="#eg-db"/></svg><b>2 · Retrieve</b>Top-k closest items from a vector index</div>
+              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
+              <div class="pc yellow node fragment"><svg class="ic m-v"><use href="#eg-spark"/></svg><b>3 · Generate</b>LLM answers using only those items</div>
+            </div>
+            <div class="grid g3 fragment" style="width:1088px; gap:16px; margin-top:28px">
+              <div class="pc"><b>Fresh</b><br>Answers use today's documents, not training data</div>
+              <div class="pc"><b>Grounded</b><br>Fewer made-up answers, and you can cite sources</div>
+              <div class="pc"><b>Private</b><br>Your data stays in your index</div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>✦ Key idea</b><span>Retrieval quality = embedding quality. If the right item is not retrieved, the LLM cannot use it.</span></div>
+        </div>
+        <aside class="notes">ทบทวน RAG: (1) ผู้ใช้ถาม (2) ค้นชิ้นข้อมูลที่ใกล้ที่สุดจาก vector index (3) ให้ LLM ตอบจากชิ้นข้อมูลเหล่านั้นเท่านั้น • ข้อดี: ข้อมูลใหม่ ตอบอิงแหล่งที่มา ข้อมูลอยู่ในระบบเรา • (คลิกสุดท้าย) หัวใจคือ embedding ถ้าค้นไม่เจอ LLM ก็ใช้ไม่ได้</aside>
+      </section>
+
+      <!-- The problem -->
+      <section data-title="Text-only RAG is blind">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">The problem</div>
+            <h2 style="margin-bottom:24px">Text-only RAG is blind to most of your data</h2>
+            <div class="eg-prob">
+              <div class="eg-src">
+                <span class="tag">Your knowledge base</span>
+                <div class="eg-srcitem m-i"><svg class="ic"><use href="#eg-doc"/></svg>Manuals with diagrams</div>
+                <div class="eg-srcitem m-i"><svg class="ic"><use href="#eg-img"/></svg>Slides, charts, photos</div>
+                <div class="eg-srcitem m-a"><svg class="ic"><use href="#eg-aud"/></svg>Support calls, meetings</div>
+                <div class="eg-srcitem m-v"><svg class="ic"><use href="#eg-vid"/></svg>How-to videos</div>
+                <div class="eg-srcitem m-t"><svg class="ic"><use href="#eg-text"/></svg>Wiki pages, FAQs</div>
+              </div>
+              <div class="eg-paths">
+                <div class="eg-path fragment">
+                  <span class="tag red">Old way · convert everything to text</span>
+                  <div class="eg-chain"><i>OCR</i><i>Captioning model</i><i>Speech-to-text</i><em>→</em><i class="t">Text embeddings</i></div>
+                  <p>Extra models to run · charts, layout, tone and visuals get lost · errors stack up</p>
+                </div>
+                <div class="eg-path ok fragment">
+                  <span class="tag yellow">Multimodal way · embed each item as it is</span>
+                  <div class="eg-chain"><i class="t">One multimodal embedding model</i><em>→</em><i class="t">One index</i></div>
+                  <p>Search a photo with words, a video with a question, a call with a sentence</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ความรู้ในองค์กรอยู่ในหลายรูปแบบ: คู่มือที่มีภาพ สไลด์ กราฟ รูป เสียงโทร วิดีโอสอน และข้อความ • (คลิก 1) วิธีเดิม: แปลงทุกอย่างเป็นข้อความก่อน ต้องใช้ OCR โมเดลบรรยายภาพ และถอดเสียง ต้องดูแลหลายโมเดล ข้อมูลภาพ กราฟ น้ำเสียงหายไป และความผิดพลาดสะสม • (คลิก 2) วิธีใหม่: ใช้โมเดล embedding ตัวเดียวแปลงทุกสื่อตรง ๆ ลง index เดียว ค้นรูปด้วยคำพูด ค้นวิดีโอด้วยคำถามได้</aside>
+      </section>
+
+      <!-- What is an embedding -->
+      <section data-title="What is an embedding?">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Concept</div>
+            <h2 style="margin-bottom:8px">What is an embedding?</h2>
+            <p class="sub" style="font-size:19px; margin-bottom:14px">A list of numbers that captures meaning. Similar meaning → nearby points.</p>
+            <div style="display:flex; align-items:center; gap:18px; width:1088px">
+              <div class="eg-items fragment" data-fragment-index="1">
+                <div class="m-t"><svg class="ic"><use href="#eg-text"/></svg>"a cat dozing"</div>
+                <div class="m-i"><svg class="ic"><use href="#eg-img"/></svg>cat photo</div>
+                <div class="m-v"><svg class="ic"><use href="#eg-vid"/></svg>cat video</div>
+                <div class="m-t"><svg class="ic"><use href="#eg-text"/></svg>"ocean waves"</div>
+                <div class="m-a"><svg class="ic"><use href="#eg-aud"/></svg>wave sound</div>
+                <div class="m-i"><svg class="ic"><use href="#eg-img"/></svg>beach photo</div>
+              </div>
+              <div class="eg-enc fragment" data-fragment-index="2"><b>Embedding<br>model</b><code>[0.12, -0.48, 0.07, … ]</code><span>768 numbers</span></div>
+              <svg class="eg-plot fragment" data-fragment-index="3" viewBox="0 0 560 380">
+                <rect x="1" y="1" width="558" height="378" rx="16" fill="#17181b" stroke="#5f6368" stroke-width="2"/>
+                <circle cx="160" cy="125" r="88" class="eg-clu"/>
+                <text x="160" y="28" class="eg-lbl" text-anchor="middle">cats</text>
+                <circle cx="120" cy="105" r="10" fill="#57caff"/><text x="120" y="80" class="eg-pt" text-anchor="middle">"a cat dozing"</text>
+                <circle cx="200" cy="115" r="10" fill="#5cdb6d"/><text x="214" y="140" class="eg-pt">cat photo</text>
+                <circle cx="150" cy="170" r="10" fill="#ffd427"/><text x="150" y="198" class="eg-pt" text-anchor="middle">cat video</text>
+                <circle cx="395" cy="265" r="92" class="eg-clu"/>
+                <text x="395" y="372" class="eg-lbl" text-anchor="middle">ocean</text>
+                <circle cx="360" cy="240" r="10" fill="#57caff"/><text x="360" y="218" class="eg-pt" text-anchor="middle">"ocean waves"</text>
+                <circle cx="440" cy="250" r="10" fill="#ff7daf"/><text x="452" y="232" class="eg-pt">wave sound</text>
+                <circle cx="395" cy="305" r="10" fill="#5cdb6d"/><text x="410" y="328" class="eg-pt">beach photo</text>
+                <path d="M128 112 L352 234" class="eg-far"/>
+                <text x="268" y="160" class="eg-note">far apart = different</text>
+                <text x="300" y="60" class="eg-note">close together = similar</text>
+              </svg>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">embedding คือชุดตัวเลข (ของ EmbeddingGemma 2 คือ 768 ตัว) ที่เก็บ "ความหมาย" ไว้ • (คลิก 1) ตัวอย่างข้อมูล 6 ชิ้น มีทั้งข้อความ รูป วิดีโอ เสียง • (คลิก 2) ผ่านโมเดล embedding ได้เวกเตอร์ออกมา • (คลิก 3) ถ้าวาดเป็นจุด ของที่ความหมายคล้ายกันจะอยู่ใกล้กัน กลุ่มแมว กลุ่มทะเล ไม่ว่าจะเป็นสื่อแบบไหน การค้นหาก็คือหาจุดที่อยู่ใกล้คำถามที่สุด (ภาพนี้ย่อจาก 768 มิติให้เหลือ 2 มิติเพื่ออธิบาย)</aside>
+      </section>
+
+      <!-- Section 02 -->
+      <section class="bg-green" data-title="02 · Meet EmbeddingGemma 2">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Meet<br>EmbeddingGemma 2</h1>
+            <p class="sub" style="margin-top:28px">Open, small, multimodal</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • รู้จัก EmbeddingGemma 2</aside>
+      </section>
+
+      <!-- Key facts -->
+      <section data-title="EmbeddingGemma 2 at a glance">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Released Oct 6, 2026 · google/embeddinggemma-2</div>
+            <h2 style="margin-bottom:24px">EmbeddingGemma 2 at a glance</h2>
+            <div class="grid g3 eg-facts" style="width:1088px; gap:16px">
+              <div class="pc blue fragment"><em>4</em><b>modalities</b><span>Text &amp; code, images &amp; visual documents, audio, video</span></div>
+              <div class="pc green fragment"><em>740M</em><b>parameters</b><span>Text 270M + vision 170M + audio 300M. Load only what you need.</span></div>
+              <div class="pc yellow fragment"><em>8,192</em><b>tokens</b><span>Shared by all inputs in one call (v1 had 2,048)</span></div>
+              <div class="pc red fragment"><em>768</em><b>dimensions</b><span>Matryoshka: cut to 512, 256 or 128</span></div>
+              <div class="pc fragment"><em>Apache 2.0</em><b>open weights</b><span>Built on the Gemma 4 decoder architecture</span></div>
+              <div class="pc fragment"><em>Local</em><b>runs anywhere</b><span>sentence-transformers, Transformers, vLLM, SGLang, MLX, Ollama, LM Studio, LiteRT</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพรวม: ออกวันที่ 6 ต.ค. 2026 ชื่อบน Hugging Face คือ google/embeddinggemma-2 • รองรับ 4 กลุ่มสื่อ: ข้อความและโค้ด รูปและเอกสารภาพเช่น PDF สไลด์ กราฟ เสียง วิดีโอ • 740M พารามิเตอร์ แบ่งเป็น text 270M, vision 170M, audio 300M โหลดเฉพาะส่วนที่ใช้ได้ • context 8,192 token ใช้ร่วมกันทุกสื่อ (รุ่นแรก 2,048) • ได้เวกเตอร์ 768 มิติ ตัดสั้นได้ • license Apache 2.0 ใช้ฟรีเชิงพาณิชย์ • รันได้หลาย runtime รวมถึงบนมือถือผ่าน LiteRT • Google รายงานว่า MTEB Code สูงกว่ารุ่นแรก 14%</aside>
+      </section>
+
+      <!-- One shared space -->
+      <section data-title="One shared vector space">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">The big idea</div>
+            <h2 style="margin-bottom:20px">Every modality lands in the same space</h2>
+            <div class="eg-space">
+              <div class="eg-ins">
+                <div class="m-t fragment" data-fragment-index="1"><svg class="ic"><use href="#eg-text"/></svg>Text &amp; code</div>
+                <div class="m-i fragment" data-fragment-index="1"><svg class="ic"><use href="#eg-img"/></svg>Image / PDF page</div>
+                <div class="m-a fragment" data-fragment-index="1"><svg class="ic"><use href="#eg-aud"/></svg>Audio</div>
+                <div class="m-v fragment" data-fragment-index="1"><svg class="ic"><use href="#eg-vid"/></svg>Video</div>
+              </div>
+              <svg class="eg-wires fragment" data-fragment-index="2" viewBox="0 0 80 300"><path d="M0 37 C40 37 40 150 80 150 M0 112 C40 112 40 150 80 150 M0 188 C40 188 40 150 80 150 M0 263 C40 263 40 150 80 150"/></svg>
+              <div class="eg-model fragment" data-fragment-index="2">
+                <b>EmbeddingGemma 2</b>
+                <div class="eg-encs"><span class="m-t">Text base · 270M</span><span class="m-i">Vision encoder · +170M</span><span class="m-a">Audio encoder · +300M</span></div>
+                <small>Gemma 4 decoder → mean pooling → normalize</small>
+              </div>
+              <svg class="eg-wires fragment" data-fragment-index="2" viewBox="0 0 60 300"><path d="M0 150 H52 M42 140 L54 150 L42 160"/></svg>
+              <svg class="eg-ball fragment" data-fragment-index="3" viewBox="0 0 330 330">
+                <circle cx="165" cy="165" r="155" fill="#17181b" stroke="#5f6368" stroke-width="2" stroke-dasharray="6 6"/>
+                <text x="165" y="40" text-anchor="middle" class="eg-lbl">one 768-d space</text>
+                <circle cx="95" cy="110" r="9" fill="#57caff"/><circle cx="120" cy="95" r="9" fill="#5cdb6d"/><circle cx="105" cy="140" r="9" fill="#ffd427"/>
+                <circle cx="240" cy="120" r="9" fill="#57caff"/><circle cx="255" cy="150" r="9" fill="#ff7daf"/>
+                <circle cx="200" cy="245" r="9" fill="#5cdb6d"/><circle cx="230" cy="230" r="9" fill="#ff7daf"/><circle cx="180" cy="215" r="9" fill="#57caff"/>
+                <circle cx="80" cy="235" r="9" fill="#ffd427"/><circle cx="110" cy="255" r="9" fill="#57caff"/>
+                <g class="fragment" data-fragment-index="4">
+                  <path d="M205 196 L200 245 M205 196 L230 230 M205 196 L180 215" stroke="#e8eaed" stroke-width="2" stroke-dasharray="4 4"/>
+                  <path d="M205 182 l4 10 11 1-8 7 3 11-10-6-10 6 3-11-8-7 11-1z" fill="#fff"/>
+                  <text x="165" y="300" text-anchor="middle" class="eg-pt">query "ocean waves at sunset"</text>
+                </g>
+              </svg>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>✦ So you can</b><span>compare text ↔ image, image ↔ audio, text ↔ video with one similarity score</span></div>
+        </div>
+        <aside class="notes">ไอเดียหลัก: (คลิก 1) ข้อมูล 4 แบบ (คลิก 2) เข้าโมเดลเดียว มี text base 270M เป็นแกน vision encoder กับ audio encoder ต่อเพิ่ม ผ่าน Gemma 4 decoder แล้ว mean pooling และ normalize (คลิก 3) ทุกอย่างไปอยู่ใน space 768 มิติเดียวกัน (คลิก 4) เวลาค้น คำถาม "ocean waves at sunset" จะอยู่ใกล้ทั้งรูปชายหาด เสียงคลื่น และข้อความเรื่องทะเล (คลิก 5) จึงเทียบข้ามสื่อได้ด้วยคะแนนเดียว</aside>
+      </section>
+
+      <!-- Modular encoders -->
+      <section data-title="Load only what you need">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Modular · one checkpoint</div>
+            <h2 style="margin-bottom:12px">Load only the encoders you need</h2>
+            <p class="sub" style="font-size:19px; margin-bottom:26px">Same weights, same vector space, four sizes</p>
+            <div class="eg-bars">
+              <div class="fragment"><b>Text only</b><div><i class="m-t" style="width:283px">Text 270M</i></div><em>270M</em></div>
+              <div class="fragment"><b>Text + vision</b><div><i class="m-t" style="width:283px">Text 270M</i><i class="m-i" style="width:178px">Vision 170M</i></div><em>440M</em></div>
+              <div class="fragment"><b>Text + audio</b><div><i class="m-t" style="width:283px">Text 270M</i><i class="m-a" style="width:315px">Audio 300M</i></div><em>570M</em></div>
+              <div class="fragment"><b>Full model</b><div><i class="m-t" style="width:283px">Text 270M</i><i class="m-i" style="width:178px">Vision 170M</i><i class="m-a" style="width:315px">Audio 300M</i></div><em>740M</em></div>
+            </div>
+            <div class="pc green fragment" style="width:1088px; margin-top:26px; box-sizing:border-box">Start with a <b>text-only</b> index. Later reload with vision or audio and add photos or calls to the <b>same index</b>. Old vectors stay valid, no re-embedding.</div>
+          </div>
+        </div>
+        <aside class="notes">จุดเด่นมาก: checkpoint เดียว โหลดได้ 4 แบบ • ข้อความอย่างเดียว 270M • ข้อความ+รูป/วิดีโอ 440M • ข้อความ+เสียง 570M • ครบทุกอย่าง 740M • ทุกแบบอยู่ใน vector space เดียวกัน • (คลิกสุดท้าย) เริ่มจาก index ข้อความก่อน วันหลังค่อยโหลด vision หรือ audio แล้วเพิ่มรูปหรือเสียงลง index เดิมได้ ไม่ต้องคำนวณเวกเตอร์เก่าใหม่ • ตัวเลขพารามิเตอร์มาจาก blog ของ Google</aside>
+      </section>
+
+      <!-- Inputs -->
+      <section data-title="What each input looks like">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Inputs · one 8,192-token budget per call</div>
+            <h2 style="margin-bottom:22px">How each input is read</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue fragment eg-in">
+                <h3><svg class="ic m-i"><use href="#eg-img"/></svg>Images &amp; documents</h3>
+                <p>Photos, PDF pages, slides, charts. Choose a visual token budget per call:</p>
+                <div class="eg-tok"><i style="width:22px">70</i><i style="width:34px">140</i><i style="width:52px">280</i><i style="width:80px">560</i><i style="width:120px">1120</i></div>
+                <p class="muted" style="font-size:14px">More tokens = more detail (small text, charts) but slower</p>
+              </div>
+              <div class="pc yellow fragment eg-in">
+                <h3><svg class="ic m-v"><use href="#eg-vid"/></svg>Video</h3>
+                <p>MP4 file or URL, or your own frames. Sampled at <b>1 frame/s</b> by default, up to <b>32 frames</b>, with timestamps.</p>
+                <div class="eg-frames"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><span>1 fps → max_frames</span></div>
+              </div>
+              <div class="pc red fragment eg-in">
+                <h3><svg class="ic m-a"><use href="#eg-aud"/></svg>Audio</h3>
+                <p>Raw speech or sound, read as <b>16 kHz mono</b>. File, URL or array.</p>
+                <svg viewBox="0 0 420 40" class="eg-wave"><path d="M0 20 Q10 4 20 20 T40 20 T60 20 Q70 0 80 20 T100 20 Q110 10 120 20 T140 20 Q150 2 160 20 T180 20 Q190 12 200 20 T220 20 Q230 0 240 20 T260 20 Q270 8 280 20 T300 20 Q310 3 320 20 T340 20 Q350 14 360 20 T380 20 Q390 6 400 20 T420 20"/></svg>
+              </div>
+              <div class="pc green fragment eg-in">
+                <h3><svg class="ic m-t"><use href="#eg-text"/></svg>Text, code &amp; mixed</h3>
+                <p>Text uses a task prompt (<code>SearchQuery</code> / <code>Document</code>). Mix media inside text with placeholders:</p>
+                <div class="cmd" style="font-size:13px">"Waterproof trail shoe. &lt;|image|&gt; Grip test: &lt;|video|&gt;"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ทุกสื่อใช้ token รวมกันไม่เกิน 8,192 ต่อการเรียกหนึ่งครั้ง • (คลิก 1) รูปและเอกสาร: เลือกงบ visual token ได้ 70, 140, 280, 560, 1120 มากขึ้นเห็นรายละเอียดมากขึ้น เช่น ตัวหนังสือเล็กในกราฟ แต่ช้าลง • (คลิก 2) วิดีโอ: ส่งไฟล์ MP4 หรือ URL ค่าเริ่มต้นดึง 1 เฟรมต่อวินาที เก็บสูงสุด 32 เฟรม พร้อม timestamp • (คลิก 3) เสียง: อ่านเป็น 16 kHz mono • (คลิก 4) ข้อความใช้ prompt ตามงาน และผสมสื่อในข้อความด้วย placeholder เช่น &lt;|image|&gt; &lt;|video|&gt; ได้ embedding เดียวของทั้งชิ้น เหมาะกับสินค้าที่มีทั้งคำอธิบาย รูป และวิดีโอ</aside>
+      </section>
+
+      <!-- Matryoshka -->
+      <section data-title="Matryoshka: smaller vectors">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Matryoshka Representation Learning (MRL)</div>
+            <h2 style="margin-bottom:12px">Cut the vector short, keep most of the quality</h2>
+            <p class="sub" style="font-size:19px; margin-bottom:24px">The most important information sits at the front of the vector</p>
+            <div class="eg-mrl">
+              <div class="eg-mrlh"><span>dims</span><span></span><span>1M vectors (bf16)</span><span>Quality vs full</span></div>
+              <div class="fragment"><b>768</b><i style="width:480px"></i><span>≈ 1.5 GB</span><span>Full. Best for multimodal &amp; visual docs</span></div>
+              <div class="fragment"><b>512</b><i style="width:320px"></i><span>≈ 1 GB</span><span>Also good when recall matters most</span></div>
+              <div class="fragment"><b>256</b><i style="width:160px"></i><span>≈ 0.5 GB</span><span>Most text quality · ~95% on image, video, speech</span></div>
+              <div class="fragment"><b>128</b><i style="width:80px"></i><span>≈ 250 MB</span><span>~90% text · ~75% media. Test on your data first.</span></div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>⚠ Rule</b><span>Queries and documents must use the same dimension. After truncating, normalize again.</span></div>
+        </div>
+        <aside class="notes">Matryoshka เหมือนตุ๊กตาแม่ลูกดก ข้อมูลสำคัญอยู่ด้านหน้าของเวกเตอร์ ตัดท้ายทิ้งได้ • 768 มิติ: 1 ล้านเวกเตอร์ใช้ราว 1.5 GB ดีที่สุดสำหรับงาน multimodal • 512: ราว 1 GB • 256: ประมาณ 1/3 ของพื้นที่ ข้อความยังดีเกือบเต็ม รูป วิดีโอ เสียงได้ราว 95% • 128: ราว 250 MB เล็กลง 6 เท่า ข้อความราว 90% แต่สื่ออื่นเหลือราว 75% ต้องทดสอบกับข้อมูลจริงก่อน • ตัวเลขคุณภาพเป็นค่าเทียบกับ 768 มิติจาก blog ของ Google ส่วน 512 และ 256 ผมคำนวณขนาดเอง • (คลิก) กฎ: query และเอกสารต้องใช้มิติเท่ากัน และ normalize ใหม่หลังตัด</aside>
+      </section>
+
+      <!-- Section 03 -->
+      <section class="bg-yellow" data-title="03 · Use it in Python">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Use it in<br>Python</h1>
+            <p class="sub" style="margin-top:28px">sentence-transformers,<br>a few lines per modality</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • ลงมือเขียนโค้ด ใช้ sentence-transformers</aside>
+      </section>
+
+      <!-- Install & load -->
+      <section data-title="Install &amp; load">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 1 · sentence-transformers v6.1.0+</div>
+            <h2 style="margin-bottom:20px">Install and load</h2>
+            <div class="cmd fragment" style="width:1088px; margin-bottom:18px; box-sizing:border-box">pip install -U "sentence-transformers[image,audio,video]" transformers</div>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <pre class="fragment" style="font-size:14px"><code class="language-python" data-trim>
+from sentence_transformers import SentenceTransformer
+
+# Full model: all modalities (740M parameters)
+MODEL_ID = "google/embeddinggemma-2"
+model = SentenceTransformer(MODEL_ID)
+
+print(model.device, model.dtype)
+# cuda:0 torch.bfloat16
+              </code></pre>
+              <pre class="fragment" style="font-size:14px"><code class="language-python" data-trim>
+# Text only (270M parameters)
+text_only_model = SentenceTransformer(
+    MODEL_ID,
+    config_kwargs={"vision_config": None,
+                   "audio_config": None},
+)
+
+# Text, images, and video (440M parameters)
+text_image_model = SentenceTransformer(
+    MODEL_ID,
+    config_kwargs={"audio_config": None},
+)
+              </code></pre>
+            </div>
+          </div>
+          <div class="ask fragment"><b>⚠ Precision</b><span>Activations do not work in float16. Use bfloat16 (default on supported GPUs) or float32.</span></div>
+        </div>
+        <aside class="notes">(คลิก 1) ติดตั้ง sentence-transformers รุ่น 6.1.0 ขึ้นไป พร้อม extras สำหรับรูป เสียง วิดีโอ • (คลิก 2) โหลดแบบเต็มด้วยชื่อ google/embeddinggemma-2 บน GPU จะเป็น bfloat16 • (คลิก 3) โหลดบางส่วนด้วย config_kwargs ตั้ง vision_config หรือ audio_config เป็น None • (คลิก 4) ข้อควรระวัง: ห้ามใช้ float16 จะได้ค่าผิด ใช้ bfloat16 หรือ float32 • คำสั่ง install ในหน้า notebook ต่างจาก blog เล็กน้อย ใช้ได้ทั้งคู่</aside>
+      </section>
+
+      <!-- Text search with prompts -->
+      <section data-title="Text search with task prompts">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 2 · Asymmetric retrieval</div>
+            <h2 style="margin-bottom:20px">Text: tell the model the task</h2>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; font-size:14px"><code class="language-python" data-trim>
+query = "What causes the northern lights?"
+document = ("The northern lights are caused by "
+            "charged particles from the sun...")
+
+# Embed using `prompt_name`
+query_emb = model.encode(query, prompt_name="SearchQuery")
+doc_emb = model.encode(document, prompt_name="Document")
+
+print(model.similarity(query_emb, doc_emb))
+              </code></pre>
+              <div style="flex:1; display:grid; gap:14px">
+                <div class="pc blue fragment"><b><code>SearchQuery</code></b><br>Short questions people type</div>
+                <div class="pc green fragment"><b><code>Document</code></b><br>The text chunks you store in the index</div>
+                <div class="pc yellow fragment"><b>Media: no prompt</b><br>Pass a dict like <code>{"image": path}</code></div>
+              </div>
+            </div>
+            <p class="muted fragment" style="font-size:17px; margin-top:22px">Questions and answers look different. Prompts move both into the right place in the space, so they match.</p>
+          </div>
+        </div>
+        <aside class="notes">ข้อความต้องบอกงานผ่าน prompt_name • คำถามใช้ SearchQuery เอกสารที่เก็บใน index ใช้ Document • ส่วนรูป เสียง วิดีโอไม่ต้องใส่ prompt ส่งเป็น dict เช่น {"image": path} • เหตุผล: คำถามกับคำตอบหน้าตาไม่เหมือนกัน prompt ช่วยให้ทั้งคู่ไปอยู่ตำแหน่งที่จับคู่กันได้ • model.similarity คำนวณความคล้าย เวกเตอร์ถูก normalize แล้ว</aside>
+      </section>
+
+      <!-- Cross-modal -->
+      <section data-title="Cross-modal search">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 3 · Images &amp; audio</div>
+            <h2 style="margin-bottom:20px">One text query, a photo and a sound</h2>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; font-size:14px"><code class="language-python" data-trim>
+# Cross-modal search: one text query against
+# a photo and a sound recording
+image_emb = model.encode({"image": "sunset_beach.jpg"})
+audio_emb = model.encode({"audio": "ocean_waves.wav"})
+query_emb = model.encode("ocean waves at sunset",
+                         prompt_name="SearchQuery")
+
+print(model.similarity(query_emb, image_emb))
+print(model.similarity(query_emb, audio_emb))
+
+# Higher detail for small text / charts
+emb = model.encode(
+    {"image": "chart.png"},
+    processing_kwargs={"image": {"max_soft_tokens": 1120}},
+)
+              </code></pre>
+              <div class="eg-scores fragment">
+                <p class="eyebrow" style="margin:0 0 10px">Scores from the Google notebook</p>
+                <div><span class="m-i"><svg class="ic"><use href="#eg-img"/></svg>Golden Gate photo</span><b>"San Francisco"</b><i style="--w:64%">0.641</i></div>
+                <div><span class="m-a"><svg class="ic"><use href="#eg-aud"/></svg>Spoken poem</span><b>"Roses are red, violets are blue."</b><i style="--w:88%">0.876</i></div>
+                <div><span class="m-v"><svg class="ic"><use href="#eg-vid"/></svg>Cat video</span><b>"a cat dozing"</b><i style="--w:69%">0.688</i></div>
+                <p class="muted" style="font-size:14px; margin-top:6px">Each was the best match among its candidate texts</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ค้นข้ามสื่อ: encode รูปและเสียงด้วย dict แล้วเทียบกับคำถามข้อความได้ทันที • ถ้ารูปมีตัวหนังสือเล็กหรือกราฟ เพิ่ม max_soft_tokens เป็น 1120 • (คลิก) ตัวอย่างคะแนนจริงจาก notebook ของ Google: รูปสะพาน Golden Gate กับคำว่า "San Francisco" ได้ 0.641 สูงสุดในตัวเลือก / เสียงอ่านกลอนกับข้อความเดียวกันได้ 0.876 / วิดีโอแมวกับ "a cat dozing" ได้ 0.688 • คะแนนใช้เทียบในชุดเดียวกัน ไม่ใช่เปอร์เซ็นต์ความถูกต้อง</aside>
+      </section>
+
+      <!-- Video + interleaved -->
+      <section data-title="Video &amp; mixed inputs">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 4 · Video and interleaved inputs</div>
+            <h2 style="margin-bottom:20px">Video, and many media in one vector</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <pre class="fragment" style="font-size:13px"><code class="language-python" data-trim>
+emb_video = model.encode(
+    {"video": "grip_test.mp4"},
+    processing_kwargs={
+        "video": {
+            "max_frames": 16,  # default 32
+            "fps": None,       # None: all up to max_frames
+            "overflow_strategy": "uniform",
+            "add_timestamps": True,
+        }
+    },
+)
+              </code></pre>
+              <pre class="fragment" style="font-size:13px"><code class="language-python" data-trim>
+# One embedding for a product listing
+# with text, photo, and video
+listing_emb = model.encode({
+    "text": "Waterproof trail shoe. <|image|> "
+            "Grip test on wet rock: <|video|>",
+    "image": "trail_shoe.jpg",
+    "video": "grip_test.mp4",
+})
+query_emb = model.encode("waterproof trail shoes",
+                         prompt_name="SearchQuery")
+print(model.similarity(query_emb, listing_emb))
+              </code></pre>
+            </div>
+            <div class="eg-inter fragment">
+              <span class="m-t">"Waterproof trail shoe."</span><span class="m-i"><svg class="ic"><use href="#eg-img"/></svg>photo</span><span class="m-t">"Grip test on wet rock:"</span><span class="m-v"><svg class="ic"><use href="#eg-vid"/></svg>video</span><em>→</em><b>1 vector</b>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">(คลิก 1) วิดีโอ: ปรับได้ว่าจะเก็บกี่เฟรม (ค่าเริ่มต้น 32) กี่เฟรมต่อวินาที ถ้าเฟรมเกินจะสุ่มแบบเว้นระยะเท่ากัน (uniform) หรือตัดท้าย (truncate) และใส่ timestamp ได้ • (คลิก 2) ผสมหลายสื่อเป็นเวกเตอร์เดียว ใช้ placeholder &lt;|image|&gt; &lt;|video|&gt; บอกตำแหน่งในข้อความ • (คลิก 3) ภาพรวม: ข้อความ รูป ข้อความ วิดีโอ รวมเป็น 1 เวกเตอร์ เหมาะกับสินค้า หน้าเว็บ หรือสไลด์ที่มีหลายสื่อ</aside>
+      </section>
+
+      <!-- Section 04 -->
+      <section class="bg-red" data-title="04 · Build the RAG pipeline">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Build the RAG<br>pipeline</h1>
+            <p class="sub" style="margin-top:28px">Index → retrieve → generate</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 4 • ประกอบเป็น RAG pipeline</aside>
+      </section>
+
+      <!-- Architecture -->
+      <section data-title="Multimodal RAG architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Architecture</div>
+            <h2 style="margin-bottom:16px">Multimodal RAG, end to end</h2>
+            <div class="eg-arch">
+              <span class="eg-lane" style="top:0">OFFLINE · index once</span>
+              <span class="eg-lane" style="top:262px">ONLINE · every question</span>
+              <div class="pc eg-b fragment" data-fragment-index="1" style="left:0; top:24px"><b>Sources</b><span><i class="m-t">docs</i> <i class="m-i">PDF pages</i> <i class="m-a">calls</i> <i class="m-v">videos</i></span></div>
+              <div class="pc eg-b fragment" data-fragment-index="1" style="left:224px; top:24px"><b>Chunk</b><span>PDF page → image<br>long video → short clips</span></div>
+              <div class="pc green eg-b fragment" data-fragment-index="1" style="left:448px; top:24px"><b>EmbeddingGemma 2</b><span>text: <code>Document</code><br>media: no prompt</span></div>
+              <div class="pc eg-b eg-db fragment" data-fragment-index="2" style="left:448px; top:150px"><b><svg class="ic"><use href="#eg-db"/></svg> Vector index</b><span>vector + item path + page / timestamp</span></div>
+              <div class="pc blue eg-b fragment" data-fragment-index="3" style="left:0; top:286px"><b>Question</b><span>"How do I descale the X200?"</span></div>
+              <div class="pc green eg-b fragment" data-fragment-index="3" style="left:224px; top:286px"><b>Embed query</b><span><code>SearchQuery</code></span></div>
+              <div class="pc eg-b fragment" data-fragment-index="3" style="left:448px; top:286px"><b>Top-k search</b><span>closest items, any modality</span></div>
+              <div class="pc yellow eg-b fragment" data-fragment-index="4" style="left:672px; top:286px"><b>Generate</b><span>multimodal LLM reads the retrieved media</span></div>
+              <div class="pc red eg-b fragment" data-fragment-index="4" style="left:896px; top:286px; width:192px"><b>Answer</b><span>with sources: page 14, video 01:20</span></div>
+              <svg class="eg-arr" viewBox="0 0 1088 400">
+                <g class="fragment" data-fragment-index="1"><path d="M192 74h28M416 74h28"/><path d="M212 66l8 8-8 8M436 66l8 8-8 8"/></g>
+                <g class="fragment" data-fragment-index="2"><path d="M544 124v22"/><path d="M536 138l8 8 8-8"/></g>
+                <g class="fragment" data-fragment-index="3"><path d="M192 336h28M416 336h28M544 282v-50"/><path d="M212 328l8 8-8 8M436 328l8 8-8 8M536 240l8-8 8 8"/></g>
+                <g class="fragment" data-fragment-index="4"><path d="M640 336h28M864 336h28"/><path d="M660 328l8 8-8 8M884 328l8 8-8 8"/></g>
+              </svg>
+              <div class="pc eg-note2 fragment" data-fragment-index="5" style="left:704px; top:24px"><b>Generator options</b><span>On-device: <b>Gemma 4 E2B</b><br>Cloud: <b>Gemini</b></span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">สถาปัตยกรรมครบวงจร • ด้านบน OFFLINE ทำครั้งเดียว: (คลิก 1) รวบรวมแหล่งข้อมูล แบ่งชิ้น เช่น PDF ทีละหน้าเป็นรูป วิดีโอตัดเป็นคลิป เสียงโทรตัดเป็นช่วง แล้ว embed ข้อความด้วย Document สื่ออื่นไม่ต้องมี prompt (คลิก 2) เก็บลง vector index พร้อม metadata เช่น path หน้า หรือ timestamp • ด้านล่าง ONLINE ทุกครั้งที่ถาม: (คลิก 3) embed คำถามด้วย SearchQuery ค้น top-k ได้ของทุกสื่อ (คลิก 4) ส่งสื่อที่ค้นได้ให้ LLM แบบ multimodal อ่านแล้วตอบพร้อมอ้างอิง (คลิก 5) ตัว generate: ถ้าอยากรันบนเครื่อง Google แนะนำคู่กับ Gemma 4 E2B ถ้าบน cloud ใช้ Gemini</aside>
+      </section>
+
+      <!-- Index code -->
+      <section data-title="Build the index">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Pipeline · 1 of 3 · Offline</div>
+            <h2 style="margin-bottom:18px">Embed the corpus</h2>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <pre style="width:700px; font-size:13px"><code class="language-python" data-trim>
+from pathlib import Path
+import torch
+from sentence_transformers import SentenceTransformer
+
+model = SentenceTransformer("google/embeddinggemma-2",
+                            truncate_dim=512)
+opts = dict(convert_to_tensor=True, normalize_embeddings=True)
+
+# text chunks use the "Document" prompt
+texts = [chunk["text"] for chunk in text_chunks]
+text_emb = model.encode(texts, prompt_name="Document", **opts)
+
+# media items take no prompt
+media  = [{"image": str(p)} for p in Path("pages").glob("*.png")]
+media += [{"audio": str(p)} for p in Path("calls").glob("*.wav")]
+media += [{"video": str(p)} for p in Path("clips").glob("*.mp4")]
+media_emb = model.encode(media, **opts)
+
+corpus = texts + media                      # the items themselves
+corpus_emb = torch.cat([text_emb, media_emb])  # same order
+torch.save({"emb": corpus_emb, "items": corpus}, "index.pt")
+              </code></pre>
+              <div class="hx-flags">
+                <div class="pc blue fragment"><b>truncate_dim=512</b>Set once at load, used for every call</div>
+                <div class="pc green fragment"><b>Two encode calls</b>Text with a prompt, media without</div>
+                <div class="pc yellow fragment"><b>Keep the items</b>Store path, page or timestamp next to each vector</div>
+                <div class="pc red fragment"><b>Small demo</b>A tensor file. For real data, use a vector database.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ขั้นที่ 1 OFFLINE: โหลดโมเดลพร้อม truncate_dim=512 ครั้งเดียวใช้ทุกการเรียก • encode ข้อความด้วย prompt Document • encode สื่อ (รูปหน้า PDF, เสียงโทร, คลิปวิดีโอ) โดยไม่ใส่ prompt • normalize_embeddings=True เพราะตัดมิติแล้วต้อง normalize ใหม่ • ต่อเวกเตอร์ทั้งสองชุดตามลำดับเดียวกับ corpus และเก็บตัว item ไว้ด้วยเพื่อใช้ตอน generate • นี่เป็นตัวอย่างเล็ก ๆ ที่ผมเขียนเอง เก็บเป็นไฟล์ tensor ถ้าข้อมูลจริงให้ใช้ vector database</aside>
+      </section>
+
+      <!-- Retrieve code -->
+      <section data-title="Retrieve">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Pipeline · 2 of 3 · Online</div>
+            <h2 style="margin-bottom:20px">Find the closest items</h2>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; font-size:14px"><code class="language-python" data-trim>
+from sentence_transformers import util
+
+question = "How do I descale the X200?"
+q_emb = model.encode(question, prompt_name="SearchQuery",
+                     convert_to_tensor=True,
+                     normalize_embeddings=True)
+
+hits = util.semantic_search(q_emb, corpus_emb, top_k=5)[0]
+for h in hits:
+    print(round(h["score"], 3), corpus[h["corpus_id"]])
+              </code></pre>
+              <div class="eg-hits fragment">
+                <p class="eyebrow" style="margin:0 0 10px">Example output (illustrative)</p>
+                <div class="m-i"><svg class="ic"><use href="#eg-img"/></svg><b>0.71</b><span>pages/manual_p14.png</span></div>
+                <div class="m-v"><svg class="ic"><use href="#eg-vid"/></svg><b>0.66</b><span>clips/descale_0120.mp4</span></div>
+                <div class="m-t"><svg class="ic"><use href="#eg-text"/></svg><b>0.63</b><span>"Descale every 3 months…"</span></div>
+                <div class="m-a"><svg class="ic"><use href="#eg-aud"/></svg><b>0.58</b><span>calls/support_0412.wav</span></div>
+                <div class="m-i"><svg class="ic"><use href="#eg-img"/></svg><b>0.52</b><span>pages/manual_p15.png</span></div>
+              </div>
+            </div>
+            <p class="muted fragment" style="font-size:17px; margin-top:22px">One ranked list across all modalities, because every vector lives in the same space.</p>
+          </div>
+        </div>
+        <aside class="notes">ขั้นที่ 2 ONLINE: embed คำถามด้วย SearchQuery ใช้การตั้งค่าเดียวกับตอน index (มิติเท่ากัน normalize) • util.semantic_search หา top-k จากเวกเตอร์ทั้งหมด • (คลิก) ตัวอย่างผลลัพธ์ เป็นตัวเลขสมมุติเพื่ออธิบาย: หน้าคู่มือ คลิปวิดีโอ ข้อความ FAQ เสียงโทร ปนกันในลำดับเดียว เพราะทุกเวกเตอร์อยู่ใน space เดียวกัน</aside>
+      </section>
+
+      <!-- Generate code -->
+      <section data-title="Generate the answer">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Pipeline · 3 of 3 · Online</div>
+            <h2 style="margin-bottom:18px">Give the retrieved media to a multimodal LLM</h2>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <pre style="width:720px; font-size:13px"><code class="language-python" data-trim>
+from google import genai
+from google.genai import types
+
+MIME = {"image": "image/png", "audio": "audio/wav",
+        "video": "video/mp4"}
+
+def to_part(item):
+    if isinstance(item, str):                 # text chunk
+        return types.Part.from_text(text=item)
+    kind, path = next(iter(item.items()))     # {"image": path}
+    return types.Part.from_bytes(data=Path(path).read_bytes(),
+                                 mime_type=MIME[kind])
+
+client = genai.Client()
+context = [to_part(corpus[h["corpus_id"]]) for h in hits]
+resp = client.models.generate_content(
+    model="gemini-flash-latest",
+    contents=[*context,
+              "Answer using only the context above and say "
+              f"which item you used. Question: {question}"],
+)
+print(resp.text)
+              </code></pre>
+              <div class="hx-flags">
+                <div class="pc yellow fragment"><b>Send the media itself</b>The LLM sees the page, hears the call, watches the clip</div>
+                <div class="pc blue fragment"><b>Ground it</b>"Only the context above" + ask for the source</div>
+                <div class="pc green fragment"><b>Fully local?</b>Swap in Gemma 4 E2B. Same retrieval code.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ขั้นที่ 3: ส่งสื่อที่ค้นได้ให้ LLM แบบ multimodal • to_part แปลง item เป็น Part: ข้อความเป็น text สื่ออื่นอ่านไฟล์เป็น bytes พร้อม mime type • ตัวอย่างนี้ใช้ Gemini ผ่าน google-genai SDK เป็นโค้ดที่ผมเขียนประกอบ ไม่ได้มาจาก docs ของ EmbeddingGemma • (คลิก 1) จุดสำคัญคือส่งตัวสื่อจริง ไม่ใช่คำบรรยาย LLM ได้เห็นหน้าคู่มือ ได้ฟังเสียง ได้ดูคลิป • (คลิก 2) สั่งให้ตอบจาก context เท่านั้นและบอกแหล่ง • (คลิก 3) ถ้าอยากให้ทุกอย่างรันบนเครื่อง เปลี่ยนเป็น Gemma 4 E2B ส่วนการค้นเหมือนเดิม • ไฟล์วิดีโอที่ส่งแบบ bytes ควรเป็นคลิปสั้น ถ้าไฟล์ใหญ่ใช้ Files API</aside>
+      </section>
+
+      <!-- Worked example -->
+      <section data-title="Worked example">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Worked example · coffee machine support bot (illustrative)</div>
+            <h2 style="margin-bottom:22px">One question, three kinds of evidence</h2>
+            <div class="eg-ex">
+              <div class="pc blue eg-exq fragment" data-fragment-index="1"><svg class="ic m-t"><use href="#eg-q"/></svg><b>"How do I descale the X200?"</b></div>
+              <svg class="eg-exw fragment" data-fragment-index="2" viewBox="0 0 1088 50"><path d="M544 0 V18 M180 18 H908 M180 18 V50 M544 18 V50 M908 18 V50"/></svg>
+              <div class="grid g3 fragment" data-fragment-index="2" style="gap:18px">
+                <div class="pc green eg-ev"><div class="eg-thumb"><svg viewBox="0 0 120 80"><rect x="4" y="4" width="112" height="72" rx="6"/><path d="M14 18h50M14 28h40M14 38h46"/><rect x="72" y="16" width="34" height="44" rx="4"/><path d="M80 50l8-12 6 8 4-4 6 8"/></svg></div><b>Manual page 14</b><span>Diagram of the descaling valve and step list</span><em class="m-i">image · 0.71</em></div>
+                <div class="pc yellow eg-ev"><div class="eg-thumb"><svg viewBox="0 0 120 80"><rect x="4" y="4" width="112" height="72" rx="6"/><path d="M50 26l26 14-26 14z"/><path d="M14 68h92" stroke-dasharray="3 4"/><circle cx="46" cy="68" r="4"/></svg></div><b>How-to video, 01:20–01:50</b><span>Shows where to pour the solution</span><em class="m-v">video · 0.66</em></div>
+                <div class="pc red eg-ev"><div class="eg-thumb"><svg viewBox="0 0 120 80"><rect x="4" y="4" width="112" height="72" rx="6"/><path d="M14 40h6M24 28v24M32 20v40M40 32v16M48 24v32M56 36v8M64 22v36M72 30v20M80 26v28M88 34v12M96 28v24M104 40h2"/></svg></div><b>Support call, Apr 12</b><span>Agent warns: never use vinegar</span><em class="m-a">audio · 0.58</em></div>
+              </div>
+              <div class="pc eg-ans fragment" data-fragment-index="3"><b><svg class="ic m-v"><use href="#eg-spark"/></svg> Answer</b> Open the descaling valve (manual p.14), pour the solution into the tank as shown at 01:20 in the video, and run the cycle. Do not use vinegar (support call, Apr 12).</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่างสมมุติ: บอทช่วยเหลือเครื่องชงกาแฟ • (คลิก 1) ผู้ใช้ถามวิธีล้างตะกรัน • (คลิก 2) ค้นเจอหลักฐาน 3 แบบ: หน้าคู่มือที่มีภาพวาล์ว (รูป), คลิปวิดีโอช่วงนาที 1:20 ที่สาธิตการเท (วิดีโอ), เสียงโทรที่เจ้าหน้าที่เตือนว่าห้ามใช้น้ำส้มสายชู (เสียง) • (คลิก 3) LLM รวมเป็นคำตอบเดียวพร้อมอ้างอิงแต่ละแหล่ง • ถ้าเป็น text-only RAG ภาพวาล์วกับคำเตือนในเสียงโทรอาจหายไปเลย</aside>
+      </section>
+
+      <!-- Section 05 -->
+      <section class="bg-blue" data-title="05 · Tune &amp; ship">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">05</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:76px">Tune &amp;<br>ship</h1>
+            <p class="sub" style="margin-top:28px">Choices that decide<br>retrieval quality</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 5 • ปรับแต่งและนำไปใช้จริง</aside>
+      </section>
+
+      <!-- Design choices -->
+      <section data-title="Design choices">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Design choices · my recommendations</div>
+            <h2 style="margin-bottom:22px">Five knobs to set</h2>
+            <div class="eg-knobs">
+              <div class="pc blue fragment"><em>1</em><b>Chunking</b><span>One PDF page or slide = one image. Split long videos and calls into short clips (for example 30–60 s) so a hit points to a moment.</span></div>
+              <div class="pc green fragment"><em>2</em><b>Dimensions</b><span>Start at 768 or 512 for multimodal. Try 256 if storage hurts. Validate 128 first.</span></div>
+              <div class="pc yellow fragment"><em>3</em><b>Visual tokens</b><span>Raise <code>max_soft_tokens</code> for dense pages and charts, lower it for simple photos.</span></div>
+              <div class="pc red fragment"><em>4</em><b>Vector store</b><span>Any store for float vectors: FAISS, pgvector, AlloyDB, Vertex AI Vector Search. Keep metadata (page, timestamp).</span></div>
+              <div class="pc fragment"><em>5</em><b>Evaluate</b><span>Write 30–50 real questions with the right item. Measure recall@k before and after each change.</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">5 เรื่องที่ต้องตัดสินใจ (เป็นคำแนะนำของผม ไม่ได้มาจาก docs ทั้งหมด): (1) การแบ่งชิ้น: PDF หน้าละรูป วิดีโอและเสียงยาวตัดเป็นคลิปสั้นเพื่อให้ผลค้นชี้ไปที่ช่วงเวลา (2) มิติ: งาน multimodal เริ่มที่ 768 หรือ 512 (3) visual token: หน้าเอกสารแน่น ๆ เพิ่ม รูปธรรมดาลด (4) vector store อะไรก็ได้ที่เก็บเวกเตอร์ได้ เก็บ metadata ด้วย (5) วัดผล: เขียนคำถามจริง 30–50 ข้อพร้อมคำตอบที่ถูก วัด recall@k ทุกครั้งที่ปรับ</aside>
+      </section>
+
+      <!-- Gotchas -->
+      <section data-title="Gotchas">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Gotchas</div>
+            <h2 style="margin-bottom:24px">Five things that break retrieval</h2>
+            <ol class="hx-steps" style="width:1088px">
+              <li class="fragment"><b>1</b><span><b>float16</b> gives wrong vectors. Use bfloat16 or float32.</span></li>
+              <li class="fragment"><b>2</b><span>Forgot <code>prompt_name</code>: queries need <code>SearchQuery</code>, text documents need <code>Document</code>.</span></li>
+              <li class="fragment"><b>3</b><span>Query and documents at <b>different dimensions</b>. Truncate both the same way.</span></li>
+              <li class="fragment"><b>4</b><span>Truncated but not normalized. Pass <code>normalize_embeddings=True</code>.</span></li>
+              <li class="fragment"><b>5</b><span>One input over the <b>8,192-token</b> budget. Split long videos, calls and documents.</span></li>
+            </ol>
+          </div>
+        </div>
+        <aside class="notes">5 อย่างที่ทำให้ค้นผิด: (1) ใช้ float16 เวกเตอร์ผิด (2) ลืมใส่ prompt_name (3) query กับเอกสารมิติไม่เท่ากัน (4) ตัดมิติแล้วไม่ normalize (5) input ยาวเกิน 8,192 token ต้องแบ่ง</aside>
+      </section>
+
+      <!-- vs Gemini Embedding 2 -->
+      <section data-title="EmbeddingGemma 2 or Gemini Embedding 2?">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Which one?</div>
+            <h2 style="margin-bottom:24px">EmbeddingGemma 2 or Gemini Embedding 2?</h2>
+            <div class="grid g2" style="gap:24px; width:1088px">
+              <div class="pc green fragment">
+                <span class="tag yellow">EmbeddingGemma 2</span>
+                <ul class="bl" style="font-size:19px; margin-top:16px">
+                  <li><b>Open weights</b>, Apache 2.0</li>
+                  <li>Runs on your laptop, server or phone</li>
+                  <li>Data never leaves your machine</li>
+                  <li>768 dims (cut to 512 / 256 / 128)</li>
+                  <li>Text, image, audio, video</li>
+                </ul>
+              </div>
+              <div class="pc blue fragment">
+                <span class="tag">Gemini Embedding 2</span>
+                <ul class="bl" style="font-size:19px; margin-top:16px">
+                  <li><b>Hosted</b> on the Gemini API</li>
+                  <li>No GPU to manage</li>
+                  <li>Up to 3072 dims (768 / 1536 / 3072 recommended)</li>
+                  <li>Text, image, video, audio, PDF</li>
+                  <li>8,192 input tokens</li>
+                </ul>
+              </div>
+            </div>
+            <p class="sub fragment" style="font-size:20px; margin-top:22px">Private, offline or on-device → EmbeddingGemma 2 · managed and largest vectors → Gemini Embedding 2</p>
+          </div>
+        </div>
+        <aside class="notes">เลือกตัวไหน: (คลิก 1) EmbeddingGemma 2 เป็น open weights รันเองได้ทุกที่ ข้อมูลไม่ออกจากเครื่อง 768 มิติ (คลิก 2) Gemini Embedding 2 เป็นบริการบน Gemini API ไม่ต้องดูแล GPU เวกเตอร์ได้ถึง 3072 มิติ รองรับ PDF โดยตรง context 8,192 token (คลิก 3) สรุป: ต้องการความเป็นส่วนตัว ออฟไลน์ หรือบนมือถือ ใช้ EmbeddingGemma 2 / ต้องการบริการที่จัดการให้และเวกเตอร์ใหญ่ ใช้ Gemini Embedding 2 • หมายเหตุ: Google ไม่ได้ทำตารางเทียบนี้ ผมสรุปจากหน้า docs ของแต่ละตัว และสองตัวนี้อยู่คนละ vector space ห้ามผสมเวกเตอร์กันใน index เดียว</aside>
+      </section>
+
+      <!-- Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:22px">Multimodal RAG in 10 lines</h2>
+            <pre style="width:1000px; font-size:15px"><code class="language-python" data-trim>
+model = SentenceTransformer("google/embeddinggemma-2", truncate_dim=512)
+
+text_emb  = model.encode(texts, prompt_name="Document", **opts)   # text chunks
+media_emb = model.encode(media, **opts)                           # dicts: {"image": path}
+corpus_emb = torch.cat([text_emb, media_emb])
+
+q_emb = model.encode(question, prompt_name="SearchQuery", **opts)
+hits  = util.semantic_search(q_emb, corpus_emb, top_k=5)[0]
+
+answer = llm(question, [corpus[h["corpus_id"]] for h in hits])    # Gemini or Gemma 4
+            </code></pre>
+            <p class="sub" style="font-size:20px; margin-top:22px">One model · one space · one index · every modality</p>
+          </div>
+        </div>
+        <aside class="notes">สรุปทั้งหมดในไม่กี่บรรทัด: โหลดโมเดล → embed ข้อความด้วย Document และสื่อโดยไม่มี prompt → รวมเป็น index เดียว → embed คำถามด้วย SearchQuery → ค้น top-k → ส่งให้ LLM ตอบ • llm() ในสไลด์นี้เป็นฟังก์ชันย่อของสไลด์ generate • จำ: โมเดลเดียว space เดียว index เดียว ทุกสื่อ</aside>
+      </section>
+
+      <!-- Resources -->
+      <section data-title="Try it yourself">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:28px">Try it yourself</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc blue"><h3>Developer guide</h3><a class="mono" style="font-size:15px" href="https://developers.googleblog.com/embeddinggemma-2-the-developer-guide/" target="_blank">developers.googleblog.com · EmbeddingGemma 2</a></div>
+              <div class="pc green"><h3>Multimodal notebook</h3><a class="mono" style="font-size:15px" href="https://ai.google.dev/gemma/docs/embeddinggemma/multimodal-embeddinggemma-with-sentence-transformers" target="_blank">ai.google.dev/gemma/docs/embeddinggemma</a></div>
+              <div class="pc yellow"><h3>Model on Hugging Face</h3><a class="mono" style="font-size:15px" href="https://huggingface.co/google/embeddinggemma-2" target="_blank">huggingface.co/google/embeddinggemma-2</a></div>
+              <div class="pc red"><h3>Gemini Embedding 2</h3><a class="mono" style="font-size:15px" href="https://ai.google.dev/gemini-api/docs/models/gemini-embedding-2" target="_blank">ai.google.dev · gemini-embedding-2</a></div>
+            </div>
+            <div class="cmd" style="margin-top:22px; width:640px">pip install -U "sentence-transformers[image,audio,video]"</div>
+          </div>
+        </div>
+        <aside class="notes">แหล่งอ่านต่อ: Developer guide บน Google Developers Blog • notebook multimodal บน ai.google.dev • หน้าโมเดลบน Hugging Face • docs ของ Gemini Embedding 2 • ให้เวลาผู้ฟังถ่ายรูปสไลด์นี้</aside>
+      </section>
+
+      <!-- Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <svg class="ico abs" style="left:930px; top:240px; width:200px; height:200px; stroke-width:4"><use href="#i-star"/></svg>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณทุกคนครับ/ค่ะ • เปิดถาม-ตอบ • ชวนลองเอาเอกสารของทีมตัวเองมาทำ index ดู เริ่มจากโหลดแบบ text only แล้วค่อยเพิ่มรูปกับเสียง</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <!-- DevFest template shapes: notched/scalloped cards + GDG lockup on every slide -->
+  <script>
+    (function () {
+      const NS = "http://www.w3.org/2000/svg", S = 3, o = S / 2;
+      function cardPath(W, H, el) {
+        const r = +(el.dataset.r || 34);
+        const [a, b] = (el.dataset.tl || "0x0").split("x").map(Number);
+        const [c, d] = (el.dataset.br || "0x0").split("x").map(Number);
+        const n = +(el.dataset.scallop || 0);
+        const L = o, T = o, R = W - o, B = H - o, P = [];
+        if (n) P.push(`M${L},${T}`); else if (a && b) P.push(`M${L + a + r},${T}`); else P.push(`M${L + r},${T}`);
+        P.push(`H${R - r}`, `A${r},${r} 0 0 1 ${R},${T + r}`);
+        if (c && d) P.push(`V${B - d - r}`, `A${r},${r} 0 0 1 ${R - r},${B - d}`, `H${R - c + r}`, `A${r},${r} 0 0 0 ${R - c},${B - d + r}`, `V${B - r}`, `A${r},${r} 0 0 1 ${R - c - r},${B}`);
+        else P.push(`V${B - r}`, `A${r},${r} 0 0 1 ${R - r},${B}`);
+        if (n) { // scalloped left edge (statement slides)
+          P.push(`H${L}`); const h = (B - T) / n;
+          for (let i = 0; i < n; i++) P.push(`A${h / 2},${h / 2} 0 0 1 ${L},${B - h * (i + 1)}`);
+        } else {
+          P.push(`H${L + r}`, `A${r},${r} 0 0 1 ${L},${B - r}`);
+          if (a && b) P.push(`V${T + b + r}`, `A${r},${r} 0 0 1 ${L + r},${T + b}`, `H${L + a - r}`, `A${r},${r} 0 0 0 ${L + a},${T + b - r}`, `V${T + r}`, `A${r},${r} 0 0 1 ${L + a + r},${T}`);
+          else P.push(`V${T + r}`, `A${r},${r} 0 0 1 ${L + r},${T}`);
+        }
+        return P.join(" ") + " Z";
+      }
+      document.querySelectorAll(".reveal .nc").forEach((el) => {
+        const cs = getComputedStyle(el), W = parseFloat(cs.width), H = parseFloat(cs.height);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "nc-s"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+        svg.setAttribute("width", W); svg.setAttribute("height", H);
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", cardPath(W, H, el));
+        p.setAttribute("fill", el.dataset.fill || "#fff"); p.setAttribute("stroke", "#1e1e1e"); p.setAttribute("stroke-width", S);
+        svg.appendChild(p); el.prepend(svg);
+      });
+      document.querySelectorAll(".reveal .slides section:not([data-corner=off])").forEach((s) => {
+        s.insertAdjacentHTML("beforeend", '<div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok</small></span></div><img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">');
+      });
+    })();
+  </script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      hashOneBasedIndex: true,  // URL #/7 = slide 7, same as the counter
+      fragmentInURL: false,     // keep the URL to just the slide number
+      controls: false,     // replaced by the shopio-style #ctrl bar
+      overview: false,     // replaced by the scrollable #ov grid
+      progress: false,
+      slideNumber: "c/t",
+      showSlideNumber: "print", // page numbers only in exported PDF
+      transition: "fade",
+      backgroundTransition: "fade",
+      width: 1280,
+      height: 720,
+      margin: 0,
+      center: false,       // slides are absolutely laid out 1280×720 canvases
+      plugins: [RevealHighlight, RevealNotes],
+      // export: one page per slide, all fragments shown
+      view: /[?&]print-pdf\b/.test(location.search) ? "print" : null,
+      pdfSeparateFragments: false,
+      pdfMaxPagesPerSlide: 1,
+    });
+  </script>
+
+  <!-- Export PDF: All slides / This slide -->
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const isPrint = params.has("print-pdf");
+
+      if (isPrint) {
+        // ---- print view (opened in a new tab by the menu) ----
+        const only = params.get("slide");
+        Reveal.on("pdf-ready", async () => {
+          if (only !== null) {
+            const target = Reveal.getSlides()[+only]?.closest(".pdf-page");
+            if (target) document.querySelectorAll(".reveal .slides .pdf-page").forEach((p) => { if (p !== target) p.remove(); });
+            document.title = `From Prompt to Production – slide ${+only + 1}`;
+          } else {
+            document.title = "From Prompt to Production – all slides";
+          }
+          if (!params.has("autoprint")) return;
+          await document.fonts.ready;
+          addEventListener("afterprint", () => window.close());
+          setTimeout(() => window.print(), 300);
+        });
+        return;
+      }
+
+      // ---- normal view: shopio-style control bar ----
+      const $ = (id) => document.getElementById(id);
+      const slides = Reveal.getSlides(), N = slides.length;
+      const idx = () => slides.indexOf(Reveal.getCurrentSlide());
+      const cnt = $("cnt"), prog = $("progress"), list = $("menu"), xMenu = $("exportMenu"), bPdf = $("bPdf"), bNotes = $("bNotes");
+      const titleOf = (s, i) => s.dataset.title || s.querySelector("h1,h2")?.textContent.trim() || `Slide ${i + 1}`;
+
+      // slide list (click the counter)
+      list.innerHTML = slides.map((s, i) => `<a href="#" data-i="${i}"><span>${i + 1}</span>${titleOf(s, i).replace(/</g, "&lt;")}</a>`).join("");
+      function sync() {
+        const i = idx();
+        cnt.textContent = `${i + 1} / ${N}`;
+        prog.style.width = (N > 1 ? (i / (N - 1)) * 100 : 100) + "%";
+        list.querySelectorAll("a").forEach((a, k) => a.classList.toggle("cur", k === i));
+      }
+      Reveal.on("ready", sync); Reveal.on("slidechanged", sync); sync();
+
+      const menus = [list, xMenu];
+      function openOnly(m) {
+        const willOpen = m && !m.classList.contains("open");
+        menus.forEach((x) => x.classList.remove("open"));
+        if (willOpen) { m.classList.add("open"); wake(); }
+        bPdf.setAttribute("aria-expanded", xMenu.classList.contains("open"));
+        if (list.classList.contains("open")) list.querySelector("a.cur")?.scrollIntoView({ block: "center" });
+        if (xMenu.classList.contains("open")) $("exportCur").textContent = `PDF of slide ${idx() + 1} / ${N}`;
+      }
+
+      $("bPrev").onclick = () => Reveal.prev();
+      $("bNext").onclick = () => Reveal.next();
+      cnt.onclick = (e) => { e.stopPropagation(); openOnly(list); };
+      list.onclick = (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); Reveal.slide(+a.dataset.i); openOnly(null); };
+      // all-slides overview: clone each slide into a scaled 1280×720 thumbnail
+      const ov = $("ov"), ovg = ov.querySelector(".ovg");
+      function buildOv() {
+        const cur = idx();
+        ovg.innerHTML = "";
+        slides.forEach((s, i) => {
+          const t = document.createElement("div");
+          t.className = "ovt" + (i === cur ? " cur" : ""); t.dataset.i = i;
+          const fr = document.createElement("div"); fr.className = "fr";
+          const rv = document.createElement("div"); rv.className = "reveal";
+          const sl = document.createElement("div"); sl.className = "slides";
+          const c = s.cloneNode(true);
+          c.removeAttribute("hidden"); c.removeAttribute("aria-hidden");
+          c.classList.remove("past", "future"); c.classList.add("present");
+          c.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+          c.querySelectorAll("video").forEach((v) => v.remove());
+          c.querySelectorAll("aside.notes").forEach((n) => n.remove());
+          sl.appendChild(c); rv.appendChild(sl); fr.appendChild(rv);
+          const cap = document.createElement("div"); cap.className = "cap";
+          cap.innerHTML = `<span>${i + 1}</span>`; cap.append(titleOf(s, i));
+          t.append(fr, cap); ovg.appendChild(t);
+          // reveal only vertically-centres slides near the current one; centre every clone here
+          c.style.top = "0px";
+          c.style.top = Math.max((720 - c.offsetHeight) / 2, 0) + "px";
+        });
+        sizeOv();
+      }
+      function sizeOv() { ovg.querySelectorAll(".fr").forEach((fr) => { fr.firstChild.style.transform = `scale(${fr.clientWidth / 1280})`; }); }
+      const ovOpen = () => ov.classList.contains("open");
+      function toggleOv(force) {
+        const open = force ?? !ovOpen();
+        openOnly(null);
+        ov.classList.toggle("open", open);
+        $("bOv").classList.toggle("on", open);
+        if (open) { buildOv(); ovg.querySelector(".cur")?.scrollIntoView({ block: "center" }); }
+        else ovg.innerHTML = "";
+      }
+      $("bOv").onclick = () => toggleOv();
+      $("ovX").onclick = () => toggleOv(false);
+      ovg.onclick = (e) => { const t = e.target.closest(".ovt"); if (!t) return; Reveal.slide(+t.dataset.i); toggleOv(false); };
+      addEventListener("resize", () => { if (ovOpen()) sizeOv(); });
+      const toggleFs = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+      $("bFs").onclick = toggleFs;
+
+      // speaker notes → reveal's presenter window (current + next slide, timer, notes)
+      const notes = () => Reveal.getPlugin("notes");
+      bNotes.onclick = () => notes()?.open();
+
+      // export
+      function exportPdf(mode) {
+        const q = new URLSearchParams({ "print-pdf": "", autoprint: "" });
+        if (mode === "slide") q.set("slide", idx());
+        const url = location.pathname + "?" + q.toString().replace(/=(&|$)/g, "$1");
+        if (!window.open(url, "_blank")) location.href = url; // popup blocked → same tab
+        openOnly(null);
+      }
+      bPdf.onclick = (e) => { e.stopPropagation(); openOnly(xMenu); };
+      xMenu.onclick = (e) => { const b = e.target.closest("[data-export]"); if (b) exportPdf(b.dataset.export); };
+
+      // close menus on outside click; click on the slide = next (like shopio)
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("#ctrl,#menu,#exportMenu,#ov")) return;
+        const wasOpen = menus.some((m) => m.classList.contains("open"));
+        openOnly(null);
+        if (wasOpen) return;
+        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,video,canvas,pre,.demo-wrap")) return;
+        if (String(getSelection?.() || "").length) return;
+        Reveal.next();
+      }, true); // capture: read isOverview() before reveal handles the overview click
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menus.some((m) => m.classList.contains("open"))) { openOnly(null); e.stopPropagation(); e.preventDefault(); return; }
+        if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+        if (e.key === "o" || e.key === "O") { e.preventDefault(); e.stopPropagation(); toggleOv(); return; }
+        if (ovOpen()) { // overview owns the keyboard: Esc closes, arrows/space scroll the grid instead of changing slides
+          e.stopPropagation();
+          if (e.key === "Escape") { e.preventDefault(); toggleOv(false); }
+          return;
+        }
+        if (e.key === "e" || e.key === "E") { e.preventDefault(); e.stopPropagation(); exportPdf(e.shiftKey ? "all" : "slide"); }
+        else if (e.key === "n" || e.key === "N") { e.preventDefault(); e.stopPropagation(); notes()?.open(); }
+      }, true);
+
+      // hide the bar when the mouse is idle
+      let idle;
+      const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => { if (!menus.some((m) => m.classList.contains("open"))) document.body.classList.add("idle"); }, 2500); };
+      addEventListener("mousemove", wake); wake();
+    })();
+  </script>
+</body>
+</html>

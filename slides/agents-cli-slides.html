@@ -137,6 +137,27 @@
     .flow .node b { display: block; font-size: 24px; margin-bottom: 8px; }
     .flow .node code { font-family: var(--mono); font-size: 16px; white-space: nowrap; }
     .flow .arr { width: 46px; flex: none; }
+    /* code text: the light-theme rule (.reveal .hljs { color:#1e1e1e }) made plain code invisible on dark pre */
+    .reveal pre code.hljs { color: var(--dk-text); }
+    /* project tree (What scaffold creates) */
+    .ftree { width: 640px; flex: none; padding: 16px 20px; font: 400 14px/1.55 var(--mono); }
+    .ftree div { white-space: pre; display: flex; align-items: baseline; }
+    .ftree i { font-style: normal; color: #80868b; }
+    .ftree em { font: 400 12.5px/1 var(--sans); font-style: normal; color: var(--dk-sub); margin-left: 12px; white-space: nowrap; }
+    .ftree .d { color: #fff; font-weight: 500; }
+    .f-you { color: var(--h-blue); } .f-gen { color: #bdc1c6; } .f-eval { color: var(--h-green); } .f-enh { color: var(--h-yellow); } .f-guide { color: var(--h-red); }
+    .ftree-key { flex: 1; display: grid; gap: 10px; }
+    .ftree-key .pc { padding: 11px 16px; }
+    .ftree-key b { display: block; font-size: 17px; margin-bottom: 3px; } .ftree-key span { font-size: 15px; line-height: 1.35; }
+    /* coding-agent logo pills, top-right of a slide header */
+    .tool-logos { position: absolute; right: 56px; top: 38px; display: flex; align-items: center; gap: 10px; }
+    .tool-logos small { font: 400 14px/1 var(--mono); color: var(--dk-sub); margin-right: 2px; }
+    .tool-logos span { display: flex; align-items: center; gap: 10px; padding: 7px 16px 7px 8px; border: 2px solid var(--dk-line); border-radius: 999px; background: var(--dk-card); font: 500 17px/1 var(--sans); color: #fff; }
+    .reveal .tool-logos img { height: 34px; width: auto; margin: 0; }
+    /* 5-node flow: tighter so all nodes fit in 1088px */
+    .flow.tight { gap: 8px; } .flow.tight .arr { width: 28px; }
+    .flow.tight .node { padding: 20px 10px; min-width: 0; } .flow.tight .node b { font-size: 21px; }
+    .flow.tight .node code { font-size: 13px; white-space: normal; }
 
     /* demo */
     .demo-wrap { position: relative; width: 520px; aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; border: 2.5px solid var(--ink); background: #1e1e1e; }
@@ -556,7 +577,7 @@
     .s-agenda-dk .agd-list b { font: 500 34px/1 var(--sans); color: var(--c); width: 48px; }
     .s-agenda-dk .agd-list strong { display: block; font: 500 30px/1.15 var(--sans); color: var(--c); }
     .s-agenda-dk .agd-list span { display: block; font: 400 17px/1.3 var(--sans); color: var(--dk-sub); margin-top: 4px; }
-    /* coding-agent strip: agents-cli + Skills → Antigravity · Claude Code · Gemini CLI · Codex */
+    /* coding-agent strip: agents-cli + Skills → Antigravity · Claude Code · Codex */
     .ac-strip { position: relative; display: flex; align-items: center; gap: 18px; height: 64px; }
     .reveal .ac-strip img { height: 58px; width: auto; position: relative; z-index: 1; }
     .ac-strip .ac-name { font: 500 30px/1 var(--mono); color: #202124; background: #e8eaed; padding: 6px 12px; border-radius: 8px; position: relative; z-index: 1; }
@@ -747,6 +768,11 @@
           <div class="in" style="padding:44px 56px 0">
             <div class="eyebrow">Try it yourself · about 5 minutes</div>
             <h2 style="font-size:40px; margin-bottom:24px">Install the skills, then prompt</h2>
+            <div class="tool-logos" aria-label="Works with">
+              <small>Works with</small>
+              <span><img src="../images/agents-cli-slides/logos/antigravity.png" alt="">Antigravity</span>
+              <span><img src="../images/agents-cli-slides/logos/claude.png" alt="">Claude Code</span>
+            </div>
             <div class="grid g4 ag-steps st4" style="width:1088px; gap:16px">
               <div class="pc blue fragment">
                 <span class="num">1</span>
@@ -852,13 +878,12 @@
               <div class="ac-arrow">
                 <img src="../images/agents-cli-slides/logos/antigravity.png" alt="Antigravity">
                 <img src="../images/agents-cli-slides/logos/claude.png" alt="Claude Code">
-                <img src="../images/agents-cli-slides/logos/gemini-cli.png" alt="Gemini CLI">
                 <img src="../images/agents-cli-slides/logos/codex.png" alt="Codex">
               </div>
             </div>
           </div>
         </div>
-        <aside class="notes">Agents CLI ทำงานอยู่บน Gemini Enterprise Agent Platform ซึ่งแบ่งเป็น 4 เสา: (คลิก 1) Build สร้าง agent ด้วย Agent Studio แบบ low-code หรือเขียนโค้ดด้วย ADK มี template จาก Agent Garden และรองรับ multimodal streaming (คลิก 2) Scale รันให้เสถียรด้วย Agent Runtime, Memory Bank, Agent Sessions และ orchestration แบบ A2A (คลิก 3) Govern ดูแลความปลอดภัย: Agent Identity, Agent Registry, Agent Gateway + Model Armor, ตรวจจับ threat และความผิดปกติ (คลิก 4) Optimize ทำให้ดีขึ้น: simulation, evaluation, observability, optimizer • (คลิก 5) จุดสำคัญ: agents-cli + Skills คือทางเข้าเดียวที่เชื่อมทุกเสานี้เข้ากับ AI coding agent ที่เราใช้ ไม่ว่าจะเป็น Antigravity, Claude Code, Gemini CLI หรือ Codex</aside>
+        <aside class="notes">Agents CLI ทำงานอยู่บน Gemini Enterprise Agent Platform ซึ่งแบ่งเป็น 4 เสา: (คลิก 1) Build สร้าง agent ด้วย Agent Studio แบบ low-code หรือเขียนโค้ดด้วย ADK มี template จาก Agent Garden และรองรับ multimodal streaming (คลิก 2) Scale รันให้เสถียรด้วย Agent Runtime, Memory Bank, Agent Sessions และ orchestration แบบ A2A (คลิก 3) Govern ดูแลความปลอดภัย: Agent Identity, Agent Registry, Agent Gateway + Model Armor, ตรวจจับ threat และความผิดปกติ (คลิก 4) Optimize ทำให้ดีขึ้น: simulation, evaluation, observability, optimizer • (คลิก 5) จุดสำคัญ: agents-cli + Skills คือทางเข้าเดียวที่เชื่อมทุกเสานี้เข้ากับ AI coding agent ที่เราใช้ ไม่ว่าจะเป็น Antigravity, Claude Code หรือ Codex</aside>
       </section>
 
       <!-- Architecture: any AI coding assistant -->
@@ -872,7 +897,6 @@
               <div class="ac-arrow">
                 <img src="../images/agents-cli-slides/logos/antigravity.png" alt="Antigravity" style="height:50px">
                 <img src="../images/agents-cli-slides/logos/claude.png" alt="Claude Code" style="height:50px">
-                <img src="../images/agents-cli-slides/logos/gemini-cli.png" alt="Gemini CLI" style="height:50px">
                 <img src="../images/agents-cli-slides/logos/codex.png" alt="Codex" style="height:50px">
               </div>
             </div>
@@ -919,7 +943,7 @@
             </div>
           </div>
         </div>
-        <aside class="notes">ภาพรวม production stack ของ agent หนึ่งตัว: ผู้ใช้เข้ามาผ่าน Client ไปที่ Deployment ซึ่งเลือกได้ว่าจะใช้ Agent Runtime หรือ Cloud Run / GKE • ตรงกลางคือ Agent Orchestration สร้างด้วย ADK และ A2A มี sample ให้เริ่มได้ทันที ดึงโมเดลจาก Model Garden และวัดผลด้วย Agent Platform Evaluation • ฝั่งขวาคือส่วนที่มักถูกลืมตอนทำ prototype: Data (vector store, monitoring, data storage), Observability (OpenTelemetry tracing + logging) และ IaC &amp; CI/CD • ข้อความหลัก: agents-cli + Skills ทำให้ AI coding assistant ตัวไหนก็ได้ ทั้ง Antigravity, Claude Code, Gemini CLI, Codex สร้างครบทั้ง stack นี้ได้ ไม่ใช่แค่โค้ดของ agent</aside>
+        <aside class="notes">ภาพรวม production stack ของ agent หนึ่งตัว: ผู้ใช้เข้ามาผ่าน Client ไปที่ Deployment ซึ่งเลือกได้ว่าจะใช้ Agent Runtime หรือ Cloud Run / GKE • ตรงกลางคือ Agent Orchestration สร้างด้วย ADK และ A2A มี sample ให้เริ่มได้ทันที ดึงโมเดลจาก Model Garden และวัดผลด้วย Agent Platform Evaluation • ฝั่งขวาคือส่วนที่มักถูกลืมตอนทำ prototype: Data (vector store, monitoring, data storage), Observability (OpenTelemetry tracing + logging) และ IaC &amp; CI/CD • ข้อความหลัก: agents-cli + Skills ทำให้ AI coding assistant ตัวไหนก็ได้ ทั้ง Antigravity, Claude Code, Codex สร้างครบทั้ง stack นี้ได้ ไม่ใช่แค่โค้ดของ agent</aside>
       </section>
 
       <!-- Two ways to use it -->
@@ -1082,6 +1106,45 @@ cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
         <aside class="notes">เริ่มด้วย scaffold create เลือก template adk และ --prototype เพื่อข้าม CI/CD และ Terraform ไปก่อน โฟกัสให้ agent ทำงานได้ • พอ agent ใช้ได้แล้วค่อยเพิ่ม deployment ด้วย scaffold enhance . --deployment-target (agent_runtime, cloud_run หรือ gke) • ได้โค้ด ADK พร้อม A2A, โฟลเดอร์ eval พร้อม dataset และ config, Terraform กับ CI/CD เมื่อเพิ่ม target และไฟล์คำแนะนำให้ coding agent (GEMINI.md, CLAUDE.md หรือ AGENTS.md) • อย่าตั้งค่าเอง จะพลาด eval boilerplate และ CI/CD</aside>
       </section>
 
+      <!-- Scaffold: project structure -->
+      <section data-title="What scaffold creates">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Step 2 · Scaffold · project structure</div>
+            <h2 style="margin-bottom:18px">What <code style="font-size:.8em">scaffold create</code> gives you</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div class="pc ftree">
+<div class="d">my-agent/</div>
+<div><i>├── </i><span class="d">app/</span></div>
+<div><i>│   ├── </i><span class="f-you">agent.py</span><em>root_agent: instruction, tools, model</em></div>
+<div><i>│   ├── </i><span class="f-you">tools.py</span><em>your tool functions</em></div>
+<div><i>│   ├── </i><span class="f-gen">__init__.py</span><em>App(name="app")</em></div>
+<div><i>│   ├── </i><span class="f-gen">fast_api_app.py</span><em>serving</em></div>
+<div><i>│   └── </i><span class="f-gen">app_utils/</span><em>a2a.py · services.py</em></div>
+<div><i>├── </i><span class="d">tests/</span></div>
+<div><i>│   ├── </i><span class="f-eval">eval/eval_config.yaml</span><em>metrics &amp; thresholds</em></div>
+<div><i>│   ├── </i><span class="f-eval">eval/datasets/basic-dataset.json</span></div>
+<div><i>│   └── </i><span class="f-gen">unit/ · integration/</span></div>
+<div><i>├── </i><span class="f-you">.env</span><em>project ID, location, keys</em></div>
+<div><i>├── </i><span class="f-gen">Dockerfile · Makefile · pyproject.toml</span></div>
+<div><i>├── </i><span class="f-gen">agents-cli-manifest.yaml</span></div>
+<div><i>├── </i><span class="f-guide">CLAUDE.md</span><em>or GEMINI.md / AGENTS.md</em></div>
+<div><i>├── </i><span class="f-enh">deployment/terraform/</span><em>after enhance</em></div>
+<div><i>└── </i><span class="f-enh">.github/workflows/</span><em>after enhance (CI/CD)</em></div>
+              </div>
+              <div class="ftree-key">
+                <div class="pc blue fragment"><b class="f-you">Edit these</b><span><code>agent.py</code>, <code>tools.py</code>, <code>.env</code>: your agent's behavior</span></div>
+                <div class="pc fragment"><b class="f-gen">Generated, don't hand-edit</b><span>Serving, sessions, A2A, container, manifest the CLI reads</span></div>
+                <div class="pc green fragment"><b class="f-eval">Evals from day one</b><span>Dataset + config, ready for <code>agents-cli eval run</code></span></div>
+                <div class="pc red fragment"><b class="f-guide">Guidance file</b><span>Tells your coding agent the project rules</span></div>
+                <div class="pc yellow fragment"><b class="f-enh">Added later</b><span><code>scaffold enhance</code> adds Terraform and CI/CD</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">โครงสร้างโปรเจกต์ที่ scaffold create สร้างให้ • (คลิก 1) สีฟ้าคือไฟล์ที่เราแก้: app/agent.py กำหนด root_agent ทั้ง instruction, tools, model / app/tools.py ฟังก์ชัน tool / .env ใส่ project ID, location และ key • (คลิก 2) สีเทาคือไฟล์ที่สร้างให้ อย่าแก้เอง: __init__.py (ชื่อ App ต้องตรงกับชื่อโฟลเดอร์), fast_api_app.py สำหรับ serving, app_utils สำหรับ A2A และ session, Dockerfile, Makefile และ agents-cli-manifest.yaml ที่ CLI อ่าน • (คลิก 3) สีเขียวคือ eval มีตั้งแต่วันแรก eval_config.yaml กับ dataset ตัวอย่าง • (คลิก 4) ไฟล์คำแนะนำให้ coding agent ชื่อตาม tool ที่ใช้: CLAUDE.md, GEMINI.md หรือ AGENTS.md • (คลิก 5) สีเหลืองคือส่วนที่เพิ่มทีหลังด้วย scaffold enhance: Terraform ใน deployment/ และ CI/CD เช่น GitHub Actions • ข้อมูลโครงสร้างอ้างจาก skill ของ agents-cli</aside>
+      </section>
+
       <!-- Build with ADK -->
       <section data-title="Build with ADK">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
@@ -1142,7 +1205,7 @@ root_agent = Agent(
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 4 · Evaluate</div>
             <h2 style="margin-bottom:26px">The quality flywheel</h2>
-            <div class="flow" style="width:1088px">
+            <div class="flow tight" style="width:1088px">
               <div class="pc blue node fragment"><b>1 · Data</b>1–2 cases first<br><code>eval dataset synthesize</code></div>
               <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
               <div class="pc node fragment"><b>2 · Run</b>Agent → traces<br><code>eval generate</code></div>
@@ -1481,6 +1544,8 @@ agents-cli publish gemini-enterprise                 # optional
   <script>
     Reveal.initialize({
       hash: true,
+      hashOneBasedIndex: true,  // URL #/7 = slide 7, same as the counter
+      fragmentInURL: false,     // keep the URL to just the slide number
       controls: false,     // replaced by the shopio-style #ctrl bar
       overview: false,     // replaced by the scrollable #ov grid
       progress: false,
