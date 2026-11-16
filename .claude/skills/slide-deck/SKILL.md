@@ -79,6 +79,11 @@ Rules that prevent the overflows we have actually had:
    is black on black. The `LOW` check catches it.
 8. **Absolute diagrams** (boxes with `left/top`): keep every box inside the 1088 × ~400 area
    you reserve, and keep labels inside their boxes (short text, `<br>` on purpose).
+9. **Style badges with the child combinator.** Number circles like `.hx-steps li > b` must use `>`.
+   A descendant selector (`li b`) also turns every bold word inside the sentence into a circle that
+   overlaps the text. The checker does not catch this, so screenshot any list you add `<b>` to.
+10. **Theme rules beat a plain class.** `.reveal h2 { font-size }` wins over `.my-title { font-size }`.
+    Override with `.reveal h2.my-title`, then screenshot to confirm the size changed.
 
 ## Building a new deck
 

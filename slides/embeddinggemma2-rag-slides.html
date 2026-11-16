@@ -617,7 +617,7 @@
     .reveal ol.hx-steps { list-style: none; margin: 0; padding: 0; width: 470px; flex: none; display: grid; gap: 8px; }
     .hx-steps li { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; font-size: 16px; line-height: 1.35; }
     .hx-steps li code { padding: 0 4px; }
-    .hx-steps li b { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--h-yellow); color: var(--h-yellow); display: grid; place-items: center; font: 500 16px/1 var(--sans); }
+    .hx-steps li > b { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--h-yellow); color: var(--h-yellow); display: grid; place-items: center; font: 500 16px/1 var(--sans); }
     .hx-flags { flex: 1; display: grid; gap: 12px; }
     .hx-flags .pc { padding: 12px 16px; font-size: 16px; }
     .hx-flags .pc b { display: block; font: 500 15px/1.3 var(--mono); margin-bottom: 4px; }
@@ -642,6 +642,87 @@
   </style>
   <style>
     /* ---------- EmbeddingGemma deck ---------- */
+    /* at-a-glance infographic (dark) */
+    .gl-head { display: flex; align-items: center; gap: 24px; width: 1088px; height: 132px; margin-bottom: 14px; }
+    .gl-title { display: flex; align-items: center; gap: 14px; flex: none; }
+    .reveal .gl-title img { width: 64px; height: 64px; margin: 0; }
+    .gl-title h2 { font-size: 46px; line-height: 1.05; margin: 0; }
+    .gl-title h2 span { color: #8ab4f8; }
+    .gl-title h2 small { display: block; font: 500 30px/1.2 var(--sans); color: var(--dk-sub); }
+    .gl-sub { flex: 1; font-size: 18px; line-height: 1.45; color: var(--dk-text); border-left: 2px solid var(--dk-line); padding-left: 20px; }
+    .gl-hero { width: 240px; height: 132px; flex: none; }
+    .gl-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; width: 1088px; }
+    .gl-card { display: flex; gap: 10px; height: 192px; box-sizing: border-box; padding: 16px 16px 14px 20px; border-radius: 18px; border: 2px solid var(--c); background: linear-gradient(135deg, color-mix(in srgb, var(--c) 16%, #2a2b2f), #232427 70%); overflow: hidden; }
+    .gl-txt { flex: 1; min-width: 0; }
+    .gl-txt em { display: block; font: 700 46px/1 var(--sans); font-style: normal; color: var(--c); letter-spacing: -.01em; }
+    .gl-txt b { display: block; font-size: 20px; margin: 6px 0 8px; color: #fff; }
+    .gl-txt span { display: block; font-size: 14.5px; line-height: 1.4; color: var(--dk-text); }
+    .gl-art { width: 128px; flex: none; display: flex; align-items: center; justify-content: center; }
+    .gl-mods { display: grid; grid-template-columns: 54px 54px; gap: 10px; align-content: center; }
+    .gl-mods i { width: 54px; height: 54px; border-radius: 14px; display: grid; place-items: center; border: 2px solid currentColor; background: color-mix(in srgb, currentColor 18%, #202124); }
+    .gl-mods i:nth-child(2) { transform: translateY(10px) rotate(6deg); } .gl-mods i:nth-child(3) { transform: rotate(-6deg); }
+    .gl-mods .ic { width: 28px; height: 28px; }
+    .gl-params { flex-direction: column; gap: 8px; width: 140px; }
+    .gl-params i { display: flex; align-items: center; gap: 7px; width: 100%; box-sizing: border-box; padding: 8px 9px; border-radius: 10px; border: 1.5px solid currentColor; background: color-mix(in srgb, currentColor 18%, #202124); font: 500 13.5px/1 var(--sans); font-style: normal; white-space: nowrap; }
+    .gl-params .ic { width: 18px; height: 18px; }
+    .gl-tok { position: relative; height: 130px; }
+    .gl-doc { width: 76px; height: 92px; border-radius: 10px; border: 2px solid #5f6368; background: #2f3034; padding: 14px 10px; box-sizing: border-box; display: grid; gap: 8px; align-content: start; }
+    .gl-doc i { display: block; height: 6px; border-radius: 3px; background: #80868b; } .gl-doc i:nth-child(4) { width: 60%; }
+    .gl-tok b { position: absolute; right: -4px; top: 6px; font: 700 18px/1 var(--sans); color: #202124; background: #ffd427; padding: 7px 10px; border-radius: 10px; }
+    .gl-tok s { position: absolute; right: 2px; bottom: 6px; font: 500 14px/1 var(--sans); color: var(--dk-sub); background: #2f3034; padding: 5px 8px; border-radius: 8px; border: 1px solid #5f6368; }
+    .gl-tok svg { position: absolute; right: 4px; top: 40px; width: 34px; height: 34px; }
+    .gl-mrl > div { width: 124px; height: 124px; }
+    .gl-mrl div { box-sizing: border-box; border-radius: 14px; display: flex; flex-direction: column; align-items: center; padding-top: 6px; background: color-mix(in srgb, #ff7daf 22%, #2a2b2f); border: 1.5px solid #ff7daf; }
+    .gl-mrl div div { width: 80%; height: 76%; margin-top: 4px; background: color-mix(in srgb, #c58af9 26%, #2a2b2f); border-color: #c58af9; }
+    .gl-mrl div div div { background: color-mix(in srgb, #a78bfa 30%, #2a2b2f); border-color: #a78bfa; }
+    .gl-mrl div div div div { background: color-mix(in srgb, #8ab4f8 34%, #2a2b2f); border-color: #8ab4f8; }
+    .gl-mrl span { font: 600 13px/1 var(--sans); color: #fff; }
+    .gl-gemma { flex-direction: column; gap: 8px; }
+    .reveal .gl-gemma img { width: 84px; height: 84px; margin: 0; }
+    .gl-gemma span { font: 500 22px/1 var(--sans); color: #8ab4f8; }
+    .gl-laptop svg { width: 124px; height: 88px; }
+    /* AI Edge Gallery slide */
+    .reveal h2.ag-title { display: flex; align-items: center; gap: 16px; font-size: 40px; margin-bottom: 18px; }
+    .reveal .ag-title img { width: 60px; height: 60px; border-radius: 14px; margin: 0; flex: none; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+    .ag-wrap { display: flex; gap: 28px; width: 1088px; align-items: flex-start; }
+    .ag-shots { display: flex; gap: 16px; flex: none; }
+    .ag-shots figure { margin: 0; width: 214px; }
+    /* phone frame around the screenshots */
+    .phone { position: relative; padding: 7px; border-radius: 40px; background: linear-gradient(145deg, #4a4d52, #1b1c1f 45%, #2c2e32); border: 1.5px solid #6b6f75; box-shadow: 0 14px 30px rgba(0,0,0,.55), inset 0 0 0 2px #0d0e10; }
+    .phone::before, .phone::after { content: ""; position: absolute; width: 3px; border-radius: 2px; background: #5f6368; }
+    .phone::before { left: -4px; top: 92px; height: 54px; box-shadow: 0 -34px 0 -6px #5f6368; }
+    .phone::after { right: -4px; top: 110px; height: 72px; }
+    .phone .island { position: absolute; left: 50%; top: 14px; transform: translateX(-50%); width: 62px; height: 17px; border-radius: 10px; background: #000; z-index: 2; }
+    .reveal .ag-shots img { width: 200px; height: auto; margin: 0; display: block; border-radius: 33px; }
+    .ag-shots figcaption { font: 400 13px/1 var(--mono); color: var(--dk-sub); margin-top: 8px; }
+    .ag-side { flex: 1; min-width: 0; display: grid; gap: 12px; }
+    .ag-side > .pc { padding: 12px 16px; }
+    .ag-side > .pc b { display: flex; align-items: center; gap: 8px; font-size: 19px; margin-bottom: 4px; }
+    .ag-side > .pc span { font-size: 15.5px; line-height: 1.4; }
+    .ag-dl { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 12px; margin-top: 2px; }
+    .reveal .ag-dl a.pc { display: flex; align-items: center; gap: 14px; padding: 12px; color: var(--dk-text); }
+    .ag-dl i { flex: none; width: 112px; height: 112px; background: #fff; border-radius: 10px; padding: 6px; box-sizing: border-box; }
+    .reveal .ag-dl i img { width: 100%; height: 100%; margin: 0; display: block; }
+    .ag-dl span { display: block; font-size: 15px; line-height: 1.35; }
+    .ag-dl span b { display: block; font-size: 22px; color: #fff; }
+    .ag-dl small { display: block; font: 400 12.5px/1.3 var(--mono); color: var(--dk-sub); margin-top: 4px; }
+    /* ADK flow chips */
+    .adk-flow { display: flex; align-items: center; gap: 4px; flex-wrap: nowrap; }
+    .adk-flow span { padding: 7px 8px; border-radius: 10px; border: 1.5px solid currentColor; background: var(--dk-card); font: 500 12.5px/1.15 var(--sans); text-align: center; white-space: nowrap; }
+    .adk-flow small { display: block; font: 400 11px/1.2 var(--mono); color: var(--dk-sub); margin-top: 2px; }
+    .adk-flow em { font-style: normal; color: var(--dk-sub); font-size: 15px; }
+    /* Gemma logo */
+    .hx-cover .hx-chips i.eg-gchip { display: flex; align-items: center; gap: 8px; padding: 5px 14px 5px 6px; }
+    .reveal .eg-gchip img { width: 24px; height: 24px; margin: 0; }
+    .eg-glogo { width: 144px; height: 144px; border-radius: 50%; border: 2px solid var(--dk-line); background: #17181b; display: grid; place-items: center; }
+    .reveal .eg-glogo img { width: 96px; height: 96px; margin: 0; }
+    .tool-logos { position: absolute; right: 56px; top: 38px; display: flex; align-items: center; gap: 10px; }
+    .tool-logos span { display: flex; align-items: center; gap: 10px; padding: 7px 16px 7px 8px; border: 2px solid var(--dk-line); border-radius: 999px; background: var(--dk-card); font: 500 17px/1 var(--sans); color: #fff; }
+    .reveal .tool-logos img { height: 40px; width: 40px; margin: 0; }
+    .eg-model b.eg-mtitle { display: flex; align-items: center; gap: 10px; }
+    .reveal .eg-mtitle img { width: 36px; height: 36px; margin: 0; }
+    .reveal .eg-gi { width: 18px; height: 18px; margin: 0; }
+
     .ic { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: none; vertical-align: middle; }
     .m-t { color: var(--h-blue); } .m-i { color: var(--h-green); } .m-a { color: var(--h-red); } .m-v { color: var(--h-yellow); }
     .flow .node .ic { display: block; margin: 0 auto 8px; width: 34px; height: 34px; }
@@ -700,6 +781,10 @@
     .eg-bars i { display: block; height: 44px; box-sizing: border-box; border: 2px solid currentColor; background: color-mix(in srgb, currentColor 22%, transparent); font: 400 14px/40px var(--mono); font-style: normal; padding-left: 10px; white-space: nowrap; overflow: hidden; }
     .eg-bars i + i { border-left: none; }
     .eg-bars i:first-child { border-radius: 10px 0 0 10px; } .eg-bars i:last-child { border-radius: 0 10px 10px 0; } .eg-bars i:only-child { border-radius: 10px; }
+    .eg-dl { display: grid; gap: 4px; margin-top: 12px; font-size: 16px; line-height: 1.4; }
+    .eg-dl .muted { font-size: 14px; }
+    .eg-bars .sz, .eg-barh span { width: 130px; flex: none; text-align: right; font: 500 18px/1 var(--mono); color: #fff; }
+    .eg-barh b, .eg-barh em, .eg-barh span { font: 400 13px/1 var(--mono) !important; color: var(--dk-sub) !important; }
     .eg-bars em { width: 70px; text-align: right; font: 500 20px/1 var(--sans); font-style: normal; color: #fff; }
     /* inputs */
     .eg-in { padding: 16px 20px; }
@@ -819,7 +904,7 @@
           <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Multimodal RAG</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
         </div>
         <div class="hx-title"><b>Build Multimodal RAG<br>with EmbeddingGemma 2</b><span>Search text, images, audio and video in one vector space</span></div>
-        <div class="hx-chips"><i style="--c:var(--h-blue)">Open · Apache 2.0</i><i style="--c:var(--h-green)">740M params</i><i style="--c:var(--h-red)">Runs locally</i></div>
+        <div class="hx-chips"><i class="eg-gchip" style="--c:#8ab4f8"><img src="../images/mediapipe-slides/logos/gemma.png" alt="">Gemma</i><i style="--c:var(--h-blue)">Open · Apache 2.0</i><i style="--c:var(--h-green)">740M params</i><i style="--c:var(--h-red)">Runs locally</i></div>
         <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:-4px; top:250px; background:var(--h-red)"></i></div>
         <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
         <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
@@ -956,7 +1041,7 @@
       <!-- Section 02 -->
       <section class="bg-green" data-title="02 · Meet EmbeddingGemma 2">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="eg-glogo abs" style="left:113px; top:248px"><img src="../images/mediapipe-slides/logos/gemma.png" alt="Gemma"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -970,16 +1055,63 @@
       <!-- Key facts -->
       <section data-title="EmbeddingGemma 2 at a glance">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
-            <div class="eyebrow">Released Oct 6, 2026 · google/embeddinggemma-2</div>
-            <h2 style="margin-bottom:24px">EmbeddingGemma 2 at a glance</h2>
-            <div class="grid g3 eg-facts" style="width:1088px; gap:16px">
-              <div class="pc blue fragment"><em>4</em><b>modalities</b><span>Text &amp; code, images &amp; visual documents, audio, video</span></div>
-              <div class="pc green fragment"><em>740M</em><b>parameters</b><span>Text 270M + vision 170M + audio 300M. Load only what you need.</span></div>
-              <div class="pc yellow fragment"><em>8,192</em><b>tokens</b><span>Shared by all inputs in one call (v1 had 2,048)</span></div>
-              <div class="pc red fragment"><em>768</em><b>dimensions</b><span>Matryoshka: cut to 512, 256 or 128</span></div>
-              <div class="pc fragment"><em>Apache 2.0</em><b>open weights</b><span>Built on the Gemma 4 decoder architecture</span></div>
-              <div class="pc fragment"><em>Local</em><b>runs anywhere</b><span>sentence-transformers, Transformers, vLLM, SGLang, MLX, Ollama, LM Studio, LiteRT</span></div>
+          <div class="in" style="padding:34px 56px">
+            <div class="gl-head">
+              <div class="gl-title"><img src="../images/mediapipe-slides/logos/gemma.png" alt=""><h2>Embedding<span>Gemma 2</span><small>at a glance</small></h2></div>
+              <p class="gl-sub">A local, multimodal embedding model that understands text, images, audio and video.</p>
+              <svg class="gl-hero" viewBox="0 0 240 132" aria-hidden="true">
+                <defs><linearGradient id="glchip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8ab4f8"/><stop offset="1" stop-color="#3b6ef5"/></linearGradient></defs>
+                <g fill="none" stroke-width="3" stroke-linecap="round" opacity=".75">
+                  <path d="M32 30 C60 48 90 64 108 86" stroke="#57caff"/><path d="M84 18 C100 40 112 60 118 84" stroke="#5cdb6d"/>
+                  <path d="M150 16 C140 40 132 60 128 84" stroke="#ff7daf"/><path d="M206 28 C176 48 150 66 138 86" stroke="#ffd427"/>
+                </g>
+                <rect x="70" y="96" width="120" height="30" rx="10" fill="#1d3f9e"/>
+                <rect x="78" y="80" width="104" height="36" rx="10" fill="url(#glchip)"/>
+                <path d="M130 88 q2 8 10 10 q-8 2 -10 10 q-2 -8 -10 -10 q8 -2 10 -10z" fill="#fff"/>
+                <g transform="translate(14 12)"><rect width="34" height="30" rx="8" fill="#2a3a55" stroke="#57caff" stroke-width="2"/><path d="M8 10h18M8 16h18M8 22h11" stroke="#57caff" stroke-width="2.5" stroke-linecap="round"/></g>
+                <g transform="translate(66 0)"><rect width="34" height="30" rx="8" fill="#22402c" stroke="#5cdb6d" stroke-width="2"/><path d="M7 23l8-8 6 6 4-4 4 6" stroke="#5cdb6d" stroke-width="2.5" fill="none" stroke-linejoin="round"/><circle cx="23" cy="10" r="3" fill="#5cdb6d"/></g>
+                <g transform="translate(134 0)"><rect width="34" height="30" rx="8" fill="#4a2a3a" stroke="#ff7daf" stroke-width="2"/><path d="M8 15h2M13 10v10M17 7v16M21 11v8M25 13v4" stroke="#ff7daf" stroke-width="2.5" stroke-linecap="round"/></g>
+                <g transform="translate(190 12)"><rect width="34" height="30" rx="8" fill="#4a4120" stroke="#ffd427" stroke-width="2"/><path d="M14 9l10 6-10 6z" fill="#ffd427"/></g>
+              </svg>
+            </div>
+            <div class="gl-grid">
+              <div class="gl-card fragment" style="--c:var(--h-blue)">
+                <div class="gl-txt"><em>4</em><b>modalities</b><span>Text &amp; code, images &amp; visual documents, audio, video</span></div>
+                <div class="gl-art gl-mods">
+                  <i class="m-t"><svg class="ic"><use href="#eg-text"/></svg></i><i class="m-v"><svg class="ic"><use href="#eg-vid"/></svg></i>
+                  <i class="m-i"><svg class="ic"><use href="#eg-img"/></svg></i><i class="m-a"><svg class="ic"><use href="#eg-aud"/></svg></i>
+                </div>
+              </div>
+              <div class="gl-card fragment" style="--c:var(--h-green)">
+                <div class="gl-txt"><em>740M</em><b>parameters</b><span>Load only the encoders you need</span></div>
+                <div class="gl-art gl-params">
+                  <i class="m-t"><svg class="ic"><use href="#eg-text"/></svg>Text 270M</i>
+                  <i class="m-i"><svg class="ic"><use href="#eg-img"/></svg>Vision 170M</i>
+                  <i class="m-a"><svg class="ic"><use href="#eg-aud"/></svg>Audio 300M</i>
+                </div>
+              </div>
+              <div class="gl-card fragment" style="--c:var(--h-yellow)">
+                <div class="gl-txt"><em>8,192</em><b>tokens</b><span>Shared by all inputs in one call (v1 had 2,048)</span></div>
+                <div class="gl-art gl-tok">
+                  <div class="gl-doc"><i></i><i></i><i></i><i></i></div>
+                  <b>8,192</b><s>2,048</s>
+                  <svg viewBox="0 0 40 40"><path d="M6 34 C18 32 28 24 32 8 M24 12 L32 6 L36 15" fill="none" stroke="#ffd427" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+              </div>
+              <div class="gl-card fragment" style="--c:var(--h-red)">
+                <div class="gl-txt"><em>768</em><b>dimensions</b><span>Matryoshka: cut to 512, 256 or 128</span></div>
+                <div class="gl-art gl-mrl"><div><span>768</span><div><span>512</span><div><span>256</span><div><span>128</span></div></div></div></div></div>
+              </div>
+              <div class="gl-card fragment" style="--c:#a78bfa">
+                <div class="gl-txt"><em style="font-size:38px; white-space:nowrap">Apache 2.0</em><b>open weights</b><span>Built on the Gemma 4 decoder architecture</span></div>
+                <div class="gl-art gl-gemma"><img src="../images/mediapipe-slides/logos/gemma.png" alt="Gemma"><span>Gemma 4</span></div>
+              </div>
+              <div class="gl-card fragment" style="--c:#8ab4f8">
+                <div class="gl-txt"><em>Local</em><b>runs anywhere</b><span>sentence-transformers, Transformers, vLLM, SGLang, MLX, Ollama, LM Studio, LiteRT</span></div>
+                <div class="gl-art gl-laptop">
+                  <svg viewBox="0 0 120 84"><rect x="16" y="6" width="88" height="58" rx="6" fill="#17181b" stroke="#8ab4f8" stroke-width="2.5"/><path d="M30 26 l10 8 -10 8 M46 44 h18" fill="none" stroke="#5cdb6d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 70 h112 l-8 8 h-96 z" fill="#3c4043" stroke="#8ab4f8" stroke-width="2"/></svg>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1001,7 +1133,7 @@
               </div>
               <svg class="eg-wires fragment" data-fragment-index="2" viewBox="0 0 80 300"><path d="M0 37 C40 37 40 150 80 150 M0 112 C40 112 40 150 80 150 M0 188 C40 188 40 150 80 150 M0 263 C40 263 40 150 80 150"/></svg>
               <div class="eg-model fragment" data-fragment-index="2">
-                <b>EmbeddingGemma 2</b>
+                <b class="eg-mtitle"><img src="../images/mediapipe-slides/logos/gemma.png" alt="">EmbeddingGemma 2</b>
                 <div class="eg-encs"><span class="m-t">Text base · 270M</span><span class="m-i">Vision encoder · +170M</span><span class="m-a">Audio encoder · +300M</span></div>
                 <small>Gemma 4 decoder → mean pooling → normalize</small>
               </div>
@@ -1034,15 +1166,17 @@
             <h2 style="margin-bottom:12px">Load only the encoders you need</h2>
             <p class="sub" style="font-size:19px; margin-bottom:26px">Same weights, same vector space, four sizes</p>
             <div class="eg-bars">
-              <div class="fragment"><b>Text only</b><div><i class="m-t" style="width:283px">Text 270M</i></div><em>270M</em></div>
-              <div class="fragment"><b>Text + vision</b><div><i class="m-t" style="width:283px">Text 270M</i><i class="m-i" style="width:178px">Vision 170M</i></div><em>440M</em></div>
-              <div class="fragment"><b>Text + audio</b><div><i class="m-t" style="width:283px">Text 270M</i><i class="m-a" style="width:315px">Audio 300M</i></div><em>570M</em></div>
-              <div class="fragment"><b>Full model</b><div><i class="m-t" style="width:283px">Text 270M</i><i class="m-i" style="width:178px">Vision 170M</i><i class="m-a" style="width:315px">Audio 300M</i></div><em>740M</em></div>
+              <div class="eg-barh"><b></b><div></div><em>params</em><span>LiteRT file</span></div>
+              <div class="fragment"><b>Text only</b><div><i class="m-t" style="width:243px">Text 270M</i></div><em>270M</em><span class="sz">165 MB</span></div>
+              <div class="fragment"><b>Text + vision</b><div><i class="m-t" style="width:243px">Text 270M</i><i class="m-i" style="width:153px">Vision 170M</i></div><em>440M</em><span class="sz">388 MB</span></div>
+              <div class="fragment"><b>Text + audio</b><div><i class="m-t" style="width:243px">Text 270M</i><i class="m-a" style="width:270px">Audio 300M</i></div><em>570M</em><span class="sz">—</span></div>
+              <div class="fragment"><b>Full model</b><div><i class="m-t" style="width:243px">Text 270M</i><i class="m-i" style="width:153px">Vision 170M</i><i class="m-a" style="width:270px">Audio 300M</i></div><em>740M</em><span class="sz">485 MB</span></div>
             </div>
-            <div class="pc green fragment" style="width:1088px; margin-top:26px; box-sizing:border-box">Start with a <b>text-only</b> index. Later reload with vision or audio and add photos or calls to the <b>same index</b>. Old vectors stay valid, no re-embedding.</div>
+            <div class="eg-dl"><span><b>Python / sentence-transformers:</b> one <code>model.safetensors</code> file, <b>1.49 GB</b>, for every config. Fewer encoders = less memory, same download.</span><span class="muted">LiteRT: generic <code>.litertlm</code> builds on Hugging Face (litert-community). No text + audio build.</span></div>
+            <div class="pc green fragment" style="width:1088px; margin-top:16px; box-sizing:border-box">Start with a <b>text-only</b> index. Later reload with vision or audio and add photos or calls to the <b>same index</b>. Old vectors stay valid, no re-embedding.</div>
           </div>
         </div>
-        <aside class="notes">จุดเด่นมาก: checkpoint เดียว โหลดได้ 4 แบบ • ข้อความอย่างเดียว 270M • ข้อความ+รูป/วิดีโอ 440M • ข้อความ+เสียง 570M • ครบทุกอย่าง 740M • ทุกแบบอยู่ใน vector space เดียวกัน • (คลิกสุดท้าย) เริ่มจาก index ข้อความก่อน วันหลังค่อยโหลด vision หรือ audio แล้วเพิ่มรูปหรือเสียงลง index เดิมได้ ไม่ต้องคำนวณเวกเตอร์เก่าใหม่ • ตัวเลขพารามิเตอร์มาจาก blog ของ Google</aside>
+        <aside class="notes">จุดเด่นมาก: checkpoint เดียว โหลดได้ 4 แบบ • ข้อความอย่างเดียว 270M • ข้อความ+รูป/วิดีโอ 440M • ข้อความ+เสียง 570M • ครบทุกอย่าง 740M • ทุกแบบอยู่ใน vector space เดียวกัน • (คลิกสุดท้าย) เริ่มจาก index ข้อความก่อน วันหลังค่อยโหลด vision หรือ audio แล้วเพิ่มรูปหรือเสียงลง index เดิมได้ ไม่ต้องคำนวณเวกเตอร์เก่าใหม่ • ตัวเลขพารามิเตอร์มาจาก blog ของ Google • ขนาดไฟล์ที่ต้องโหลด (จาก Hugging Face): ถ้าใช้ Python/sentence-transformers มีไฟล์เดียว model.safetensors 1.49 GB ทุกแบบต้องดาวน์โหลดไฟล์นี้ การเลือก encoder ช่วยลดหน่วยความจำตอนรัน ไม่ได้ลดขนาดดาวน์โหลด • บนมือถือใช้ LiteRT ที่มีไฟล์แยกจริง: text 270M = 165 MB, text+vision 440M = 388 MB, เต็ม 740M = 485 MB ยังไม่มีไฟล์ text+audio แยก (ไฟล์สำหรับชิปเฉพาะรุ่นใหญ่กว่านี้ ราว 0.2–0.9 GB)</aside>
       </section>
 
       <!-- Inputs -->
@@ -1097,6 +1231,31 @@
           <div class="ask fragment"><b>⚠ Rule</b><span>Queries and documents must use the same dimension. After truncating, normalize again.</span></div>
         </div>
         <aside class="notes">Matryoshka เหมือนตุ๊กตาแม่ลูกดก ข้อมูลสำคัญอยู่ด้านหน้าของเวกเตอร์ ตัดท้ายทิ้งได้ • 768 มิติ: 1 ล้านเวกเตอร์ใช้ราว 1.5 GB ดีที่สุดสำหรับงาน multimodal • 512: ราว 1 GB • 256: ประมาณ 1/3 ของพื้นที่ ข้อความยังดีเกือบเต็ม รูป วิดีโอ เสียงได้ราว 95% • 128: ราว 250 MB เล็กลง 6 เท่า ข้อความราว 90% แต่สื่ออื่นเหลือราว 75% ต้องทดสอบกับข้อมูลจริงก่อน • ตัวเลขคุณภาพเป็นค่าเทียบกับ 768 มิติจาก blog ของ Google ส่วน 512 และ 256 ผมคำนวณขนาดเอง • (คลิก) กฎ: query และเอกสารต้องใช้มิติเท่ากัน และ normalize ใหม่หลังตัด</aside>
+      </section>
+
+      <!-- Try it: Google AI Edge Gallery -->
+      <section data-title="Try it in Google AI Edge Gallery">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">Try it first · no code · 100% on-device</div>
+            <h2 class="ag-title"><img src="../images/embeddinggemma2-rag-slides/ai-edge-gallery-icon.png" alt="Google AI Edge Gallery icon">Try EmbeddingGemma 2 in Google AI Edge Gallery</h2>
+            <div class="ag-wrap">
+              <div class="ag-shots">
+                <figure class="fragment" data-fragment-index="1"><div class="phone"><span class="island"></span><img src="../images/embeddinggemma2-rag-slides/instant_media_search-phone.png" alt="Instant Media Search screenshot"></div></figure>
+                <figure class="fragment" data-fragment-index="2"><div class="phone"><span class="island"></span><img src="../images/embeddinggemma2-rag-slides/video_moment_finder-phone.png" alt="Video Moment Finder screenshot"></div></figure>
+              </div>
+              <div class="ag-side">
+                <div class="pc green fragment" data-fragment-index="1"><b><svg class="ic m-i"><use href="#eg-img"/></svg>Instant Media Search</b><span>Search your photo library (or sample media) as you type, plus image-to-image matching. No cloud round trip.</span></div>
+                <div class="pc yellow fragment" data-fragment-index="2"><b><svg class="ic m-v"><use href="#eg-vid"/></svg>Video Moment Finder</b><span>Describe a moment, jump to the matching timestamps, trim and save the clip.</span></div>
+                <div class="ag-dl fragment" data-fragment-index="3">
+                  <a class="pc" href="https://play.google.com/store/apps/details?id=com.google.ai.edge.gallery" target="_blank"><i><img src="../images/embeddinggemma2-rag-slides/qr-gallery-android.svg" alt="QR: Google Play"></i><span><b>Android</b>Google Play<small>Android 12+</small></span></a>
+                  <a class="pc" href="https://apps.apple.com/us/app/google-ai-edge-gallery/id6749645337" target="_blank"><i><img src="../images/embeddinggemma2-rag-slides/qr-gallery-ios.svg" alt="QR: App Store"></i><span><b>iOS</b>App Store<small>iPhone · iOS 17+</small></span></a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลองก่อนได้เลยโดยไม่ต้องเขียนโค้ด: แอป Google AI Edge Gallery ของ Google มีเดโม EmbeddingGemma 2 ที่รันบนมือถือ 100% • (คลิก 1) Instant Media Search: พิมพ์ค้นรูปในเครื่องเป็นภาษาธรรมชาติ ผลขึ้นทันทีขณะพิมพ์ เช่น "Cat in a box" ตัวเลขบนรูปคือ cosine similarity และค้นรูปด้วยรูปได้ ไม่ส่งข้อมูลขึ้น cloud • (คลิก 2) Video Moment Finder: พิมพ์บรรยายฉาก เช่น "Mountain" แอปหาช่วงเวลาในวิดีโอให้ กดกระโดดไปที่ timestamp ตัดคลิปและบันทึกได้ • (คลิก 3) สแกน QR ดาวน์โหลด: Android ผ่าน Google Play (Android 12 ขึ้นไป) และ iPhone ผ่าน App Store (iOS 17 ขึ้นไป) • ภาพหน้าจอมาจากหน้า App Store ของแอป</aside>
       </section>
 
       <!-- Section 03 -->
@@ -1286,7 +1445,7 @@ print(model.similarity(query_emb, listing_emb))
               <span class="eg-lane" style="top:262px">ONLINE · every question</span>
               <div class="pc eg-b fragment" data-fragment-index="1" style="left:0; top:24px"><b>Sources</b><span><i class="m-t">docs</i> <i class="m-i">PDF pages</i> <i class="m-a">calls</i> <i class="m-v">videos</i></span></div>
               <div class="pc eg-b fragment" data-fragment-index="1" style="left:224px; top:24px"><b>Chunk</b><span>PDF page → image<br>long video → short clips</span></div>
-              <div class="pc green eg-b fragment" data-fragment-index="1" style="left:448px; top:24px"><b>EmbeddingGemma 2</b><span>text: <code>Document</code><br>media: no prompt</span></div>
+              <div class="pc green eg-b fragment" data-fragment-index="1" style="left:448px; top:24px; padding:12px 10px"><b style="font-size:14px; gap:5px"><img class="eg-gi" src="../images/mediapipe-slides/logos/gemma.png" alt="">EmbeddingGemma 2</b><span>text: <code>Document</code><br>media: no prompt</span></div>
               <div class="pc eg-b eg-db fragment" data-fragment-index="2" style="left:448px; top:150px"><b><svg class="ic"><use href="#eg-db"/></svg> Vector index</b><span>vector + item path + page / timestamp</span></div>
               <div class="pc blue eg-b fragment" data-fragment-index="3" style="left:0; top:286px"><b>Question</b><span>"How do I descale the X200?"</span></div>
               <div class="pc green eg-b fragment" data-fragment-index="3" style="left:224px; top:286px"><b>Embed query</b><span><code>SearchQuery</code></span></div>
@@ -1443,6 +1602,66 @@ print(resp.text)
           </div>
         </div>
         <aside class="notes">ตัวอย่างสมมุติ: บอทช่วยเหลือเครื่องชงกาแฟ • (คลิก 1) ผู้ใช้ถามวิธีล้างตะกรัน • (คลิก 2) ค้นเจอหลักฐาน 3 แบบ: หน้าคู่มือที่มีภาพวาล์ว (รูป), คลิปวิดีโอช่วงนาที 1:20 ที่สาธิตการเท (วิดีโอ), เสียงโทรที่เจ้าหน้าที่เตือนว่าห้ามใช้น้ำส้มสายชู (เสียง) • (คลิก 3) LLM รวมเป็นคำตอบเดียวพร้อมอ้างอิงแต่ละแหล่ง • ถ้าเป็น text-only RAG ภาพวาล์วกับคำเตือนในเสียงโทรอาจหายไปเลย</aside>
+      </section>
+
+      <!-- Plug into ADK -->
+      <section data-title="Plug it into an ADK agent">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">Agent Development Kit (ADK) · same retrieval, now a tool</div>
+            <h2 style="margin-bottom:16px">Plug it into an ADK agent</h2>
+            <div style="display:flex; gap:20px; width:1088px; align-items:flex-start">
+              <div class="fragment" data-fragment-index="1" style="width:560px; flex:none">
+                <span class="tag">app/tools.py</span>
+                <pre style="font-size:12.5px; margin-top:10px"><code class="language-python" data-trim>
+import torch
+from sentence_transformers import SentenceTransformer, util
+
+model = SentenceTransformer("google/embeddinggemma-2",
+                            truncate_dim=512)
+index = torch.load("index.pt")  # built offline (pipeline 1)
+
+def search_knowledge(query: str, top_k: int = 5) -> dict:
+    """Search docs, manual pages, calls and videos.
+
+    Returns the closest items with score and source.
+    """
+    q = model.encode(query, prompt_name="SearchQuery",
+                     convert_to_tensor=True,
+                     normalize_embeddings=True)
+    hits = util.semantic_search(q, index["emb"], top_k=top_k)[0]
+    return {"results": [
+        {"score": round(h["score"], 3),
+         "source": str(index["items"][h["corpus_id"]])}
+        for h in hits]}
+                </code></pre>
+              </div>
+              <div style="flex:1; min-width:0; display:grid; gap:12px">
+                <div class="fragment" data-fragment-index="2">
+                  <span class="tag yellow">app/agent.py</span>
+                  <pre style="font-size:12.5px; margin-top:10px"><code class="language-python" data-trim>
+from google.adk.agents import Agent
+from .tools import search_knowledge
+
+root_agent = Agent(
+    name="support_agent",
+    model="gemini-flash-latest",
+    description="Answers product questions from our docs.",
+    instruction=("Call search_knowledge first. Answer only "
+                 "from its results and cite each source."),
+    tools=[search_knowledge],
+)
+                  </code></pre>
+                </div>
+                <div class="adk-flow fragment" data-fragment-index="3">
+                  <span class="m-t">You</span><em>→</em><span class="m-v">ADK agent<small>Gemini</small></span><em>⇄</em><span class="m-i">search_knowledge<small>tool</small></span><em>⇄</em><span class="m-a">EmbeddingGemma 2<small>index</small></span>
+                </div>
+                <div class="cmd fragment" data-fragment-index="4" style="font-size:13px">agents-cli run "How do I descale the X200?"</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ต่อเข้ากับ ADK: เอาโค้ดค้นหาเดิมมาห่อเป็น function แล้วให้ agent เรียกใช้เป็น tool • (คลิก 1) app/tools.py: โหลดโมเดลและ index ที่สร้างไว้ตอน offline ครั้งเดียว ฟังก์ชัน search_knowledge รับคำถาม embed ด้วย SearchQuery แล้วคืนผลลัพธ์พร้อมคะแนนและแหล่งที่มา docstring สำคัญเพราะ ADK ส่งให้โมเดลอ่านว่า tool นี้ทำอะไร • (คลิก 2) app/agent.py: สร้าง Agent ใส่ tools=[search_knowledge] และสั่งใน instruction ให้เรียก tool ก่อนแล้วตอบจากผลเท่านั้นพร้อมอ้างอิง • (คลิก 3) การไหล: ผู้ใช้ถาม → agent (Gemini) ตัดสินใจเรียก tool → tool ค้นใน index ของ EmbeddingGemma 2 → agent ตอบ • (คลิก 4) ไฟล์ app/tools.py กับ app/agent.py ตรงกับโครงสร้างที่ agents-cli scaffold สร้างให้ ทดสอบด้วย agents-cli run ได้เลย • หมายเหตุ: tool คืนผลเป็นข้อความ ถ้าผลเป็นรูปหรือวิดีโอ agent จะเห็นเป็น path และ timestamp ใช้อ้างอิงได้ ถ้าอยากให้โมเดลดูสื่อจริงให้ใช้แบบสไลด์ generate ก่อนหน้า</aside>
       </section>
 
       <!-- Section 05 -->
