@@ -31,8 +31,6 @@
     .rows .chev span.g { color: var(--h-green); } .rows .chev span.r { color: var(--h-red); }
     .lead { margin-top: 22px; font: 400 20px/1.45 var(--sans); color: var(--sub); max-width: 460px; }
     .lead b { color: #fff; font-weight: 500; }
-    .stats { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
-    .stats i { font: 400 14px/1 var(--mono); font-style: normal; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
     .me { position: relative; width: 300px; height: 300px; flex: none; margin: 0 40px 0 0 !important; }
     .me .orbit { position: absolute; inset: -34px; border-radius: 50%; border: 2px dashed var(--line); animation: spin 60s linear infinite; }
     .me .orbit i { position: absolute; width: 18px; height: 18px; border-radius: 50%; border: 3px solid var(--bg); }
@@ -48,7 +46,7 @@
       .hero { grid-template-columns: 1fr; justify-items: center; text-align: center; }
       .hero > div:first-child { order: 2; width: 100%; }
       .rows .chev { justify-content: center; } .rows { -webkit-mask-image: none; mask-image: none; }
-      .lead { margin-left: auto; margin-right: auto; } .stats { justify-content: center; }
+      .lead { margin-left: auto; margin-right: auto; }
       .me { width: 220px; height: 220px; margin: 40px 0 110px !important; }
     }
     .chev { display: flex; align-items: center; gap: 14px; white-space: nowrap; font: 400 clamp(40px, 7.5vw, 68px)/1.1 var(--sans); letter-spacing: -.01em; color: #fff; }
@@ -89,7 +87,6 @@
           <div class="chev"><svg class="t"><use href="#ch-r"/></svg><svg><use href="#ch-r"/></svg><svg><use href="#ch-r"/></svg><span class="r">Slides</span></div>
         </div>
         <p class="lead">Talk decks on <b>on-device ML</b>, <b>Gemini</b> and <b>AI agents</b> on Google Cloud.</p>
-        <div class="stats"><i style="--c:var(--h-blue)">6 decks</i><i style="--c:var(--h-green)">F · fullscreen</i><i style="--c:var(--h-yellow)">O · all slides</i></div>
       </div>
       <figure class="me" style="margin:0">
         <div class="orbit"><i style="left:22px; top:40px; background:var(--h-yellow)"></i><i style="right:-6px; top:130px; background:var(--h-blue)"></i><i style="left:20px; bottom:46px; background:var(--h-green)"></i><i style="right:-4px; top:220px; background:var(--h-red)"></i></div>
