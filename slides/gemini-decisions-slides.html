@@ -102,6 +102,50 @@
     .tag.red { background: var(--p-red); } .tag.yellow { background: var(--g-yellow); }
     .eyebrow { font: 400 17px/1 var(--mono); letter-spacing: .02em; color: var(--ink); margin-bottom: 12px; }
     .grid { display: grid; gap: 20px; }
+
+    /* end-to-end diagram slide (.dg = 1088 × 430 canvas, boxes positioned absolutely) */
+    .dg { position: relative; width: 1088px; height: 430px; margin-top: 22px; }
+    .dg-lines { position: absolute; inset: 0; width: 100%; height: 100%; fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linejoin: round; stroke-linecap: round; }
+    .dg-lbl { position: absolute; font: 400 15px/1 var(--mono); color: var(--muted); }
+    .dg-box { position: absolute; box-sizing: border-box; padding: 16px 18px; border: 2.5px solid var(--ink); border-radius: 22px; }
+    .dg-box.in-box { background: var(--p-blue); } .dg-box.q-box { background: var(--p-yellow); } .dg-box.a-box { background: var(--p-green); }
+    .dg-t { font: 700 15px/1 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+    .dg-s { font-size: 15px; line-height: 1; color: var(--muted); margin: 6px 0 12px; }
+    .dg-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .dg-chips span { padding: 9px 14px; border: 2px solid var(--ink); border-radius: 12px; background: #fff; font-size: 17px; line-height: 1; }
+    .dg-row, .dg-ans { display: block; background: #fff; border: 2px solid var(--ink); border-radius: 14px; font-size: 17px; line-height: 1.2; }
+    .dg-row { padding: 9px 12px; margin-top: 10px; }
+    .q-box .dg-row:first-of-type { margin-top: 14px; }
+    .dg-ans { padding: 8px 12px; margin-top: 10px; white-space: nowrap; font-size: 16px; }
+    .dg-ans small { display: block; font-size: 13.5px; color: var(--muted); margin-top: 3px; }
+    .dg .dg-row code, .dg .dg-ans code { display: inline-block; font: 400 13.5px/1 var(--mono); padding: 4px 9px; margin-right: 8px; border: 1.5px solid var(--ink); border-radius: 999px; background: var(--p-yellow); }
+    .dg .dg-ans code { background: var(--p-green); }
+    .dg-model { position: absolute; left: 466px; top: 157px; width: 200px; height: 100px; box-sizing: border-box; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border: 2.5px solid var(--ink); border-radius: 22px; background: linear-gradient(135deg, #e8f0fe 0%, #efe6fd 55%, #fde8f1 100%); font: 700 19px/1 var(--sans); box-shadow: 0 6px 22px rgba(124, 92, 255, .22); }
+    .reveal .dg-model img { width: 34px; height: 34px; }
+
+    /* Gemini sparkle: cover + inline */
+    .reveal .cv-spark { position: absolute; left: 566px; top: 282px; width: 140px; height: 140px; z-index: 2; transform: rotate(8deg); filter: drop-shadow(0 8px 18px rgba(66, 133, 244, .35)); }
+    .reveal img.gem-i, .reveal .tas-shots img.gem-i { display: inline-block; width: 20px; height: 20px; vertical-align: -3px; margin-right: 6px; border: 0; border-radius: 0; }
+
+    /* use-case slide */
+    .uc-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; width: 1088px; }
+    .uc-grid .pc { padding: 16px 18px; font-size: 16.5px; line-height: 1.3; min-width: 0; }
+    .uc-grid h3 { font-size: 21px; margin: 10px 0 6px; }
+    .uc-top { display: flex; gap: 8px; align-items: center; }
+    .uc-top .chip { font-size: 13.5px; padding: 3px 10px; }
+    .uc-grid .pc code { font: 400 13.5px/1 var(--mono); padding: 4px 9px; border: 1.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .uc-q { font-style: italic; }
+    .uc-a { display: block; margin-top: 6px; font: 400 13.5px/1.35 var(--mono); color: var(--muted); }
+
+    /* "Try it in AI Studio" slide */
+    .tas-head { display: flex; align-items: center; gap: 20px; width: 1088px; margin-bottom: 18px; }
+    .reveal .tas-logo { width: 68px; height: 68px; flex: none; }
+    .tas-head .eyebrow { margin-bottom: 8px; }
+    .tas-link { display: inline-block; margin-top: 10px; font: 500 16px/1 var(--sans); padding: 10px 18px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--p-yellow); color: var(--ink) !important; }
+    .tas-shots { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; width: 1088px; }
+    .reveal .tas-shots figure { margin: 0; min-width: 0; }
+    .reveal .tas-shots img { display: block; width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 18px; box-sizing: border-box; }
+    .tas-shots figcaption { margin-top: 10px; font-size: 17px; line-height: 1.3; }
     .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
     .reveal ul.bl { list-style: none; margin: 0; padding: 0; display: block; font-size: 25px; line-height: 1.35; }
     .reveal ul.bl li { position: relative; padding-left: 34px; margin: 0 0 16px; }
@@ -517,6 +561,7 @@
             <h1 class="cv-title">Gemini<br>Decisions<br>API</h1>
           </div>
         </div>
+        <img class="cv-spark" src="../images/gemini-decisions-slides/gemini-logo.svg" alt="Gemini logo">
         <div class="cv-name"><b>Punsiri Boonyakiat</b><span>Google Developer Expert in Cloud AI</span></div>
         <div class="cv-photo">
           <img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat">
@@ -649,6 +694,53 @@
           </div>
         </div>
         <aside class="notes">ส่ง input ก้อนเดียว (มัลติโมดัลได้) พร้อมคำถามอิสระได้ถึง 1,000 ข้อ • โมเดลไม่ได้ generate ข้อความ แต่ให้คะแนนตัวเลือกทั้งหมดใน forward pass เดียว • ได้ความน่าจะเป็นและ confidence กลับมา • จุดที่ทรงพลัง: เอา confidence มาเขียน logic ได้เลย เคสชัดก็ทำต่ออัตโนมัติ เคสกำกวมส่งไปโมเดลที่ใหญ่กว่าหรือให้คนตรวจ</aside>
+      </section>
+
+      <!-- End-to-end diagram: input + questions → Gemini Decision 1 → calibrated answers -->
+      <section data-title="The whole picture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Example · breakroom spill</div>
+            <h2 style="font-size:42px">Gemini Decisions API, end to end</h2>
+            <div class="dg">
+              <svg class="dg-lines" viewBox="0 0 1088 430" aria-hidden="true">
+                <polyline points="384,105 428,105 428,196 466,196"/>
+                <polyline points="384,315 428,315 428,218 466,218"/>
+                <polyline points="666,198 694,198 694,130 722,130"/>
+                <polyline points="666,207 722,207"/>
+                <polyline points="666,216 694,216 694,282 722,282"/>
+                <path class="hd" d="M458,190 L466,196 L458,202 M458,212 L466,218 L458,224 M714,124 L722,130 L714,136 M714,201 L722,207 L714,213 M714,276 L722,282 L714,288"/>
+              </svg>
+              <span class="dg-lbl" style="left:396px; top:72px">input</span>
+              <span class="dg-lbl" style="left:386px; top:326px">questions</span>
+
+              <div class="dg-box in-box" style="left:0; top:20px; width:384px; height:170px">
+                <div class="dg-t">Multimodal input</div>
+                <div class="dg-s">Up to 256K tokens</div>
+                <div class="dg-chips">
+                  <span>Text &amp; JSON</span><span>PDF</span><span>Image</span><span>Audio</span><span>Video</span>
+                </div>
+              </div>
+              <div class="dg-box q-box" style="left:0; top:210px; width:384px; height:210px">
+                <div class="dg-t">Questions</div>
+                <div class="dg-row"><code>bool</code>Is there a liquid spill?</div>
+                <div class="dg-row"><code>choice</code>What action should be taken?</div>
+                <div class="dg-row"><code>score</code>Rate spill severity (0 to 2)</div>
+              </div>
+
+              <div class="dg-model"><img src="../images/gemini-decisions-slides/gemini-logo.svg" alt="Gemini logo">Gemini Decision 1</div>
+
+              <div class="dg-box a-box" style="left:722px; top:30px; width:366px">
+                <div class="dg-t">Calibrated answers</div>
+                <div class="dg-s">Parallel isolated scoring</div>
+                <div class="dg-ans"><div><code>bool</code>has_spill: 0.95</div><small>confidence: 0.95</small></div>
+                <div class="dg-ans"><div><code>choice</code>next_action: "wipe_with_cloth"</div><small>confidence: 0.98</small></div>
+                <div class="dg-ans"><div><code>score</code>severity: 1.19 / 2.00</div><small>confidence: 0.77</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพรวมทั้งระบบ (ตัวอย่างจาก docs: ตรวจน้ำหกในห้องพักพนักงาน) • ซ้ายบน: input มัลติโมดัลก้อนเดียว ข้อความ/JSON, PDF, รูป, เสียง, วิดีโอ สูงสุดราว 256K tokens • ซ้ายล่าง: คำถามหลายแบบในคำขอเดียว bool "มีน้ำหกไหม", choice "ควรทำอะไร", score "ความรุนแรง 0–2" • ตรงกลาง: โมเดล Gemini Decision 1 • ขวา: คำตอบที่ calibrate แล้ว ให้คะแนนแต่ละคำถามแยกกันแบบขนาน has_spill 0.95, next_action = wipe_with_cloth (confidence 0.98), severity 1.19 จาก 2 (confidence 0.77) • confidence ต่ำ = ส่งให้คนหรือโมเดลใหญ่ตรวจต่อ</aside>
       </section>
 
       <!-- Question types -->
@@ -991,6 +1083,25 @@ curl -X POST \
         <aside class="notes">เอาไปใช้ได้กับ pattern พวกนี้: เลือก tool ให้ agent, route ไปโมเดลถูกหรือโมเดลคิดลึก, ตรวจ policy, ให้คะแนนความเกี่ยวข้องของ context ใน RAG, ให้คะแนนเนื้อหาด้วย rubric • ลองเล่น demo apps ใน AI Studio: Doorstep Parcels, Speed Sketch, Find the Zoo Keeper (คลิกลิงก์ในสไลด์เปิดได้เลย)</aside>
       </section>
 
+      <!-- Use cases (the six Playground examples) -->
+      <section data-title="Use cases">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Use cases · one per modality</div>
+            <h2 style="font-size:42px; margin-bottom:24px">What you can decide</h2>
+            <div class="uc-grid">
+              <div class="pc blue fragment"><div class="uc-top"><span class="chip">Text</span><code>choice</code></div><h3>Route a support ticket</h3><span class="uc-q">“Which team should handle this ticket?”</span><span class="uc-a">billing 0.95 · technical 0.04</span></div>
+              <div class="pc green fragment"><div class="uc-top"><span class="chip">Image</span><code>bool</code></div><h3>Inspect a return photo</h3><span class="uc-q">“Does this photo show visible damage?”</span><span class="uc-a">true 0.92 → approve refund</span></div>
+              <div class="pc yellow fragment"><div class="uc-top"><span class="chip">Audio</span><code>score</code></div><h3>Analyze a support call</h3><span class="uc-q">“How frustrated is the caller?”</span><span class="uc-a">high score → escalate to a lead</span></div>
+              <div class="pc red fragment"><div class="uc-top"><span class="chip">Video</span><code>score</code></div><h3>Review a bug recording</h3><span class="uc-q">“How severe is this bug?”</span><span class="uc-a">cosmetic · workaround · blocked</span></div>
+              <div class="pc fragment"><div class="uc-top"><span class="chip">PDF</span><code>bool</code></div><h3>Audit an expense receipt</h3><span class="uc-q">“Does this receipt follow the policy?”</span><span class="uc-a">low confidence → human review</span></div>
+              <div class="pc blue fragment"><div class="uc-top"><span class="chip">Code</span><code>bool</code></div><h3>Gate a code review</h3><span class="uc-q">“Is this diff safe to merge?”</span><span class="uc-a">false → block the PR</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">use case ตัวอย่างจาก Decisions API Playground ใน AI Studio ครบทุก modality: (1) Text: route ticket ไปทีมที่ถูก (choice: billing/technical/shipping) (2) Image: ดูรูปสินค้าตีกลับว่าเสียหายไหม (bool) ถ้าใช่ก็อนุมัติคืนเงินอัตโนมัติ (3) Audio: ฟังสาย support ให้คะแนนความหงุดหงิดของลูกค้า (score) คะแนนสูงส่งหัวหน้า (4) Video: ดูวิดีโอบั๊กแล้วให้ระดับความรุนแรง cosmetic/workaround/blocked (5) PDF: ตรวจใบเสร็จว่าตรงนโยบายไหม confidence ต่ำส่งคนตรวจ (6) Code: gate code review ถ้าไม่ปลอดภัยก็ block PR • คำถามในสไลด์เป็นตัวอย่างที่เขียนขึ้นประกอบ ลองตัวจริงได้ใน Playground</aside>
+      </section>
+
       <!-- Section 04 -->
       <section class="bg-red" data-title="04 · Get started">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
@@ -1003,6 +1114,33 @@ curl -X POST \
           </div>
         </div>
         <aside class="notes">ช่วงที่ 4 • เริ่มใช้ได้เลยวันนี้</aside>
+      </section>
+
+      <!-- Try it in AI Studio: playground + model card screenshots -->
+      <section data-title="Try it in Google AI Studio">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="tas-head">
+              <img class="tas-logo" src="../images/gemini-decisions-slides/ai-studio-logo.png" alt="Google AI Studio logo">
+              <div>
+                <div class="eyebrow">Google AI Studio · free to try</div>
+                <h2 style="font-size:42px">Play with it in AI Studio</h2>
+              </div>
+            </div>
+            <div class="tas-shots">
+              <figure>
+                <a href="https://aistudio.google.com/docs" target="_blank"><img src="../images/gemini-decisions-slides/aistudio-docs-model-card.jpg" alt="AI Studio docs model cards: Gemini 4 Carbon, Gemini 4 Hydrogen and Gemini Decision 1"></a>
+                <figcaption><img class="gem-i" src="../images/gemini-decisions-slides/gemini-logo.svg" alt="Gemini logo"><b>gemini-decision-1</b> · 262K context · 0 output tokens</figcaption>
+              </figure>
+              <figure>
+                <a href="https://aistudio.google.com/apps/bundled/gemini-decisions-api-playground?fullscreenApplet=true" target="_blank"><img src="../images/gemini-decisions-slides/aistudio-playground.jpg" alt="Gemini Decisions API Playground in AI Studio: yes/no, choice and rubric score question types"></a>
+                <figcaption><b>Decisions API Playground</b> · yes/no, choice, score + 6 examples</figcaption>
+                <a class="tas-link" href="https://aistudio.google.com/apps/bundled/gemini-decisions-api-playground?fullscreenApplet=true" target="_blank">Open the Playground →</a>
+              </figure>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลองเล่นได้เลยใน Google AI Studio ไม่ต้องเขียนโค้ด • ซ้าย: Gemini Decisions API Playground เลือกประเภทคำถามได้ 3 แบบ คือ yes/no (Boolean), เลือกจากตัวเลือก (choice) และให้คะแนนตาม rubric (score) หรือเปิดตัวอย่างสำเร็จรูป 6 แบบ เช่น route support ticket, ตรวจรูปสินค้าตีกลับ, วิเคราะห์สายโทร support, ดูวิดีโอบั๊ก, ตรวจใบเสร็จ, gate code review • ขวา: หน้า docs ของ AI Studio มีการ์ดโมเดล Gemini Decision 1 (model code gemini-decision-1) context 262K tokens, output 0 tokens ตอบได้ถึง 1,000 คำถามต่อ request รับ text, image, audio, video, PDF • คลิกปุ่ม Open the Playground หรือรูปเพื่อเปิดลิงก์</aside>
       </section>
 
       <section data-title="Limits &amp; rate limits">
@@ -1066,10 +1204,11 @@ curl -X POST \
               <div class="pc yellow"><h3>Playground</h3><a class="mono" style="font-size:18px" href="https://aistudio.google.com/apps/bundled/gemini-decisions-api-playground?fullscreenApplet=true" target="_blank">AI Studio · Decisions API Playground</a></div>
               <div class="pc green"><h3>API key</h3><a class="mono" style="font-size:18px" href="https://aistudio.google.com/api-keys" target="_blank">aistudio.google.com/api-keys</a></div>
               <div class="pc red"><h3>Announcement</h3><a class="mono" style="font-size:18px" href="https://blog.google/innovation-and-ai/technology/developers-tools/gemini-decisions-api/" target="_blank">blog.google · Gemini Decisions API</a></div>
+              <div class="pc"><h3>Codelab</h3><a class="mono" style="font-size:18px" href="https://codelabs.developers.google.com/getting-started-with-gemini-decisions-api#5" target="_blank">Getting started with Decisions API</a></div>
             </div>
           </div>
         </div>
-        <aside class="notes">แหล่งเริ่มต้น: Docs มีคู่มือ Python, JavaScript, REST • Playground ใน AI Studio ลองได้ไม่ต้องเขียนโค้ด • สร้าง API key ที่ aistudio.google.com/api-keys • บทความประกาศบน blog.google (11 พ.ย. 2026 โดย Min Choi และ Felix Yu, Google DeepMind) • ให้เวลาผู้ฟังถ่ายรูปสไลด์นี้</aside>
+        <aside class="notes">แหล่งเริ่มต้น: Docs มีคู่มือ Python, JavaScript, REST • Codelab "Getting started with the Gemini Decisions API" ทำตามทีละขั้นได้เลย • Playground ใน AI Studio ลองได้ไม่ต้องเขียนโค้ด • สร้าง API key ที่ aistudio.google.com/api-keys • บทความประกาศบน blog.google (11 พ.ย. 2026 โดย Min Choi และ Felix Yu, Google DeepMind) • ให้เวลาผู้ฟังถ่ายรูปสไลด์นี้</aside>
       </section>
 
       <!-- Thank you -->
