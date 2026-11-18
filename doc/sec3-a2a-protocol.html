@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3.6 Agent2Agent (A2A) protocol, Agent Cards, and remote streaming · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="sec3-a2a-protocol">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">3.6 Agent2Agent (A2A) protocol, Agent Cards, and remote streaming</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.pdf-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 14px; border-radius: 10px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 12px 0; }
+.pdf-bar-text { font-size: 0.84rem; color: var(--sl-color-text); font-weight: 500; }
+.pdf-dl-btn { padding: 6px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.18); border: 1px solid #3b82f6; color: var(--sl-color-white) !important; font-size: 0.8rem; font-weight: 700; text-decoration: none !important; white-space: nowrap; }
+.nutshell-box { background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.nutshell-title { font-size: 0.85rem; font-weight: 800; color: #10b981; margin-bottom: 6px; }
+.def-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 16px 0; }
+.def-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.def-name { font-size: 0.98rem; font-weight: 700; color: var(--sl-color-white); line-height: 1.35; }
+.def-path { display: inline-block; width: fit-content; font-family: monospace; font-size: 0.76rem; padding: 2px 8px; border-radius: 6px; background: rgba(59, 130, 246, 0.16); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
+.def-text { font-size: 0.84rem; color: var(--sl-color-text); line-height: 1.5; }
+.def-text ul { margin: 4px 0 0 0; padding-left: 16px; }
+.a2a-widget { display: flex; flex-direction: column; gap: 16px; padding: 18px; border-radius: 14px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 20px 0; }
+.a2a-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 14px; background: var(--sl-color-bg); border-radius: 10px; border: 1px solid var(--sl-color-gray-5); }
+.a2a-toggle-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.a2a-btn { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.a2a-btn.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: var(--sl-color-white); }
+.a2a-svg-box { width: 100%; background: var(--sl-color-bg); border-radius: 12px; padding: 12px; border: 1px solid var(--sl-color-gray-5); }
+.a2a-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; }
+.a2a-node { cursor: pointer; transition: opacity 0.2s ease; }
+.a2a-node rect { fill: var(--sl-color-bg-nav); stroke: var(--sl-color-gray-4); stroke-width: 1.5px; rx: 10px; }
+.a2a-node.is-selected rect { stroke: #10b981; stroke-width: 2.5px; }
+.a2a-node.is-dimmed { opacity: 0.42; }
+.a2a-title { font-size: 11px; font-weight: 700; fill: var(--sl-color-white); pointer-events: none; }
+.a2a-sub { font-size: 9.5px; fill: var(--sl-color-text); pointer-events: none; }
+.a2a-edge { stroke: var(--sl-color-gray-4); stroke-width: 2px; stroke-dasharray: 5 5; }
+.a2a-edge.active-edge { stroke: #10b981; stroke-width: 2.5px; animation: a2aPulse 0.8s linear infinite; }
+@keyframes a2aPulse { from { stroke-dashoffset: 20; } to { stroke-dashoffset: 0; } }
+.a2a-card { background: var(--sl-color-bg); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.a2a-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.a2a-meta { background: var(--sl-color-bg-nav); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--sl-color-hairline); }
+.a2a-meta-label { font-size: 0.78rem; color: var(--sl-color-text-accent); font-weight: 700; margin-bottom: 6px; }
+.a2a-meta-val { font-size: 0.86rem; color: var(--sl-color-white); line-height: 1.5; }
+.a2a-meta-val ul { margin: 0; padding-left: 18px; }
+abbr[title] { text-decoration: underline dotted var(--sl-color-gray-3); cursor: help; border-bottom: none; }
+table { display: table !important; table-layout: fixed !important; border-collapse: collapse !important; width: 100% !important; border: 1px solid var(--sl-color-gray-5) !important; }
+th, td { border: 1px solid var(--sl-color-gray-5) !important; padding: 10px 12px !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; vertical-align: top !important; }
+td code, th code { white-space: normal !important; word-break: break-word !important; }
+th { background: var(--sl-color-bg-nav) !important; }
+</style>
+
+<aside aria-label="The Rosku Bank partner challenge: cross-boundary agent collaboration!" class="starlight-aside starlight-aside--danger"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path d="M12 7a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1Zm0 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm9.71-7.44-5.27-5.27a1.05 1.05 0 0 0-.71-.29H8.27a1.05 1.05 0 0 0-.71.29L2.29 7.56a1.05 1.05 0 0 0-.29.71v7.46c.004.265.107.518.29.71l5.27 5.27c.192.183.445.286.71.29h7.46a1.05 1.05 0 0 0 .71-.29l5.27-5.27a1.05 1.05 0 0 0 .29-.71V8.27a1.05 1.05 0 0 0-.29-.71ZM20 15.31 15.31 20H8.69L4 15.31V8.69L8.69 4h6.62L20 8.69v6.62Z"/></svg>The Rosku Bank partner challenge: cross-boundary agent collaboration!</p><div class="starlight-aside__content"><p>Rosku Bank’s internal <strong>Mortgage Orchestrator Agent</strong> (built in Python <abbr title="Agent Development Kit">ADK</abbr> on the <strong>Gemini Enterprise Agent Platform</strong>) needs to collaborate with an external <strong>Home-Appraisal Partner Agent</strong> (built by a third-party vendor on a completely different framework and cloud). Three critical questions arise:</p><ol>
+<li>Why shouldn’t Rosku Bank expose the partner’s multi-step appraisal agent as a simple stateless <strong><abbr title="Model Context Protocol">MCP</abbr> tool</strong>?</li>
+<li>How does Rosku Bank’s agent dynamically discover the partner agent’s skills, endpoint URL, and authentication requirements?</li>
+<li>When a physical property appraisal takes <strong>6 hours</strong> (or needs to pause and ask the customer for a property deed), how do the two agents stay synchronized without an HTTP timeout?</li>
+</ol></div></aside>
+<div class="nutshell-box"><div class="nutshell-title">Module 3.6 in a nutshell</div><ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; line-height: 1.55;"><li><strong><abbr title="Model Context Protocol">MCP</abbr> (tools) vs. <abbr title="Agent2Agent Protocol">A2A</abbr> (peer agents):</strong> Use <strong><abbr title="Model Context Protocol">MCP</abbr></strong> when calling a stateless function or database query; use <strong><abbr title="Agent2Agent Protocol">A2A</abbr></strong> when delegating a goal to an autonomous, stateful peer agent that has its own opaque reasoning loop and internal tools!</li><li><strong>Agent Card discovery and <abbr title="Agent Development Kit">ADK</abbr> helpers:</strong> Every <abbr title="Agent2Agent Protocol">A2A</abbr> server publishes a JSON contract at <strong><code>/.well-known/agent.json</code></strong> (listing <code>skills</code>, <code>capabilities</code>, modalities, and auth). Consume remote <abbr title="Agent2Agent Protocol">A2A</abbr> agents in <abbr title="Agent Development Kit">ADK</abbr> via <strong><code>RemoteA2aAgent</code></strong> and expose your own <abbr title="Agent Development Kit">ADK</abbr> agent via <strong><code>to_a2a(agent)</code></strong>.</li><li><strong>Streaming, push webhooks, and <code>input-required</code>:</strong> Use <strong><abbr title="Server-Sent Events">SSE</abbr> (<code>SendStreamingMessage</code>)</strong> for live connected progress, <strong>Push Notification Webhooks (<code>PushNotificationConfig</code>)</strong> for multi-hour disconnected tasks, and reuse the <strong>exact same <code>taskId</code> and <code>contextId</code></strong> when resuming a paused <strong><code>input-required</code></strong> task!</li></ul></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="1-key-concept-definitions-the-agent2agent-a2a-interoperability-stack">1. Key concept definitions: the Agent2Agent (A2A) interoperability stack</h2></div>
+<p>In enterprise architectures, <strong><abbr title="Model Context Protocol">MCP</abbr></strong> and <strong><abbr title="Agent2Agent Protocol">A2A</abbr></strong> are complementary layers—review these five foundational <abbr title="Agent2Agent Protocol">A2A</abbr> building blocks:</p>
+<div class="def-grid"><div class="def-card"><div class="def-name">1. MCP (tools) vs. A2A (peers)</div><span class="def-path">Function call vs. peer delegation</span><div class="def-text"><ul><li><strong><abbr title="Model Context Protocol">MCP</abbr>:</strong> Connects an agent to a deterministic, stateless function or database query.</li><li><strong><abbr title="Agent2Agent Protocol">A2A</abbr>:</strong> Connects peer agents across team, framework, or company boundaries where the remote agent has its own opaque reasoning loop and state.</li></ul></div></div><div class="def-card"><div class="def-name">2. A2A Agent Card</div><span class="def-path">/.well-known/agent.json</span><div class="def-text"><ul><li><strong>What it is:</strong> The machine-readable JSON contract published by every <abbr title="Agent2Agent Protocol">A2A</abbr> server (and indexed in <strong>Agent Registry</strong>).</li><li><strong>Why you need it:</strong> Declares the agent’s <code>skills</code>, <code>capabilities</code> (<code>streaming</code>, <code>pushNotifications</code>), input/output modalities, and auth schemes without exposing private prompts or code.</li></ul></div></div><div class="def-card"><div class="def-name">3. Task lifecycle and SSE streaming</div><span class="def-path">taskId + contextId &amp; SSE</span><div class="def-text"><ul><li><strong>What it is:</strong> Tracks stateful work units across <code>submitted → working → completed</code>.</li><li><strong>Why you need it:</strong> When <code>capabilities.streaming=true</code>, streams live <code>TaskStatusUpdateEvent</code> and <code>TaskArtifactUpdateEvent</code> messages over <abbr title="Server-Sent Events">SSE</abbr>.</li></ul></div></div><div class="def-card"><div class="def-name">4. Push webhooks and input-required</div><span class="def-path">PushNotificationConfig &amp; pause</span><div class="def-text"><ul><li><strong>Push webhooks:</strong> For multi-hour disconnected tasks, the server POSTs updates to a callback webhook URL.</li><li><strong><code>input-required</code>:</strong> If the remote agent needs missing user data mid-task, it pauses in state <code>input-required</code> until the client replies with the same <code>taskId</code>.</li></ul></div></div><div class="def-card"><div class="def-name">5. ADK RemoteA2aAgent &amp; to_a2a()</div><span class="def-path">Client wrapper &amp; server publisher</span><div class="def-text"><ul><li><strong><code>RemoteA2aAgent</code>:</strong> Wraps an external <abbr title="Agent2Agent Protocol">A2A</abbr> endpoint so an <abbr title="Agent Development Kit">ADK</abbr> coordinator can delegate to it like a local sub-agent.</li><li><strong><code>to_a2a(agent)</code>:</strong> Exposes your existing <abbr title="Agent Development Kit">ADK</abbr> agent as an <abbr title="Agent2Agent Protocol">A2A</abbr>-compliant server!</li></ul></div></div></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-interactive-a2a-lifecycle-and-agent-card-explorer">2. Interactive A2A lifecycle and Agent Card explorer</h2></div>
+<p>Switch between the <strong>3 A2A collaboration modes</strong> below and click the 4 stages in each view to trace <strong>Agent Card discovery</strong>, <strong>SSE streaming (<code dir="auto">SendStreamingMessage</code>)</strong>, and <strong>async push notifications + <code dir="auto">input-required</code></strong>:</p>
+<div class="a2a-widget"><div class="a2a-toolbar"><div class="a2a-toggle-group"><button id="a2a-mode-card" class="a2a-btn active" type="button">1. Agent Card discovery (4 stages)</button><button id="a2a-mode-stream" class="a2a-btn" type="button">2. Task lifecycle and SSE streaming (4 stages)</button><button id="a2a-mode-async" class="a2a-btn" type="button">3. Push webhooks and input-required (4 stages)</button></div><div style="display:flex; gap:8px; align-items:center;"><button id="a2a-prev" class="a2a-btn" type="button">← Prev</button><span id="a2a-step-label" style="font-size:0.82rem; font-weight:700;">Stage 1 / 4</span><button id="a2a-next" class="a2a-btn" type="button">Next →</button></div></div><div class="a2a-svg-box"><svg id="a2a-svg-canvas" class="a2a-svg" viewBox="0 0 720 125" xmlns="http://www.w3.org/2000/svg"></svg></div><div class="a2a-card"><div><div id="a2a-card-type" style="font-size:0.75rem; font-weight:700; color:#3b82f6;"></div><div id="a2a-card-title" style="font-size:1.08rem; font-weight:700; color:var(--sl-color-white); margin-top:2px;"></div></div><div class="a2a-grid"><div class="a2a-meta"><div class="a2a-meta-label">Protocol mechanism</div><div id="a2a-card-how" class="a2a-meta-val"></div></div><div class="a2a-meta"><div class="a2a-meta-label">Core architecture rule</div><div id="a2a-card-trap" class="a2a-meta-val"></div></div></div></div></div>
+<script>
+(function() {
+  const DATA = {
+    card: {
+      nodes: [
+        ["1. Discovery URI", "/.well-known/agent.json"],
+        ["2. Capabilities", "streaming / push flags"],
+        ["3. Skills & modes", "skills + input/output"],
+        ["4. ADK binding", "RemoteA2aAgent / to_a2a"]
+      ],
+      steps: [
+        {
+          type: "Stage 1 of 4: standard discovery URI",
+          title: "1. Fetching the /.well-known/agent.json Agent Card",
+          how: "<ul><li>Every <abbr title='Agent2Agent Protocol'>A2A</abbr> server publishes an Agent Card at <code>/.well-known/agent.json</code> (or registers it centrally in Google Cloud <strong>Agent Registry</strong>).</li></ul>",
+          trap: "<ul><li><strong>Architecture rule:</strong> <abbr title='Agent2Agent Protocol'>A2A</abbr> agents are <em>opaque</em>—the client reads the Agent Card metadata but never sees the remote agent's internal system prompt or database credentials!</li></ul>"
+        },
+        {
+          type: "Stage 2 of 4: protocol capability negotiation",
+          title: "2. Inspecting the capabilities object (streaming and pushNotifications)",
+          how: "<ul><li>The Agent Card's <code>capabilities</code> field declares boolean flags such as <code>streaming: true</code> and <code>pushNotifications: true</code>.</li></ul>",
+          trap: "<ul><li>Before a client agent attempts <abbr title='Server-Sent Events'>SSE</abbr> streaming or registers a webhook, it checks the remote Agent Card's <code>capabilities</code> flags!</li></ul>"
+        },
+        {
+          type: "Stage 3 of 4: skills and modality matching",
+          title: "3. Matching skills[], defaultInputModes, and defaultOutputModes",
+          how: "<ul><li>Each entry in <code>skills</code> lists an <code>id</code>, <code>name</code>, <code>description</code>, <code>tags</code>, and example prompts, plus supported MIME modalities (<code>text/plain</code>, <code>application/pdf</code>, <code>image/png</code>).</li></ul>",
+          trap: "<ul><li>Clear, non-overlapping skill descriptions in the Agent Card are essential so the client orchestrator routes the right task to the right partner agent!</li></ul>"
+        },
+        {
+          type: "Stage 4 of 4: ADK client and server integration",
+          title: "4. Consuming via RemoteA2aAgent and exposing via to_a2a()",
+          how: "<ul><li>In <abbr title='Agent Development Kit'>ADK</abbr>, wrap an external <abbr title='Agent2Agent Protocol'>A2A</abbr> endpoint using <code>RemoteA2aAgent(name, agent_card=...)</code> to use it as a sub-agent, or expose your own <abbr title='Agent Development Kit'>ADK</abbr> agent as an <abbr title='Agent2Agent Protocol'>A2A</abbr> server using <code>to_a2a()</code>!</li></ul>",
+          trap: "<ul><li>Allows an <abbr title='Agent Development Kit'>ADK</abbr> agent to collaborate seamlessly with agents built in LangGraph, CrewAI, Java, or any other framework!</li></ul>"
+        }
+      ]
+    },
+    stream: {
+      nodes: [
+        ["1. SendMessage", "Creates Task + ID"],
+        ["2. working state", "SSE status updates"],
+        ["3. Artifact chunk", "TaskArtifactUpdate"],
+        ["4. completed", "Final Task output"]
+      ],
+      steps: [
+        {
+          type: "Stage 1 of 4: initiating an A2A Task",
+          title: "1. Synchronous SendMessage vs. streaming SendStreamingMessage",
+          how: "<ul><li>The Client Agent sends a <code>Message</code> (containing one or more typed <code>Part</code>s: <code>TextPart</code>, <code>FilePart</code>, or <code>DataPart</code>) tied to a unique <code>taskId</code> and <code>contextId</code>.</li></ul>",
+          trap: "<ul><li>Use <code>SendMessage</code> (<code>message/send</code>) for quick request/response tasks; use <code>SendStreamingMessage</code> (<code>message/stream</code>) for real-time progress over Server-Sent Events (<abbr title='Server-Sent Events'>SSE</abbr>)!</li></ul>"
+        },
+        {
+          type: "Stage 2 of 4: live progress via Server-Sent Events (SSE)",
+          title: "2. Transitioning from submitted -> working with TaskStatusUpdateEvent",
+          how: "<ul><li>While the connection stays open, the Remote Agent streams <code>TaskStatusUpdateEvent</code> messages over <abbr title='Server-Sent Events'>SSE</abbr> (e.g., <em>'Checking county property records...'</em>).</li></ul>",
+          trap: "<ul><li>Requires <code>capabilities.streaming = true</code> in the remote Agent Card!</li></ul>"
+        },
+        {
+          type: "Stage 3 of 4: streaming generated deliverables",
+          title: "3. Emitting partial outputs via TaskArtifactUpdateEvent",
+          how: "<ul><li>As the Remote Agent generates structured deliverables (like a PDF appraisal report or JSON table), it streams them back as <abbr title='Agent2Agent Protocol'>A2A</abbr> <code>Artifact</code>s using <code>TaskArtifactUpdateEvent</code>.</li></ul>",
+          trap: "<ul><li><strong>Architectural distinction:</strong> <code>Message</code>s carry conversational turns between agents; <code>Artifact</code>s carry the formal output deliverables generated by the Task!</li></ul>"
+        },
+        {
+          type: "Stage 4 of 4: terminal Task states",
+          title: "4. Reaching a terminal state (completed, failed, canceled, rejected)",
+          how: "<ul><li>Once all work is finished, the Remote Agent emits a final <code>TaskStatusUpdateEvent</code> with <code>state='completed'</code> and closes the <abbr title='Server-Sent Events'>SSE</abbr> stream.</li></ul>",
+          trap: "<ul><li>If the client loses network connectivity mid-stream, it can call <code>tasks/resubscribe</code> with the <code>taskId</code> to resume receiving <abbr title='Server-Sent Events'>SSE</abbr> events!</li></ul>"
+        }
+      ]
+    },
+    async: {
+      nodes: [
+        ["1. 6-hour task", "PushNotificationConfig"],
+        ["2. Disconnected", "No open HTTP socket"],
+        ["3. input-required", "Asks for missing deed"],
+        ["4. Resume task", "Same taskId completes"]
+      ],
+      steps: [
+        {
+          type: "Stage 1 of 4: registering a push notification webhook",
+          title: "1. Handling multi-hour tasks without holding open connections",
+          how: "<ul><li>For a 6-hour property appraisal, holding an HTTP or <abbr title='Server-Sent Events'>SSE</abbr> socket open will time out. Instead, the Client Agent supplies a <code>PushNotificationConfig</code> callback webhook URL!</li></ul>",
+          trap: "<ul><li><strong>Core principle:</strong> Select <strong><abbr title='Agent2Agent Protocol'>A2A</abbr> Push Notifications (webhooks)</strong>, NOT <abbr title='Server-Sent Events'>SSE</abbr> streaming, when tasks take hours or days and clients disconnect!</li></ul>"
+        },
+        {
+          type: "Stage 2 of 4: asynchronous background execution",
+          title: "2. Remote agent works offline and pushes signed webhook updates",
+          how: "<ul><li>The Remote Agent processes the appraisal asynchronously and POSTs signed status updates to the Client Agent's webhook URL whenever state changes.</li></ul>",
+          trap: "<ul><li>The Client Agent verifies the webhook authentication token before accepting the task update.</li></ul>"
+        },
+        {
+          type: "Stage 3 of 4: the paused 'input-required' state",
+          title: "3. Pausing execution when the remote agent needs more info",
+          how: "<ul><li>Halfway through the appraisal, the partner agent realizes it needs the parcel's zoning number. It transitions the Task state to <strong><code>input-required</code></strong>!</li></ul>",
+          trap: "<ul><li><strong>Architecture rule:</strong> <code>input-required</code> is a non-terminal paused state indicating the Remote Agent needs follow-up data from the Client Agent/user to continue!</li></ul>"
+        },
+        {
+          type: "Stage 4 of 4: resuming the exact same Task",
+          title: "4. Sending follow-up data with the same taskId and contextId",
+          how: "<ul><li>Rosku Bank's agent collects the zoning number and sends a new <code>Message</code> referencing the <strong>exact same <code>taskId</code> and <code>contextId</code></strong>—allowing the Remote Agent to resume and reach <code>completed</code>!</li></ul>",
+          trap: "<ul><li>Never create a brand-new <code>taskId</code> when responding to an <code>input-required</code> status—reuse the existing <code>taskId</code> to continue the stateful workflow!</li></ul>"
+        }
+      ]
+    }
+  };
+  let mode = "card";
+  let step = 1;
+  const svgEl = document.getElementById("a2a-svg-canvas");
+  function render() {
+    const mData = DATA[mode];
+    const count = mData.nodes.length;
+    if (step > count) step = 1;
+    const sData = mData.steps[step - 1];
+    document.getElementById("a2a-step-label").textContent = "Stage " + step + " / " + count;
+    document.getElementById("a2a-mode-card").className = "a2a-btn" + (mode === "card" ? " active" : "");
+    document.getElementById("a2a-mode-stream").className = "a2a-btn" + (mode === "stream" ? " active" : "");
+    document.getElementById("a2a-mode-async").className = "a2a-btn" + (mode === "async" ? " active" : "");
+    const gap = 18;
+    const nodeW = Math.floor((690 - gap * (count - 1)) / count);
+    let svgHtml = "";
+    for (let e = 1; e < count; e++) {
+      const x1 = 15 + e * nodeW + (e - 1) * gap;
+      const x2 = x1 + gap;
+      const edgeCls = "a2a-edge" + ((e === step || e === step - 1) ? " active-edge" : "");
+      svgHtml += '<line class="' + edgeCls + '" x1="' + x1 + '" y1="62" x2="' + x2 + '" y2="62" />';
+    }
+    for (let i = 1; i <= count; i++) {
+      const x = 15 + (i - 1) * (nodeW + gap);
+      const cls = "a2a-node " + (i === step ? "is-selected" : "is-dimmed");
+      svgHtml += '<g class="' + cls + '" data-step="' + i + '" transform="translate(' + x + ', 22)">';
+      svgHtml += '<rect x="0" y="0" width="' + nodeW + '" height="80" />';
+      svgHtml += '<text x="10" y="33" class="a2a-title">' + mData.nodes[i - 1][0] + '</text>';
+      svgHtml += '<text x="10" y="55" class="a2a-sub">' + mData.nodes[i - 1][1] + '</text>';
+      svgHtml += '</g>';
+    }
+    svgEl.innerHTML = svgHtml;
+    svgEl.querySelectorAll(".a2a-node").forEach(el => {
+      el.addEventListener("click", () => {
+        step = parseInt(el.getAttribute("data-step") || "1", 10);
+        render();
+      });
+    });
+    document.getElementById("a2a-card-type").textContent = sData.type;
+    document.getElementById("a2a-card-title").textContent = sData.title;
+    document.getElementById("a2a-card-how").innerHTML = sData.how;
+    document.getElementById("a2a-card-trap").innerHTML = sData.trap;
+  }
+  document.getElementById("a2a-mode-card")?.addEventListener("click", () => { mode = "card"; step = 1; render(); });
+  document.getElementById("a2a-mode-stream")?.addEventListener("click", () => { mode = "stream"; step = 1; render(); });
+  document.getElementById("a2a-mode-async")?.addEventListener("click", () => { mode = "async"; step = 1; render(); });
+  document.getElementById("a2a-prev")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step > 1 ? step - 1 : max;
+    render();
+  });
+  document.getElementById("a2a-next")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step < max ? step + 1 : 1;
+    render();
+  });
+  render();
+})();
+</script>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-architectural-comparison-mcp-tools-vs-a2a-agents">3. Architectural comparison: MCP (tools) vs. A2A (agents)</h2></div>
+<p>Compare when to use <strong>Model Context Protocol (<abbr title="Model Context Protocol">MCP</abbr>)</strong> versus <strong>Agent2Agent (<abbr title="Agent2Agent Protocol">A2A</abbr>)</strong> in a distributed enterprise system:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architectural dimension</th>
+<th style="text-align: left"><strong>Model Context Protocol (MCP)</strong></th>
+<th style="text-align: left"><strong>Agent2Agent (A2A) protocol</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>Relationship model</strong></td>
+<td style="text-align: left"><strong>Agent-to-tool / resource</strong> (Caller invokes a deterministic function or database query).</td>
+<td style="text-align: left"><strong>Agent-to-agent (peer-to-peer)</strong> (Client delegates a goal to an autonomous, reasoning agent).</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>State and reasoning</strong></td>
+<td style="text-align: left"><strong>Stateless and deterministic:</strong> Fixed input schema (<code dir="auto">JSON Schema</code>) → predictable function execution → direct output.</td>
+<td style="text-align: left"><strong>Stateful and autonomous:</strong> Remote agent plans, loops, calls its own private tools, and tracks multi-turn <code dir="auto">Task</code> state.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Discovery mechanism</strong></td>
+<td style="text-align: left"><code dir="auto">tools/list</code> returns function names, descriptions, and strict parameter JSON schemas.</td>
+<td style="text-align: left"><strong><code dir="auto">Agent Card</code> (<code dir="auto">/.well-known/agent.json</code>)</strong> or <strong>Agent Registry</strong> lists high-level <code dir="auto">skills</code>, natural-language examples, and <code dir="auto">capabilities</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Communication primitives</strong></td>
+<td style="text-align: left"><code dir="auto">tools/list</code>, <code dir="auto">tools/call</code>, <code dir="auto">resources/read</code>, <code dir="auto">prompts/get</code>.</td>
+<td style="text-align: left"><code dir="auto">Task</code> (<code dir="auto">submitted</code>, <code dir="auto">working</code>, <code dir="auto">input-required</code>, <code dir="auto">completed</code>), <code dir="auto">Message</code>, <code dir="auto">Part</code> (<code dir="auto">TextPart</code>, <code dir="auto">FilePart</code>, <code dir="auto">DataPart</code>), <code dir="auto">Artifact</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Primary architectural trigger</strong></td>
+<td style="text-align: left"><em>“Query AlloyDB/BigQuery,” “invoke a deterministic REST/SQL function,” “share pooled database tools.”</em></td>
+<td style="text-align: left"><em>“Collaborate with a partner/cross-department agent,” “opaque internal reasoning,” “multi-turn negotiation (<code dir="auto">input-required</code>).”</em></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="4-anatomy-of-an-a2a-agent-card-and-adk-integration-helpers">4. Anatomy of an A2A <code dir="auto">Agent Card</code> and ADK integration helpers</h2></div>
+<p>Review the core fields inside an <abbr title="Agent2Agent Protocol">A2A</abbr> <strong><code dir="auto">Agent Card</code></strong> and the two <abbr title="Agent Development Kit">ADK</abbr> integration helpers (<code dir="auto">RemoteA2aAgent</code> and <code dir="auto">to_a2a()</code>):</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left"><code dir="auto">Agent Card</code> or ADK field</th>
+<th style="text-align: left">Expected content or type</th>
+<th style="text-align: left">Runtime purpose</th>
+<th style="text-align: left">Core architecture rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">name</code> &amp; <code dir="auto">description</code></strong></td>
+<td style="text-align: left"><code dir="auto">str</code></td>
+<td style="text-align:left">Human- and <abbr title="Large Language Model">LLM</abbr>-readable identity and summary of the remote agent’s purpose.</td>
+<td style="text-align: left">Used by parent orchestrators during discovery and routing.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">url</code> &amp; <code dir="auto">version</code></strong></td>
+<td style="text-align: left"><code dir="auto">str</code> (HTTPS endpoint + semantic version)</td>
+<td style="text-align:left">Specifies where to send <abbr title="Agent2Agent Protocol">A2A</abbr> JSON-RPC / HTTP requests and tracks contract versions.</td>
+<td style="text-align: left">Managed in <strong>Agent Registry</strong> to deprecate legacy versions safely.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">capabilities</code></strong></td>
+<td style="text-align: left">Object (<code dir="auto">streaming: bool</code>, <code dir="auto">pushNotifications: bool</code>)</td>
+<td style="text-align:left">Declares whether the server supports <abbr title="Server-Sent Events">SSE</abbr> streaming (<code dir="auto">message/stream</code>) and async webhooks.</td>
+<td style="text-align:left">Always check <code dir="auto">capabilities</code> before attempting <abbr title="Server-Sent Events">SSE</abbr> or webhook registration!</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">skills</code></strong></td>
+<td style="text-align: left">List of Skill objects (<code dir="auto">id</code>, <code dir="auto">name</code>, <code dir="auto">description</code>, <code dir="auto">tags</code>, <code dir="auto">examples</code>)</td>
+<td style="text-align: left">Describes specific tasks the agent can perform and sample utterances.</td>
+<td style="text-align: left">Distinct, well-scoped <code dir="auto">skills</code> prevent orchestrator misrouting across partner agents.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">defaultInputModes</code> / <code dir="auto">defaultOutputModes</code></strong></td>
+<td style="text-align: left">List of MIME types (<code dir="auto">text/plain</code>, <code dir="auto">application/json</code>, <code dir="auto">application/pdf</code>)</td>
+<td style="text-align: left">Negotiates supported content modalities (<code dir="auto">TextPart</code>, <code dir="auto">FilePart</code>, <code dir="auto">DataPart</code>).</td>
+<td style="text-align: left">Prevents a client from sending a PDF or audio file to a text-only remote agent.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">authentication</code> / <code dir="auto">securitySchemes</code></strong></td>
+<td style="text-align:left">OAuth 2.0, <abbr title="OpenID Connect">OIDC</abbr>, API Key, or <abbr title="Mutual TLS">mTLS</abbr> schema</td>
+<td style="text-align:left">Tells the Client Agent how to authenticate when invoking the <abbr title="Agent2Agent Protocol">A2A</abbr> endpoint.</td>
+<td style="text-align: left">Enforced at the perimeter via <strong>Agent Gateway</strong> and <strong>Agent Identity</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>ADK <code dir="auto">RemoteA2aAgent</code></strong></td>
+<td style="text-align: left"><code dir="auto">RemoteA2aAgent(name, description, agent_card=...)</code></td>
+<td style="text-align:left">Wraps an external <abbr title="Agent2Agent Protocol">A2A</abbr> server so an <abbr title="Agent Development Kit">ADK</abbr> coordinator can use it just like a local sub-agent!</td>
+<td style="text-align:left">Primary way for an <abbr title="Agent Development Kit">ADK</abbr> agent to consume a remote agent built in another framework.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>ADK <code dir="auto">to_a2a(agent)</code></strong></td>
+<td style="text-align:left"><abbr title="Agent Development Kit">ADK</abbr> server helper function</td>
+<td style="text-align:left">Exposes an existing <abbr title="Agent Development Kit">ADK</abbr> agent as an <abbr title="Agent2Agent Protocol">A2A</abbr>-compliant server with an auto-generated <code dir="auto">Agent Card</code>.</td>
+<td style="text-align:left">Fastest way to publish your <abbr title="Agent Development Kit">ADK</abbr> agent for cross-team <abbr title="Agent2Agent Protocol">A2A</abbr> consumption!</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="5-real-world-deep-dive-a2a-task-resumption-and-streaming-mechanics">5. Real-world deep dive: A2A Task resumption and streaming mechanics</h2></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architect question</th>
+<th style="text-align: left">How it works under the hood in production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>“When a remote A2A agent pauses in state <code dir="auto">input-required</code> (because it needs the customer’s parcel zoning number), how does the Client Agent know what question to ask and how to resume?”</strong></td>
+<td style="text-align: left"><ul><li><strong>Status message + reusing <code>taskId</code> and <code>contextId</code>:</strong> When transitioning to <code>input-required</code>, the Remote Agent attaches a <code>Message</code> (containing a <code>TextPart</code> or structured <code>DataPart</code> explaining what field is missing) inside the <code>TaskStatus</code>.</li><li>The Client Agent obtains that info (from its own state or by prompting the human user) and sends a follow-up <code>SendMessage</code> carrying the <strong>exact same <code>taskId</code> and <code>contextId</code></strong> so the Remote Agent continues right where it paused!</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“What is the difference between an A2A <code dir="auto">Message</code> and an A2A <code dir="auto">Artifact</code>?”</strong></td>
+<td style="text-align: left"><ul><li><strong>Conversation turn vs. task deliverable:</strong> A <strong><code>Message</code></strong> represents conversational dialogue, instructions, clarifications, or status thoughts exchanged between the Client Agent and Remote Agent.</li><li>An <strong><code>Artifact</code></strong> represents the formal output deliverable produced by the Task (such as a generated PDF appraisal certificate, a compiled code file, or a final structured JSON report) streamed via <code>TaskArtifactUpdateEvent</code>.</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“When should we use SSE (<code dir="auto">SendStreamingMessage</code>) vs. Push Notification Webhooks (<code dir="auto">PushNotificationConfig</code>)?”</strong></td>
+<td style="text-align:left"><ul><li><strong>Connected seconds/minutes vs. disconnected hours/days:</strong> Use <strong><abbr title="Server-Sent Events">SSE</abbr> (<code>message/stream</code>)</strong> when a user or orchestrator is actively connected and waiting for real-time progress updates over seconds or a couple of minutes.</li><li>Use <strong>Push Notification Webhooks</strong> when a task takes hours or days (like physical inspections or batch settlements) so neither agent has to hold an open HTTP socket!</li></ul></td>
+</tr>
+</tbody>
+</table>
+<aside aria-label="Golden rules for Module 3.6" class="starlight-aside starlight-aside--tip"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path fill-rule="evenodd" d="M1.44 8.855v-.001l3.527-3.516c.34-.344.802-.541 1.285-.548h6.649l.947-.947c3.07-3.07 6.207-3.072 7.62-2.868a1.821 1.821 0 0 1 1.557 1.557c.204 1.413.203 4.55-2.868 7.62l-.946.946v6.649a1.845 1.845 0 0 1-.549 1.286l-3.516 3.528a1.844 1.844 0 0 1-3.11-.944l-.858-4.275-4.52-4.52-2.31-.463-1.964-.394A1.847 1.847 0 0 1 .98 10.693a1.843 1.843 0 0 1 .46-1.838Zm5.379 2.017-3.873-.776L6.32 6.733h4.638l-4.14 4.14Zm8.403-5.655c2.459-2.46 4.856-2.463 5.89-2.33.134 1.035.13 3.432-2.329 5.891l-6.71 6.71-3.561-3.56 6.71-6.711Zm-1.318 15.837-.776-3.873 4.14-4.14v4.639l-3.364 3.374Z" clip-rule="evenodd"/><path d="M9.318 18.345a.972.972 0 0 0-1.86-.561c-.482 1.435-1.687 2.204-2.934 2.619a8.22 8.22 0 0 1-1.23.302c.062-.365.157-.79.303-1.229.415-1.247 1.184-2.452 2.62-2.935a.971.971 0 1 0-.62-1.842c-.12.04-.236.084-.35.13-2.02.828-3.012 2.588-3.493 4.033a10.383 10.383 0 0 0-.51 2.845l-.001.016v.063c0 .536.434.972.97.972H2.24a7.21 7.21 0 0 0 .878-.065c.527-.063 1.248-.19 2.02-.447 1.445-.48 3.205-1.472 4.033-3.494a5.828 5.828 0 0 0 .147-.407Z"/></svg>Golden rules for Module 3.6</p><div class="starlight-aside__content"><ol>
+<li><strong>Deterministic function / database query = <abbr title="Model Context Protocol">MCP</abbr></strong> | <strong>Autonomous stateful peer agent = <abbr title="Agent2Agent Protocol">A2A</abbr></strong>.</li>
+<li><strong>Real-time connected progress = <abbr title="Server-Sent Events">SSE</abbr> (<code dir="auto">SendStreamingMessage</code>)</strong> | <strong>Multi-hour disconnected jobs = <abbr title="Agent2Agent Protocol">A2A</abbr> Push Notification Webhooks</strong>.</li>
+<li><strong>Remote agent needs more info mid-task = <code dir="auto">input-required</code> state</strong> (reply using the <strong>exact same <code dir="auto">taskId</code></strong>!).</li>
+</ol></div></aside>
+<div class="doc-footer"><div class="doc-footer-title">Official Google Cloud documentation and further reading</div><div class="doc-footer-note">Consult the official ADK A2A documentation and Agent2Agent protocol specification for complete schema and transport details:</div><div class="doc-footer-links"><a href="https://adk.dev/a2a/" target="_blank" rel="noopener noreferrer">ADK Agent2Agent (A2A) integration guide (RemoteA2aAgent and to_a2a) →</a><a href="https://a2a-protocol.org/latest/" target="_blank" rel="noopener noreferrer">Agent2Agent (A2A) protocol official specification →</a><a href="https://adk.dev/agents/multi-agents/" target="_blank" rel="noopener noreferrer">Designing distributed multi-agent systems in ADK →</a></div></div></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec3-state-memory.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">3.5 State, Sessions &amp; Memory Bank</span></span></a><a href="sec3-takeaway.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">3.7 Section 3 Master Takeaway</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

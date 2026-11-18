@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1.4 Section 1 master takeaway: architecture, multimodal, and CX Studio summary · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="sec1-takeaway">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">1.4 Section 1 master takeaway: architecture, multimodal, and CX Studio summary</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.pdf-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 14px; border-radius: 10px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 12px 0; }
+.pdf-bar-text { font-size: 0.84rem; color: var(--sl-color-text); font-weight: 500; }
+.pdf-dl-btn { padding: 6px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.18); border: 1px solid #3b82f6; color: var(--sl-color-white) !important; font-size: 0.8rem; font-weight: 700; text-decoration: none !important; white-space: nowrap; }
+.nutshell-box {
+  background: rgba(16, 185, 129, 0.08);
+  border: 1.5px solid rgba(16, 185, 129, 0.4);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin: 16px 0;
+}
+.nutshell-title {
+  font-size: 0.85rem;
+  font-weight: 800;
+  color: #10b981;
+  margin-bottom: 6px;
+}
+.frs-box {
+  background: var(--sl-color-bg-nav);
+  border: 1.5px solid var(--sl-color-gray-5);
+  border-radius: 14px;
+  padding: 16px;
+  margin: 18px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.frs-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.frs-btn {
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid var(--sl-color-gray-5);
+  background: var(--sl-color-bg);
+  color: var(--sl-color-text);
+  font-size: 0.78rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.frs-btn.active {
+  background: rgba(16, 185, 129, 0.18);
+  border-color: #10b981;
+  color: var(--sl-color-white);
+}
+.frs-panel {
+  background: var(--sl-color-bg);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 10px;
+  padding: 14px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 12px;
+}
+.frs-col {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.frs-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #3b82f6;
+}
+.frs-text {
+  font-size: 0.86rem;
+  color: var(--sl-color-white);
+  line-height: 1.5;
+}
+.frs-text ul {
+  margin: 0;
+  padding-left: 18px;
+}
+.cram-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+.cram-card {
+  background: var(--sl-color-bg-nav);
+  border: 1.5px solid var(--sl-color-gray-5);
+  border-radius: 12px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.cram-tag {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: #10b981;
+}
+.cram-title {
+  font-size: 0.96rem;
+  font-weight: 700;
+  color: var(--sl-color-white);
+}
+.cram-body {
+  font-size: 0.83rem;
+  color: var(--sl-color-text);
+  line-height: 1.45;
+}
+.cram-body ul {
+  margin: 0;
+  padding-left: 16px;
+}
+abbr[title] { text-decoration: underline dotted var(--sl-color-gray-3); cursor: help; border-bottom: none; }
+table {
+  display: table !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  width: 100% !important;
+  border: 1px solid var(--sl-color-gray-5) !important;
+}
+th, td {
+  border: 1px solid var(--sl-color-gray-5) !important;
+  padding: 10px 12px !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  white-space: normal !important;
+  vertical-align: top !important;
+}
+th { background: var(--sl-color-bg-nav) !important; }
+</style>
+
+<div class="nutshell-box"><div class="nutshell-title">Section 1 in a nutshell</div><ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; line-height: 1.55;"><li>Review the <strong>4-pitfall solution architect switcher</strong>, <strong>4-pillar summary grid</strong>, and <strong>master decision matrix</strong> below right before launching the <strong><a href="mcq-sec1.html">Section 1 practice questions</a></strong>!</li><li>Hover your mouse over any dotted abbreviation (like <abbr title="Customer Engagement Suite">CES</abbr>, <abbr title="Dual-Tone Multi-Frequency — touch-tone keypad digits">DTMF</abbr>, <abbr title="Access Control List">ACL</abbr>, or <abbr title="Chain-of-Thought">CoT</abbr>) for an instant definition.</li></ul></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="1-interactive-solution-architect-switcher-top-4-section-1-pitfalls">1. Interactive solution architect switcher: top 4 Section 1 pitfalls</h2></div>
+<p>Click each pitfall tab below to compare naive design mistakes against the recommended Google Cloud architecture in scannable bullet points:</p>
+<div class="frs-box"><div class="frs-tabs"><button id="d1-btn-1" class="frs-btn active" type="button">1. Tier and workflow selection</button><button id="d1-btn-2" class="frs-btn" type="button">2. Multimodal and ADK bridge</button><button id="d1-btn-3" class="frs-btn" type="button">3. Playbooks, Pages, and Routes</button><button id="d1-btn-4" class="frs-btn" type="button">4. Composite voice and handoffs</button></div><div class="frs-panel"><div class="frs-col"><span class="frs-label">Why the naive approach fails</span><div id="d1-fail" class="frs-text"></div></div><div class="frs-col"><span class="frs-label">The recommended architectural solution</span><div id="d1-fix" class="frs-text"></div></div></div></div>
+<script>
+(function() {
+  const TRAPS = [
+    {
+      fail: "<ul><li>Using an <abbr title='Large Language Model'>LLM</abbr> agent for structured, fixed-rule <abbr title='Extract, Transform, Load'>ETL</abbr> adds latency, token cost, and hallucination risk.</li><li>Splitting a simple 4-tool FAQ bot into 5 sub-agents adds slow, unnecessary handoffs.</li></ul>",
+      fix: "<ul><li>Use <strong>deterministic automation</strong> (Cloud Workflows / Dataflow) for fixed schemas, or <strong>Workflow Builder</strong> for no-code multi-app tasks.</li><li>Use a <strong>single agent</strong> (with <abbr title='Chain-of-Thought'>CoT</abbr> and few-shot templates) for 1 domain with under 10 tools.</li><li>Use <strong>multi-agent ONLY</strong> for 15+ tools, conflicting personas, parallel fan-out, or <abbr title='Identity and Access Management / Principal Access Boundary'>IAM/PAB</abbr> isolation!</li></ul>"
+    },
+    {
+      fail: "<ul><li>Naive fixed-size text chunking slices PDF financial tables mid-row and ignores embedded charts/videos.</li><li>Re-indexing all enterprise documents from scratch when upgrading a prototype from no-code Agent Designer to Python <abbr title='Agent Development Kit'>ADK</abbr>.</li></ul>",
+      fix: "<ul><li>Enable <strong>layout-aware parsing</strong> and <strong>multimodal embeddings</strong> to keep tables, charts, and video timestamps intact.</li><li>Upgrade from your no-code prototype to custom Python <abbr title='Agent Development Kit'>ADK</abbr> while plugging into the <strong>exact same Agent Search database</strong> (<code>data_store_id</code>) you already built!</li><li>Or keep the no-code bot as the main chat window and pass complex tasks to your Python <abbr title='Agent Development Kit'>ADK</abbr> bot behind the scenes via <abbr title='Agent2Agent Protocol'>A2A</abbr>.</li></ul>"
+    },
+    {
+      fail: "<ul><li>Relying on a Generative Playbook alone to collect <abbr title='Payment Card Industry / Know Your Customer'>PCI/KYC</abbr> fields in a strict order or read verbatim legal notices.</li><li>Confusing <strong>Transition Routes</strong> with <strong>Event Handlers</strong> inside a Deterministic Flow Page.</li></ul>",
+      fix: "<ul><li>Use a <strong>Generative Playbook</strong> (steered by <strong>Exemplars</strong>) for open triage, and transition to a <strong>Deterministic Flow Page</strong> for strict slot-filling and verbatim disclosures.</li><li>Use <strong>Transition Routes</strong> for expected <strong>Intents</strong> and boolean <strong>Conditions</strong>.</li><li>Use <strong>Event Handlers</strong> for unrecognized inputs (<code>no-match</code>), silence (<code>no-input</code>), and webhook errors!</li></ul>"
+    },
+    {
+      fail: "<ul><li>Sending markdown tables to a phone voice channel or blocking callers from interrupting long prompts.</li><li>Performing a blind call transfer that forces frustrated callers to repeat their name and issue to a human rep.</li></ul>",
+      fix: "<ul><li>Use CX Agent Studio's <strong>3-part composite voice model</strong> (Listener, Thinking, Speaker) with <strong>Speaking style descriptions</strong>, inline <code>&lt;pause&gt;</code> tags, <strong>barge-in</strong>, and redacted <strong><abbr title='Dual-Tone Multi-Frequency'>DTMF</abbr></strong> keypad entry.</li><li>Configure <strong>warm live-agent handoffs</strong> (triggered by sentiment or fallback caps) that pass verified session parameters + an <strong>AI transcript summary</strong> to the human rep's desktop!</li></ul>"
+    }
+  ];
+
+  function setTrap(idx) {
+    [1, 2, 3, 4].forEach(n => {
+      const b = document.getElementById("d1-btn-" + n);
+      if (b) b.className = "frs-btn" + (n === idx + 1 ? " active" : "");
+    });
+    document.getElementById("d1-fail").innerHTML = TRAPS[idx].fail;
+    document.getElementById("d1-fix").innerHTML = TRAPS[idx].fix;
+  }
+
+  document.getElementById("d1-btn-1")?.addEventListener("click", () => setTrap(0));
+  document.getElementById("d1-btn-2")?.addEventListener("click", () => setTrap(1));
+  document.getElementById("d1-btn-3")?.addEventListener("click", () => setTrap(2));
+  document.getElementById("d1-btn-4")?.addEventListener("click", () => setTrap(3));
+  setTrap(0);
+})();
+</script>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-the-4-pillar-section-1-summary-grid">2. The 4-pillar Section 1 summary grid</h2></div>
+<div class="cram-grid"><div class="cram-card"><span class="cram-tag">1.1 Tiers and CoT</span><div class="cram-title">Automation vs. 1 vs. multi</div><div class="cram-body"><ul><li><strong>Workflows/Dataflow:</strong> Fixed schemas.</li><li><strong>Workflow Builder:</strong> No-code app tasks.</li><li><strong>Single agent (+ <abbr title="Chain-of-Thought">CoT</abbr>):</strong> 1 domain, &lt;10 tools.</li><li><strong>Multi-agent:</strong> 15+ tools, personas, parallel, or <abbr title="Principal Access Boundary">PAB</abbr>.</li></ul></div></div><div class="cram-card"><span class="cram-tag">1.2 Studio and bridge</span><div class="cram-title">Agent Designer and ADK</div><div class="cram-body"><ul><li><strong>Agent Designer:</strong> Internal workforce + Agent Search <abbr title="Access Control Lists">ACLs</abbr> + OAuth connectors.</li><li><strong>Bridge to <abbr title="Agent Development Kit">ADK</abbr>:</strong> Reuse <code>data_store_id</code> or delegate behind the scenes via <abbr title="Agent2Agent Protocol">A2A</abbr>.</li></ul></div></div><div class="cram-card"><span class="cram-tag">1.2b Multimodal</span><div class="cram-title">Tables, charts, and video</div><div class="cram-body"><ul><li><strong>Layout parser:</strong> Keeps PDF tables and headers intact.</li><li><strong>Multimodal embeddings:</strong> Grounds on visual charts, images, and audio/video timestamps.</li></ul></div></div><div class="cram-card"><span class="cram-tag">1.3 CX Agent Studio</span><div class="cram-title">Pages and composite voice</div><div class="cram-body"><ul><li><strong>Hierarchy:</strong> Playbook ↔ Flow → Page (Slots + Transition Routes + Event Handlers).</li><li><strong>Voice:</strong> Listener + Thinking + Speaker (Speaking style &amp; <code>&lt;pause&gt;</code>), <abbr title="Dual-Tone Multi-Frequency">DTMF</abbr>, and warm handoff.</li></ul></div></div></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-master-architecture-decision-matrix-section-1">3. Master architecture decision matrix (Section 1)</h2></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Scenario or requirement</th>
+<th style="text-align: left">Recommended Google Cloud solution</th>
+<th style="text-align: left">Why it works best</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>Process structured events or CSV rows using fixed mathematical rules under sub-100ms latency</strong></td>
+<td style="text-align: left"><strong>Cloud Workflows / Eventarc / Dataflow</strong> (deterministic automation)</td>
+<td style="text-align: left">Zero LLM token cost, sub-second execution, and 100% deterministic repeatability.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Let business users automate a repeatable email-to-Jira workflow with a human approval gate</strong></td>
+<td style="text-align: left"><strong>Gemini Enterprise Workflow Builder</strong></td>
+<td style="text-align: left">No-code visual canvas chaining triggers, Gemini steps, and SaaS connectors.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Build a conversational bot for 1 domain with 5 read-only tools and lowest LLM latency</strong></td>
+<td style="text-align:left"><strong>Single-agent architecture</strong> (enhanced with <strong>Chain-of-Thought (<abbr title="Chain-of-Thought">CoT</abbr>) and few-shot templates</strong>)</td>
+<td style="text-align: left">Avoids multi-agent routing latency and extra token overhead while steering step-by-step reasoning within one turn.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Resolve tool-selection errors in a single agent overloaded with 30+ cross-department tools</strong></td>
+<td style="text-align: left"><strong>Multi-agent system</strong> (Coordinator + domain specialist sub-agents)</td>
+<td style="text-align: left">Partitioning tools into small, domain-specific sub-agents restores high tool-selection accuracy.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Let business analysts launch an internal employee assistant grounded on SharePoint/Drive in days</strong></td>
+<td style="text-align:left"><strong>Agent Designer</strong> (with <strong>Agent Search <abbr title="Access Control Lists">ACLs</abbr></strong> and pre-built action connectors)</td>
+<td style="text-align: left">Turnkey no-code studio with automatic query-time document permission filtering and per-user OAuth 2.0 consent.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Ingest complex PDFs with multi-column tables, visual charts, and recorded inspection videos</strong></td>
+<td style="text-align: left"><strong>Multimodal data ingestion</strong> (<strong>layout parser</strong> + multimodal embeddings)</td>
+<td style="text-align: left">Preserves table row/header structure and indexes visual diagrams and video timestamps with citations.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Add Python <code dir="auto">before_tool_callback</code>, <code dir="auto">ParallelAgent</code>, or Git CI/CD gates to an Agent Designer prototype</strong></td>
+<td style="text-align:left"><strong>Cross the Agent Designer → <abbr title="Agent Development Kit">ADK</abbr> bridge</strong> (or delegate from Agent Designer to <abbr title="Agent Development Kit">ADK</abbr> over <strong><abbr title="Agent2Agent Protocol">A2A</abbr></strong>)</td>
+<td style="text-align: left">Reuses the existing <strong>Agent Search <code dir="auto">data_store_id</code></strong> without re-indexing any documents while unlocking full code control.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Enforce strict step-by-step <abbr title="Know Your Customer">KYC</abbr> slot collection and verbatim legal notices in a contact-center bot</strong></td>
+<td style="text-align: left"><strong>CX Agent Studio hybrid: Generative Playbook + Deterministic Flow Page</strong></td>
+<td style="text-align: left">Playbooks handle flexible triage; Flow <strong>Pages</strong> enforce slot order, <strong>Transition Routes</strong>, and <strong>Event Handlers</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Fix a Generative Playbook that calls tools in the wrong order without writing Python code</strong></td>
+<td style="text-align: left"><strong>Add Exemplars (few-shot example conversations) to the Playbook</strong></td>
+<td style="text-align: left">Exemplars steer Playbook tool selection, argument formatting, and sequence declaratively in CX Agent Studio.</td>
+</tr>
+<tr>
+<td style="text-align:left"><strong>Control natural voice pacing, alphanumeric reading, barge-in, and keypad <abbr title="Payment Card Industry">PCI</abbr> entry on phone calls</strong></td>
+<td style="text-align:left"><strong>CX Agent Studio composite voice</strong> (Listener/Thinking/Speaker + <strong><code dir="auto">&lt;pause&gt;</code></strong> + redacted <strong><abbr title="Dual-Tone Multi-Frequency">DTMF</abbr></strong>)</td>
+<td style="text-align: left">Steers voice via natural Speaking style descriptions and inline tags while redacting sensitive keypad digits in logs.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Transfer a frustrated caller to a human contact-center rep without making them repeat details</strong></td>
+<td style="text-align: left"><strong>Warm live-agent handoff</strong> with <strong>session params + AI summary + Agent Assist</strong></td>
+<td style="text-align: left">Passes verified identity slots and an AI-generated transcript brief directly to the human rep’s desktop.</td>
+</tr>
+</tbody>
+</table>
+<aside aria-label="Golden rules for Section 1" class="starlight-aside starlight-aside--tip"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path fill-rule="evenodd" d="M1.44 8.855v-.001l3.527-3.516c.34-.344.802-.541 1.285-.548h6.649l.947-.947c3.07-3.07 6.207-3.072 7.62-2.868a1.821 1.821 0 0 1 1.557 1.557c.204 1.413.203 4.55-2.868 7.62l-.946.946v6.649a1.845 1.845 0 0 1-.549 1.286l-3.516 3.528a1.844 1.844 0 0 1-3.11-.944l-.858-4.275-4.52-4.52-2.31-.463-1.964-.394A1.847 1.847 0 0 1 .98 10.693a1.843 1.843 0 0 1 .46-1.838Zm5.379 2.017-3.873-.776L6.32 6.733h4.638l-4.14 4.14Zm8.403-5.655c2.459-2.46 4.856-2.463 5.89-2.33.134 1.035.13 3.432-2.329 5.891l-6.71 6.71-3.561-3.56 6.71-6.711Zm-1.318 15.837-.776-3.873 4.14-4.14v4.639l-3.364 3.374Z" clip-rule="evenodd"/><path d="M9.318 18.345a.972.972 0 0 0-1.86-.561c-.482 1.435-1.687 2.204-2.934 2.619a8.22 8.22 0 0 1-1.23.302c.062-.365.157-.79.303-1.229.415-1.247 1.184-2.452 2.62-2.935a.971.971 0 1 0-.62-1.842c-.12.04-.236.084-.35.13-2.02.828-3.012 2.588-3.493 4.033a10.383 10.383 0 0 0-.51 2.845l-.001.016v.063c0 .536.434.972.97.972H2.24a7.21 7.21 0 0 0 .878-.065c.527-.063 1.248-.19 2.02-.447 1.445-.48 3.205-1.472 4.033-3.494a5.828 5.828 0 0 0 .147-.407Z"/></svg>Golden rules for Section 1</p><div class="starlight-aside__content"><ol>
+<li><strong>Right-size agency:</strong> Use <strong>Cloud Workflows / Dataflow</strong> for fixed schemas, <strong>Workflow Builder</strong> for no-code multi-app tasks, a <strong>single agent (+ <abbr title="Chain-of-Thought">CoT</abbr>)</strong> for 1 domain with under 10 tools, and <strong>multi-agent</strong> only for 15+ tools, conflicting personas, parallel fan-out, or <abbr title="Identity and Access Management / Principal Access Boundary">IAM/PAB</abbr> isolation.</li>
+<li><strong>Studio vs. code:</strong> Use <strong>Agent Designer</strong> for internal employee search/actions, enable <strong>layout-aware multimodal ingestion</strong> for tables/charts/videos, and reuse your <code dir="auto">data_store_id</code> when bridging to <strong><abbr title="Agent Development Kit">ADK</abbr></strong>.</li>
+<li><strong>Omnichannel contact center:</strong> In <strong>CX Agent Studio (<abbr title="Customer Engagement Suite">CES</abbr>)</strong>, combine <strong>Generative Playbooks</strong> (steered by <strong>Exemplars</strong>) with <strong>Deterministic Flow Pages</strong> (<strong>Transition Routes</strong> + <strong>Event Handlers</strong>), <strong>3-part composite voice</strong>, and <strong>warm live-agent handoffs</strong>!</li>
+</ol></div></aside>
+<div class="doc-footer"><div class="doc-footer-title">Official Google Cloud documentation and further reading</div><div class="doc-footer-note">Explore the official Gemini Enterprise Agent Platform and CX Agent Studio documentation:</div><div class="doc-footer-links"><a href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/" target="_blank" rel="noopener noreferrer">Gemini Enterprise Agent Platform documentation →</a><a href="https://docs.cloud.google.com/gemini/enterprise/docs/" target="_blank" rel="noopener noreferrer">Gemini Enterprise Studio and Workflow Builder →</a><a href="https://docs.cloud.google.com/gemini-enterprise-cx/cx-agent-studio" target="_blank" rel="noopener noreferrer">CX Agent Studio (Customer Engagement Suite) →</a></div></div></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec1-ces-omnichannel.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">1.3 CES: Flows, Playbooks &amp; Omnichannel</span></span></a><a href="sec1-qa.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">1.5 Section 1 Q&amp;A</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

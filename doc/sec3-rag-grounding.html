@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3.4 RAG Engine, Agent Search, and Context Caching · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="sec3-rag-grounding">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">3.4 RAG Engine, Agent Search, and Context Caching</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.pdf-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 14px; border-radius: 10px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 12px 0; }
+.pdf-bar-text { font-size: 0.84rem; color: var(--sl-color-text); font-weight: 500; }
+.pdf-dl-btn { padding: 6px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.18); border: 1px solid #3b82f6; color: var(--sl-color-white) !important; font-size: 0.8rem; font-weight: 700; text-decoration: none !important; white-space: nowrap; }
+.nutshell-box { background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.nutshell-title { font-size: 0.85rem; font-weight: 800; color: #10b981; margin-bottom: 6px; }
+.def-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 16px 0; }
+.def-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.def-name { font-size: 0.98rem; font-weight: 700; color: var(--sl-color-white); line-height: 1.35; }
+.def-path { display: inline-block; width: fit-content; font-family: monospace; font-size: 0.76rem; padding: 2px 8px; border-radius: 6px; background: rgba(59, 130, 246, 0.16); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
+.def-text { font-size: 0.84rem; color: var(--sl-color-text); line-height: 1.5; }
+.def-text ul { margin: 4px 0 0 0; padding-left: 16px; }
+.rg-widget { display: flex; flex-direction: column; gap: 16px; padding: 18px; border-radius: 14px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 20px 0; }
+.rg-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 14px; background: var(--sl-color-bg); border-radius: 10px; border: 1px solid var(--sl-color-gray-5); }
+.rg-toggle-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.rg-btn { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.rg-btn.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: var(--sl-color-white); }
+.rg-svg-box { width: 100%; background: var(--sl-color-bg); border-radius: 12px; padding: 12px; border: 1px solid var(--sl-color-gray-5); }
+.rg-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; }
+.rg-node { cursor: pointer; transition: opacity 0.2s ease; }
+.rg-node rect { fill: var(--sl-color-bg-nav); stroke: var(--sl-color-gray-4); stroke-width: 1.5px; rx: 10px; }
+.rg-node.is-selected rect { stroke: #10b981; stroke-width: 2.5px; }
+.rg-node.is-dimmed { opacity: 0.42; }
+.rg-title { font-size: 11px; font-weight: 700; fill: var(--sl-color-white); pointer-events: none; }
+.rg-sub { font-size: 9.5px; fill: var(--sl-color-text); pointer-events: none; }
+.rg-edge { stroke: var(--sl-color-gray-4); stroke-width: 2px; stroke-dasharray: 5 5; }
+.rg-edge.active-edge { stroke: #10b981; stroke-width: 2.5px; animation: rgPulse 0.8s linear infinite; }
+@keyframes rgPulse { from { stroke-dashoffset: 20; } to { stroke-dashoffset: 0; } }
+.rg-card { background: var(--sl-color-bg); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.rg-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.rg-meta { background: var(--sl-color-bg-nav); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--sl-color-hairline); }
+.rg-meta-label { font-size: 0.78rem; color: var(--sl-color-text-accent); font-weight: 700; margin-bottom: 6px; }
+.rg-meta-val { font-size: 0.86rem; color: var(--sl-color-white); line-height: 1.5; }
+.rg-meta-val ul { margin: 0; padding-left: 18px; }
+abbr[title] { text-decoration: underline dotted var(--sl-color-gray-3); cursor: help; border-bottom: none; }
+table { display: table !important; table-layout: fixed !important; border-collapse: collapse !important; width: 100% !important; border: 1px solid var(--sl-color-gray-5) !important; }
+th, td { border: 1px solid var(--sl-color-gray-5) !important; padding: 10px 12px !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; vertical-align: top !important; }
+td code, th code { white-space: normal !important; word-break: break-word !important; }
+th { background: var(--sl-color-bg-nav) !important; }
+</style>
+
+<aside aria-label="The Rosku Bank knowledge dilemma: 3 different knowledge needs!" class="starlight-aside starlight-aside--danger"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path d="M12 7a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1Zm0 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm9.71-7.44-5.27-5.27a1.05 1.05 0 0 0-.71-.29H8.27a1.05 1.05 0 0 0-.71.29L2.29 7.56a1.05 1.05 0 0 0-.29.71v7.46c.004.265.107.518.29.71l5.27 5.27c.192.183.445.286.71.29h7.46a1.05 1.05 0 0 0 .71-.29l5.27-5.27a1.05 1.05 0 0 0 .29-.71V8.27a1.05 1.05 0 0 0-.29-.71ZM20 15.31 15.31 20H8.69L4 15.31V8.69L8.69 4h6.62L20 8.69v6.62Z"/></svg>The Rosku Bank knowledge dilemma: 3 different knowledge needs!</p><div class="starlight-aside__content"><p>Rosku Bank’s architecture team is connecting their agents on the <strong>Gemini Enterprise Agent Platform</strong> to internal bank knowledge, and they hit three distinct roadblocks:</p><ol>
+<li>Their <strong>Employee Intranet Bot</strong> needs turnkey search across SharePoint, Google Drive, and Confluence while strictly enforcing <strong>document-level user permissions (<abbr title="Access Control Lists">ACLs</abbr>)</strong> so junior tellers cannot see executive M&amp;A files!</li>
+<li>Their <strong>Mortgage Underwriting Agent</strong> retrieves noisy, incomplete paragraphs from complex underwriting tables because they cannot customize the <strong>chunk size, chunk overlap, or reranking</strong> step!</li>
+<li>Their <strong>Compliance Auditor Agent</strong> sends the exact same <strong>400-page static Basel III rulebook</strong> in the prompt on every single turn—racking up massive input token bills and 12-second latency!</li>
+</ol></div></aside>
+<div class="nutshell-box"><div class="nutshell-title">Module 3.4 in a nutshell</div><ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; line-height: 1.55;"><li><strong>Turnkey SaaS connectors + document <abbr title="Access Control Lists">ACLs</abbr> = Agent Search:</strong> Pick <strong>Agent Search</strong> when you need rapid setup across SharePoint, Drive, Jira, or Confluence with automatic query-time document permission (<abbr title="Access Control List">ACL</abbr>) filtering.</li><li><strong>Custom chunking, embeddings, and reranking = <abbr title="Retrieval-Augmented Generation">RAG</abbr> Engine:</strong> Pick <strong>Vertex AI <abbr title="Retrieval-Augmented Generation">RAG</abbr> Engine</strong> when engineers need fine-grained control over <code>chunk_size</code>, <code>chunk_overlap</code>, <code>similarity_top_k</code>, <code>vector_distance_threshold</code>, and two-stage <strong>semantic reranking</strong>.</li><li><strong>Repeatedly querying the same massive static document/video = Gemini Context Caching:</strong> Pick <strong>Gemini Context Caching</strong> (<code>CachedContent</code> with a configurable <code>ttl</code> or <abbr title="Agent Development Kit">ADK</abbr> <code>ContextCacheConfig</code>) when the agent needs the <strong>entire</strong> static 32k+ token document, codebase, or video in memory across many turns!</li></ul></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="1-key-concept-definitions-the-grounding-and-context-caching-stack">1. Key concept definitions: the grounding and context caching stack</h2></div>
+<p>On the <strong>Gemini Enterprise Agent Platform</strong>, Google Cloud provides four complementary mechanisms to ground agent reasoning in enterprise and live knowledge:</p>
+<div class="def-grid"><div class="def-card"><div class="def-name">1. Agent Search (turnkey + ACLs)</div><span class="def-path">SaaS connectors + query-time ACLs</span><div class="def-text"><ul><li><strong>What it is:</strong> The managed enterprise search engine with turnkey connectors (SharePoint, Jira, Drive, Confluence, <abbr title="Google Cloud Storage">GCS</abbr>).</li><li><strong>Why you need it:</strong> Provides automatic layout parsing and built-in <strong>Document-Level Access Control Lists (<abbr title="Access Control Lists">ACLs</abbr>)</strong> enforced against the user’s identity at query time.</li></ul></div></div><div class="def-card"><div class="def-name">2. RAG Engine (custom pipeline)</div><span class="def-path">chunk_size, overlap &amp; reranker</span><div class="def-text"><ul><li><strong>What it is:</strong> The developer-controlled retrieval pipeline on Vertex AI.</li><li><strong>Why you need it:</strong> Gives granular programmatic control over <strong><code>chunk_size</code></strong>, <strong><code>chunk_overlap</code></strong>, custom embedding models, <code>vector_distance_threshold</code>, and <strong>semantic reranking</strong>.</li></ul></div></div><div class="def-card"><div class="def-name">3. Gemini Context Caching</div><span class="def-path">CachedContent &amp; ContextCacheConfig</span><div class="def-text"><ul><li><strong>What it is:</strong> Caches a large, static prompt prefix (32k+ tokens of PDFs, videos, or codebases) in Gemini memory with a configurable <code>ttl</code>.</li><li><strong>Why you need it:</strong> Skips re-uploading and re-tokenizing static manuals on every turn—slashing input token costs and <abbr title="Time-To-First-Token">TTFT</abbr> latency!</li></ul></div></div><div class="def-card"><div class="def-name">4. Web grounding and citations</div><span class="def-path">groundingMetadata &amp; source URIs</span><div class="def-text"><ul><li><strong>What it is:</strong> Connects agents to live public facts via Google Search grounding (or Enterprise Web Grounding).</li><li><strong>Why you need it:</strong> Returns <code>groundingMetadata</code> with verifiable source URIs and inline citation mappings for compliance auditing.</li></ul></div></div></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-interactive-decision-boundary-agent-search-vs-rag-engine-vs-context-caching">2. Interactive decision boundary: Agent Search vs. RAG Engine vs. Context Caching</h2></div>
+<p>Switch between the <strong>3 grounding and caching modes</strong> below and step through the 4 stages in each view to compare <strong>Agent Search</strong>, <strong>RAG Engine</strong>, and <strong>Gemini Context Caching</strong>:</p>
+<div class="rg-widget"><div class="rg-toolbar"><div class="rg-toggle-group"><button id="rg-mode-search" class="rg-btn active" type="button">1. Agent Search (turnkey + ACLs) (4 stages)</button><button id="rg-mode-rag" class="rg-btn" type="button">2. RAG Engine (custom chunk &amp; rerank) (4 stages)</button><button id="rg-mode-cache" class="rg-btn" type="button">3. Gemini Context Caching (static bulk) (4 stages)</button></div><div style="display:flex; gap:8px; align-items:center;"><button id="rg-prev" class="rg-btn" type="button">← Prev</button><span id="rg-step-label" style="font-size:0.82rem; font-weight:700;">Stage 1 / 4</span><button id="rg-next" class="rg-btn" type="button">Next →</button></div></div><div class="rg-svg-box"><svg id="rg-svg-canvas" class="rg-svg" viewBox="0 0 720 125" xmlns="http://www.w3.org/2000/svg"></svg></div><div class="rg-card"><div><div id="rg-card-type" style="font-size:0.75rem; font-weight:700; color:#3b82f6;"></div><div id="rg-card-title" style="font-size:1.08rem; font-weight:700; color:var(--sl-color-white); margin-top:2px;"></div></div><div class="rg-grid"><div class="rg-meta"><div class="rg-meta-label">Architectural behavior</div><div id="rg-card-how" class="rg-meta-val"></div></div><div class="rg-meta"><div class="rg-meta-label">Core architecture rule</div><div id="rg-card-trap" class="rg-meta-val"></div></div></div></div></div>
+<script>
+(function() {
+  const DATA = {
+    search: {
+      nodes: [
+        ["1. SaaS & docs", "SharePoint / Drive / GCS"],
+        ["2. Data store", "Managed parsing + ACLs"],
+        ["3. Agent Search", "Identity-aware filter"],
+        ["4. Grounded reply", "Citations + metadata"]
+      ],
+      steps: [
+        {
+          type: "Agent Search stage 1 of 4: data connectors",
+          title: "1. Connecting enterprise SaaS and unstructured data stores",
+          how: "<ul><li>Agent Search connects directly to Cloud Storage, BigQuery, websites, Google Drive, SharePoint, Jira, and Confluence using built-in managed connectors.</li></ul>",
+          trap: "<ul><li><strong>Architectural trigger:</strong> Whenever a scenario demands minimal engineering effort and native enterprise SaaS connectors, select <strong>Agent Search</strong>!</li></ul>"
+        },
+        {
+          type: "Agent Search stage 2 of 4: managed indexing and ACL ingestion",
+          title: "2. Automatic document parsing and Access Control Lists (ACLs)",
+          how: "<ul><li>Automatically parses PDFs, HTML, and tables while ingesting user/group permission metadata (<abbr title='Access Control Lists'>ACLs</abbr>) from the source system.</li></ul>",
+          trap: "<ul><li>You do not have to build a custom embedding or chunking pipeline—Agent Search manages the entire index lifecycle!</li></ul>"
+        },
+        {
+          type: "Agent Search stage 3 of 4: identity-aware retrieval",
+          title: "3. Enforcing document-level permissions at query time",
+          how: "<ul><li>When an employee queries the agent, Agent Search filters results using the user's identity so they only retrieve chunks from documents they are authorized to read.</li></ul>",
+          trap: "<ul><li><strong>Core principle:</strong> Native document-level <abbr title='Access Control List'>ACL</abbr> enforcement is a primary architectural reason to choose Agent Search over a custom DIY <abbr title='Retrieval-Augmented Generation'>RAG</abbr> pipeline!</li></ul>"
+        },
+        {
+          type: "Agent Search stage 4 of 4: grounding metadata and citations",
+          title: "4. Grounded generation with source attribution",
+          how: "<ul><li>Returns retrieved passages to Gemini along with <code>groundingMetadata</code> containing source URIs, titles, and citation mappings.</li></ul>",
+          trap: "<ul><li>Allows your UI to verify claims and render clickable source citations for regulatory compliance.</li></ul>"
+        }
+      ]
+    },
+    rag: {
+      nodes: [
+        ["1. Raw corpus", "Complex PDFs & tables"],
+        ["2. Custom chunk", "chunk_size + overlap"],
+        ["3. RAG retrieval", "top_k + reranker"],
+        ["4. ADK RagTool", "Grounded synthesis"]
+      ],
+      steps: [
+        {
+          type: "RAG Engine stage 1 of 4: corpus ingestion",
+          title: "1. Building a custom RAG corpus on the Gemini Enterprise Agent Platform",
+          how: "<ul><li>Engineers create a <code>RagCorpus</code> and import files from Cloud Storage or Google Drive when they need programmatic control over every retrieval stage.</li></ul>",
+          trap: "<ul><li>Select <strong><abbr title='Retrieval-Augmented Generation'>RAG</abbr> Engine</strong> when default managed search isn't enough and data scientists need fine-grained control over chunking and embeddings!</li></ul>"
+        },
+        {
+          type: "RAG Engine stage 2 of 4: chunking transformation config",
+          title: "2. Tuning chunk_size and chunk_overlap to preserve context",
+          how: "<ul><li>Configure <code>TransformationConfig</code> with <code>ChunkingConfig(chunk_size, chunk_overlap)</code> so multi-paragraph legal rules or tables are not split mid-thought.</li></ul>",
+          trap: "<ul><li><strong>Troubleshooting rule:</strong> If retrieved chunks cut off key exceptions or context mid-sentence, increase <code>chunk_size</code> and <code>chunk_overlap</code>!</li></ul>"
+        },
+        {
+          type: "RAG Engine stage 3 of 4: two-stage retrieval and reranking",
+          title: "3. Eliminating noisy chunks with semantic reranking",
+          how: "<ul><li>Stage 1 fetches candidate chunks via <code>similarity_top_k</code>; Stage 2 uses a <strong>Semantic Reranker</strong> (Ranking API / <abbr title='Large Language Model'>LLM</abbr> autorater) to score and keep only the most relevant chunks.</li></ul>",
+          trap: "<ul><li><strong>Architecture rule:</strong> If an agent retrieves 20 chunks that are semantically similar but factually irrelevant, add a <strong>reranker</strong> step to boost precision!</li></ul>"
+        },
+        {
+          type: "RAG Engine stage 4 of 4: ADK tool integration",
+          title: "4. Attaching RAG Engine to an ADK LlmAgent",
+          how: "<ul><li>Expose the corpus to your <abbr title='Agent Development Kit'>ADK</abbr> agent using the pre-built <abbr title='Retrieval-Augmented Generation'>RAG</abbr> retrieval tool configured with <code>rag_resources</code>, <code>similarity_top_k</code>, and <code>vector_distance_threshold</code>.</li></ul>",
+          trap: "<ul><li>Filtering by <code>vector_distance_threshold</code> prevents low-relevance noise from ever entering the Gemini prompt!</li></ul>"
+        }
+      ]
+    },
+    cache: {
+      nodes: [
+        ["1. Static 400p PDF", "Repeated every turn"],
+        ["2. CachedContent", "TTL in Gemini memory"],
+        ["3. Fast queries", "Skips re-tokenizing!"],
+        ["4. 75% cost drop", "Lower TTFT latency"]
+      ],
+      steps: [
+        {
+          type: "Gemini Context Caching stage 1 of 4: identifying the use case",
+          title: "1. Large, static context used repeatedly across many queries",
+          how: "<ul><li>Rosku Bank's compliance agent analyzes every loan against the exact same 400-page static regulatory PDF (or a massive codebase / long training video).</li></ul>",
+          trap: "<ul><li><strong>Architecture decision rule:</strong> Do <strong>not</strong> use <abbr title='Retrieval-Augmented Generation'>RAG</abbr> if the agent needs the <strong>entire</strong> static document in memory for deep cross-document reasoning on every turn!</li></ul>"
+        },
+        {
+          type: "Gemini Context Caching stage 2 of 4: creating CachedContent",
+          title: "2. Uploading static tokens once with a configurable TTL",
+          how: "<ul><li>Upload the large document, system instruction, or media once to create a <code>CachedContent</code> resource with a Time-To-Live (<code>ttl</code>) matching your workload.</li></ul>",
+          trap: "<ul><li>Requires a minimum token count (e.g., 32,768+ tokens) and charges a small hourly storage fee while active.</li></ul>"
+        },
+        {
+          type: "Gemini Context Caching stage 3 of 4: query execution",
+          title: "3. Referencing the cache ID on subsequent agent turns",
+          how: "<ul><li>Each new user turn sends <strong>only</strong> the short user question plus a pointer to the <code>CachedContent</code> ID—skipping re-uploading and re-tokenizing the 400-page manual!</li></ul>",
+          trap: "<ul><li>Combine Context Caching with <abbr title='Agent Development Kit'>ADK</abbr>'s <code>ContextCacheConfig</code> (<code>min_tokens</code>, <code>ttl</code>, <code>cache_intervals</code>) for multi-turn agent sessions!</li></ul>"
+        },
+        {
+          type: "Gemini Context Caching stage 4 of 4: cost and latency payoff",
+          title: "4. Slashing input token costs and Time-to-First-Token (TTFT)",
+          how: "<ul><li>Dramatically reduces input token billing and cuts response latency from 12+ seconds down to sub-second prefill speeds.</li></ul>",
+          trap: "<ul><li>Remember: if the underlying data changes every minute across millions of documents, use Agent Search or <abbr title='Retrieval-Augmented Generation'>RAG</abbr> Engine—not Context Caching!</li></ul>"
+        }
+      ]
+    }
+  };
+  let mode = "search";
+  let step = 1;
+  const svgEl = document.getElementById("rg-svg-canvas");
+  function render() {
+    const mData = DATA[mode];
+    const count = mData.nodes.length;
+    if (step > count) step = 1;
+    const sData = mData.steps[step - 1];
+    document.getElementById("rg-step-label").textContent = "Stage " + step + " / " + count;
+    document.getElementById("rg-mode-search").className = "rg-btn" + (mode === "search" ? " active" : "");
+    document.getElementById("rg-mode-rag").className = "rg-btn" + (mode === "rag" ? " active" : "");
+    document.getElementById("rg-mode-cache").className = "rg-btn" + (mode === "cache" ? " active" : "");
+    const gap = 18;
+    const nodeW = Math.floor((690 - gap * (count - 1)) / count);
+    let svgHtml = "";
+    for (let e = 1; e < count; e++) {
+      const x1 = 15 + e * nodeW + (e - 1) * gap;
+      const x2 = x1 + gap;
+      const edgeCls = "rg-edge" + ((e === step || e === step - 1) ? " active-edge" : "");
+      svgHtml += '<line class="' + edgeCls + '" x1="' + x1 + '" y1="62" x2="' + x2 + '" y2="62" />';
+    }
+    for (let i = 1; i <= count; i++) {
+      const x = 15 + (i - 1) * (nodeW + gap);
+      const cls = "rg-node " + (i === step ? "is-selected" : "is-dimmed");
+      svgHtml += '<g class="' + cls + '" data-step="' + i + '" transform="translate(' + x + ', 22)">';
+      svgHtml += '<rect x="0" y="0" width="' + nodeW + '" height="80" />';
+      svgHtml += '<text x="10" y="33" class="rg-title">' + mData.nodes[i - 1][0] + '</text>';
+      svgHtml += '<text x="10" y="55" class="rg-sub">' + mData.nodes[i - 1][1] + '</text>';
+      svgHtml += '</g>';
+    }
+    svgEl.innerHTML = svgHtml;
+    svgEl.querySelectorAll(".rg-node").forEach(el => {
+      el.addEventListener("click", () => {
+        step = parseInt(el.getAttribute("data-step") || "1", 10);
+        render();
+      });
+    });
+    document.getElementById("rg-card-type").textContent = sData.type;
+    document.getElementById("rg-card-title").textContent = sData.title;
+    document.getElementById("rg-card-how").innerHTML = sData.how;
+    document.getElementById("rg-card-trap").innerHTML = sData.trap;
+  }
+  document.getElementById("rg-mode-search")?.addEventListener("click", () => { mode = "search"; step = 1; render(); });
+  document.getElementById("rg-mode-rag")?.addEventListener("click", () => { mode = "rag"; step = 1; render(); });
+  document.getElementById("rg-mode-cache")?.addEventListener("click", () => { mode = "cache"; step = 1; render(); });
+  document.getElementById("rg-prev")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step > 1 ? step - 1 : max;
+    render();
+  });
+  document.getElementById("rg-next")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step < max ? step + 1 : 1;
+    render();
+  });
+  render();
+})();
+</script>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-master-decision-matrix-agent-search-vs-rag-engine-vs-context-caching">3. Master decision matrix: Agent Search vs. RAG Engine vs. Context Caching</h2></div>
+<p>Use this side-by-side parameter and capability matrix to select the right knowledge-grounding architecture:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architectural dimension</th>
+<th style="text-align: left"><strong>Agent Search</strong></th>
+<th style="text-align: left"><strong>RAG Engine</strong></th>
+<th style="text-align: left"><strong>Gemini Context Caching</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>Core purpose</strong></td>
+<td style="text-align: left">Turnkey enterprise search and grounding across SaaS and document repositories.</td>
+<td style="text-align:left">Developer-controlled <abbr title="Retrieval-Augmented Generation">RAG</abbr> pipeline with custom chunking, embeddings, and reranking.</td>
+<td style="text-align: left">Caching a large, static prompt prefix (PDFs, videos, codebases) in Gemini memory.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Key configuration parameters</strong></td>
+<td style="text-align:left"><code dir="auto">data_store_id</code>, enterprise connectors, document <abbr title="Access Control List">ACL</abbr> enforcement.</td>
+<td style="text-align: left"><code dir="auto">rag_resources</code>, <code dir="auto">chunk_size</code>, <code dir="auto">chunk_overlap</code>, <code dir="auto">similarity_top_k</code>, <code dir="auto">vector_distance_threshold</code>, <code dir="auto">reranker</code>.</td>
+<td style="text-align:left"><code dir="auto">CachedContent</code> (<code dir="auto">contents</code>, <code dir="auto">system_instruction</code>, <code dir="auto">ttl</code>) or <abbr title="Agent Development Kit">ADK</abbr> <code dir="auto">ContextCacheConfig</code>.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Data size and change frequency</strong></td>
+<td style="text-align: left">Thousands to millions of documents; updates continuously via connectors.</td>
+<td style="text-align: left">Thousands to millions of custom-chunked documents; programmatic corpus updates.</td>
+<td style="text-align: left">Single large static payload (32k+ tokens up to 2M tokens) reused across many requests.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Document-level permissions (ACLs)</strong></td>
+<td style="text-align: left"><strong>Built-in out of the box</strong> (filters search results by logged-in user identity).</td>
+<td style="text-align: left">Requires custom metadata filtering implementation.</td>
+<td style="text-align: left">Shared across all callers referencing the same <code dir="auto">CachedContent</code> resource.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Primary architectural trigger</strong></td>
+<td style="text-align: left"><em>“Fastest setup,” “SharePoint/Drive/Jira connectors,” “enforce user document ACLs.”</em></td>
+<td style="text-align: left"><em>“Tune chunk size/overlap,” “custom embedding model,” “custom semantic reranking.”</em></td>
+<td style="text-align: left"><em>“Same 500-page manual or video queried 1,000 times/hour,” “reduce TTFT and input token cost.”</em></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="4-real-world-deep-dive-retrieval-troubleshooting-and-caching-mechanics">4. Real-world deep dive: retrieval troubleshooting and caching mechanics</h2></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architect question</th>
+<th style="text-align: left">How it works under the hood in production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>“What if our RAG agent retrieves passages that cut off legal exceptions or financial tables mid-sentence?”</strong></td>
+<td style="text-align: left"><ul><li><strong>Tune <code>chunk_size</code>, <code>chunk_overlap</code>, and layout parsing:</strong> Fixed-size chunks that are too small (or have zero overlap) split semantic units apart.</li><li>Increase <strong><code>chunk_size</code></strong> and <strong><code>chunk_overlap</code></strong> inside <code>ChunkingConfig</code> (and enable layout-aware document parsing so tables and multi-paragraph rules remain intact)!</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“Why does pure vector search (<code dir="auto">similarity_top_k=20</code>) sometimes return boilerplate paragraphs that confuse the LLM—and how do we fix it?”</strong></td>
+<td style="text-align: left"><ul><li><strong>Add a two-stage semantic reranker:</strong> Dense vector embeddings measure broad semantic similarity, not exact question-answering relevance.</li><li>Adding a <strong>Semantic Reranker (Ranking API)</strong> re-scores the top-20 candidate chunks against the user’s exact query and passes only the top-3 highest-precision passages to Gemini (paired with a strict <code>vector_distance_threshold</code>)!</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“When should we choose Gemini Context Caching (<code dir="auto">CachedContent</code>) instead of chunking a document into RAG Engine?”</strong></td>
+<td style="text-align:left"><ul><li><strong>Full-document synthesis vs. needle-in-a-haystack lookup:</strong> If an agent needs to cross-reference every section of the <strong>exact same 400-page static rulebook</strong> (or a 1-hour video / large codebase) across hundreds of turns, chunked <abbr title="Retrieval-Augmented Generation">RAG</abbr> will miss global cross-references.</li><li>Uploading the entire 400-page document into <strong>Gemini Context Caching</strong> keeps all tokens in model memory with a configurable <code>ttl</code>, cutting input token costs and latency!</li></ul></td>
+</tr>
+</tbody>
+</table>
+<aside aria-label="Golden rules for Module 3.4" class="starlight-aside starlight-aside--tip"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path fill-rule="evenodd" d="M1.44 8.855v-.001l3.527-3.516c.34-.344.802-.541 1.285-.548h6.649l.947-.947c3.07-3.07 6.207-3.072 7.62-2.868a1.821 1.821 0 0 1 1.557 1.557c.204 1.413.203 4.55-2.868 7.62l-.946.946v6.649a1.845 1.845 0 0 1-.549 1.286l-3.516 3.528a1.844 1.844 0 0 1-3.11-.944l-.858-4.275-4.52-4.52-2.31-.463-1.964-.394A1.847 1.847 0 0 1 .98 10.693a1.843 1.843 0 0 1 .46-1.838Zm5.379 2.017-3.873-.776L6.32 6.733h4.638l-4.14 4.14Zm8.403-5.655c2.459-2.46 4.856-2.463 5.89-2.33.134 1.035.13 3.432-2.329 5.891l-6.71 6.71-3.561-3.56 6.71-6.711Zm-1.318 15.837-.776-3.873 4.14-4.14v4.639l-3.364 3.374Z" clip-rule="evenodd"/><path d="M9.318 18.345a.972.972 0 0 0-1.86-.561c-.482 1.435-1.687 2.204-2.934 2.619a8.22 8.22 0 0 1-1.23.302c.062-.365.157-.79.303-1.229.415-1.247 1.184-2.452 2.62-2.935a.971.971 0 1 0-.62-1.842c-.12.04-.236.084-.35.13-2.02.828-3.012 2.588-3.493 4.033a10.383 10.383 0 0 0-.51 2.845l-.001.016v.063c0 .536.434.972.97.972H2.24a7.21 7.21 0 0 0 .878-.065c.527-.063 1.248-.19 2.02-.447 1.445-.48 3.205-1.472 4.033-3.494a5.828 5.828 0 0 0 .147-.407Z"/></svg>Golden rules for Module 3.4</p><div class="starlight-aside__content"><ol>
+<li><strong>Turnkey SaaS connectors + user <abbr title="Access Control Lists">ACLs</abbr> = Agent Search</strong>.</li>
+<li><strong>Custom <code dir="auto">chunk_size</code>, <code dir="auto">chunk_overlap</code>, and semantic reranking = <abbr title="Retrieval-Augmented Generation">RAG</abbr> Engine</strong>.</li>
+<li><strong>Repeatedly querying the SAME massive static document/video/prompt = Gemini Context Caching</strong>!</li>
+</ol></div></aside>
+<div class="doc-footer"><div class="doc-footer-title">Official Google Cloud documentation and further reading</div><div class="doc-footer-note">Consult the official Vertex AI RAG Engine, Agent Search, and Gemini Context Caching documentation for complete configuration specifications:</div><div class="doc-footer-links"><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/rag-overview" target="_blank" rel="noopener noreferrer">Vertex AI RAG Engine overview and chunking config →</a><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/context-cache/context-cache-overview" target="_blank" rel="noopener noreferrer">Gemini Context Caching (CachedContent) guide →</a><a href="https://adk.dev/context/caching/" target="_blank" rel="noopener noreferrer">ADK ContextCacheConfig documentation →</a></div></div></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec3-mcp-tools.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">3.3 MCP Toolbox &amp; Custom Tools</span></span></a><a href="sec3-state-memory.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">3.5 State, Sessions &amp; Memory Bank</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

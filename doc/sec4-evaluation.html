@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4.1 Agent evaluation: trajectory modes, rubric syntax, and autoraters · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="sec4-evaluation">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">4.1 Agent evaluation: trajectory modes, rubric syntax, and autoraters</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.pdf-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 14px; border-radius: 10px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 12px 0; }
+.pdf-bar-text { font-size: 0.84rem; color: var(--sl-color-text); font-weight: 500; }
+.pdf-dl-btn { padding: 6px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.18); border: 1px solid #3b82f6; color: var(--sl-color-white) !important; font-size: 0.8rem; font-weight: 700; text-decoration: none !important; white-space: nowrap; }
+.nutshell-box { background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.nutshell-title { font-size: 0.85rem; font-weight: 800; color: #10b981; margin-bottom: 6px; }
+.def-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 16px 0; }
+.def-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.def-name { font-size: 0.98rem; font-weight: 700; color: var(--sl-color-white); line-height: 1.35; }
+.def-path { display: inline-block; width: fit-content; font-family: monospace; font-size: 0.76rem; padding: 2px 8px; border-radius: 6px; background: rgba(59, 130, 246, 0.16); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
+.def-text { font-size: 0.84rem; color: var(--sl-color-text); line-height: 1.5; }
+.def-text ul { margin: 4px 0 0 0; padding-left: 16px; }
+.ev-widget { display: flex; flex-direction: column; gap: 16px; padding: 18px; border-radius: 14px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 20px 0; }
+.ev-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 14px; background: var(--sl-color-bg); border-radius: 10px; border: 1px solid var(--sl-color-gray-5); }
+.ev-toggle-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.ev-btn { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.ev-btn.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: var(--sl-color-white); }
+.ev-svg-box { width: 100%; background: var(--sl-color-bg); border-radius: 12px; padding: 12px; border: 1px solid var(--sl-color-gray-5); }
+.ev-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; }
+.ev-node { cursor: pointer; transition: opacity 0.2s ease; }
+.ev-node rect { fill: var(--sl-color-bg-nav); stroke: var(--sl-color-gray-4); stroke-width: 1.5px; rx: 10px; }
+.ev-node.is-selected rect { stroke: #10b981; stroke-width: 2.5px; }
+.ev-node.is-dimmed { opacity: 0.42; }
+.ev-title { font-size: 11px; font-weight: 700; fill: var(--sl-color-white); pointer-events: none; }
+.ev-sub { font-size: 9.5px; fill: var(--sl-color-text); pointer-events: none; }
+.ev-edge { stroke: var(--sl-color-gray-4); stroke-width: 2px; stroke-dasharray: 5 5; }
+.ev-edge.active-edge { stroke: #10b981; stroke-width: 2.5px; animation: evPulse 0.8s linear infinite; }
+@keyframes evPulse { from { stroke-dashoffset: 20; } to { stroke-dashoffset: 0; } }
+.ev-card { background: var(--sl-color-bg); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.ev-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.ev-meta { background: var(--sl-color-bg-nav); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--sl-color-hairline); }
+.ev-meta-label { font-size: 0.78rem; color: var(--sl-color-text-accent); font-weight: 700; margin-bottom: 6px; }
+.ev-meta-val { font-size: 0.86rem; color: var(--sl-color-white); line-height: 1.5; }
+.ev-meta-val ul { margin: 0; padding-left: 18px; }
+abbr[title] { text-decoration: underline dotted var(--sl-color-gray-3); cursor: help; border-bottom: none; }
+table { display: table !important; table-layout: fixed !important; border-collapse: collapse !important; width: 100% !important; border: 1px solid var(--sl-color-gray-5) !important; }
+th, td { border: 1px solid var(--sl-color-gray-5) !important; padding: 10px 12px !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; vertical-align: top !important; }
+td code, th code { white-space: normal !important; word-break: break-word !important; }
+th { background: var(--sl-color-bg-nav) !important; }
+</style>
+
+<aside aria-label="The Rosku Bank pre-launch failure: right answer, wrong path!" class="starlight-aside starlight-aside--danger"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path d="M12 7a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1Zm0 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm9.71-7.44-5.27-5.27a1.05 1.05 0 0 0-.71-.29H8.27a1.05 1.05 0 0 0-.71.29L2.29 7.56a1.05 1.05 0 0 0-.29.71v7.46c.004.265.107.518.29.71l5.27 5.27c.192.183.445.286.71.29h7.46a1.05 1.05 0 0 0 .71-.29l5.27-5.27a1.05 1.05 0 0 0 .29-.71V8.27a1.05 1.05 0 0 0-.29-.71ZM20 15.31 15.31 20H8.69L4 15.31V8.69L8.69 4h6.62L20 8.69v6.62Z"/></svg>The Rosku Bank pre-launch failure: right answer, wrong path!</p><div class="starlight-aside__content"><p>Before launching Rosku Bank’s Mortgage Underwriting Agent to production, the <abbr title="Quality Assurance">QA</abbr> team tests it using simple final-text string matching (<code dir="auto">response_match_score</code>). The tests pass—but in staging, three critical flaws appear:</p><ol>
+<li>The agent approves a loan by <strong>guessing</strong> the customer’s credit score instead of calling <code dir="auto">verify_identity()</code> before <code dir="auto">check_credit_score()</code>!</li>
+<li>When a <code dir="auto">ParallelAgent</code> runs <code dir="auto">check_fraud()</code> and <code dir="auto">check_income()</code> concurrently, the evaluation suite randomly fails whenever <code dir="auto">check_income()</code> finishes first!</li>
+<li>When evaluating open-ended financial explanations, lexical <abbr title="Recall-Oriented Understudy for Gisting Evaluation — word-overlap metric">ROUGE</abbr> matching (<code dir="auto">response_match_score</code>) marks valid answers as failures just because the wording changed slightly!</li>
+</ol></div></aside>
+<div class="nutshell-box"><div class="nutshell-title">Module 4.1 in a nutshell</div><ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; line-height: 1.55;"><li><strong>Grade the path (trajectory), not just the final text:</strong> Use <code>tool_trajectory_avg_score</code> (<code>ToolTrajectoryCriterion</code>) with <strong><code>EXACT</code></strong> for strict step-by-step compliance, <strong><code>IN_ORDER</code></strong> when extra helper tools are allowed between required steps, and <strong><code>ANY_ORDER</code></strong> when a <code>ParallelAgent</code> runs tools concurrently!</li><li><strong>Stop false negatives on open-ended answers:</strong> Replace rigid word-overlap matching (<code>response_match_score</code>) with semantic <abbr title="Large Language Model">LLM</abbr> judging (<strong><code>final_response_match_v2</code></strong> when you have a reference answer) or custom domain rubrics (<strong><code>rubric_based_final_response_quality_v1</code></strong> and <strong><code>rubric_based_tool_use_quality_v1</code></strong>).</li><li><strong>Single-agent scoring vs. head-to-head A/B comparison:</strong> In the Vertex AI Evaluation <abbr title="Software Development Kit">SDK</abbr> (<code>EvalTask</code>), use <strong><code>PointwiseMetric</code></strong> (or dynamic <strong><code>RubricBasedMetric</code></strong>) to score one agent on a scale, and use <strong><code>PairwiseMetric</code></strong> to compare Candidate <code>v2</code> against Baseline <code>v1</code> side-by-side!</li></ul></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="1-key-concept-definitions-the-agent-evaluation-stack">1. Key concept definitions: the agent evaluation stack</h2></div>
+<p>Evaluating an autonomous agent requires grading <strong>both</strong> the intermediate path (<strong>trajectory</strong>) and the final output (<strong>response and rubrics</strong>) across five core building blocks:</p>
+<div class="def-grid"><div class="def-card"><div class="def-name">1. EvalSet and EvalCase</div><span class="def-path">*.evalset.json</span><div class="def-text"><ul><li><strong>What it is:</strong> <abbr title="Agent Development Kit">ADK</abbr>’s golden test dataset format storing multi-turn <strong>Invocation</strong> objects.</li><li><strong>Why you need it:</strong> Records <code>user_content</code>, expected <code>intermediate_data.tool_uses</code> (tool names + arguments), and reference <code>final_response</code> for repeatable regression testing.</li></ul></div></div><div class="def-card"><div class="def-name">2. ToolTrajectoryCriterion</div><span class="def-path">EXACT | IN_ORDER | ANY_ORDER</span><div class="def-text"><ul><li><strong>What it is:</strong> Configures <code>tool_trajectory_avg_score</code> inside <code>test_config.json</code> to verify tool call sequences.</li><li><strong>Why you need it:</strong> Lets you choose <strong><code>EXACT</code></strong> (strict 1-to-1), <strong><code>IN_ORDER</code></strong> (allows extra helper tools), or <strong><code>ANY_ORDER</code></strong> (for concurrent parallel tool calls).</li></ul></div></div><div class="def-card"><div class="def-name">3. ADK RubricBasedCriterion</div><span class="def-path">RubricContent(text_property=…)</span><div class="def-text"><ul><li><strong>What it is:</strong> Powers <code>rubric_based_final_response_quality_v1</code> and <code>rubric_based_tool_use_quality_v1</code> using an <abbr title="Large Language Model">LLM</abbr> autorater.</li><li><strong>Why you need it:</strong> Grades custom pass/fail domain rules (like required <abbr title="Annual Percentage Rate">APR</abbr> disclosures or search query scoping) without needing a fixed reference string.</li></ul></div></div><div class="def-card"><div class="def-name">4. PointwiseMetric &amp; RubricBasedMetric</div><span class="def-path">EvalTask single-agent scoring</span><div class="def-text"><ul><li><strong>What it is:</strong> Platform Evaluation <abbr title="Software Development Kit">SDK</abbr> classes passed into <code>EvalTask.evaluate()</code>.</li><li><strong>Why you need it:</strong> Scores a single agent’s output against static criteria (<code>PointwiseMetricPromptTemplate</code>) or dynamically generated per-prompt rubrics (<code>RubricBasedMetric</code>).</li></ul></div></div><div class="def-card"><div class="def-name">5. PairwiseMetric (A/B autorater)</div><span class="def-path">Baseline v1 vs. Candidate v2</span><div class="def-text"><ul><li><strong>What it is:</strong> Side-by-side <abbr title="Large Language Model">LLM</abbr> judge using <code>PairwiseMetricPromptTemplate</code>.</li><li><strong>Why you need it:</strong> Compares a <strong>Candidate Agent (v2)</strong> directly against a <strong>Baseline Agent (v1)</strong> to compute Win/Loss/Tie percentages before promoting <code>v2</code>.</li></ul></div></div></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-interactive-simulator-trajectory-match-modes-and-rubric-autoraters">2. Interactive simulator: trajectory match modes and rubric autoraters</h2></div>
+<p>Switch between the <strong>3 evaluation modes</strong> below and click the 3 stages in each view to inspect <strong><code dir="auto">EXACT</code> vs. <code dir="auto">IN_ORDER</code> vs. <code dir="auto">ANY_ORDER</code></strong> trajectory matching, <strong>ADK rubric criteria</strong>, and <strong>Platform SDK metrics</strong>:</p>
+<div class="ev-widget"><div class="ev-toolbar"><div class="ev-toggle-group"><button id="ev-mode-traj" class="ev-btn active" type="button">1. 3 trajectory match modes (3 stages)</button><button id="ev-mode-rubric" class="ev-btn" type="button">2. ADK rubric criteria syntax (3 stages)</button><button id="ev-mode-sdk" class="ev-btn" type="button">3. Platform EvalTask and metrics (3 stages)</button></div><div style="display:flex; gap:8px; align-items:center;"><button id="ev-prev" class="ev-btn" type="button">← Prev</button><span id="ev-step-label" style="font-size:0.82rem; font-weight:700;">Stage 1 / 3</span><button id="ev-next" class="ev-btn" type="button">Next →</button></div></div><div class="ev-svg-box"><svg id="ev-svg-canvas" class="ev-svg" viewBox="0 0 720 125" xmlns="http://www.w3.org/2000/svg"></svg></div><div class="ev-card"><div><div id="ev-card-type" style="font-size:0.75rem; font-weight:700; color:#3b82f6;"></div><div id="ev-card-title" style="font-size:1.08rem; font-weight:700; color:var(--sl-color-white); margin-top:2px;"></div></div><div class="ev-grid"><div class="ev-meta"><div class="ev-meta-label">Syntax and mechanism</div><div id="ev-card-how" class="ev-meta-val"></div></div><div class="ev-meta"><div class="ev-meta-label">Architecture decision rule</div><div id="ev-card-trap" class="ev-meta-val"></div></div></div></div></div>
+<script>
+(function() {
+  const DATA = {
+    traj: {
+      nodes: [
+        ["1. EXACT mode", "Strict 1-to-1 sequence"],
+        ["2. IN_ORDER mode", "Allows extra helper tools"],
+        ["3. ANY_ORDER mode", "Parallel tool execution"]
+      ],
+      steps: [
+        {
+          type: "match_type = 'EXACT' (default strict mode)",
+          title: "1. MatchType.EXACT: zero extra tools, exact sequence",
+          how: "<ul><li>Expected: <code>[verify_id, execute_wire]</code>. Actual must be <code>[verify_id, execute_wire]</code>.</li><li>If the agent calls an extra <code>get_time</code> helper tool in between, <code>EXACT</code> fails!</li></ul>",
+          trap: "<ul><li><strong>Architecture rule:</strong> Use <code>EXACT</code> for strict compliance workflows where calling any unexpected tool or changing order is a policy violation.</li></ul>"
+        },
+        {
+          type: "match_type = 'IN_ORDER' (flexible ordered mode)",
+          title: "2. MatchType.IN_ORDER: mandatory sequence, extra helper tools allowed",
+          how: "<ul><li>Expected: <code>[verify_id, execute_wire]</code>.</li><li>If the agent calls <code>[get_exchange_rate, verify_id, format_currency, execute_wire]</code>, <code>IN_ORDER</code> passes because <code>verify_id</code> still occurred before <code>execute_wire</code>!</li></ul>",
+          trap: "<ul><li><strong>Architecture rule:</strong> Use <code>IN_ORDER</code> when mandatory prerequisites must happen in sequence, but the agent is permitted to invoke optional lookup/helper tools along the way.</li></ul>"
+        },
+        {
+          type: "match_type = 'ANY_ORDER' (concurrent / parallel mode)",
+          title: "3. MatchType.ANY_ORDER: order-agnostic set matching",
+          how: "<ul><li>Expected: <code>[check_credit, check_fraud, check_income]</code>.</li><li>Whether <code>check_fraud</code> or <code>check_credit</code> finishes first, <code>ANY_ORDER</code> passes as long as all expected tools are called!</li></ul>",
+          trap: "<ul><li><strong>Core principle:</strong> Always select <code>ANY_ORDER</code> when evaluating a <code>ParallelAgent</code> or independent multi-tool fan-out where completion order is nondeterministic!</li></ul>"
+        }
+      ]
+    },
+    rubric: {
+      nodes: [
+        ["1. Response rubric", "rubric_based_final..."],
+        ["2. Tool use rubric", "rubric_based_tool..."],
+        ["3. Grounded & match", "final_response_match_v2"]
+      ],
+      steps: [
+        {
+          type: "Criterion key: rubric_based_final_response_quality_v1",
+          title: "1. Grading open-ended responses against domain rubrics",
+          how: "<ul><li>Configured in <code>test_config.json</code> via <code>RubricBasedCriterion(threshold=0.8, rubrics=[Rubric(rubric_id='r1', rubric_content=RubricContent(text_property='Must cite APR disclosure'))])</code>.</li></ul>",
+          trap: "<ul><li><strong>Architecture rule:</strong> Use <code>rubric_based_final_response_quality_v1</code> when responses must follow custom compliance disclosures, tone, or structure without needing a fixed reference string!</li></ul>"
+        },
+        {
+          type: "Criterion key: rubric_based_tool_use_quality_v1",
+          title: "2. Grading dynamic tool selection and query formulation",
+          how: "<ul><li>Configured with <code>Rubric</code> objects that evaluate <em>how</em> the agent parameterized its tools (for example, <em>'Agent must scope the search query to the 2026 tax year'</em>).</li></ul>",
+          trap: "<ul><li>Use <code>rubric_based_tool_use_quality_v1</code> when static JSON argument equality in <code>tool_trajectory_avg_score</code> is too rigid for dynamic <abbr title='Structured Query Language'>SQL</abbr> or search queries!</li></ul>"
+        },
+        {
+          type: "Criterion keys: final_response_match_v2 and hallucinations_v1",
+          title: "3. Semantic reference matching and groundedness verification",
+          how: "<ul><li><code>final_response_match_v2</code> uses an <abbr title='Large Language Model'>LLM</abbr> judge (<code>LlmAsAJudgeCriterion</code>) to check semantic equivalence against a reference answer; <code>hallucinations_v1</code> verifies that every claim is grounded in tool outputs!</li></ul>",
+          trap: "<ul><li>If valid answers fail <code>response_match_score</code> (<abbr title='Recall-Oriented Understudy for Gisting Evaluation'>ROUGE-1</abbr> word overlap) due to phrasing differences, upgrade to <code>final_response_match_v2</code>!</li></ul>"
+        }
+      ]
+    },
+    sdk: {
+      nodes: [
+        ["1. PointwiseMetric", "Single-agent rubric scale"],
+        ["2. RubricBasedMetric", "Dynamic per-prompt rubrics"],
+        ["3. PairwiseMetric", "Baseline v1 vs. Candidate v2"]
+      ],
+      steps: [
+        {
+          type: "Platform SDK: PointwiseMetric and PointwiseMetricPromptTemplate",
+          title: "1. Scoring a single agent output on a custom rubric scale",
+          how: "<ul><li>Instantiate <code>PointwiseMetric(metric='loan_compliance', metric_prompt_template=PointwiseMetricPromptTemplate(criteria={'apr_disclosure': '...'}, rating_rubric={'1': 'Pass', '0': 'Fail'}))</code> inside <code>EvalTask.evaluate()</code>.</li></ul>",
+          trap: "<ul><li><code>PointwiseMetric</code> grades a single model/agent output on an absolute numerical scale (such as 1–5 or 0–1) using your custom <code>criteria</code> and <code>rating_rubric</code> dictionary!</li></ul>"
+        },
+        {
+          type: "Platform SDK: RubricBasedMetric (dynamic rubrics)",
+          title: "2. Generating and critiquing prompt-specific rubrics automatically",
+          how: "<ul><li>Use <code>RubricBasedMetric(generation_config=RubricGenerationConfig(prompt_template=...), critique_metric=PointwiseMetric(...))</code> to generate tailored pass/fail rubrics per dataset row.</li></ul>",
+          trap: "<ul><li>Ideal when evaluating diverse datasets where each prompt requires its own dynamically generated checklist of verification rules!</li></ul>"
+        },
+        {
+          type: "Platform SDK: PairwiseMetric (side-by-side A/B judging)",
+          title: "3. Comparing Candidate v2 against Baseline v1 head-to-head",
+          how: "<ul><li>Configure <code>PairwiseMetric(metric='v1_vs_v2', baseline_model=agent_v1, metric_prompt_template=PairwiseMetricPromptTemplate(...))</code> and pass it to <code>EvalTask.evaluate(model=agent_v2)</code>.</li></ul>",
+          trap: "<ul><li><strong>Architectural contrast:</strong> <code>PointwiseMetric</code> scores 1 agent against a scale; <code>PairwiseMetric</code> compares 2 agents side-by-side to output Win/Loss/Tie rates!</li></ul>"
+        }
+      ]
+    }
+  };
+  let mode = "traj";
+  let step = 1;
+  const svgEl = document.getElementById("ev-svg-canvas");
+  function render() {
+    const mData = DATA[mode];
+    const count = mData.nodes.length;
+    if (step > count) step = 1;
+    const sData = mData.steps[step - 1];
+    document.getElementById("ev-step-label").textContent = "Stage " + step + " / " + count;
+    document.getElementById("ev-mode-traj").className = "ev-btn" + (mode === "traj" ? " active" : "");
+    document.getElementById("ev-mode-rubric").className = "ev-btn" + (mode === "rubric" ? " active" : "");
+    document.getElementById("ev-mode-sdk").className = "ev-btn" + (mode === "sdk" ? " active" : "");
+    const gap = 28;
+    const nodeW = Math.floor((690 - gap * (count - 1)) / count);
+    let svgHtml = "";
+    for (let e = 1; e < count; e++) {
+      const x1 = 15 + e * nodeW + (e - 1) * gap;
+      const x2 = x1 + gap;
+      const edgeCls = "ev-edge" + ((e === step || e === step - 1) ? " active-edge" : "");
+      svgHtml += '<line class="' + edgeCls + '" x1="' + x1 + '" y1="62" x2="' + x2 + '" y2="62" />';
+    }
+    for (let i = 1; i <= count; i++) {
+      const x = 15 + (i - 1) * (nodeW + gap);
+      const cls = "ev-node " + (i === step ? "is-selected" : "is-dimmed");
+      svgHtml += '<g class="' + cls + '" data-step="' + i + '" transform="translate(' + x + ', 22)">';
+      svgHtml += '<rect x="0" y="0" width="' + nodeW + '" height="80" />';
+      svgHtml += '<text x="12" y="33" class="ev-title">' + mData.nodes[i - 1][0] + '</text>';
+      svgHtml += '<text x="12" y="55" class="ev-sub">' + mData.nodes[i - 1][1] + '</text>';
+      svgHtml += '</g>';
+    }
+    svgEl.innerHTML = svgHtml;
+    svgEl.querySelectorAll(".ev-node").forEach(el => {
+      el.addEventListener("click", () => {
+        step = parseInt(el.getAttribute("data-step") || "1", 10);
+        render();
+      });
+    });
+    document.getElementById("ev-card-type").textContent = sData.type;
+    document.getElementById("ev-card-title").textContent = sData.title;
+    document.getElementById("ev-card-how").innerHTML = sData.how;
+    document.getElementById("ev-card-trap").innerHTML = sData.trap;
+  }
+  document.getElementById("ev-mode-traj")?.addEventListener("click", () => { mode = "traj"; step = 1; render(); });
+  document.getElementById("ev-mode-rubric")?.addEventListener("click", () => { mode = "rubric"; step = 1; render(); });
+  document.getElementById("ev-mode-sdk")?.addEventListener("click", () => { mode = "sdk"; step = 1; render(); });
+  document.getElementById("ev-prev")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step > 1 ? step - 1 : max;
+    render();
+  });
+  document.getElementById("ev-next")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step < max ? step + 1 : 1;
+    render();
+  });
+  render();
+})();
+</script>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-detailed-rubric-and-evaluation-syntax-matrix-adk--platform-sdk">3. Detailed rubric and evaluation syntax matrix (ADK + Platform SDK)</h2></div>
+<p>Review these exact <strong>function names, criterion keys, and class parameters</strong> across <abbr title="Agent Development Kit">ADK</abbr> and the Platform Evaluation <abbr title="Software Development Kit">SDK</abbr>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Function, criterion, or class name</th>
+<th style="text-align: left">Key parameters and syntax</th>
+<th style="text-align: left">What it evaluates</th>
+<th style="text-align: left">Primary architectural use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">AgentEvaluator.evaluate()</code></strong> <em>(ADK Python runner)</em></td>
+<td style="text-align: left"><code dir="auto">AgentEvaluator.evaluate(agent_module, eval_dataset_file_path_or_dir, num_runs=2)</code></td>
+<td style="text-align:left">Runs automated <code dir="auto">pytest</code> / <abbr title="Continuous Integration">CI</abbr> checks against <code dir="auto">*.evalset.json</code> or <code dir="auto">*.test.json</code> files.</td>
+<td style="text-align:left">Primary programmatic entry point for running <abbr title="Agent Development Kit">ADK</abbr> evaluation suites inside <abbr title="Continuous Integration / Continuous Delivery">CI/CD</abbr> pipelines.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">tool_trajectory_avg_score</code></strong> <em>(ADK criterion key)</em></td>
+<td style="text-align: left"><code dir="auto">ToolTrajectoryCriterion(threshold=1.0, match_type="EXACT" | "IN_ORDER" | "ANY_ORDER")</code></td>
+<td style="text-align: left">Compares actual <code dir="auto">tool_uses</code> (name + args) against expected trajectory in <code dir="auto">EvalCase</code>.</td>
+<td style="text-align: left">Use <strong><code dir="auto">EXACT</code></strong> for strict sequences, <strong><code dir="auto">IN_ORDER</code></strong> when extra helper tools are acceptable, and <strong><code dir="auto">ANY_ORDER</code></strong> for parallel tool calls.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">response_match_score</code></strong> <em>(ADK criterion key)</em></td>
+<td style="text-align: left">Float threshold (e.g., <code dir="auto">0.8</code>) in <code dir="auto">test_config.json</code></td>
+<td style="text-align:left">Computes lexical <abbr title="Recall-Oriented Understudy for Gisting Evaluation">ROUGE-1</abbr> token overlap between actual output and reference <code dir="auto">final_response</code>.</td>
+<td style="text-align: left">Fast and zero-LLM-cost, but <strong>fails when valid answers use different phrasing or synonyms</strong>.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">final_response_match_v2</code></strong> <em>(ADK criterion key)</em></td>
+<td style="text-align: left"><code dir="auto">LlmAsAJudgeCriterion(threshold=0.8, judge_model_options=...)</code></td>
+<td style="text-align:left">Uses an <abbr title="Large Language Model">LLM</abbr> autorater to verify <strong>semantic equivalence</strong> against the reference <code dir="auto">final_response</code>.</td>
+<td style="text-align: left">Eliminates false negatives from <code dir="auto">response_match_score</code> when a reference answer exists.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">rubric_based_final_response_quality_v1</code></strong> <em>(ADK rubric criterion)</em></td>
+<td style="text-align: left"><code dir="auto">RubricBasedCriterion(threshold=0.9, rubrics=[Rubric(rubric_id="...", rubric_content=RubricContent(text_property="..."))])</code></td>
+<td style="text-align: left">Grades the agent’s final response against custom domain rules/rubrics <strong>without needing a verbatim reference string</strong>.</td>
+<td style="text-align: left">Grading open-ended responses for tone, legal disclosures, or formatting rules.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">rubric_based_tool_use_quality_v1</code></strong> <em>(ADK rubric criterion)</em></td>
+<td style="text-align: left"><code dir="auto">RubricBasedCriterion(threshold=1.0, rubrics=[Rubric(...)])</code></td>
+<td style="text-align:left">Uses an <abbr title="Large Language Model">LLM</abbr> autorater to evaluate <strong>how</strong> tools were selected and parameterized against qualitative rules.</td>
+<td style="text-align: left">Evaluating dynamic tool arguments (like free-text search queries) where static JSON equality is too brittle.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">hallucinations_v1</code> &amp; <code dir="auto">safety_v1</code></strong> <em>(ADK built-in autoraters)</em></td>
+<td style="text-align: left"><code dir="auto">LlmAsAJudgeCriterion(threshold=1.0, evaluate_intermediate_nl_responses=True)</code></td>
+<td style="text-align: left">Checks whether every claim in the final answer is strictly grounded in tool outputs (<code dir="auto">hallucinations_v1</code>) and safe (<code dir="auto">safety_v1</code>).</td>
+<td style="text-align: left">Essential pre-deployment gate to catch ungrounded fabrications.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">PointwiseMetric</code> &amp; <code dir="auto">PointwiseMetricPromptTemplate</code></strong> <em>(Platform Eval SDK)</em></td>
+<td style="text-align: left"><code dir="auto">PointwiseMetric(metric="...", metric_prompt_template=PointwiseMetricPromptTemplate(criteria={...}, rating_rubric={...}))</code></td>
+<td style="text-align: left">Grades a single agent’s output on a defined rubric score scale (e.g., 1 to 5).</td>
+<td style="text-align: left">Passed into <code dir="auto">EvalTask(dataset=df, metrics=[...]).evaluate()</code> for single-model scoring.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">PairwiseMetric</code> &amp; <code dir="auto">PairwiseMetricPromptTemplate</code></strong> <em>(Platform Eval SDK)</em></td>
+<td style="text-align: left"><code dir="auto">PairwiseMetric(metric="...", baseline_model=..., metric_prompt_template=PairwiseMetricPromptTemplate(criteria={...}, rating_rubric={...}))</code></td>
+<td style="text-align: left">Compares <strong>Baseline Agent vs. Candidate Agent</strong> side-by-side to compute Win/Loss/Tie rates.</td>
+<td style="text-align: left">Selecting whether a new model or prompt version (<code dir="auto">v2</code>) outperforms the current production baseline (<code dir="auto">v1</code>).</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="4-real-world-deep-dive-trajectory-and-rubric-brain-twisters">4. Real-world deep dive: trajectory and rubric brain-twisters</h2></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architect question</th>
+<th style="text-align: left">How it works under the hood in production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>“Because LLM agents are non-deterministic, a single test run might pass by luck. How does ADK handle run-to-run variance during evaluation?”</strong></td>
+<td style="text-align:left"><ul><li><strong>Multi-run averaging (<code>num_runs</code>):</strong> In <code>AgentEvaluator.evaluate(…, num_runs=3)</code>, <abbr title="Agent Development Kit">ADK</abbr> executes each <code>EvalCase</code> multiple times and averages the resulting trajectory and rubric scores before comparing against the <code>threshold</code> in <code>test_config.json</code>!</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“When should I use <code dir="auto">final_response_match_v2</code> vs. <code dir="auto">rubric_based_final_response_quality_v1</code>?”</strong></td>
+<td style="text-align: left"><ul><li><strong>Reference text vs. rule checklist:</strong> Use <strong><code>final_response_match_v2</code></strong> when your <code>EvalCase</code> has a specific target answer (<code>“The wire fee is $25”</code>) and you want to allow synonyms (<code>“It costs twenty-five dollars”</code>).</li><li>Use <strong><code>rubric_based_final_response_quality_v1</code></strong> when the output is open-ended (e.g., a personalized retirement plan) and you need to verify compliance rules (<em>“Includes APR disclaimer”</em> and <em>“Uses empathetic tone”</em>).</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“What happens if an agent calls <code dir="auto">[check_credit, verify_id]</code> when the golden trajectory is <code dir="auto">[verify_id, check_credit]</code>?”</strong></td>
+<td style="text-align: left"><ul><li><strong><code>EXACT</code> fails, <code>IN_ORDER</code> fails, <code>ANY_ORDER</code> passes!</strong> Both <code>EXACT</code> and <code>IN_ORDER</code> require <code>verify_id</code> to happen chronologically before <code>check_credit</code>. Only <code>ANY_ORDER</code> ignores sequence order!</li></ul></td>
+</tr>
+</tbody>
+</table>
+<aside aria-label="Golden rules for Module 4.1" class="starlight-aside starlight-aside--tip"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path fill-rule="evenodd" d="M1.44 8.855v-.001l3.527-3.516c.34-.344.802-.541 1.285-.548h6.649l.947-.947c3.07-3.07 6.207-3.072 7.62-2.868a1.821 1.821 0 0 1 1.557 1.557c.204 1.413.203 4.55-2.868 7.62l-.946.946v6.649a1.845 1.845 0 0 1-.549 1.286l-3.516 3.528a1.844 1.844 0 0 1-3.11-.944l-.858-4.275-4.52-4.52-2.31-.463-1.964-.394A1.847 1.847 0 0 1 .98 10.693a1.843 1.843 0 0 1 .46-1.838Zm5.379 2.017-3.873-.776L6.32 6.733h4.638l-4.14 4.14Zm8.403-5.655c2.459-2.46 4.856-2.463 5.89-2.33.134 1.035.13 3.432-2.329 5.891l-6.71 6.71-3.561-3.56 6.71-6.711Zm-1.318 15.837-.776-3.873 4.14-4.14v4.639l-3.364 3.374Z" clip-rule="evenodd"/><path d="M9.318 18.345a.972.972 0 0 0-1.86-.561c-.482 1.435-1.687 2.204-2.934 2.619a8.22 8.22 0 0 1-1.23.302c.062-.365.157-.79.303-1.229.415-1.247 1.184-2.452 2.62-2.935a.971.971 0 1 0-.62-1.842c-.12.04-.236.084-.35.13-2.02.828-3.012 2.588-3.493 4.033a10.383 10.383 0 0 0-.51 2.845l-.001.016v.063c0 .536.434.972.97.972H2.24a7.21 7.21 0 0 0 .878-.065c.527-.063 1.248-.19 2.02-.447 1.445-.48 3.205-1.472 4.033-3.494a5.828 5.828 0 0 0 .147-.407Z"/></svg>Golden rules for Module 4.1</p><div class="starlight-aside__content"><ol>
+<li><strong>Parallel tool calls failing trajectory tests randomly?</strong> Switch <code dir="auto">tool_trajectory_avg_score</code> to <strong><code dir="auto">ANY_ORDER</code></strong>.</li>
+<li><strong>Valid answers failing <code dir="auto">response_match_score</code> due to phrasing?</strong> Upgrade to <strong><code dir="auto">final_response_match_v2</code></strong> (if you have a reference answer) or <strong><code dir="auto">rubric_based_final_response_quality_v1</code> / <code dir="auto">PointwiseMetric</code></strong> (for custom rubric criteria)!</li>
+<li><strong>Comparing Agent v1 vs. Agent v2 head-to-head?</strong> Use <strong><code dir="auto">PairwiseMetric</code></strong> inside <strong><code dir="auto">EvalTask.evaluate()</code></strong>!</li>
+</ol></div></aside>
+<div class="doc-footer"><div class="doc-footer-title">Official Google Cloud documentation and further reading</div><div class="doc-footer-note">Consult the official ADK and Vertex AI GenAI Evaluation Service documentation for complete schema definitions and metric templates:</div><div class="doc-footer-links"><a href="https://adk.dev/evaluate/" target="_blank" rel="noopener noreferrer">ADK agent evaluation and criteria guide →</a><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/models/evaluation-overview" target="_blank" rel="noopener noreferrer">GenAI Evaluation Service (EvalTask and rubric metrics) →</a><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/models/determine-eval" target="_blank" rel="noopener noreferrer">Pointwise vs. Pairwise autorater metrics →</a></div></div></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec4-exam-guide.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">4.0 Domain 4 Roadmap</span></span></a><a href="sec4-runtimes.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">4.2 Runtimes: Agent Runtime, Cloud Run &amp; GKE</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

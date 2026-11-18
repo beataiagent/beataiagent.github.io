@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>4.2 Deployment runtimes: Agent Runtime, Cloud Run, and GKE Agent Sandbox · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="sec4-runtimes">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">4.2 Deployment runtimes: Agent Runtime, Cloud Run, and GKE Agent Sandbox</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.pdf-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 14px; border-radius: 10px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 12px 0; }
+.pdf-bar-text { font-size: 0.84rem; color: var(--sl-color-text); font-weight: 500; }
+.pdf-dl-btn { padding: 6px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.18); border: 1px solid #3b82f6; color: var(--sl-color-white) !important; font-size: 0.8rem; font-weight: 700; text-decoration: none !important; white-space: nowrap; }
+.nutshell-box { background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.nutshell-title { font-size: 0.85rem; font-weight: 800; color: #10b981; margin-bottom: 6px; }
+.def-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 16px 0; }
+.def-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.def-name { font-size: 0.98rem; font-weight: 700; color: var(--sl-color-white); line-height: 1.35; }
+.def-path { display: inline-block; width: fit-content; font-family: monospace; font-size: 0.76rem; padding: 2px 8px; border-radius: 6px; background: rgba(59, 130, 246, 0.16); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
+.def-text { font-size: 0.84rem; color: var(--sl-color-text); line-height: 1.5; }
+.def-text ul { margin: 4px 0 0 0; padding-left: 16px; }
+.rt-widget { display: flex; flex-direction: column; gap: 16px; padding: 18px; border-radius: 14px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 20px 0; }
+.rt-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 14px; background: var(--sl-color-bg); border-radius: 10px; border: 1px solid var(--sl-color-gray-5); }
+.rt-toggle-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.rt-btn { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.rt-btn.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: var(--sl-color-white); }
+.rt-svg-box { width: 100%; background: var(--sl-color-bg); border-radius: 12px; padding: 12px; border: 1px solid var(--sl-color-gray-5); }
+.rt-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; }
+.rt-node { cursor: pointer; transition: opacity 0.2s ease; }
+.rt-node rect { fill: var(--sl-color-bg-nav); stroke: var(--sl-color-gray-4); stroke-width: 1.5px; rx: 10px; }
+.rt-node.is-selected rect { stroke: #10b981; stroke-width: 2.5px; }
+.rt-node.is-dimmed { opacity: 0.42; }
+.rt-title { font-size: 11px; font-weight: 700; fill: var(--sl-color-white); pointer-events: none; }
+.rt-sub { font-size: 9.5px; fill: var(--sl-color-text); pointer-events: none; }
+.rt-edge { stroke: var(--sl-color-gray-4); stroke-width: 2px; stroke-dasharray: 5 5; }
+.rt-edge.active-edge { stroke: #10b981; stroke-width: 2.5px; animation: rtPulse 0.8s linear infinite; }
+@keyframes rtPulse { from { stroke-dashoffset: 20; } to { stroke-dashoffset: 0; } }
+.rt-card { background: var(--sl-color-bg); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.rt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.rt-meta { background: var(--sl-color-bg-nav); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--sl-color-hairline); }
+.rt-meta-label { font-size: 0.78rem; color: var(--sl-color-text-accent); font-weight: 700; margin-bottom: 6px; }
+.rt-meta-val { font-size: 0.86rem; color: var(--sl-color-white); line-height: 1.5; }
+.rt-meta-val ul { margin: 0; padding-left: 18px; }
+abbr[title] { text-decoration: underline dotted var(--sl-color-gray-3); cursor: help; border-bottom: none; }
+table { display: table !important; table-layout: fixed !important; border-collapse: collapse !important; width: 100% !important; border: 1px solid var(--sl-color-gray-5) !important; }
+th, td { border: 1px solid var(--sl-color-gray-5) !important; padding: 10px 12px !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; vertical-align: top !important; }
+td code, th code { white-space: normal !important; word-break: break-word !important; }
+th { background: var(--sl-color-bg-nav) !important; }
+</style>
+
+<aside aria-label="The Rosku Bank hosting dilemma: 3 agents, 3 different infrastructure needs!" class="starlight-aside starlight-aside--danger"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path d="M12 7a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1Zm0 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm9.71-7.44-5.27-5.27a1.05 1.05 0 0 0-.71-.29H8.27a1.05 1.05 0 0 0-.71.29L2.29 7.56a1.05 1.05 0 0 0-.29.71v7.46c.004.265.107.518.29.71l5.27 5.27c.192.183.445.286.71.29h7.46a1.05 1.05 0 0 0 .71-.29l5.27-5.27a1.05 1.05 0 0 0 .29-.71V8.27a1.05 1.05 0 0 0-.29-.71ZM20 15.31 15.31 20H8.69L4 15.31V8.69L8.69 4h6.62L20 8.69v6.62Z"/></svg>The Rosku Bank hosting dilemma: 3 agents, 3 different infrastructure needs!</p><div class="starlight-aside__content"><p>Rosku Bank’s platform architects must deploy three very different AI agents into production:</p><ol>
+<li><strong>The Retail Loan Orchestrator:</strong> Built in Python <abbr title="Agent Development Kit">ADK</abbr>. The team wants <strong>zero Dockerfile or Kubernetes overhead</strong> and wants managed <strong>SessionService</strong> and <strong>Memory Bank</strong> wired up automatically out of the box.</li>
+<li><strong>The Spiky Tax-Season Bot:</strong> Packaged as a custom container alongside a lightweight Node.js PDF parser. Traffic is zero at night and spikes to 5,000 concurrent users at 9:00 AM—requiring fast <strong>serverless scale-to-zero</strong>!</li>
+<li><strong>The Quant Code-Execution Agent:</strong> Executes <strong>untrusted, user-submitted Python and C++ quantitative models</strong> and requires dedicated <abbr title="Graphics Processing Unit">GPU</abbr> node pools plus <strong>strict kernel-level sandbox isolation (gVisor / microVMs)</strong> so malicious code can never escape the container!</li>
+</ol></div></aside>
+<div class="nutshell-box"><div class="nutshell-title">Module 4.2 in a nutshell</div><ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; line-height: 1.55;"><li><strong>Turnkey zero-Dockerfile hosting:</strong> Pick <strong>Managed Agent Runtime</strong> (wrapping your agent in <code>AdkApp</code>) when you want the lowest operational overhead with auto-wired managed <strong>Sessions</strong>, <strong>Memory Bank</strong>, <strong>Managed Agent Identity</strong>, and <strong>Cloud Trace</strong>.</li><li><strong>Custom containers and scale-to-zero:</strong> Pick <strong>Serverless Cloud Run</strong> when you need custom OS binaries or polyglot sidecars, fast <strong>scale-to-zero</strong> during idle hours, and high async <abbr title="Input/Output">I/O</abbr> concurrency—and <strong>always externalize session state</strong> (never use <code>InMemorySessionService</code> across multiple instances!).</li><li><strong>Untrusted code execution and custom GPUs/TPUs:</strong> Pick <strong><abbr title="Google Kubernetes Engine">GKE</abbr> with Agent Sandbox</strong> when running untrusted user/AI code inside per-execution kernel boundaries (<strong>gVisor / Kata microVMs</strong> with pre-warmed sandbox pools) or hosting open-weight models on custom <abbr title="Graphics Processing Unit / Tensor Processing Unit">GPU/TPU</abbr> node pools.</li></ul></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="1-key-concept-definitions-the-3-production-agent-runtimes">1. Key concept definitions: the 3 production agent runtimes</h2></div>
+<p>Select your Google Cloud hosting target based on operational overhead, state integration, and isolation requirements:</p>
+<div class="def-grid"><div class="def-card"><div class="def-name">1. Managed Agent Runtime</div><span class="def-path">AdkApp (zero Dockerfile)</span><div class="def-text"><ul><li><strong>What it is:</strong> The turnkey managed runtime on the Gemini Enterprise Agent Platform.</li><li><strong>Why you need it:</strong> Wrap your <abbr title="Agent Development Kit">ADK</abbr> agent in <code>AdkApp</code> for zero-Dockerfile hosting with auto-wired managed <strong>Sessions</strong>, <strong>Memory Bank</strong>, <strong>Agent Identity</strong>, and <strong>Cloud Trace</strong>.</li></ul></div></div><div class="def-card"><div class="def-name">2. Serverless Cloud Run</div><span class="def-path">Custom container + scale-to-zero</span><div class="def-text"><ul><li><strong>What it is:</strong> Google Cloud’s managed serverless platform for custom Docker containers (any language or OS binary).</li><li><strong>Why you need it:</strong> Delivers fast <strong>scale-to-zero</strong> cost efficiency, high async <abbr title="Input/Output">I/O</abbr> concurrency per instance (50–80 concurrent requests), and built-in revision traffic splitting for canary rollouts.</li></ul></div></div><div class="def-card"><div class="def-name">3. GKE with Agent Sandbox</div><span class="def-path">gVisor / microVMs + GPU/TPU pools</span><div class="def-text"><ul><li><strong>What it is:</strong> Kubernetes cluster hosting paired with per-execution kernel sandboxing on <abbr title="Google Kubernetes Engine">GKE</abbr>.</li><li><strong>Why you need it:</strong> Provides custom <strong><abbr title="Graphics Processing Unit / Tensor Processing Unit">GPU/TPU</abbr> node pools</strong> (for self-hosted open models) and strict kernel isolation (<strong>gVisor / Kata microVMs</strong> + pre-warmed pools) for running untrusted code safely.</li></ul></div></div></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-interactive-3-runtime-architecture-switcher">2. Interactive 3-runtime architecture switcher</h2></div>
+<p>Switch between the <strong>3 production runtimes</strong> below and step through the 3 architectural layers (<em>Packaging and compute</em>, <em>State and memory wiring</em>, and <em>Scaling and isolation</em>) to compare how each environment operates:</p>
+<div class="rt-widget"><div class="rt-toolbar"><div class="rt-toggle-group"><button id="rt-mode-engine" class="rt-btn active" type="button">1. Managed Agent Runtime (3 stages)</button><button id="rt-mode-run" class="rt-btn" type="button">2. Serverless Cloud Run (3 stages)</button><button id="rt-mode-gke" class="rt-btn" type="button">3. GKE + Agent Sandbox (3 stages)</button></div><div style="display:flex; gap:8px; align-items:center;"><button id="rt-prev" class="rt-btn" type="button">← Prev</button><span id="rt-step-label" style="font-size:0.82rem; font-weight:700;">Stage 1 / 3</span><button id="rt-next" class="rt-btn" type="button">Next →</button></div></div><div class="rt-svg-box"><svg id="rt-svg-canvas" class="rt-svg" viewBox="0 0 720 125" xmlns="http://www.w3.org/2000/svg"></svg></div><div class="rt-card"><div><div id="rt-card-type" style="font-size:0.75rem; font-weight:700; color:#3b82f6;"></div><div id="rt-card-title" style="font-size:1.08rem; font-weight:700; color:var(--sl-color-white); margin-top:2px;"></div></div><div class="rt-grid"><div class="rt-meta"><div class="rt-meta-label">Architectural behavior</div><div id="rt-card-how" class="rt-meta-val"></div></div><div class="rt-meta"><div class="rt-meta-label">Architecture decision rule</div><div id="rt-card-trap" class="rt-meta-val"></div></div></div></div></div>
+<script>
+(function() {
+  const DATA = {
+    engine: {
+      nodes: [
+        ["1. Package & compute", "AdkApp (zero Dockerfile)"],
+        ["2. State & memory", "Auto-wired services"],
+        ["3. Scale & ops", "Managed Trace & IAM"]
+      ],
+      steps: [
+        {
+          type: "Agent Runtime stage 1 of 3: turnkey packaging",
+          title: "1. Wrapping your agent in AdkApp (zero container boilerplate)",
+          how: "<ul><li>Developers wrap their root <abbr title='Agent Development Kit'>ADK</abbr> agent in <code>AdkApp</code> and specify Python package requirements.</li><li>The platform builds, secures, and hosts the runtime automatically without Dockerfiles.</li></ul>",
+          trap: "<ul><li><strong>Architectural trigger:</strong> Smallest operational footprint, no container management, or turnkey <abbr title='Agent Development Kit'>ADK</abbr> hosting always points to <strong>Agent Runtime</strong>!</li></ul>"
+        },
+        {
+          type: "Agent Runtime stage 2 of 3: auto-wired state and memory",
+          title: "2. Native integration with managed Sessions and Memory Bank",
+          how: "<ul><li><code>AdkApp</code> on Agent Runtime automatically provisions and connects to persistent managed <code>SessionService</code> and <strong>Memory Bank</strong> without external database setup!</li></ul>",
+          trap: "<ul><li><strong>Core principle:</strong> Unlike DIY containers that default to ephemeral <code>InMemorySessionService</code>, Agent Runtime provides managed cross-instance state persistence natively!</li></ul>"
+        },
+        {
+          type: "Agent Runtime stage 3 of 3: enterprise observability and identity",
+          title: "3. Managed horizontal scaling, Agent Identity, and Cloud Trace",
+          how: "<ul><li>Runs with a dedicated <strong>Managed Agent Identity</strong>, <abbr title='Virtual Private Cloud Service Controls'>VPC-SC</abbr> support, and automatic OpenTelemetry span export to Cloud Trace and Cloud Monitoring.</li></ul>",
+          trap: "<ul><li>Supports both synchronous <code>query()</code> calls and streaming <code>stream_query()</code> responses out of the box.</li></ul>"
+        }
+      ]
+    },
+    run: {
+      nodes: [
+        ["1. Custom container", "Any OS binary / lang"],
+        ["2. External state!", "Avoid InMemory trap"],
+        ["3. Serverless scale", "Scale-to-zero + async"]
+      ],
+      steps: [
+        {
+          type: "Cloud Run stage 1 of 3: custom container flexibility",
+          title: "1. Packaging custom containers, sidecars, and polyglot stacks",
+          how: "<ul><li>Build a custom container image containing your agent, custom OS libraries (like FFmpeg or LibreOffice), or an <abbr title='Model Context Protocol'>MCP</abbr> server sidecar.</li></ul>",
+          trap: "<ul><li>Select <strong>Cloud Run</strong> when your agent needs custom system packages or non-Python runtimes alongside serverless scaling!</li></ul>"
+        },
+        {
+          type: "Cloud Run stage 2 of 3: externalizing session state (critical!)",
+          title: "2. Why InMemorySessionService fails on multi-instance Cloud Run",
+          how: "<ul><li>Cloud Run spins up multiple stateless container instances and scales them down when idle.</li><li>If you leave <code>InMemorySessionService</code> active, Turn 2 hits a different instance and loses Turn 1's conversation state!</li></ul>",
+          trap: "<ul><li><strong>Architecture rule:</strong> On Cloud Run, <strong>always</strong> configure an external persistent <code>SessionService</code> (managed <code>VertexAiSessionService</code> or <code>DatabaseSessionService</code> backed by Cloud SQL/Spanner)!</li></ul>"
+        },
+        {
+          type: "Cloud Run stage 3 of 3: scale-to-zero and async concurrency tuning",
+          title: "3. Maximizing throughput for I/O-bound agent workloads",
+          how: "<ul><li>Scales down to 0 instances during off-hours (or keeps <code>min-instances</code> warm for peak hours).</li><li>Because <abbr title='Large Language Model'>LLM</abbr> and <abbr title='Model Context Protocol'>MCP</abbr> calls are network <abbr title='Input/Output'>I/O</abbr>-bound, <code>async def</code> Python functions allow 1 container to serve 50–80 concurrent requests.</li></ul>",
+          trap: "<ul><li>Built-in revision traffic splitting also makes canary rollouts (such as 10% <code>v2</code> / 90% <code>v1</code>) effortless!</li></ul>"
+        }
+      ]
+    },
+    gke: {
+      nodes: [
+        ["1. Untrusted code", "User Python / binaries"],
+        ["2. Agent Sandbox", "gVisor / microVM kernel"],
+        ["3. Warm pools & GPUs", "Sub-second boot + TPUs"]
+      ],
+      steps: [
+        {
+          type: "GKE stage 1 of 3: untrusted code and complex topologies",
+          title: "1. When standard shared-kernel containers aren't enough",
+          how: "<ul><li>Rosku Bank's Quant Agent lets users submit arbitrary Python/bash scripts and untrusted binaries that execute inside the agent environment.</li></ul>",
+          trap: "<ul><li>Standard containers share the host Linux kernel—if untrusted code triggers a kernel exploit, it could escape the container boundary!</li></ul>"
+        },
+        {
+          type: "GKE stage 2 of 3: Agent Sandbox kernel isolation",
+          title: "2. Enforcing kernel-level isolation with GKE Agent Sandbox",
+          how: "<ul><li><strong><abbr title='Google Kubernetes Engine'>GKE</abbr> Agent Sandbox</strong> runs each agent code execution inside a dedicated sandboxed runtime (using <strong>gVisor</strong> user-space kernel or <strong>Kata microVMs</strong>) with strict network egress controls.</li></ul>",
+          trap: "<ul><li><strong>Architecture rule:</strong> Whenever a workload requires executing untrusted agent-generated code or third-party binaries safely on Kubernetes, select <strong><abbr title='Google Kubernetes Engine'>GKE</abbr> with Agent Sandbox</strong>!</li></ul>"
+        },
+        {
+          type: "GKE stage 3 of 3: warm sandbox pools and custom GPU/TPU scheduling",
+          title: "3. Sub-second sandbox startup and co-located open-weight models",
+          how: "<ul><li><strong>Pre-warmed sandbox pods</strong> and filesystem snapshots allow isolated environments to boot in milliseconds and wipe cleanly afterward, while <abbr title='Graphics Processing Unit / Tensor Processing Unit'>GPU/TPU</abbr> node pools host open-weight models (like Gemma on vLLM).</li></ul>",
+          trap: "<ul><li>Prevents state or malware from Customer A's code execution from ever persisting to Customer B!</li></ul>"
+        }
+      ]
+    }
+  };
+  let mode = "engine";
+  let step = 1;
+  const svgEl = document.getElementById("rt-svg-canvas");
+  function render() {
+    const mData = DATA[mode];
+    const count = mData.nodes.length;
+    if (step > count) step = 1;
+    const sData = mData.steps[step - 1];
+    document.getElementById("rt-step-label").textContent = "Stage " + step + " / " + count;
+    document.getElementById("rt-mode-engine").className = "rt-btn" + (mode === "engine" ? " active" : "");
+    document.getElementById("rt-mode-run").className = "rt-btn" + (mode === "run" ? " active" : "");
+    document.getElementById("rt-mode-gke").className = "rt-btn" + (mode === "gke" ? " active" : "");
+    const gap = 28;
+    const nodeW = Math.floor((690 - gap * (count - 1)) / count);
+    let svgHtml = "";
+    for (let e = 1; e < count; e++) {
+      const x1 = 15 + e * nodeW + (e - 1) * gap;
+      const x2 = x1 + gap;
+      const edgeCls = "rt-edge" + ((e === step || e === step - 1) ? " active-edge" : "");
+      svgHtml += '<line class="' + edgeCls + '" x1="' + x1 + '" y1="62" x2="' + x2 + '" y2="62" />';
+    }
+    for (let i = 1; i <= count; i++) {
+      const x = 15 + (i - 1) * (nodeW + gap);
+      const cls = "rt-node " + (i === step ? "is-selected" : "is-dimmed");
+      svgHtml += '<g class="' + cls + '" data-step="' + i + '" transform="translate(' + x + ', 22)">';
+      svgHtml += '<rect x="0" y="0" width="' + nodeW + '" height="80" />';
+      svgHtml += '<text x="12" y="33" class="rt-title">' + mData.nodes[i - 1][0] + '</text>';
+      svgHtml += '<text x="12" y="55" class="rt-sub">' + mData.nodes[i - 1][1] + '</text>';
+      svgHtml += '</g>';
+    }
+    svgEl.innerHTML = svgHtml;
+    svgEl.querySelectorAll(".rt-node").forEach(el => {
+      el.addEventListener("click", () => {
+        step = parseInt(el.getAttribute("data-step") || "1", 10);
+        render();
+      });
+    });
+    document.getElementById("rt-card-type").textContent = sData.type;
+    document.getElementById("rt-card-title").textContent = sData.title;
+    document.getElementById("rt-card-how").innerHTML = sData.how;
+    document.getElementById("rt-card-trap").innerHTML = sData.trap;
+  }
+  document.getElementById("rt-mode-engine")?.addEventListener("click", () => { mode = "engine"; step = 1; render(); });
+  document.getElementById("rt-mode-run")?.addEventListener("click", () => { mode = "run"; step = 1; render(); });
+  document.getElementById("rt-mode-gke")?.addEventListener("click", () => { mode = "gke"; step = 1; render(); });
+  document.getElementById("rt-prev")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step > 1 ? step - 1 : max;
+    render();
+  });
+  document.getElementById("rt-next")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step < max ? step + 1 : 1;
+    render();
+  });
+  render();
+})();
+</script>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-production-runtime-selection-matrix">3. Production runtime selection matrix</h2></div>
+<p>Compare the three Google Cloud hosting environments across five architectural dimensions:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architectural dimension</th>
+<th style="text-align: left"><strong>Agent Runtime</strong> <em>(Gemini Enterprise Agent Platform)</em></th>
+<th style="text-align: left"><strong>Cloud Run</strong> <em>(serverless containers)</em></th>
+<th style="text-align: left"><strong>GKE with Agent Sandbox</strong> <em>(Kubernetes)</em></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>Operational overhead</strong></td>
+<td style="text-align: left"><strong>Lowest (turnkey):</strong> No Dockerfiles or cluster management; deploy Python <code dir="auto">AdkApp</code> directly.</td>
+<td style="text-align: left"><strong>Low (serverless):</strong> Manage your Dockerfile; Google manages infrastructure and scaling.</td>
+<td style="text-align: left"><strong>High (cluster control):</strong> Manage node pools, Pod specs, networking, and sandbox policies.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Session and memory integration</strong></td>
+<td style="text-align: left"><strong>Built-in and auto-wired:</strong> Automatically connects to managed <code dir="auto">SessionService</code> and <code dir="auto">Memory Bank</code>.</td>
+<td style="text-align: left"><strong>External wiring required:</strong> Must configure external <code dir="auto">SessionService</code> (or <code dir="auto">DatabaseSessionService</code>).</td>
+<td style="text-align: left"><strong>External wiring required:</strong> Must configure external <code dir="auto">SessionService</code> / Cloud SQL / Spanner.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Scaling profile</strong></td>
+<td style="text-align: left">Managed horizontal autoscaling tuned for agentic workloads.</td>
+<td style="text-align: left"><strong>Fast scale-to-zero</strong> (cost-optimal for spiky/idle workloads) + configurable <code dir="auto">min-instances</code>.</td>
+<td style="text-align: left">Pod/Node autoscaling + <strong>pre-warmed Agent Sandbox pools</strong> for sub-second sandbox startup.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Untrusted code isolation</strong></td>
+<td style="text-align: left">Standard managed container isolation (use Built-In Code Executor for simple Python).</td>
+<td style="text-align: left">Standard gVisor container isolation per service revision.</td>
+<td style="text-align: left"><strong>Per-execution kernel sandbox (<code dir="auto">Agent Sandbox</code>)</strong> with gVisor / microVMs and ephemeral filesystems.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Primary architectural trigger</strong></td>
+<td style="text-align: left"><em>“Fastest path to production for ADK,” “minimal ops,” “managed sessions and Memory Bank out of the box.”</em></td>
+<td style="text-align: left"><em>“Custom container/OS packages,” “scale to zero during off-hours,” “serverless REST/MCP microservice.”</em></td>
+<td style="text-align: left"><em>“Execute untrusted user/LLM code safely in Kubernetes,” “custom GPU/TPU node pools,” “self-hosted open models.”</em></td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="4-real-world-deep-dive-stateful-scaling-and-sandbox-mechanics">4. Real-world deep dive: stateful scaling and sandbox mechanics</h2></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architect question</th>
+<th style="text-align: left">How it works under the hood in production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>“Why does enabling load-balancer sticky sessions (session affinity) fail to fix <code dir="auto">InMemorySessionService</code> state loss on Cloud Run or GKE?”</strong></td>
+<td style="text-align:left"><ul><li><strong>Containers are ephemeral!</strong> Session affinity only attempts to route a user to the same container while that container stays alive.</li><li>As soon as Cloud Run scales down an idle instance, crashes, or rolls out a new deployment revision, everything in local container <abbr title="Random-Access Memory">RAM</abbr> (<code>InMemorySessionService</code>) is wiped permanently. Always externalize state to <strong>managed <code>VertexAiSessionService</code></strong> or <strong><code>DatabaseSessionService</code></strong> (Cloud SQL / AlloyDB / Spanner)!</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“Why should Cloud Run container concurrency be set higher than 1 for most ADK agents?”</strong></td>
+<td style="text-align:left"><ul><li><strong>Agents are network <abbr title="Input/Output">I/O</abbr>-bound, not <abbr title="Central Processing Unit">CPU</abbr>-bound!</strong> An <abbr title="Agent Development Kit">ADK</abbr> agent spends over 90% of its turn waiting on network responses from the Gemini API and remote <abbr title="Model Context Protocol">MCP</abbr> tools.</li><li>Using <code>async def</code> tools and allowing a single container to handle 50–80 concurrent requests slashes compute costs and avoids cold-start storms!</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“How does GKE Agent Sandbox execute untrusted code in milliseconds without cold-booting a VM every time?”</strong></td>
+<td style="text-align:left"><ul><li><strong>Pre-warmed sandbox pools and snapshot restore:</strong> <abbr title="Google Kubernetes Engine">GKE</abbr> maintains a warm pool of pre-initialized gVisor/microVM sandbox pods.</li><li>When an agent tool call arrives, it attaches to a warm sandbox in milliseconds, runs the untrusted binary in an isolated kernel/filesystem, and destroys/resets the snapshot immediately afterward!</li></ul></td>
+</tr>
+</tbody>
+</table>
+<aside aria-label="Golden rules for Module 4.2" class="starlight-aside starlight-aside--tip"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path fill-rule="evenodd" d="M1.44 8.855v-.001l3.527-3.516c.34-.344.802-.541 1.285-.548h6.649l.947-.947c3.07-3.07 6.207-3.072 7.62-2.868a1.821 1.821 0 0 1 1.557 1.557c.204 1.413.203 4.55-2.868 7.62l-.946.946v6.649a1.845 1.845 0 0 1-.549 1.286l-3.516 3.528a1.844 1.844 0 0 1-3.11-.944l-.858-4.275-4.52-4.52-2.31-.463-1.964-.394A1.847 1.847 0 0 1 .98 10.693a1.843 1.843 0 0 1 .46-1.838Zm5.379 2.017-3.873-.776L6.32 6.733h4.638l-4.14 4.14Zm8.403-5.655c2.459-2.46 4.856-2.463 5.89-2.33.134 1.035.13 3.432-2.329 5.891l-6.71 6.71-3.561-3.56 6.71-6.711Zm-1.318 15.837-.776-3.873 4.14-4.14v4.639l-3.364 3.374Z" clip-rule="evenodd"/><path d="M9.318 18.345a.972.972 0 0 0-1.86-.561c-.482 1.435-1.687 2.204-2.934 2.619a8.22 8.22 0 0 1-1.23.302c.062-.365.157-.79.303-1.229.415-1.247 1.184-2.452 2.62-2.935a.971.971 0 1 0-.62-1.842c-.12.04-.236.084-.35.13-2.02.828-3.012 2.588-3.493 4.033a10.383 10.383 0 0 0-.51 2.845l-.001.016v.063c0 .536.434.972.97.972H2.24a7.21 7.21 0 0 0 .878-.065c.527-.063 1.248-.19 2.02-.447 1.445-.48 3.205-1.472 4.033-3.494a5.828 5.828 0 0 0 .147-.407Z"/></svg>Golden rules for Module 4.2</p><div class="starlight-aside__content"><ol>
+<li><strong>Zero-ops <abbr title="Agent Development Kit">ADK</abbr> hosting + built-in Sessions and Memory Bank = Agent Runtime</strong>.</li>
+<li><strong>Custom containers + scale-to-zero cost savings = Cloud Run</strong> (always pair with an <strong>external persistent <code dir="auto">SessionService</code></strong>!).</li>
+<li><strong>Executing untrusted code/binaries in isolated kernel sandboxes or custom <abbr title="Graphics Processing Unit">GPU</abbr> node pools = <abbr title="Google Kubernetes Engine">GKE</abbr> with Agent Sandbox</strong>!</li>
+</ol></div></aside>
+<div class="doc-footer"><div class="doc-footer-title">Official Google Cloud documentation and further reading</div><div class="doc-footer-note">Explore the official Google Cloud documentation for complete runtime specifications, session persistence, and sandbox isolation:</div><div class="doc-footer-links"><a href="https://adk.dev/deploy/" target="_blank" rel="noopener noreferrer">ADK deployment guide (Agent Runtime, Cloud Run, and GKE) →</a><a href="https://cloud.google.com/run/docs/overview/what-is-cloud-run" target="_blank" rel="noopener noreferrer">Cloud Run serverless containers documentation →</a><a href="https://cloud.google.com/kubernetes-engine/docs/how-to/sandbox-pods" target="_blank" rel="noopener noreferrer">GKE Sandbox (gVisor) and workload isolation →</a></div></div></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec4-evaluation.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">4.1 Trajectory Eval &amp; Rubric Syntax</span></span></a><a href="sec4-cicd.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">4.3 Agent Starter Pack &amp; CI/CD Gates</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

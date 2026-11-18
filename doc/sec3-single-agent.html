@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3.1 Single-agent design, prompting, and ADK parameters · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="sec3-single-agent">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">3.1 Single-agent design, prompting, and ADK parameters</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.pdf-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 14px; border-radius: 10px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 12px 0; }
+.pdf-bar-text { font-size: 0.84rem; color: var(--sl-color-text); font-weight: 500; }
+.pdf-dl-btn { padding: 6px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.18); border: 1px solid #3b82f6; color: var(--sl-color-white) !important; font-size: 0.8rem; font-weight: 700; text-decoration: none !important; white-space: nowrap; }
+.nutshell-box { background: rgba(16, 185, 129, 0.08); border: 1.5px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.nutshell-title { font-size: 0.85rem; font-weight: 800; color: #10b981; margin-bottom: 6px; }
+.def-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 12px; margin: 16px 0; }
+.def-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 12px; padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+.def-name { font-size: 0.98rem; font-weight: 700; color: var(--sl-color-white); line-height: 1.35; }
+.def-path { display: inline-block; width: fit-content; font-family: monospace; font-size: 0.76rem; padding: 2px 8px; border-radius: 6px; background: rgba(59, 130, 246, 0.16); color: #93c5fd; border: 1px solid rgba(59, 130, 246, 0.35); }
+.def-text { font-size: 0.84rem; color: var(--sl-color-text); line-height: 1.5; }
+.def-text ul { margin: 4px 0 0 0; padding-left: 16px; }
+.sa-widget { display: flex; flex-direction: column; gap: 16px; padding: 18px; border-radius: 14px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 20px 0; }
+.sa-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 10px 14px; background: var(--sl-color-bg); border-radius: 10px; border: 1px solid var(--sl-color-gray-5); }
+.sa-toggle-group { display: flex; flex-wrap: wrap; gap: 6px; }
+.sa-btn { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: transparent; color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.2s ease; }
+.sa-btn.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: var(--sl-color-white); }
+.sa-svg-box { width: 100%; background: var(--sl-color-bg); border-radius: 12px; padding: 12px; border: 1px solid var(--sl-color-gray-5); }
+.sa-svg { width: 100%; max-width: 720px; height: auto; display: block; margin: 0 auto; }
+.sa-node { cursor: pointer; transition: opacity 0.2s ease; }
+.sa-node rect { fill: var(--sl-color-bg-nav); stroke: var(--sl-color-gray-4); stroke-width: 1.5px; rx: 10px; }
+.sa-node.is-selected rect { stroke: #10b981; stroke-width: 2.5px; }
+.sa-node.is-dimmed { opacity: 0.42; }
+.sa-title { font-size: 11px; font-weight: 700; fill: var(--sl-color-white); pointer-events: none; }
+.sa-sub { font-size: 9.5px; fill: var(--sl-color-text); pointer-events: none; }
+.sa-edge { stroke: var(--sl-color-gray-4); stroke-width: 2px; stroke-dasharray: 5 5; }
+.sa-edge.active-edge { stroke: #10b981; stroke-width: 2.5px; animation: saPulse 0.8s linear infinite; }
+@keyframes saPulse { from { stroke-dashoffset: 20; } to { stroke-dashoffset: 0; } }
+.sa-card { background: var(--sl-color-bg); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
+.sa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 12px; }
+.sa-meta { background: var(--sl-color-bg-nav); padding: 12px 14px; border-radius: 8px; border: 1px solid var(--sl-color-hairline); }
+.sa-meta-label { font-size: 0.78rem; color: var(--sl-color-text-accent); font-weight: 700; margin-bottom: 6px; }
+.sa-meta-val { font-size: 0.86rem; color: var(--sl-color-white); line-height: 1.5; }
+.sa-meta-val ul { margin: 0; padding-left: 18px; }
+abbr[title] { text-decoration: underline dotted var(--sl-color-gray-3); cursor: help; border-bottom: none; }
+table { display: table !important; table-layout: fixed !important; border-collapse: collapse !important; width: 100% !important; border: 1px solid var(--sl-color-gray-5) !important; }
+th, td { border: 1px solid var(--sl-color-gray-5) !important; padding: 10px 12px !important; word-break: break-word !important; overflow-wrap: anywhere !important; white-space: normal !important; vertical-align: top !important; }
+td code, th code { white-space: normal !important; word-break: break-word !important; }
+th { background: var(--sl-color-bg-nav) !important; }
+</style>
+
+<aside aria-label="The Rosku Bank design challenge: the confused Loan Intake Agent!" class="starlight-aside starlight-aside--danger"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path d="M12 7a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1Zm0 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm9.71-7.44-5.27-5.27a1.05 1.05 0 0 0-.71-.29H8.27a1.05 1.05 0 0 0-.71.29L2.29 7.56a1.05 1.05 0 0 0-.29.71v7.46c.004.265.107.518.29.71l5.27 5.27c.192.183.445.286.71.29h7.46a1.05 1.05 0 0 0 .71-.29l5.27-5.27a1.05 1.05 0 0 0 .29-.71V8.27a1.05 1.05 0 0 0-.29-.71ZM20 15.31 15.31 20H8.69L4 15.31V8.69L8.69 4h6.62L20 8.69v6.62Z"/></svg>The Rosku Bank design challenge: the confused Loan Intake Agent!</p><div class="starlight-aside__content"><p>Rosku Bank builds its first <strong>Loan Intake Agent</strong> using the <strong>Agent Development Kit (<abbr title="Agent Development Kit">ADK</abbr>)</strong>. Immediately, three things break in testing:</p><ol>
+<li>The root coordinator agent keeps routing home-mortgage questions to the Credit Card Agent instead of the Loan Intake Agent!</li>
+<li>When the Loan Intake Agent calculates a customer’s Debt-to-Income (<abbr title="Debt-to-Income">DTI</abbr>) ratio, it replies in free-form paragraphs instead of strict JSON, crashing the downstream underwriting step!</li>
+<li>The next agent in the pipeline cannot find the calculated <abbr title="Debt-to-Income">DTI</abbr> result in <code dir="auto">session.state</code>, and stateless formatting workers are re-reading 50 turns of prior chat history on every hop!</li>
+</ol></div></aside>
+<div class="nutshell-box"><div class="nutshell-title">Module 3.1 in a nutshell</div><ul style="margin: 0; padding-left: 18px; font-size: 0.88rem; line-height: 1.55;"><li><strong><code>description</code> vs. <code>instruction</code>:</strong> Parent/coordinator agents read <strong>only <code>description</code></strong> to decide which sub-agent gets the task; <strong><code>instruction</code></strong> steers this agent’s own internal reasoning and supports dynamic <code>{state_key}</code> injection (or <code>{state_key?}</code> for optional keys).</li><li><strong>Never mix <code>tools</code> and <code>output_schema</code> on the same agent:</strong> Enabling <code>output_schema</code> (Pydantic <code>BaseModel</code>) forces strict JSON output and disables tool calling on that agent turn. Split into a 2-step sequence: Agent 1 calls tools and saves to <code>output_key</code>; Agent 2 (with <code>include_contents=‘none’</code>) formats into <code>output_schema</code>!</li><li><strong>Planners and transfer bounds:</strong> Use <code>BuiltInPlanner</code> (with Gemini <code>ThinkingConfig</code>) or <code>PlanReActPlanner</code> for step-by-step planning, and set <code>disallow_transfer_to_parent=True</code> / <code>disallow_transfer_to_peers=True</code> so specialist sub-agents don’t hand off prematurely.</li></ul></div>
+<div class="sl-heading-wrapper level-h2"><h2 id="1-key-concept-definitions-inside-an-adk-llmagent">1. Key concept definitions: inside an ADK <code dir="auto">LlmAgent</code></h2></div>
+<p>Before wiring multiple agents together, review the six core configuration primitives of <abbr title="Agent Development Kit">ADK</abbr>’s fundamental building block—the <strong><code dir="auto">LlmAgent</code></strong> (also aliased as <code dir="auto">Agent</code>):</p>
+<div class="def-grid"><div class="def-card"><div class="def-name">1. description vs. instruction</div><span class="def-path">External route vs. internal brain</span><div class="def-text"><ul><li><strong><code>description</code>:</strong> External routing metadata read by <em>parent/coordinator agents</em> to decide task delegation.</li><li><strong><code>instruction</code>:</strong> Read by <em>this agent’s own <abbr title="Large Language Model">LLM</abbr></em> to govern its reasoning, persona, and tool use.</li></ul></div></div><div class="def-card"><div class="def-name">2. Dynamic state templates</div><span class="def-path">{var_name} &amp; {var_name?}</span><div class="def-text"><ul><li><strong>What it is:</strong> Placing <code>{var_name}</code> inside <code>instruction</code> automatically interpolates <code>session.state[‘var_name’]</code> at runtime.</li><li><strong>Why you need it:</strong> Adding a trailing question mark (<code>{var_name?}</code>) safely ignores missing optional keys without throwing an error, or pass a callable <code>InstructionProvider</code> function to skip brace parsing.</li></ul></div></div><div class="def-card"><div class="def-name">3. output_schema vs. output_key</div><span class="def-path">Pydantic JSON vs. state save</span><div class="def-text"><ul><li><strong><code>output_schema</code>:</strong> Takes a Pydantic <code>BaseModel</code> to force strict JSON output (which disables tool calls on that same agent turn).</li><li><strong><code>output_key</code>:</strong> Automatically writes the agent’s final response into <code>session.state[output_key]</code> for downstream agents.</li></ul></div></div><div class="def-card"><div class="def-name">4. include_contents=‘none’</div><span class="def-path">Stateless history pruning</span><div class="def-text"><ul><li><strong>What it is:</strong> Strips prior conversation history from the model call.</li><li><strong>Why you need it:</strong> Ensures a stateless worker or JSON formatting sub-agent processes <strong>only</strong> its <code>instruction</code> (including injected <code>{state_key}</code> variables), slashing token bills!</li></ul></div></div><div class="def-card"><div class="def-name">5. Built-in and ReAct planners</div><span class="def-path">BuiltInPlanner &amp; PlanReActPlanner</span><div class="def-text"><ul><li><strong>What it is:</strong> Reasoning controllers attached via the <code>planner</code> parameter on <code>LlmAgent</code>.</li><li><strong>Why you need it:</strong> <code>BuiltInPlanner</code> (with Gemini <code>ThinkingConfig</code>) or <code>PlanReActPlanner</code> instructs the agent to generate an explicit multi-step plan before calling tools or answering.</li></ul></div></div><div class="def-card"><div class="def-name">6. Model tiering and transfer bounds</div><span class="def-path">Flash/Pro + disallow_transfer</span><div class="def-text"><ul><li><strong>Model tiering:</strong> Pair <strong>Gemini Flash</strong> (low-latency routers/formatters) with <strong>Gemini Pro</strong> (deep reasoning).</li><li><strong>Transfer bounds:</strong> Set <code>disallow_transfer_to_parent=True</code> and <code>disallow_transfer_to_peers=True</code> to prevent premature handoffs.</li></ul></div></div></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-interactive-architecture-decision-engine-inside-an-adk-llmagent">2. Interactive architecture decision engine: inside an ADK <code dir="auto">LlmAgent</code></h2></div>
+<p>Switch between the <strong>3 <code dir="auto">LlmAgent</code> design scenarios</strong> below and click the 4 stages in each view to inspect how parameters flow through Rosku Bank’s Loan Intake Agent:</p>
+<div class="sa-widget"><div class="sa-toolbar"><div class="sa-toggle-group"><button id="sa-mode-routing" class="sa-btn active" type="button">1. Routing and prompting (4 stages)</button><button id="sa-mode-schema" class="sa-btn" type="button">2. Structured JSON and state (4 stages)</button><button id="sa-mode-model" class="sa-btn" type="button">3. Model, planner, and transfer tuning (4 stages)</button></div><div style="display:flex; gap:8px; align-items:center;"><button id="sa-prev" class="sa-btn" type="button">← Prev</button><span id="sa-step-label" style="font-size:0.82rem; font-weight:700;">Stage 1 / 4</span><button id="sa-next" class="sa-btn" type="button">Next →</button></div></div><div class="sa-svg-box"><svg id="sa-svg-canvas" class="sa-svg" viewBox="0 0 720 125" xmlns="http://www.w3.org/2000/svg"></svg></div><div class="sa-card"><div><div id="sa-card-param" style="font-size:0.75rem; font-weight:700; color:#3b82f6;"></div><div id="sa-card-title" style="font-size:1.08rem; font-weight:700; color:var(--sl-color-white); margin-top:2px;"></div></div><div class="sa-grid"><div class="sa-meta"><div class="sa-meta-label">Input and configuration rule</div><div id="sa-card-in" class="sa-meta-val"></div></div><div class="sa-meta"><div class="sa-meta-label">Output behavior and architecture rule</div><div id="sa-card-out" class="sa-meta-val"></div></div></div></div></div>
+<script>
+(function() {
+  const DATA = {
+    routing: {
+      nodes: [
+        ["1. Identity & route", "name + description"],
+        ["2. Brain & prompt", "instruction + {state}"],
+        ["3. Output contract", "output_schema"],
+        ["4. State handoff", "output_key -> state"]
+      ],
+      steps: [
+        {
+          param: "Parameters: name and description",
+          title: "1. How parent orchestrators route tasks to this agent",
+          inp: "<ul><li>Configure <code>name</code> (unique identifier) and <code>description</code> (concise summary of capabilities, e.g., <em>'Calculates mortgage eligibility and Debt-to-Income ratios'</em>).</li></ul>",
+          out: "<ul><li><strong>Architecture rule:</strong> Parent agents read <strong>only <code>description</code></strong> (not <code>instruction</code>) to decide sub-agent routing! Vague descriptions cause misrouted tasks.</li></ul>"
+        },
+        {
+          param: "Parameter: instruction (static or dynamic template)",
+          title: "2. Guiding the agent's internal reasoning and persona",
+          inp: "<ul><li>Pass a system instruction string—or use curly-brace state placeholders like <code>&#123;customer_tier&#125;</code> (or <code>&#123;customer_tier?&#125;</code> for optional keys) or a callable <code>InstructionProvider</code> function!</li></ul>",
+          out: "<ul><li><abbr title='Agent Development Kit'>ADK</abbr> automatically substitutes <code>&#123;variable_name&#125;</code> from <code>session.state</code> into the instruction before calling Gemini.</li></ul>"
+        },
+        {
+          param: "Parameter: output_schema (structured output)",
+          title: "3. Enforcing deterministic JSON responses",
+          inp: "<ul><li>Supply a Pydantic <code>BaseModel</code> class to <code>output_schema</code> (e.g., <code>LoanEligibilityResult</code> with fields <code>dti_ratio: float</code>, <code>approved: bool</code>).</li></ul>",
+          out: "<ul><li><strong>Important constraint:</strong> When <code>output_schema</code> is active on an <code>LlmAgent</code>, the model is forced to emit strict JSON and <strong>cannot invoke tools</strong> in that same agent turn!</li></ul>"
+        },
+        {
+          param: "Parameter: output_key (auto-save to session state)",
+          title: "4. Passing results to downstream agents",
+          inp: "<ul><li>Set <code>output_key='loan_intake_result'</code> on the <code>LlmAgent</code> definition.</li></ul>",
+          out: "<ul><li><abbr title='Agent Development Kit'>ADK</abbr> automatically writes the agent's final response into <code>session.state['loan_intake_result']</code> so the next agent can reference <code>&#123;loan_intake_result&#125;</code>!</li></ul>"
+        }
+      ]
+    },
+    schema: {
+      nodes: [
+        ["1. Tool + schema", "2-step split pattern"],
+        ["2. {state_key}", "Injects upstream data"],
+        ["3. Pydantic model", "Strict JSON validation"],
+        ["4. include_contents", "Set to 'none' (stateless)"]
+      ],
+      steps: [
+        {
+          param: "Design pattern: tools + output_schema split",
+          title: "1. Why can't one agent call tools AND use output_schema?",
+          inp: "<ul><li>Rosku Bank wants the agent to call a credit-bureau tool AND return a strict Pydantic <code>output_schema</code> in the same <code>LlmAgent</code>.</li></ul>",
+          out: "<ul><li><strong>Architectural fix:</strong> Split into two sequential agents! Agent 1 calls the credit-bureau tool and saves to <code>output_key</code>; Agent 2 (with no tools) formats the data using <code>output_schema</code>!</li></ul>"
+        },
+        {
+          param: "Dynamic instructions: {state_key} injection",
+          title: "2. Reading upstream data without custom code",
+          inp: "<ul><li>Reference any key stored in <code>session.state</code> inside the downstream agent's instruction string using <code>&#123;loan_intake_result&#125;</code>.</li></ul>",
+          out: "<ul><li>Eliminates manual string concatenation and keeps prompts clean, modular, and testable.</li></ul>"
+        },
+        {
+          param: "Schema validation: Pydantic BaseModel",
+          title: "3. Guaranteeing downstream API compatibility",
+          inp: "<ul><li>Define strict field types and descriptions inside a Pydantic schema passed to <code>output_schema</code>.</li></ul>",
+          out: "<ul><li>Prevents conversational markdown chatter (like <em>'Sure! Here is your JSON:'</em>) from breaking downstream parsers.</li></ul>"
+        },
+        {
+          param: "Context control: include_contents='none'",
+          title: "4. Controlling conversation history visibility",
+          inp: "<ul><li>Set <code>include_contents='none'</code> when a formatting or stateless utility agent only needs the current <code>&#123;state_key&#125;</code> variables, not the full chat history.</li></ul>",
+          out: "<ul><li>Reduces input token cost and prevents long prior chat turns from distracting a specialized formatting agent!</li></ul>"
+        }
+      ]
+    },
+    model: {
+      nodes: [
+        ["1. Model tiering", "Flash router + Pro leaf"],
+        ["2. Generation config", "Temperature & tokens"],
+        ["3. Transfer bounds", "disallow_transfer_to..."],
+        ["4. Agent planners", "Thinking / PlanReAct"]
+      ],
+      steps: [
+        {
+          param: "Model selection: Gemini Flash vs. Gemini Pro",
+          title: "1. Matching model tier to agent task complexity",
+          inp: "<ul><li>Use <strong>Gemini Flash</strong> for high-volume classification, routing, and extraction; use <strong>Gemini Pro</strong> for complex multi-step financial reasoning and coding.</li></ul>",
+          out: "<ul><li><strong>Architecture rule:</strong> In multi-agent systems, use Flash for the root router/triage agent and Pro only for deep specialist sub-agents to optimize latency and cost!</li></ul>"
+        },
+        {
+          param: "Parameter: generate_content_config",
+          title: "2. Tuning temperature, top-p, and token limits",
+          inp: "<ul><li>Pass <code>GenerateContentConfig(temperature=0.0, max_output_tokens=1024)</code> to the <code>LlmAgent</code>.</li></ul>",
+          out: "<ul><li>Use low temperature (<code>0.0 - 0.2</code>) for deterministic tool selection, classification, and financial extraction.</li></ul>"
+        },
+        {
+          param: "Parameters: disallow_transfer_to_parent / peers",
+          title: "3. Controlling autonomous agent transfers",
+          inp: "<ul><li>Configure <code>disallow_transfer_to_parent=True</code> or <code>disallow_transfer_to_peers=True</code> when you want a sub-agent to finish its task without handing off early.</li></ul>",
+          out: "<ul><li>Prevents sub-agents from prematurely bouncing tasks back to the coordinator or sibling agents.</li></ul>"
+        },
+        {
+          param: "Parameter: planner (built-in thinking / Plan-ReAct)",
+          title: "4. Enabling multi-step reasoning plans",
+          inp: "<ul><li>Attach <code>BuiltInPlanner</code> (with <code>ThinkingConfig</code>) or <code>PlanReActPlanner</code> to an <code>LlmAgent</code> handling complex, ambiguous tasks.</li></ul>",
+          out: "<ul><li>Instructs the agent to formulate a structured step-by-step plan before invoking tools or generating the final answer.</li></ul>"
+        }
+      ]
+    }
+  };
+  let mode = "routing";
+  let step = 1;
+  const svgEl = document.getElementById("sa-svg-canvas");
+  function render() {
+    const mData = DATA[mode];
+    const count = mData.nodes.length;
+    if (step > count) step = 1;
+    const sData = mData.steps[step - 1];
+    document.getElementById("sa-step-label").textContent = "Stage " + step + " / " + count;
+    document.getElementById("sa-mode-routing").className = "sa-btn" + (mode === "routing" ? " active" : "");
+    document.getElementById("sa-mode-schema").className = "sa-btn" + (mode === "schema" ? " active" : "");
+    document.getElementById("sa-mode-model").className = "sa-btn" + (mode === "model" ? " active" : "");
+    const gap = 18;
+    const nodeW = Math.floor((690 - gap * (count - 1)) / count);
+    let svgHtml = "";
+    for (let e = 1; e < count; e++) {
+      const x1 = 15 + e * nodeW + (e - 1) * gap;
+      const x2 = x1 + gap;
+      const edgeCls = "sa-edge" + ((e === step || e === step - 1) ? " active-edge" : "");
+      svgHtml += '<line class="' + edgeCls + '" x1="' + x1 + '" y1="62" x2="' + x2 + '" y2="62" />';
+    }
+    for (let i = 1; i <= count; i++) {
+      const x = 15 + (i - 1) * (nodeW + gap);
+      const cls = "sa-node " + (i === step ? "is-selected" : "is-dimmed");
+      svgHtml += '<g class="' + cls + '" data-step="' + i + '" transform="translate(' + x + ', 22)">';
+      svgHtml += '<rect x="0" y="0" width="' + nodeW + '" height="80" />';
+      svgHtml += '<text x="10" y="33" class="sa-title">' + mData.nodes[i - 1][0] + '</text>';
+      svgHtml += '<text x="10" y="55" class="sa-sub">' + mData.nodes[i - 1][1] + '</text>';
+      svgHtml += '</g>';
+    }
+    svgEl.innerHTML = svgHtml;
+    svgEl.querySelectorAll(".sa-node").forEach(el => {
+      el.addEventListener("click", () => {
+        step = parseInt(el.getAttribute("data-step") || "1", 10);
+        render();
+      });
+    });
+    document.getElementById("sa-card-param").textContent = sData.param;
+    document.getElementById("sa-card-title").textContent = sData.title;
+    document.getElementById("sa-card-in").innerHTML = sData.inp;
+    document.getElementById("sa-card-out").innerHTML = sData.out;
+  }
+  document.getElementById("sa-mode-routing")?.addEventListener("click", () => { mode = "routing"; step = 1; render(); });
+  document.getElementById("sa-mode-schema")?.addEventListener("click", () => { mode = "schema"; step = 1; render(); });
+  document.getElementById("sa-mode-model")?.addEventListener("click", () => { mode = "model"; step = 1; render(); });
+  document.getElementById("sa-prev")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step > 1 ? step - 1 : max;
+    render();
+  });
+  document.getElementById("sa-next")?.addEventListener("click", () => {
+    const max = DATA[mode].nodes.length;
+    step = step < max ? step + 1 : 1;
+    render();
+  });
+  render();
+})();
+</script>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-visual-parameter-reference-table-adk-llmagent-inputs-and-outputs">3. Visual parameter reference table: ADK <code dir="auto">LlmAgent</code> inputs and outputs</h2></div>
+<p>Review this complete <strong>input/output parameter matrix</strong> for <code dir="auto">LlmAgent</code>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: left"><code dir="auto">LlmAgent</code> parameter</th>
+<th style="text-align: left">Expected input type</th>
+<th style="text-align: left">Runtime output or effect</th>
+<th style="text-align: left">Core architecture rule</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">name</code></strong></td>
+<td style="text-align: left"><code dir="auto">str</code> (Unique identifier, e.g., <code dir="auto">"loan_intake_agent"</code>)</td>
+<td style="text-align: left">Identifies the agent in logs, traces, and transfer calls (<code dir="auto">transfer_to_agent</code>).</td>
+<td style="text-align: left">Must be unique across the agent hierarchy; avoid spaces or special characters.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">description</code></strong></td>
+<td style="text-align: left"><code dir="auto">str</code> (Capability summary)</td>
+<td style="text-align: left">Read by <strong>parent/coordinator LLMs</strong> to decide task delegation.</td>
+<td style="text-align: left"><strong>Never</strong> put internal formatting rules here; put routing capabilities here!</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">instruction</code></strong></td>
+<td style="text-align: left"><code dir="auto">str</code> (Supports <code dir="auto">{state_var}</code> templates) or <code dir="auto">Callable</code></td>
+<td style="text-align: left">Guides <strong>this agent’s own LLM</strong> behavior, persona, and tool usage.</td>
+<td style="text-align: left">Automatically injects values from <code dir="auto">session.state</code> when <code dir="auto">{key}</code> syntax is used.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">model</code></strong></td>
+<td style="text-align: left"><code dir="auto">str</code> (e.g., <code dir="auto">"gemini-2.5-flash"</code> or <code dir="auto">"gemini-2.5-pro"</code>)</td>
+<td style="text-align: left">Selects the underlying reasoning engine for this specific agent.</td>
+<td style="text-align: left">Use <strong>Flash</strong> for low-latency routers/extractors; use <strong>Pro</strong> for deep reasoning sub-agents.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">tools</code></strong></td>
+<td style="text-align: left"><code dir="auto">list</code> of Functions, <code dir="auto">BaseTool</code>, or <code dir="auto">MCPToolset</code></td>
+<td style="text-align:left">Exposes callable actions to the <abbr title="Large Language Model">LLM</abbr> during its reasoning loop.</td>
+<td style="text-align:left"><abbr title="Large Language Model">LLM</abbr> uses function <strong>docstrings and type hints</strong> to decide when and how to call each tool.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">output_schema</code></strong></td>
+<td style="text-align: left">Pydantic <code dir="auto">BaseModel</code> class</td>
+<td style="text-align: left">Forces the final response to conform strictly to a JSON schema.</td>
+<td style="text-align: left"><strong>Important constraint:</strong> Enabling <code dir="auto">output_schema</code> disables tool calling and agent transfers for that agent!</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">output_key</code></strong></td>
+<td style="text-align: left"><code dir="auto">str</code> (e.g., <code dir="auto">"dti_result"</code>)</td>
+<td style="text-align: left">Saves the agent’s final text/JSON output into <code dir="auto">session.state["dti_result"]</code>.</td>
+<td style="text-align: left">Primary mechanism for passing outputs to the next agent in a pipeline!</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">include_contents</code></strong></td>
+<td style="text-align: left"><code dir="auto">'default'</code> or <code dir="auto">'none'</code></td>
+<td style="text-align:left">Controls whether prior conversation history is sent to the <abbr title="Large Language Model">LLM</abbr>.</td>
+<td style="text-align: left">Set to <code dir="auto">'none'</code> for stateless worker agents that only need <code dir="auto">{state_key}</code> inputs to save tokens!</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">generate_content_config</code></strong></td>
+<td style="text-align: left"><code dir="auto">GenerateContentConfig</code> object</td>
+<td style="text-align: left">Sets <code dir="auto">temperature</code>, <code dir="auto">top_p</code>, <code dir="auto">max_output_tokens</code>, and safety settings.</td>
+<td style="text-align: left">Use <code dir="auto">temperature=0.0</code> for deterministic routing and structured data extraction.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">disallow_transfer_to_parent</code> / <code dir="auto">peers</code></strong></td>
+<td style="text-align: left"><code dir="auto">bool</code> (<code dir="auto">True</code> or <code dir="auto">False</code>)</td>
+<td style="text-align: left">Restricts whether the sub-agent can autonomously transfer control back up or sideways.</td>
+<td style="text-align: left">Set to <code dir="auto">True</code> when a specialist sub-agent must complete its assigned step without bouncing early.</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong><code dir="auto">planner</code></strong></td>
+<td style="text-align: left"><code dir="auto">BuiltInPlanner</code> or <code dir="auto">PlanReActPlanner</code></td>
+<td style="text-align: left">Enables explicit step-by-step reasoning/thinking plans prior to tool execution.</td>
+<td style="text-align: left">Use <code dir="auto">BuiltInPlanner(thinking_config=...)</code> for Gemini thinking models or <code dir="auto">PlanReActPlanner</code> for structured Plan-Act-Observe loops.</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="4-real-world-deep-dive-llmagent-parameter-brain-twisters">4. Real-world deep dive: <code dir="auto">LlmAgent</code> parameter brain-twisters</h2></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architect question</th>
+<th style="text-align: left">How it works under the hood in production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>“Why does an <code dir="auto">LlmAgent</code> configured with BOTH <code dir="auto">tools=[credit_check]</code> AND <code dir="auto">output_schema=LoanJSON</code> fail to call its tool, and how do we solve it?”</strong></td>
+<td style="text-align:left"><ul><li><strong>Two-step sequential split:</strong> In <abbr title="Agent Development Kit">ADK</abbr>, setting <code>output_schema</code> constrains the model’s decoding output strictly to that JSON schema, preventing intermediate function-calling turns on that agent.</li><li>Solve this with a 2-step <code>SequentialAgent</code>: <strong>Agent 1</strong> calls <code>credit_check</code> and saves to <code>output_key=“raw_credit”</code>; <strong>Agent 2</strong> (with no tools and <code>include_contents=‘none’</code>) reads <code>{raw_credit}</code> and applies <code>output_schema=LoanJSON</code>!</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“If we set <code dir="auto">include_contents='none'</code> on Agent 2 so prior chat history is excluded, how does Agent 2 still receive the data from Agent 1?”</strong></td>
+<td style="text-align:left"><ul><li><strong>State interpolation still runs on <code>instruction</code>!</strong> Even when <code>include_contents=‘none’</code> strips the conversation history list, <abbr title="Agent Development Kit">ADK</abbr> still resolves <code>{raw_credit}</code> placeholders inside Agent 2’s <code>instruction</code> from <code>session.state[‘raw_credit’]</code>—giving Agent 2 the exact structured input it needs at a fraction of the token cost!</li></ul></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“How do we inject dynamic context into <code dir="auto">instruction</code> if we do NOT want ADK’s automatic <code dir="auto">{brace}</code> interpolation to parse literal curly braces (like JSON examples) in our prompt?”</strong></td>
+<td style="text-align:left"><ul><li><strong>Pass a callable <code>InstructionProvider</code> function:</strong> Instead of passing a static <code>str</code> to <code>instruction</code>, pass a Python function <code>def build_instruction(ctx: ReadonlyContext) -&gt; str:</code>.</li><li>When <code>instruction</code> is a callable function, <abbr title="Agent Development Kit">ADK</abbr> uses your function’s return string verbatim and skips automatic <code>{brace}</code> parsing!</li></ul></td>
+</tr>
+</tbody>
+</table>
+<aside aria-label="Golden rules for Module 3.1" class="starlight-aside starlight-aside--tip"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path fill-rule="evenodd" d="M1.44 8.855v-.001l3.527-3.516c.34-.344.802-.541 1.285-.548h6.649l.947-.947c3.07-3.07 6.207-3.072 7.62-2.868a1.821 1.821 0 0 1 1.557 1.557c.204 1.413.203 4.55-2.868 7.62l-.946.946v6.649a1.845 1.845 0 0 1-.549 1.286l-3.516 3.528a1.844 1.844 0 0 1-3.11-.944l-.858-4.275-4.52-4.52-2.31-.463-1.964-.394A1.847 1.847 0 0 1 .98 10.693a1.843 1.843 0 0 1 .46-1.838Zm5.379 2.017-3.873-.776L6.32 6.733h4.638l-4.14 4.14Zm8.403-5.655c2.459-2.46 4.856-2.463 5.89-2.33.134 1.035.13 3.432-2.329 5.891l-6.71 6.71-3.561-3.56 6.71-6.711Zm-1.318 15.837-.776-3.873 4.14-4.14v4.639l-3.364 3.374Z" clip-rule="evenodd"/><path d="M9.318 18.345a.972.972 0 0 0-1.86-.561c-.482 1.435-1.687 2.204-2.934 2.619a8.22 8.22 0 0 1-1.23.302c.062-.365.157-.79.303-1.229.415-1.247 1.184-2.452 2.62-2.935a.971.971 0 1 0-.62-1.842c-.12.04-.236.084-.35.13-2.02.828-3.012 2.588-3.493 4.033a10.383 10.383 0 0 0-.51 2.845l-.001.016v.063c0 .536.434.972.97.972H2.24a7.21 7.21 0 0 0 .878-.065c.527-.063 1.248-.19 2.02-.447 1.445-.48 3.205-1.472 4.033-3.494a5.828 5.828 0 0 0 .147-.407Z"/></svg>Golden rules for Module 3.1</p><div class="starlight-aside__content"><ol>
+<li><strong>Parent routing</strong> depends on <strong><code dir="auto">description</code></strong>; <strong>internal behavior</strong> depends on <strong><code dir="auto">instruction</code></strong>.</li>
+<li><strong><code dir="auto">output_key</code></strong> writes to <code dir="auto">session.state</code>; <strong><code dir="auto">{key}</code></strong> inside <code dir="auto">instruction</code> reads from <code dir="auto">session.state</code>.</li>
+<li>Never combine <strong>tool calling</strong> and <strong><code dir="auto">output_schema</code></strong> inside the exact same <code dir="auto">LlmAgent</code>—use a two-step agent handoff instead!</li>
+</ol></div></aside>
+<div class="doc-footer"><div class="doc-footer-title">Official Google Cloud documentation and further reading</div><div class="doc-footer-note">Consult the official Agent Development Kit (ADK) documentation for complete LlmAgent parameter specifications, planners, and state templating rules:</div><div class="doc-footer-links"><a href="https://adk.dev/agents/llm-agents/" target="_blank" rel="noopener noreferrer">ADK LlmAgent configuration and parameters guide →</a><a href="https://adk.dev/sessions/state/" target="_blank" rel="noopener noreferrer">Dynamic state injection and output_key documentation →</a><a href="https://cloud.google.com/vertex-ai/generative-ai/docs/learn/models" target="_blank" rel="noopener noreferrer">Gemini models (Flash vs. Pro) selection guide →</a></div></div></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec3-exam-guide.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">3.0 Domain 3 Roadmap</span></span></a><a href="sec3-workflows.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">3.2 Multi-Agent Workflow Patterns</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

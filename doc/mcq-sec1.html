@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section 1 simulator: Practice questions · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="mcq-sec1">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">Section 1 simulator: Practice questions</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.sim-wrap { display: flex; flex-direction: column; gap: 16px; margin: 16px 0; }
+.sim-top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+.sim-score-pill { font-size: 0.85rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: rgba(16, 185, 129, 0.16); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
+.sim-filter-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.sim-chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+.sim-chip.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: var(--sl-color-white); }
+.sim-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.sim-meta-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.sim-domain-tag { font-size: 0.75rem; font-weight: 700; color: #3b82f6; background: rgba(59, 130, 246, 0.14); padding: 4px 10px; border-radius: 999px; }
+.sim-type-tag { font-size: 0.75rem; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 4px 10px; border-radius: 999px; }
+.sim-stem { font-size: 0.98rem; line-height: 1.6; color: var(--sl-color-white); font-weight: 500; }
+.sim-options { display: flex; flex-direction: column; gap: 10px; }
+.sim-opt { text-align: left; padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-white); font-size: 0.9rem; line-height: 1.45; cursor: pointer; transition: all 0.15s ease; }
+.sim-opt:hover { border-color: #3b82f6; }
+.sim-opt.selected-pending { border-color: #3b82f6; background: rgba(59, 130, 246, 0.15); }
+.sim-opt.correct { border-color: #10b981; background: rgba(16, 185, 129, 0.15); }
+.sim-opt.wrong { border-color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+.sim-explain { display: none; padding: 16px; border-radius: 10px; background: var(--sl-color-bg); border-left: 4px solid #10b981; font-size: 0.88rem; line-height: 1.5; color: var(--sl-color-text); }
+.sim-explain.visible { display: flex; flex-direction: column; gap: 10px; }
+.sim-arch-strip { padding: 10px 14px; border-radius: 8px; background: var(--sl-color-bg-nav); border: 1px dashed #3b82f6; font-family: monospace; font-size: 0.82rem; color: var(--sl-color-white); overflow-x: auto; }
+.sim-hood { padding: 10px 12px; border-radius: 8px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); font-size: 0.82rem; color: var(--sl-color-white); }
+.sim-nav-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.sim-grid { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+.sim-num-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.sim-num-btn.current { border-color: #3b82f6; border-width: 2px; color: var(--sl-color-white); }
+.sim-num-btn.ans-ok { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #10b981; }
+.sim-num-btn.ans-bad { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444; }
+</style>
+<div class="sim-wrap"><div class="sim-top-bar"><div class="sim-filter-row"><button class="sim-chip active" data-filter="all" type="button">All questions</button><button class="sim-chip" data-filter="1.1" type="button">1.1 Automation vs. agents (10)</button><button class="sim-chip" data-filter="1.2" type="button">1.2 Designer &amp; multimodal (10)</button><button class="sim-chip" data-filter="1.3" type="button">1.3 CX Studio, Pages &amp; voice (10)</button><button class="sim-chip" data-filter="missed" type="button">Retry missed only</button></div><div style="display:flex; gap:8px; align-items:center;"><span id="sim-score" class="sim-score-pill">Score: 0 / 0</span><button id="sim-reset" class="sim-chip" type="button">Reset progress</button></div></div><div class="sim-card"><div class="sim-meta-row"><div style="display:flex; gap:8px; align-items:center;"><span id="q-domain" class="sim-domain-tag">1.1 Architecture</span><span id="q-type" class="sim-type-tag">Single choice</span></div><span id="q-counter" style="font-size:0.85rem; font-weight:700;">Question 1 of 30</span></div><div id="q-stem" class="sim-stem">Loading scenario…</div><div id="q-options" class="sim-options"></div><div id="q-explain" class="sim-explain"><div id="q-arch" class="sim-arch-strip"></div><div id="q-exp-text"></div><div id="q-hood" class="sim-hood"></div></div><div class="sim-nav-row"><button id="q-prev" class="sim-chip" type="button">← Previous question</button><button id="q-next" class="sim-chip active" type="button">Next question →</button></div></div><div><div style="font-size:0.8rem; font-weight:700; margin-bottom:6px; color:var(--sl-color-text);">Quick-jump question navigator:</div><div id="q-grid" class="sim-grid"></div></div></div>
+<script>
+(function() {
+  const QUESTIONS = [
+    {
+      id: 1, sec: "1.1", multi: false,
+      arch: "[Structured ISO-8583 JSON Events + Fixed Rules + <50ms SLA] --> [Deterministic Stream Processing (Dataflow / Workflows)]",
+      stem: "Rosku Bank ingests 25,000 ISO-8583 payment clearing events per second from Pub/Sub. Every event conforms to a strict JSON schema, and business rules state that any transaction with a non-USD currency code must be converted using a fixed reference table and written to BigQuery within 50 milliseconds. An engineering team proposes an ADK SequentialAgent using Gemini Flash to inspect and transform each event. Which architectural recommendation should you make?",
+      opts: [
+        "A. Approve the SequentialAgent design and enable Gemini Context Caching on the currency reference table.",
+        "B. Reject the agent proposal and process the structured stream using a deterministic Dataflow pipeline.",
+        "C. Replace the SequentialAgent with a ParallelAgent that invokes an MCP Toolbox currency lookup endpoint.",
+        "D. Deploy a single LlmAgent on Cloud Run with Provisioned Throughput reserved for peak clearing windows."
+      ],
+      ans: [1],
+      exp: "Correct (B): When inputs follow a strict schema, rules are 100% deterministic, and a sub-50ms high-throughput SLA applies, deterministic stream processing (Dataflow) delivers exact repeatability at zero LLM token cost. Options A, C, and D introduce unnecessary LLM inference latency and per-token billing.",
+      hood: "Architecture rule: Never use an LLM agent for high-frequency, fixed-schema ETL or deterministic arithmetic."
+    },
+    {
+      id: 2, sec: "1.1", multi: false,
+      arch: "[No-Code Business User + Trigger -> Gemini Summary -> Jira Ticket -> Manager Approval] --> [Gemini Enterprise Workflow Builder]",
+      stem: "Rosku Bank's vendor-management operations team (non-developers) wants to automate a repeatable business process: whenever a vendor contract email arrives in a shared Gmail inbox, the system should automatically summarize the key renewal dates using Gemini, create a tracking issue in Jira, and pause for a manager's 1-click approval before emailing the vendor. Which Google Cloud capability is purpose-built for this requirement?",
+      opts: [
+        "A. Deploy a code-first ADK CustomAgent subclassing BaseAgent on a GKE Autopilot cluster with gVisor pods.",
+        "B. Use Gemini Enterprise Workflow Builder to chain the trigger, summary step, Jira action, and approval.",
+        "C. Configure CX Agent Studio with an inbound SIP/PSTN voice telephony gateway and DTMF keypad slot rules.",
+        "D. Build a Dataflow streaming pipeline in Apache Beam using custom Python ParDo transforms and Pub/Sub."
+      ],
+      ans: [1],
+      exp: "Correct (B): Gemini Enterprise Workflow Builder provides a no-code visual canvas for business users to automate repeatable, trigger-driven multi-app workflows combining Gemini reasoning steps, SaaS connectors, and human approval gates.",
+      hood: "Architecture rule: No-code trigger-to-action business process automation in Gemini Enterprise = Workflow Builder."
+    },
+    {
+      id: 3, sec: "1.1", multi: false,
+      arch: "[1 Cohesive Domain + 4 Tools + Skipping Reasoning Steps] --> [Keep Single Agent + Add Chain-of-Thought (CoT) & Few-Shot Template]",
+      stem: "You operate a single-agent fee-waiver assistant that uses 4 well-scoped tools within the retail checking domain. Telemetry shows low latency, but on multi-condition fee rules (checking account tenure, monthly average balance, and prior waivers), the agent occasionally skips checking account tenure before calling the waiver tool. A junior engineer proposes splitting the 4-tool agent into a 5-agent hierarchy. What should you do first?",
+      opts: [
+        "A. Split the 4-tool agent into a 5-agent hierarchy deployed across separate projects with A2A routing.",
+        "B. Migrate the interactive fee-waiver assistant into a nightly BigQuery scheduled SQL transformation job.",
+        "C. Keep the single agent and refine its prompt with a Chain-of-Thought template and Few-Shot examples.",
+        "D. Remove all four tool descriptions from the agent so Gemini relies exclusively on pre-trained weights."
+      ],
+      ans: [2],
+      exp: "Correct (C): When a single-domain agent has under 10 tools, splitting it into 5 agents adds unnecessary handoff latency and token overhead. Structuring the prompt with a Chain-of-Thought (CoT) reasoning checklist and 3-5 Few-Shot examples fixes multi-condition reasoning within a single LLM turn.",
+      hood: "Architecture rule: Optimize single-agent prompts (CoT + Few-Shot templates) before escalating to multi-agent complexity."
+    },
+    {
+      id: 4, sec: "1.1", multi: false,
+      arch: "[Single Agent Overloaded with 38 Tools] --> [Refactor into Coordinator + Domain Specialist Sub-Agents]",
+      stem: "Rosku Bank built a single LlmAgent for its enterprise operations portal. Over six months, teams attached 38 distinct tools spanning IT Helpdesk, Payroll, Facilities, Commercial Lending, and Legal Compliance to that single agent. Telemetry shows that input token costs per turn have quadrupled and the model frequently selects the wrong tool when parameter names overlap. How should you re-architect this system?",
+      opts: [
+        "A. Retain the single LlmAgent and attach a before_tool_callback to rename overlapping tool parameters.",
+        "B. Retain the single LlmAgent, upgrade the model to Gemini Pro, and increase the thinking token budget.",
+        "C. Group all 38 tools into one MCP Toolbox server and attach the complete toolset to the root LlmAgent.",
+        "D. Decompose the monolith into a lightweight coordinator routing to domain-specialist sub-agents."
+      ],
+      ans: [3],
+      exp: "Correct (D): Attaching 38 cross-domain tools to one agent causes tool overload, bloating the prompt with 38 schemas on every turn and degrading tool-selection accuracy. Partitioning tools into domain-specialist sub-agents (5-8 tools each) behind a coordinator restores accuracy and cuts token bloat.",
+      hood: "Architecture rule: Tool overload (15+ tools across domains) is a primary trigger to upgrade from Single-Agent to Multi-Agent."
+    },
+    {
+      id: 5, sec: "1.1", multi: true,
+      arch: "[Multi-Agent Upgrade Triggers] = [1. Concurrent Parallel Fan-Out Latency] + [2. Distinct Agent Identity / PAB Boundaries]",
+      stem: "During an architecture review at Rosku Bank, the CISO and Lead Architect ask you to justify why the new Commercial Underwriting system uses a multi-agent architecture instead of a single agent. Which two technical requirements justify a multi-agent design over a single agent? (Choose two.)",
+      opts: [
+        "A. The agent must ground its responses on a 400-page static PDF manual queried repeatedly across turns.",
+        "B. Three slow, independent domain lookups must execute concurrently to meet an 8-second SLA budget.",
+        "C. The agent must validate structured JSON output using a Pydantic BaseModel schema before returning.",
+        "D. The Fraud and Customer-Triage capabilities require strictly isolated Agent Identities and PABs.",
+        "E. The system must persist user language preferences across multiple conversation sessions using state."
+      ],
+      ans: [1, 3],
+      exp: "Correct (B, D): Upgrading to a multi-agent architecture is justified when you need concurrent fan-out to reduce latency across independent investigations (B), or when sub-tasks require isolated least-privilege Agent Identities and Principal Access Boundaries (D). Options A, C, and E are easily handled within a single-agent design.",
+      hood: "Architecture rule: The 4 multi-agent triggers are tool overload, conflicting personas, parallel fan-out, and IAM/PAB isolation."
+    },
+    {
+      id: 6, sec: "1.1", multi: false,
+      arch: "[9-Step Fixed Mortgage Pipeline + 1 Unstructured Extraction Step] --> [Cloud Workflows Calling Gemini/Agent at Step 4 Only]",
+      stem: "Rosku Bank operates a 9-step back-office mortgage pipeline where Steps 1-3 and Steps 5-9 are deterministic Cloud SQL and SFTP operations, while Step 4 requires extracting unstructured income explanations from scanned employer letters. How should you architect this pipeline to optimize reliability and cost?",
+      opts: [
+        "A. Orchestrate all nine steps using an ADK SequentialAgent with nine specialist LlmAgent sub-agents.",
+        "B. Orchestrate all nine steps inside a single LlmAgent using LongRunningFunctionTool for SFTP jobs.",
+        "C. Orchestrate the pipeline in Cloud Workflows and invoke a focused extraction agent only at Step 4.",
+        "D. Migrate the entire nine-step pipeline into a CX Agent Studio Generative Playbook with REST tools."
+      ],
+      ans: [2],
+      exp: "Correct (C): When the macro control flow is fixed and only one isolated step requires unstructured AI reasoning, keeping orchestration in deterministic Cloud Workflows and invoking Gemini/ADK strictly at Step 4 minimizes cost and eliminates orchestration hallucination risk.",
+      hood: "Architecture rule: Embed AI agents inside deterministic orchestrators when the overarching workflow is fixed."
+    },
+    {
+      id: 7, sec: "1.1", multi: false,
+      arch: "[Creative Proposal Drafter] vs. [Strict Regulatory Critic] --> [Isolate into Separate Sub-Agents in a Loop]",
+      stem: "You are designing an automated wealth-report system that must first draft a persuasive, client-friendly investment narrative and then subject that narrative to an adversarial FINRA compliance audit that flags promotional language. When both sets of instructions are placed inside a single LlmAgent system prompt, the agent compromises between the two personas and misses subtle compliance violations. What is the recommended architectural fix?",
+      opts: [
+        "A. Separate the conflicting personas into distinct Drafter and Auditor sub-agents inside a LoopAgent.",
+        "B. Keep the single LlmAgent and attach an after_model_callback that re-prompts the same agent instance.",
+        "C. Keep the single LlmAgent and inject the FINRA compliance rules dynamically via a state placeholder.",
+        "D. Split the system prompt across a root GEMINI.md context file and a subdirectory-scoped context file."
+      ],
+      ans: [0],
+      exp: "Correct (A): When a workflow requires conflicting cognitive stances (creative synthesis vs. strict adversarial auditing), isolating them into distinct sub-agents inside a LoopAgent prevents instruction dilution and confirmation bias.",
+      hood: "Architecture rule: Conflicting personas (Generator vs. Critic) should be isolated into separate agents."
+    },
+    {
+      id: 8, sec: "1.1", multi: false,
+      arch: "[Verbose Log-Analyzer Sub-Agents] --(Return Concise Summaries Only)--> [Root Coordinator Context Window Preserved]",
+      stem: "An SRE incident-response system must inspect 80,000 tokens of raw GKE pod logs, 60,000 tokens of VPC flow logs, and 50,000 tokens of Cloud SQL audit logs before recommending a remediation plan. When a single agent loads all three raw log streams into its conversation history, subsequent reasoning turns degrade in accuracy and exceed latency targets. How does a multi-agent architecture solve this problem?",
+      opts: [
+        "A. Configure a single LlmAgent with Gemini Context Caching enabled across all three live log streams.",
+        "B. Delegate each log stream to a scoped sub-agent that returns only a concise summary to the root agent.",
+        "C. Store the 190,000 tokens of raw logs inside unprefixed session.state keys with default content mode.",
+        "D. Attach all three log-fetching tools to a single LlmAgent and cap max_output_tokens at 512 tokens per turn."
+      ],
+      ans: [1],
+      exp: "Correct (B): Delegating high-volume, noisy data inspection to specialized sub-agents isolates the raw logs inside each sub-agent's scoped invocation, returning only distilled findings to the root coordinator's context window. Context Caching (A) is unsuitable for dynamically changing live incident logs.",
+      hood: "Architecture rule: Sub-agent context isolation prevents verbose intermediate data from polluting the main thread."
+    },
+    {
+      id: 9, sec: "1.1", multi: false,
+      arch: "[3 Independent Teams (Python ADK, Java, External Vendor)] --> [Decoupled Multi-Agent Fleet Interoperating via A2A]",
+      stem: "At Rosku Bank, the Retail Banking team builds agents in Python ADK, the Acquisitions team builds agents in Java, and an external credit-scoring partner runs agents on a third-party cloud stack. Leadership wants these three systems to collaborate on commercial loan approvals without forcing all teams into a single monolithic codebase or deployment lifecycle. Which architectural pattern should you choose?",
+      opts: [
+        "A. Expose all three systems as stateless SQL queries inside a single shared MCP Toolbox tools.yaml file.",
+        "B. Package the Java and partner agents as Python FunctionTools inside the Retail team's ADK container.",
+        "C. Migrate all three teams into a single low-code Agent Designer workspace project with shared IAM roles.",
+        "D. Deploy each team's system as an autonomous agent service and interoperate over the A2A protocol."
+      ],
+      ans: [3],
+      exp: "Correct (D): Cross-team ownership boundaries, independent deployment lifecycles, and polyglot stacks map directly to a decoupled multi-agent architecture interoperating via the standard Agent2Agent (A2A) protocol.",
+      hood: "Architecture rule: Organizational and cross-company boundaries naturally map to A2A multi-agent boundaries."
+    },
+    {
+      id: 10, sec: "1.1", multi: false,
+      arch: "[High-Volume Triage] --> [Front-Door Router: Gemini Flash] + [Deep Underwriting Sub-Agent: Gemini Pro]",
+      stem: "You are designing a multi-agent support architecture where 80% of incoming turns are simple intent routing or balance lookups, while 20% require complex multi-document mortgage underwriting analysis. When a single monolithic agent backed by Gemini Pro handles 100% of turns, token costs and latency exceed your SLA budget. How should you optimize this architecture?",
+      opts: [
+        "A. Use Gemini Flash on a front-door Router Agent and reserve Gemini Pro for the underwriting sub-agent.",
+        "B. Run all sub-agents on Gemini Pro and invoke them concurrently using a ParallelAgent on every turn.",
+        "C. Use Gemini Flash for the deep underwriting sub-agent and Gemini Pro for the front-door Router Agent.",
+        "D. Keep the single Gemini Pro agent and set include_contents='none' across all multi-turn conversations."
+      ],
+      ans: [0],
+      exp: "Correct (A): A modular multi-agent design enables per-agent model tiering: assigning fast, cost-efficient Gemini Flash to high-volume front-door triage while reserving frontier Gemini Pro reasoning strictly for the 20% of turns routed to the underwriting specialist.",
+      hood: "Architecture rule: Per-agent model tiering (Flash for routing, Pro for deep reasoning) is a core FinOps advantage."
+    },
+    {
+      id: 11, sec: "1.2", multi: false,
+      arch: "[HR Business Analysts (No-Code) + SharePoint/Drive ACLs + ServiceNow Connector] --> [Agent Designer]",
+      stem: "Rosku Bank's Human Resources operations team (composed of business analysts with no Python or container experience) needs to launch an internal employee onboarding assistant within one week. The assistant must answer questions from HR policies stored in SharePoint and Google Drive while honoring existing document-level user permissions (ACLs), and allow employees to create ServiceNow IT requests. Which solution should you select?",
+      opts: [
+        "A. Deploy code-first ADK on GKE with Agent Sandbox and a custom RAG Engine document chunking pipeline.",
+        "B. Configure CX Agent Studio with inbound PSTN voice telephony trunks and DTMF touch-tone slot filling.",
+        "C. Use Agent Designer with Agent Search data stores and pre-built ServiceNow action connectors.",
+        "D. Use Cloud Workflows to orchestrate Vertex AI Batch Prediction jobs against exported SharePoint CSVs."
+      ],
+      ans: [2],
+      exp: "Correct (C): Agent Designer provides a low-code studio for business analysts to launch internal workforce assistants grounded on Agent Search (with native SharePoint/Drive connectors and document ACL enforcement) and pre-built SaaS action connectors.",
+      hood: "Architecture rule: Business analysts + internal employee productivity + 1-click SaaS grounding/actions = Agent Designer."
+    },
+    {
+      id: 12, sec: "1.2", multi: false,
+      arch: "[Complex PDF Financial Tables Sliced Mid-Row During Ingestion] --> [Enable Layout-Aware Document Parsing (Layout Parser)]",
+      stem: "Rosku Bank's commercial lending team ingests 5,000 multi-column PDF credit agreements containing complex financial covenant tables into their grounding index. During testing, the agent gives inaccurate answers on table values because standard fixed-character text chunking slices table rows in half and separates column headers from data cells. How should you fix the ingestion pipeline?",
+      opts: [
+        "A. Reduce the fixed character chunk size to 100 characters and set chunk overlap to zero tokens.",
+        "B. Enable Layout-Aware Document Parsing to keep tables, headers, and section hierarchy intact.",
+        "C. Convert all PDF credit agreements to unformatted ASCII text files prior to bucket ingestion.",
+        "D. Disable document retrieval and use Chain-of-Thought prompting to estimate covenant table values."
+      ],
+      ans: [1],
+      exp: "Correct (B): Layout-Aware Document Parsing (Layout Parser) understands document structure—detecting headings, lists, and multi-column tables and keeping entire tables intact as structured HTML/Markdown blocks so column headers stay bound to their data cells.",
+      hood: "Architecture rule: Broken PDF tables or lost section hierarchy during ingestion = enable Layout-Aware Parsing."
+    },
+    {
+      id: 13, sec: "1.2", multi: false,
+      arch: "[PDFs with Visual Charts/Diagrams + Recorded Inspection Videos] --> [Multimodal Ingestion (Vision Captioning + Video Transcripts + Multimodal Embeddings)]",
+      stem: "Your wealth-research assistant must answer analyst questions by retrieving evidence across three media types stored in Cloud Storage: (1) PDF reports containing visual yield-curve charts, (2) architectural property floor-plan images, and (3) recorded 60-minute earnings call videos. How should you design the ingestion and grounding pipeline (Objective 1.2b)?",
+      opts: [
+        "A. Use Multimodal Ingestion with vision captioning, timestamped transcripts, and multimodal embeddings.",
+        "B. Use a text-only regex parser that strips all embedded images, charts, and video files at ingestion.",
+        "C. Encode the raw video and image files as Base64 strings inside a CX Agent Studio Flow parameter slot.",
+        "D. Store only the file names in Cloud SQL and require analysts to inspect charts and videos manually."
+      ],
+      ans: [0],
+      exp: "Correct (A): Multimodal Data Ingestion extracts structured descriptions/captions from visual charts and images, transcribes audio/video with timecode metadata, and indexes text and visuals in a shared multimodal embedding space with verifiable citations.",
+      hood: "Architecture rule: Grounding across text, visual charts, images, and video = Multimodal Parsing + Multimodal Embeddings."
+    },
+    {
+      id: 14, sec: "1.2", multi: false,
+      arch: "[Validated Agent Designer Prototype] --(Needs before_tool_callback + ParallelAgent + Git CI/CD)--> [Bridge to Code-First ADK]",
+      stem: "A product team at Rosku Bank built a successful loan-triage prototype in low-code Agent Designer grounded on an Agent Search data store. Now, to pass enterprise production audit, the agent must enforce deterministic Python before_tool_callback parameter checks, execute three credit bureau lookups concurrently using ParallelAgent, and run automated AgentEvaluator trajectory gates in GitHub Actions. What should you recommend?",
+      opts: [
+        "A. Rebuild the document index from scratch in custom RAG Engine before writing the Python ADK code.",
+        "B. Keep the entire workload in no-code Agent Designer and add natural-language callback instructions.",
+        "C. Migrate the prototype into a Deterministic Flow inside CX Agent Studio with static webhook routes.",
+        "D. Transition orchestration to code-first ADK while reusing the existing Agent Search data_store_id."
+      ],
+      ans: [3],
+      exp: "Correct (D): When a low-code Agent Designer prototype requires deterministic ADK code callbacks, composite workflow orchestrators (ParallelAgent/LoopAgent), or Git-based CI/CD evaluation gates, you transition the agent orchestration to code-first ADK while directly reusing the existing Agent Search data_store_id.",
+      hood: "Architecture rule: Crossing the Agent Designer -> ADK Bridge never requires re-indexing your Agent Search data stores."
+    },
+    {
+      id: 15, sec: "1.2", multi: false,
+      arch: "[Low-Code Agent Designer Front Door (Business Owned)] --(Delegates Complex Risk Math via A2A)--> [Code-First ADK Specialist]",
+      stem: "Rosku Bank's Workplace Experience team (non-developers) manages a popular internal concierge agent in Agent Designer. They want the concierge agent to support a new commercial credit-risk calculation that requires a complex code-first Python ADK LoopAgent built by the Risk Engineering team—without forcing the Workplace Experience team to abandon Agent Designer. How should you integrate the two systems?",
+      opts: [
+        "A. Require the non-technical Workplace team to migrate their concierge bot into the Python repository.",
+        "B. Export the Python LoopAgent code as a PDF file and ingest it into the concierge's Search data store.",
+        "C. Publish the ADK agent as an A2A server in Agent Registry so Agent Designer can delegate to it.",
+        "D. Replace both agents with a single Cloud Workflows YAML state machine managed by infrastructure SREs."
+      ],
+      ans: [2],
+      exp: "Correct (C): By exposing the code-first ADK specialist agent as an A2A-compliant endpoint registered in Agent Registry, the low-code Agent Designer front door can delegate complex tasks to it seamlessly while each team retains ownership of its respective platform.",
+      hood: "Architecture rule: Hybrid A2A bridges low-code Studio front doors with code-first ADK backend specialists."
+    },
+    {
+      id: 16, sec: "1.2", multi: false,
+      arch: "[Employee Queries Confluence & Drive via Agent Designer] --> [Agent Search Enforces Query-Time Document ACLs]",
+      stem: "You configure an internal legal assistant in Agent Designer connected to an Agent Search data store indexing Google Drive and Confluence. A paralegal queries the assistant about an unannounced executive merger stored in a restricted Drive folder that only the General Counsel has permission to view. How does the platform prevent unauthorized data exposure?",
+      opts: [
+        "A. Egress Model Armor redacts the merger company names after Gemini generates the complete response.",
+        "B. A Principal Access Boundary policy blocks the paralegal from logging into the Gemini Enterprise app.",
+        "C. Agent Search enforces document ACLs at query time, excluding restricted chunks before synthesis.",
+        "D. The assistant retrieves restricted chunks into the prompt but relies on system rules not to quote them."
+      ],
+      ans: [2],
+      exp: "Correct (C): Agent Search natively ingests source-system document ACLs and enforces them against the logged-in user's identity at retrieval time, ensuring unauthorized documents are never retrieved or passed to the LLM.",
+      hood: "Architecture rule: Identity-aware ACL filtering at query time is a signature security feature of Agent Search."
+    },
+    {
+      id: 17, sec: "1.2", multi: false,
+      arch: "[Agent Designer Action Connector (Jira / Calendar)] + [Per-User OAuth 2.0 Consent] --> [Zero Confused Deputy Risk]",
+      stem: "When configuring an Agent Designer assistant to create Jira issues and update Google Calendar events on behalf of employees, how does the platform ensure an employee can only modify their own calendar and authorized Jira projects?",
+      opts: [
+        "A. By authenticating all connector calls using the project's default Compute Engine service account.",
+        "B. By enforcing per-user OAuth 2.0 consent flows on the connectors under the employee's identity.",
+        "C. By caching a shared Jira administrator API key inside a global app: prefixed session state variable.",
+        "D. By routing all Jira and Calendar API requests through a VPC Service Controls perimeter egress bridge."
+      ],
+      ans: [1],
+      exp: "Correct (B): Pre-built action connectors in Agent Designer integrate with managed OAuth 2.0 user delegation, prompting the employee for consent and executing actions strictly with that employee's permissions.",
+      hood: "Architecture rule: Per-user OAuth 2.0 delegation prevents Confused Deputy privilege escalation in studio action connectors."
+    },
+    {
+      id: 18, sec: "1.2", multi: true,
+      arch: "[Multimodal Grounding Best Practices] = [1. Layout Parser for Tables/Hierarchy] + [2. Preserve Page/Bounding-Box/Timestamp Metadata for Citations]",
+      stem: "Your architecture team is designing a multimodal ingestion pipeline for Rosku Bank's engineering manuals (which contain text, circuit schematics, multi-page tables, and repair videos). Which two practices ensure high retrieval precision and verifiable citations? (Choose two.)",
+      opts: [
+        "A. Enable Layout-Aware Parsing so tables and section headers stay intact rather than splitting mid-row.",
+        "B. Strip all page numbers, image bounding boxes, and video timecodes during ingestion to shrink indexes.",
+        "C. Generate multimodal embeddings while retaining page and timestamp metadata for grounded citations.",
+        "D. Store raw 4-GB video files directly inside user session state dictionaries during each conversation.",
+        "E. Disable semantic reranking and set similarity_top_k to 100 chunks on every incoming analyst question."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Layout-aware parsing keeps tables and document hierarchy intact (A), while multimodal embeddings/captions paired with page, bounding-box, and timestamp metadata enable accurate cross-modal retrieval and verifiable source citations (C).",
+      hood: "Architecture rule: Intact table structure (Layout Parser) + Multimodal Embeddings + Citation Metadata = Objective 1.2b mastery."
+    },
+    {
+      id: 19, sec: "1.2", multi: false,
+      arch: "[Existing REST Microservice with OpenAPI v3 Spec] --> [Import Directly as OpenAPI Tool in CX Agent Studio / Agent Designer / ADK]",
+      stem: "Your contact-center team is building a shipment-tracking agent in CX Agent Studio (CES). The logistics backend already exposes a REST API documented with an OpenAPI v3 YAML specification. How can the team allow the agent to query shipment status with minimal custom coding?",
+      opts: [
+        "A. Import the OpenAPI v3 spec directly as an OpenAPI Tool in CX Agent Studio and configure auth.",
+        "B. Deploy an MCP Toolbox for Databases server configured with a tools.yaml file for the REST API.",
+        "C. Write a custom Python Cloud Run webhook wrapper for each endpoint and invoke it via HTTP headers.",
+        "D. Export the shipment tracking database to Cloud Storage nightly and index it as unstructured text."
+      ],
+      ans: [0],
+      exp: "Correct (A): CX Agent Studio (as well as Agent Designer and ADK's OpenAPIToolset) natively supports importing OpenAPI v3 specifications to create callable REST tools with managed authentication and zero custom wrapper code.",
+      hood: "Architecture rule: OpenAPI v3 specs work seamlessly across CX Agent Studio, Agent Designer, and code-first ADK."
+    },
+    {
+      id: 20, sec: "1.2", multi: true,
+      arch: "[Platform Match] = [1. Internal Workforce Search/Actions = Agent Designer] + [2. External Omnichannel Voice/CCaaS = CX Agent Studio (CES)]",
+      stem: "You are authoring an enterprise architecture standard comparing Agent Designer and CX Agent Studio (Customer Engagement Suite). Which two statements accurately contrast the primary strengths of these two platforms? (Choose two.)",
+      opts: [
+        "A. Agent Designer is purpose-built for inbound PSTN voice telephony, SIP trunking, and DTMF slot capture.",
+        "B. CX Agent Studio cannot connect to external OpenAPI REST tools or grounded enterprise document stores.",
+        "C. Agent Designer builds internal workforce assistants grounded on SaaS repositories with document ACLs.",
+        "D. Both platforms require writing custom Python lifecycle callbacks and Kubernetes manifests before use.",
+        "E. CX Agent Studio powers external customer care across Voice and Chat with Flows, Playbooks, and HITL."
+      ],
+      ans: [2, 4],
+      exp: "Correct (C, E): Agent Designer focuses on internal workforce productivity and enterprise search/actions with document ACLs (C), whereas CX Agent Studio (CES) powers external omnichannel customer service across Voice and Chat with hybrid Flows, Playbooks, and live-agent escalation (E).",
+      hood: "Architecture rule: Internal Workforce Studio = Agent Designer; External Omnichannel Contact Center = CX Agent Studio (CES)."
+    },
+    {
+      id: 21, sec: "1.3", multi: false,
+      arch: "[Open-Ended Triage = Generative Playbook] --(Transitions To)--> [Strict KYC Slots & Verbatim Disclosure = Deterministic Flow]",
+      stem: "In CX Agent Studio (CES), Rosku Bank's dispute agent must first converse flexibly with customers to understand complex billing complaints, and then—if the customer wants to file a formal chargeback—collect three mandatory KYC fields in an exact sequence and read a verbatim Federal Regulation E disclosure word-for-word. How should you design this agent?",
+      opts: [
+        "A. Use a single Deterministic Flow with static intent routes for both open-ended triage and KYC slots.",
+        "B. Use a Generative Playbook for open triage and transition to a Deterministic Flow for KYC and notices.",
+        "C. Use two separate Generative Playbooks connected via an organization Principal Access Boundary policy.",
+        "D. Use a Generative Playbook for strict KYC slot collection and a Deterministic Flow for open triage."
+      ],
+      ans: [1],
+      exp: "Correct (B): Combining a Generative Playbook (for flexible, open-ended multi-intent triage) with a Deterministic Flow (for strict state-machine slot-filling and exact static legal disclosures) is the canonical hybrid pattern in CX Agent Studio.",
+      hood: "Architecture rule: Generative Playbooks = flexible reasoning; Deterministic Flows = strict slot sequences & verbatim compliance text."
+    },
+    {
+      id: 22, sec: "1.3", multi: false,
+      arch: "[Inside a Deterministic Flow Page] = [Form Parameters (Slots)] + [Transition Routes (Intents/Conditions)] + [Event Handlers (no-match/no-input)]",
+      stem: "You are configuring a Verify_Identity_Page inside a CX Agent Studio Deterministic Flow. Once all three required Form Parameters (card_last_4, dob, pin) are filled on that Page, you want the session to move automatically to Dispute_Summary_Page. However, if the caller stays silent twice in a row, you want to route them to a human representative. Which two Page mechanisms handle (1) moving to Dispute_Summary_Page when slots are filled, and (2) catching the caller silence?",
+      opts: [
+        "A. (1) An Event Handler checking sys.no-match-default, and (2) a Generative Playbook few-shot Exemplar.",
+        "B. (1) A Transition Route checking $page.params.status = 'FINAL', and (2) an Event Handler for no-input.",
+        "C. (1) A Form Parameter prompt retry counter, and (2) a Condition Transition Route for sys.no-input.",
+        "D. (1) An ADK before_tool_callback function, and (2) a folder-level Principal Access Boundary policy."
+      ],
+      ans: [1],
+      exp: "Correct (B): Inside a Flow Page, Transition Routes evaluate Intents and boolean parameter Conditions (such as $page.params.status = 'FINAL' when all Page form slots are complete) to transition between Pages, while Event Handlers catch runtime exceptions like silence (sys.no-input-default), unrecognized speech (sys.no-match-default), or webhook failures.",
+      hood: "Architecture rule: Expected Intent/Condition transitions = Transition Routes; silence/unmatched/webhook fallbacks = Event Handlers."
+    },
+    {
+      id: 23, sec: "1.3", multi: false,
+      arch: "[CX Agent Studio 3-Part Composite Voice Model] = [1. Listener (Barge-In/Endpointing) + 2. Thinking (Reasoning) + 3. Speaker (Speaking Style + <pause>)]",
+      stem: "Rosku Bank is configuring a voice agent in modern CX Agent Studio. Instead of hand-coding verbose XML SSML tags on every single response, the voice UX designer wants to steer the agent's overall vocal persona, alphanumeric clarity, and natural pauses using CX Agent Studio's 3-part composite voice architecture. Which three models make up this composite voice architecture, and how is pacing/style steered?",
+      opts: [
+        "A. Encoder, Decoder, and Vocoder acoustic models steered via declarative MCP Toolbox tools.yaml parameters.",
+        "B. Router, Drafter, and Critic sub-agent models steered via ADK EventActions(escalate=True) state signals.",
+        "C. Listener, Thinking, and Speaker models steered via a Speaking style description and inline <pause> tags.",
+        "D. Speech-to-Text, BigQuery, and Looker Studio models steered via custom CSS voice prosody stylesheets."
+      ],
+      ans: [2],
+      exp: "Correct (C): Modern CX Agent Studio uses a 3-part composite voice architecture: the Listener model (turn-taking, endpointing, barge-in), the Thinking model (reasoning and tool use), and the Speaker model—which is steered via a short natural-language Speaking style description and lightweight inline angle-bracket tags such as <pause>.",
+      hood: "Architecture rule: CX Agent Studio Composite Voice = Listener + Thinking + Speaker (steered by Speaking style descriptions & <pause> tags)."
+    },
+    {
+      id: 24, sec: "1.3", multi: false,
+      arch: "[Generative Playbook Calling Tools in Wrong Sequence] --> [Add Few-Shot Exemplars in CX Agent Studio]",
+      stem: "Your conversational designer built a Generative Playbook in CX Agent Studio with access to three OpenAPI tools: lookup_customer, check_loan_payoff, and generate_payoff_letter. In testing, the Playbook occasionally invokes generate_payoff_letter before calling check_loan_payoff. How should you steer the Playbook to follow the proper tool sequence without converting the entire agent into Python code?",
+      opts: [
+        "A. Remove all tool descriptions from the OpenAPI spec so the Playbook relies solely on operation IDs.",
+        "B. Attach a Principal Access Boundary policy to the generate_payoff_letter OpenAPI tool endpoint URL.",
+        "C. Attach a sys.no-input-default Event Handler to the root flow to override the OpenAPI tool sequence.",
+        "D. Add curated Exemplars demonstrating the expected tool sequence and argument flow to the Playbook."
+      ],
+      ans: [3],
+      exp: "Correct (D): In CX Agent Studio, Exemplars are structured few-shot example conversations attached to a Playbook that teach the LLM the expected tool invocation order, argument mapping, and response style declaratively.",
+      hood: "Architecture rule: To steer Playbook tool use and sequence declaratively in CX Agent Studio, add Exemplars."
+    },
+    {
+      id: 25, sec: "1.3", multi: false,
+      arch: "[Voice Caller Entering 16-Digit Card # in Noisy Station] --> [Dual Speech + DTMF Input + Parameter Redaction]",
+      stem: "On Rosku Bank's voice telephony channel, customers calling from noisy train stations struggle to speak their 16-digit debit card number clearly to Speech-to-Text, and the security team requires that raw card numbers never appear in plain-text conversation logs. Which CX Agent Studio configuration addresses both requirements?",
+      opts: [
+        "A. Increase Speech-to-Text microphone gain and store raw caller audio recordings in a Cloud Storage bucket.",
+        "B. Disable card number collection on the voice channel and require callers to send an unencrypted SMS text.",
+        "C. Enable dual speech and DTMF keypad input for the card slot and turn on parameter redaction in logs.",
+        "D. Configure inline <pause> tags on the agent's greeting prompt and disable Cloud Audit Logging project-wide."
+      ],
+      ans: [2],
+      exp: "Correct (C): Supporting DTMF keypad entry allows reliable numeric input in noisy environments, and enabling parameter redaction masks the sensitive PCI digits across all transcripts and Cloud Logging entries.",
+      hood: "Architecture rule: Sensitive numeric slots on voice channels = DTMF keypad input + Parameter Redaction."
+    },
+    {
+      id: 26, sec: "1.3", multi: false,
+      arch: "[Voice Channel: Caller Interrupts Mid-Sentence] --> [Enable Barge-In (Listener Model) + Disable Only on Mandatory Legal Notices]",
+      stem: "Callers to Rosku Bank's voice agent complain that when the bot reads a list of recent transactions, they cannot interrupt it by speaking ('Stop, that is the one!')—yet compliance also requires that a 10-second regulatory liability notice at the end of the call cannot be skipped by the caller. How should you configure Barge-In?",
+      opts: [
+        "A. Enable Barge-In for normal turns, and disable Barge-In only on the mandatory legal disclosure step.",
+        "B. Disable Barge-In globally across the entire voice agent so callers must listen to every prompt in full.",
+        "C. Enable Barge-In only on the mandatory regulatory disclosure step and disable it on all other pages.",
+        "D. Disable streaming Text-to-Speech on the phone gateway and switch to batch pre-recorded audio files."
+      ],
+      ans: [0],
+      exp: "Correct (A): Enabling Barge-In during standard conversational turns allows natural human interruption via the Listener model, while selectively disabling Barge-In on the verbatim legal disclosure guarantees regulatory compliance.",
+      hood: "Architecture rule: Enable Barge-In for conversational UX; selectively disable Barge-In on unskippable legal disclosures."
+    },
+    {
+      id: 27, sec: "1.3", multi: false,
+      arch: "[Playbook Extracts account_id -> Transitions to Flow] --> [Shared Session Parameter Namespace Skips Redundant Prompt]",
+      stem: "In a hybrid CX Agent Studio agent, a customer already provides their account_id and dispute_amount during the initial Generative Playbook turn. When the Playbook transitions to a Deterministic Flow Page to execute the chargeback compliance checklist, how should you prevent the Flow Page from asking the customer for account_id and dispute_amount a second time?",
+      opts: [
+        "A. Store the Playbook parameters inside an ADK temp: state variable that expires before the Flow starts.",
+        "B. Configure a webhook that clears all session parameters whenever control moves from Playbook to Flow.",
+        "C. Map Playbook outputs to shared session parameters so pre-filled Page form slots are skipped.",
+        "D. Duplicate the slot-filling prompts inside both the Generative Playbook and the Deterministic Flow Page."
+      ],
+      ans: [2],
+      exp: "Correct (C): Passing extracted Playbook values into shared session parameters ($session.params) allows downstream Deterministic Flow Pages to detect that those slots are already populated, automatically skipping redundant prompts.",
+      hood: "Architecture rule: Shared session parameters bridge state seamlessly between Playbooks, Flows, and Live-Agent Handoffs."
+    },
+    {
+      id: 28, sec: "1.3", multi: false,
+      arch: "[Negative Sentiment OR 2 Consecutive No-Match Fallbacks] --> [Warm Live-Agent Handoff + Session Params + AI Summary]",
+      stem: "During a live chat with Rosku Bank's CX Agent Studio support agent, a customer becomes frustrated after two consecutive unmatched queries (sys.no-match-default events). You want the conversation to escalate immediately to a human contact-center representative, and you must ensure the representative can resolve the issue without asking the customer to repeat their account details or prior messages. What should you configure?",
+      opts: [
+        "A. Configure the Event Handler to clear all session parameters and restart the welcome flow on fallback.",
+        "B. Trigger a warm transfer on negative sentiment or 2 no-matches with session params and an AI summary.",
+        "C. Configure an ADK before_tool_callback that raises a Python exception after two unmatched user intents.",
+        "D. Increase the sys.no-match-default retry cap to 15 consecutive turns before showing a static phone number."
+      ],
+      ans: [1],
+      exp: "Correct (B): Configuring deterministic escalation rules (on negative sentiment or bounded no-match Event Handler fallbacks) with a warm transfer payload containing verified session parameters and an AI-generated transcript summary eliminates customer repetition.",
+      hood: "Architecture rule: Warm Handoff = Escalation Trigger (Sentiment / Fallback Cap) + Verified Session Params + AI Summary."
+    },
+    {
+      id: 29, sec: "1.3", multi: true,
+      arch: "[Omnichannel Single Agent (Web + Voice)] = [1. Channel-Conditional Payloads (Visual Cards vs. Spoken Style)] + [2. Unified Backend Tools & State]",
+      stem: "You are designing a single omnichannel CX Agent Studio agent that serves customers on both a mobile web widget and a voice telephony line. Which two design practices ensure an optimal experience across both channels without maintaining two separate backend integrations? (Choose two.)",
+      opts: [
+        "A. Use channel-conditional payloads so Web Chat gets visual cards while Voice gets short spoken replies.",
+        "B. Send raw HTML anchor tags and five-column markdown tables directly to the Voice Speaker model engine.",
+        "C. Maintain separate duplicate OpenAPI tool specs and separate session parameter stores for each channel.",
+        "D. Share the same underlying OpenAPI tools, data stores, and session parameters across Web and Voice.",
+        "E. Disable Barge-In and DTMF keypad input globally so the Voice channel behaves like asynchronous email."
+      ],
+      ans: [0, 3],
+      exp: "Correct (A, D): A well-architected omnichannel agent shares unified backend tools, data stores, and session state (D) while adapting presentation per channel—sending rich visual cards to Web Chat and concise spoken text (with Speaking style and <pause> tags) to Voice (A).",
+      hood: "Architecture rule: Unify backend tools and session state; adapt the presentation payload per channel."
+    },
+    {
+      id: 30, sec: "1.3", multi: false,
+      arch: "[Grounded Data Store Tool] --> [High Grounding Confidence Threshold + Safe Fallback] --> [Zero Hallucinated Rates]",
+      stem: "Rosku Bank grounds its public-facing CX Agent Studio mortgage FAQ bot on an official product brochure data store. When a user asks about a fictional 'Zero-Interest Crypto Mortgage' that does not exist in the brochure, you must ensure the agent declines to answer (or triggers a controlled fallback) rather than fabricating loan terms from general pre-trained knowledge. What should you configure?",
+      opts: [
+        "A. Enforce a high grounding confidence threshold on the data store tool with a safe fallback reply.",
+        "B. Increase the Playbook Thinking model temperature to 1.2 and disable data store confidence checks.",
+        "C. Attach an unrestricted public web search tool so the mortgage bot quotes third-party crypto blogs.",
+        "D. Configure a Principal Access Boundary policy on the public FAQ bot's Cloud Storage brochure bucket."
+      ],
+      ans: [0],
+      exp: "Correct (A): Enforcing strict grounding settings and confidence thresholds on Data Store responses ensures the agent only answers when supported by retrieved enterprise documents and falls back safely on out-of-scope queries.",
+      hood: "Architecture rule: Public financial/healthcare bots must enforce strict grounding thresholds to prevent out-of-domain hallucinations."
+    }
+  ];
+  const STORAGE_KEY = "agenticaivantage_paac_sec1_v7_30q";
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { saved = {}; }
+  let pendingMulti = [];
+  let filter = "all";
+  let currentIdx = 0;
+  function isCorrect(q, userPick) {
+    if (!Array.isArray(userPick) || userPick.length !== q.ans.length) return false;
+    const s1 = [...userPick].sort();
+    const s2 = [...q.ans].sort();
+    return s1.every((val, i) => val === s2[i]);
+  }
+  function getFilteredList() {
+    if (filter === "all") return QUESTIONS;
+    if (filter === "missed") {
+      const missed = QUESTIONS.filter(q => saved[q.id] !== undefined && !isCorrect(q, saved[q.id]));
+      return missed.length ? missed : QUESTIONS;
+    }
+    return QUESTIONS.filter(q => q.sec === filter);
+  }
+  function updateScoreBadge() {
+    const keys = Object.keys(saved);
+    let correctCount = 0;
+    keys.forEach(k => {
+      const q = QUESTIONS.find(item => item.id === parseInt(k, 10));
+      if (q && isCorrect(q, saved[k])) correctCount++;
+    });
+    document.getElementById("sim-score").textContent = "Score: " + correctCount + " / " + keys.length + " (of 30)";
+  }
+  function renderQuestion() {
+    const list = getFilteredList();
+    if (currentIdx >= list.length) currentIdx = 0;
+    if (currentIdx < 0) currentIdx = list.length - 1;
+    const q = list[currentIdx];
+    const userPick = saved[q.id];
+    document.getElementById("q-domain").textContent = "Checkpoint " + q.sec + " | Q#" + q.id;
+    document.getElementById("q-type").textContent = q.multi ? "Choose Two (select 2)" : "Single choice";
+    document.getElementById("q-counter").textContent = "Showing " + (currentIdx + 1) + " of " + list.length;
+    document.getElementById("q-stem").textContent = q.stem;
+    const optContainer = document.getElementById("q-options");
+    optContainer.innerHTML = "";
+    q.opts.forEach((optText, idx) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sim-opt";
+      if (userPick !== undefined) {
+        if (q.ans.includes(idx)) btn.classList.add("correct");
+        else if (userPick.includes(idx)) btn.classList.add("wrong");
+      } else if (q.multi && pendingMulti.includes(idx)) {
+        btn.classList.add("selected-pending");
+      }
+      btn.textContent = optText;
+      btn.addEventListener("click", () => {
+        if (!q.multi) {
+          saved[q.id] = [idx];
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (e) {}
+          renderQuestion();
+        } else {
+          if (userPick !== undefined) {
+            delete saved[q.id];
+            pendingMulti = [idx];
+            renderQuestion();
+            return;
+          }
+          if (pendingMulti.includes(idx)) pendingMulti = pendingMulti.filter(i => i !== idx);
+          else pendingMulti.push(idx);
+          if (pendingMulti.length === 2) {
+            saved[q.id] = [...pendingMulti];
+            pendingMulti = [];
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (e) {}
+          }
+          renderQuestion();
+        }
+      });
+      optContainer.appendChild(btn);
+    });
+    const expBox = document.getElementById("q-explain");
+    if (userPick !== undefined) {
+      expBox.classList.add("visible");
+      document.getElementById("q-arch").textContent = "Architecture flow: " + q.arch;
+      document.getElementById("q-exp-text").textContent = q.exp;
+      document.getElementById("q-hood").textContent = q.hood;
+    } else {
+      expBox.classList.remove("visible");
+    }
+    const grid = document.getElementById("q-grid");
+    grid.innerHTML = "";
+    list.forEach((item, i) => {
+      const gBtn = document.createElement("button");
+      gBtn.type = "button";
+      gBtn.className = "sim-num-btn";
+      if (i === currentIdx) gBtn.classList.add("current");
+      if (saved[item.id] !== undefined) {
+        gBtn.classList.add(isCorrect(item, saved[item.id]) ? "ans-ok" : "ans-bad");
+      }
+      gBtn.textContent = item.id;
+      gBtn.addEventListener("click", () => {
+        pendingMulti = [];
+        currentIdx = i;
+        renderQuestion();
+      });
+      grid.appendChild(gBtn);
+    });
+    updateScoreBadge();
+  }
+  document.querySelectorAll(".sim-chip[data-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".sim-chip[data-filter]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      filter = btn.getAttribute("data-filter") || "all";
+      pendingMulti = [];
+      currentIdx = 0;
+      renderQuestion();
+    });
+  });
+  document.getElementById("q-prev")?.addEventListener("click", () => { pendingMulti = []; currentIdx--; renderQuestion(); });
+  document.getElementById("q-next")?.addEventListener("click", () => { pendingMulti = []; currentIdx++; renderQuestion(); });
+  document.getElementById("sim-reset")?.addEventListener("click", () => {
+    saved = {};
+    pendingMulti = [];
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    renderQuestion();
+  });
+  renderQuestion();
+})();
+</script></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec1-qa.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">1.5 Section 1 Q&amp;A</span></span></a><a href="sec2-exam-guide.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">2.0 Domain 2 Roadmap</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

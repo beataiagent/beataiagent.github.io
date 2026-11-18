@@ -1,0 +1,1042 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section 4 simulator: Practice questions · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="mcq-sec4">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">Section 4 simulator: Practice questions</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.pdf-bar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; padding: 10px 14px; border-radius: 10px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); margin: 12px 0; }
+.pdf-bar-text { font-size: 0.84rem; color: var(--sl-color-text); font-weight: 500; }
+.pdf-dl-btn { padding: 6px 14px; border-radius: 8px; background: rgba(59, 130, 246, 0.18); border: 1px solid #3b82f6; color: var(--sl-color-white) !important; font-size: 0.8rem; font-weight: 700; text-decoration: none !important; white-space: nowrap; }
+.sim-wrap { display: flex; flex-direction: column; gap: 16px; margin: 16px 0; }
+.sim-top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+.sim-score-pill { font-size: 0.85rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: rgba(16, 185, 129, 0.16); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
+.sim-filter-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.sim-chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+.sim-chip.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: var(--sl-color-white); }
+.sim-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.sim-meta-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.sim-domain-tag { font-size: 0.75rem; font-weight: 700; color: #3b82f6; background: rgba(59, 130, 246, 0.14); padding: 4px 10px; border-radius: 999px; }
+.sim-type-tag { font-size: 0.75rem; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 4px 10px; border-radius: 999px; }
+.sim-stem { font-size: 0.98rem; line-height: 1.6; color: var(--sl-color-white); font-weight: 500; }
+.sim-options { display: flex; flex-direction: column; gap: 10px; }
+.sim-opt { text-align: left; padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-white); font-size: 0.9rem; line-height: 1.45; cursor: pointer; transition: all 0.15s ease; }
+.sim-opt:hover { border-color: #3b82f6; }
+.sim-opt.selected-pending { border-color: #3b82f6; background: rgba(59, 130, 246, 0.15); }
+.sim-opt.correct { border-color: #10b981; background: rgba(16, 185, 129, 0.15); }
+.sim-opt.wrong { border-color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+.sim-explain { display: none; padding: 16px; border-radius: 10px; background: var(--sl-color-bg); border-left: 4px solid #10b981; font-size: 0.88rem; line-height: 1.5; color: var(--sl-color-text); }
+.sim-explain.visible { display: flex; flex-direction: column; gap: 10px; }
+.sim-arch-strip { padding: 10px 14px; border-radius: 8px; background: var(--sl-color-bg-nav); border: 1px dashed #3b82f6; font-family: monospace; font-size: 0.82rem; color: var(--sl-color-white); overflow-x: auto; }
+.sim-hood { padding: 10px 12px; border-radius: 8px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); font-size: 0.82rem; color: var(--sl-color-white); }
+.sim-nav-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.sim-grid { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+.sim-num-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.sim-num-btn.current { border-color: #3b82f6; border-width: 2px; color: var(--sl-color-white); }
+.sim-num-btn.ans-ok { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #10b981; }
+.sim-num-btn.ans-bad { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444; }
+</style>
+
+<div class="sim-wrap"><div class="sim-top-bar"><div class="sim-filter-row"><button class="sim-chip active" data-filter="all" type="button">All questions</button><button class="sim-chip" data-filter="4.1" type="button">4.1 Eval &amp; rubrics (20)</button><button class="sim-chip" data-filter="4.2" type="button">4.2 Runtimes (14)</button><button class="sim-chip" data-filter="4.3" type="button">4.3 CI/CD &amp; rollouts (13)</button><button class="sim-chip" data-filter="4.4" type="button">4.4 Trace &amp; FinOps (13)</button><button class="sim-chip" data-filter="missed" type="button">Retry missed only</button></div><div style="display:flex; gap:8px; align-items:center;"><span id="sim-score" class="sim-score-pill">Score: 0 / 0</span><button id="sim-reset" class="sim-chip" type="button">Reset progress</button></div></div><div class="sim-card"><div class="sim-meta-row"><div style="display:flex; gap:8px; align-items:center;"><span id="q-domain" class="sim-domain-tag">4.1 Eval &amp; rubrics</span><span id="q-type" class="sim-type-tag">Single choice</span></div><span id="q-counter" style="font-size:0.85rem; font-weight:700;">Question 1 of 60</span></div><div id="q-stem" class="sim-stem">Loading scenario…</div><div id="q-options" class="sim-options"></div><div id="q-explain" class="sim-explain"><div id="q-arch" class="sim-arch-strip"></div><div id="q-exp-text"></div><div id="q-hood" class="sim-hood"></div></div><div class="sim-nav-row"><button id="q-prev" class="sim-chip" type="button">← Previous question</button><button id="q-next" class="sim-chip active" type="button">Next question →</button></div></div><div><div style="font-size:0.8rem; font-weight:700; margin-bottom:6px; color:var(--sl-color-text);">Quick-jump question navigator:</div><div id="q-grid" class="sim-grid"></div></div></div>
+<script>
+(function() {
+  const QUESTIONS = [
+    {
+      id: 1, sec: "4.1", multi: false,
+      arch: "[test_config.json] --> [rubric_based_final_response_quality_v1 + RubricBasedCriterion(rubrics=[Rubric(rubric_content=RubricContent(text_property=...))])]",
+      stem: "Rosku Bank's compliance team wants to evaluate an open-ended Wealth Advisory ADK agent where no single verbatim reference response exists. Instead, every final response must be graded by an LLM judge against two custom pass/fail domain rules: (1) 'Includes APR fee disclosure', and (2) 'Does not guarantee future market returns'. Which ADK criterion key and class structure in test_config.json implements this check?",
+      opts: [
+        "A. final_response_match_v2 with LlmAsAJudgeCriterion(reference_rubrics=['Includes APR disclosure']).",
+        "B. rubric_based_final_response_quality_v1 with RubricBasedCriterion and RubricContent(text_property=...).",
+        "C. response_match_score configured with ToolTrajectoryCriterion(match_type=MatchType.ANY_ORDER).",
+        "D. hallucinations_v1 configured with PointwiseMetricPromptTemplate(criteria={'apr': 'Pass/Fail'})."
+      ],
+      ans: [1],
+      exp: "Correct (B): In ADK evaluation, rubric_based_final_response_quality_v1 uses RubricBasedCriterion containing a list of Rubric(rubric_id=..., rubric_content=RubricContent(text_property=...)) objects to grade open-ended final responses against custom domain rules without requiring a reference text.",
+      hood: "Architecture rule: Open-ended final response grading against custom rules in ADK = rubric_based_final_response_quality_v1."
+    },
+    {
+      id: 2, sec: "4.1", multi: false,
+      arch: "[Dynamic SQL/Search Tool Arguments] --> [rubric_based_tool_use_quality_v1 (RubricBasedCriterion)]",
+      stem: "An ADK research agent invokes a search_sec_filings(query: str, date_range: str) tool. Because valid search queries can be phrased in many ways (e.g., 'Q3 2026 revenue risks' vs. '2026 third quarter top-line risk factors'), exact JSON argument matching in tool_trajectory_avg_score fails valid runs. You want an LLM autorater to verify that the agent's tool call arguments semantically scoped the search to 2026 filings. Which ADK criterion key should you configure?",
+      opts: [
+        "A. Configure tool_trajectory_avg_score with MatchType.IN_ORDER and a lowered threshold of 0.50.",
+        "B. Configure rubric_based_final_response_quality_v1 with evaluate_intermediate_nl_responses=True.",
+        "C. Configure rubric_based_tool_use_quality_v1 with RubricBasedCriterion and custom Rubric objects.",
+        "D. Configure final_response_match_v2 with JudgeModelOptions(num_samples=5) on the final string."
+      ],
+      ans: [2],
+      exp: "Correct (C): rubric_based_tool_use_quality_v1 applies RubricBasedCriterion to evaluate how the agent selected and parameterized its intermediate tool calls against qualitative natural-language rubrics.",
+      hood: "Architecture rule: Qualitative grading of intermediate tool selection and dynamic arguments = rubric_based_tool_use_quality_v1."
+    },
+    {
+      id: 3, sec: "4.1", multi: false,
+      arch: "[ParallelAgent Concurrent Tool Calls] --> [ToolTrajectoryCriterion(match_type=MatchType.ANY_ORDER)]",
+      stem: "Rosku Bank's Underwriting Agent uses a ParallelAgent to invoke check_equifax(), check_transunion(), and check_ofac() concurrently. In CI/CD, AgentEvaluator.evaluate() intermittently fails tool_trajectory_avg_score whenever check_ofac() completes before check_equifax(). How should you update test_config.json so the trajectory check passes regardless of which parallel branch finishes first?",
+      opts: [
+        "A. Set match_type='IN_ORDER' inside ToolTrajectoryCriterion for tool_trajectory_avg_score.",
+        "B. Lower the response_match_score threshold from 1.0 to 0.33 inside the test_config.json file.",
+        "C. Replace tool_trajectory_avg_score with hallucinations_v1 across all ParallelAgent test cases.",
+        "D. Set match_type='ANY_ORDER' inside ToolTrajectoryCriterion for tool_trajectory_avg_score."
+      ],
+      ans: [3],
+      exp: "Correct (D): MatchType.ANY_ORDER verifies that all expected tool calls in the golden trajectory occurred with matching arguments, ignoring the chronological order in which concurrent parallel calls finished. IN_ORDER (A) still enforces strict chronological order for listed tools.",
+      hood: "Architecture rule: Parallel tool fan-out requires MatchType.ANY_ORDER in ToolTrajectoryCriterion."
+    },
+    {
+      id: 4, sec: "4.1", multi: false,
+      arch: "[Mandatory Sequence: verify_kyc -> issue_wire] + [Allow Optional Helper Tools in Between] --> [MatchType.IN_ORDER]",
+      stem: "Your compliance policy mandates that verify_kyc must always be called chronologically before issue_wire. However, during some conversations, the agent appropriately calls an optional helper tool (lookup_swift_code or convert_currency) between verify_kyc and issue_wire. When using default MatchType.EXACT, any run that calls a helper tool fails. Which trajectory match mode enforces the mandatory sequence while permitting extra helper tools?",
+      opts: [
+        "A. Configure MatchType.IN_ORDER inside ToolTrajectoryCriterion in your test_config.json file.",
+        "B. Configure MatchType.ANY_ORDER inside ToolTrajectoryCriterion in your test_config.json file.",
+        "C. Keep MatchType.EXACT and lower the tool_trajectory_avg_score threshold to 0.50 in config.",
+        "D. Configure RubricContent(text_property='allow_extra_tools') inside final_response_match_v2."
+      ],
+      ans: [0],
+      exp: "Correct (A): MatchType.IN_ORDER verifies that all expected golden tool calls occurred in the exact chronological sequence specified (verify_kyc before issue_wire), while allowing additional unrecorded helper tool calls to occur before, between, or after them.",
+      hood: "Architecture rule: Strict 1-to-1 = EXACT; mandatory sequence + extra helper tools allowed = IN_ORDER; parallel = ANY_ORDER."
+    },
+    {
+      id: 5, sec: "4.1", multi: false,
+      arch: "[Vertex AI Eval SDK: Single-Agent Custom Rubric Scale] --> [PointwiseMetric + PointwiseMetricPromptTemplate(criteria, rating_rubric)]",
+      stem: "Your data science team is using the Vertex AI GenAI Evaluation SDK (EvalTask) to score a single customer-support agent's responses on a 1-to-5 scale based on custom empathy and regulatory clarity rules. Which metric class and prompt template class should they pass into EvalTask(dataset=df, metrics=[...])?",
+      opts: [
+        "A. PairwiseMetric configured with PairwiseMetricPromptTemplate(criteria=..., rating_rubric=...).",
+        "B. ToolTrajectoryCriterion configured with RubricContent(text_property=..., threshold=0.90).",
+        "C. PointwiseMetric configured with PointwiseMetricPromptTemplate(criteria=..., rating_rubric=...).",
+        "D. ComputationBasedMetric configured with RougeMetricPromptTemplate(rouge_type='rougeL')."
+      ],
+      ans: [2],
+      exp: "Correct (C): In the Vertex AI Evaluation SDK, PointwiseMetric paired with PointwiseMetricPromptTemplate(criteria={...}, rating_rubric={...}) evaluates a single model/agent output per row against custom criteria and a numerical rating scale.",
+      hood: "Architecture rule: Single-agent custom rubric scale in EvalTask = PointwiseMetric + PointwiseMetricPromptTemplate."
+    },
+    {
+      id: 6, sec: "4.1", multi: false,
+      arch: "[Diverse Dataset Needs Tailored Per-Prompt Rubrics] --> [RubricBasedMetric(generation_config=RubricGenerationConfig(...), critique_metric=PointwiseMetric(...))]",
+      stem: "You are evaluating a general-purpose banking assistant across 500 diverse test prompts (ranging from mortgage math to Python API troubleshooting to wire fraud disputes). A single static rubric checklist does not fit all 500 prompts. You want the Vertex AI Evaluation Service to dynamically generate a tailored checklist of pass/fail rubrics for each individual prompt row and then critique the agent's response against those generated rubrics. Which SDK configuration achieves this?",
+      opts: [
+        "A. RubricBasedMetric with RubricGenerationConfig(prompt_template=...) and PointwiseMetric critique.",
+        "B. PairwiseMetric with baseline_model=agent_v1 and PairwiseMetricPromptTemplate(criteria=...).",
+        "C. ToolTrajectoryCriterion configured with threshold=1.0 and MatchType.EXACT across all rows.",
+        "D. LlmAsAJudgeCriterion configured with threshold=0.8 and JudgeModelOptions(num_samples=1)."
+      ],
+      ans: [0],
+      exp: "Correct (A): RubricBasedMetric in the Vertex AI Evaluation SDK accepts a RubricGenerationConfig (which dynamically synthesizes prompt-specific pass/fail rubrics per row) and a critique_metric (PointwiseMetric) that grades the response against each generated rubric.",
+      hood: "Architecture rule: Dynamic per-prompt rubric generation + critique in EvalTask = RubricBasedMetric + RubricGenerationConfig."
+    },
+    {
+      id: 7, sec: "4.1", multi: false,
+      arch: "[Side-by-Side A/B Model Selection (Baseline v1 vs. Candidate v2)] --> [PairwiseMetric + PairwiseMetricPromptTemplate]",
+      stem: "Rosku Bank wants to compare a new Candidate Agent (v2 running on a fine-tuned prompt) directly against the current production Baseline Agent (v1) across 300 golden conversations to calculate the exact Win / Loss / Tie percentage before promoting v2. Which Vertex AI Evaluation SDK class is designed for this head-to-head comparison?",
+      opts: [
+        "A. PointwiseMetric configured with baseline_threshold=0.85 and PointwiseMetricPromptTemplate.",
+        "B. PairwiseMetric configured with baseline_model=agent_v1 and PairwiseMetricPromptTemplate.",
+        "C. RubricBasedCriterion configured with rubrics=[Rubric(rubric_id='baseline_v1_comparison')].",
+        "D. AgentEvaluator.evaluate() configured with num_runs=2 and match_type='EXACT' in pytest."
+      ],
+      ans: [1],
+      exp: "Correct (B): PairwiseMetric (configured with baseline_model and PairwiseMetricPromptTemplate) presents both the baseline output and candidate output side-by-side to an LLM autorater, outputting win/loss/tie preferences.",
+      hood: "Architecture rule: Score 1 agent on a scale = PointwiseMetric; compare 2 agents head-to-head (A/B) = PairwiseMetric."
+    },
+    {
+      id: 8, sec: "4.1", multi: false,
+      arch: "[Reference Answer Exists + Valid Synonyms Failing ROUGE-1] --> [Upgrade response_match_score to final_response_match_v2]",
+      stem: "In your ADK golden *.evalset.json, each EvalCase includes a concise reference final_response (e.g., 'The international wire fee is $35.'). When running response_match_score, the evaluation fails whenever the agent replies 'An outbound international wire costs thirty-five dollars.' You want to verify semantic equivalence against the reference final_response rather than exact word overlap. Which criterion should you use?",
+      opts: [
+        "A. Configure tool_trajectory_avg_score with MatchType.IN_ORDER inside test_config.json.",
+        "B. Configure safety_v1 with LlmAsAJudgeCriterion(threshold=1.0) inside test_config.json.",
+        "C. Configure rubric_based_tool_use_quality_v1 with RubricContent inside test_config.json.",
+        "D. Configure final_response_match_v2 with LlmAsAJudgeCriterion inside test_config.json."
+      ],
+      ans: [3],
+      exp: "Correct (D): response_match_score computes lexical ROUGE-1 word overlap and fails on valid synonyms or paraphrasing. final_response_match_v2 uses an LLM Judge (LlmAsAJudgeCriterion) to evaluate semantic equivalence between the agent's output and the reference final_response.",
+      hood: "Architecture rule: Lexical word overlap = response_match_score; semantic equivalence to a reference answer = final_response_match_v2."
+    },
+    {
+      id: 9, sec: "4.1", multi: false,
+      arch: "[Verify Every Factual Claim Is Grounded in Retrieved Tool Context] --> [hallucinations_v1 (LlmAsAJudgeCriterion)]",
+      stem: "A medical-claims ADK agent retrieves policy excerpts using a RAG tool and summarizes coverage for the user. You need an automated ADK evaluation gate in test_config.json that specifically checks whether every factual statement in the agent's response is strictly supported by the tool outputs and contains zero unsupported fabrications. Which built-in ADK criterion key should you enable?",
+      opts: [
+        "A. Enable hallucinations_v1 with LlmAsAJudgeCriterion(threshold=1.0) in test_config.json.",
+        "B. Enable response_match_score with a lexical ROUGE-1 threshold of 0.95 in test_config.json.",
+        "C. Enable tool_trajectory_avg_score with MatchType.EXACT and threshold=1.0 in test_config.json.",
+        "D. Enable rubric_based_tool_use_quality_v1 with JudgeModelOptions in test_config.json."
+      ],
+      ans: [0],
+      exp: "Correct (A): The built-in hallucinations_v1 criterion in ADK uses LlmAsAJudgeCriterion to compare the agent's natural-language claims against the actual context/observations returned by tools, flagging any ungrounded statements.",
+      hood: "Architecture rule: Groundedness / zero-fabrication verification in ADK = hallucinations_v1."
+    },
+    {
+      id: 10, sec: "4.1", multi: true,
+      arch: "[ADK Rubric Object Hierarchy] = [RubricBasedCriterion -> rubrics=[Rubric(rubric_id, rubric_content=RubricContent(text_property=...))]]",
+      stem: "You are writing a Python test script that constructs a test_config.json structure using google.adk.evaluation.eval_rubrics and google.adk.evaluation.eval_config. Which two class instantiation patterns are required to define a valid rubric-based criterion in ADK? (Choose two.)",
+      opts: [
+        "A. Wrap each rule string in RubricContent(text_property='...') inside a Rubric(rubric_id='...') object.",
+        "B. Pass the list of Rubric objects into ToolTrajectoryCriterion(rubrics=[...], match_type='EXACT').",
+        "C. Pass the Rubric list into RubricBasedCriterion(threshold=..., judge_model_options=..., rubrics=[...]).",
+        "D. Define rubrics inside EventActions(state_delta={'rubric': '...'}) inside before_model_callback.",
+        "E. Pass RubricContent directly into InMemorySessionService at container initialization time."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): In ADK's evaluation schema, each rule is defined as Rubric(rubric_id='...', rubric_content=RubricContent(text_property='...')) (A), and that list of Rubric objects is passed to RubricBasedCriterion(threshold=..., judge_model_options=..., rubrics=[...]) (C).",
+      hood: "Architecture rule: Know the exact ADK rubric nesting: RubricBasedCriterion -> Rubric -> RubricContent(text_property=...)."
+    },
+    {
+      id: 11, sec: "4.1", multi: false,
+      arch: "[Mitigating LLM Non-Determinism in CI/CD Evals] --> [AgentEvaluator.evaluate(..., num_runs=3) + JudgeModelOptions(num_samples=5)]",
+      stem: "Because LLM generation is probabilistic, your CI/CD evaluation suite occasionally exhibits flakiness when a single test execution or a single LLM Judge sample fluctuates near the pass threshold. Which two parameters in ADK evaluation average out run-to-run variance and judge variance?",
+      opts: [
+        "A. Setting max_iterations=5 on SequentialAgent and ttl=3600 on the ContextCacheConfig object.",
+        "B. Setting num_runs in AgentEvaluator.evaluate() and num_samples inside JudgeModelOptions.",
+        "C. Setting similarity_top_k=20 in RAG Engine and min_tokens=32768 in CachedContent configs.",
+        "D. Setting match_type='ANY_ORDER' and include_contents='none' across all sub-agent classes."
+      ],
+      ans: [1],
+      exp: "Correct (B): num_runs in AgentEvaluator.evaluate(..., num_runs=3) runs each EvalCase multiple times to average agent execution variance, while num_samples in JudgeModelOptions collects multiple autorater votes per turn (majority/mean aggregation).",
+      hood: "Architecture rule: Smooth agent variance with num_runs; smooth LLM Judge variance with JudgeModelOptions(num_samples=...)."
+    },
+    {
+      id: 12, sec: "4.1", multi: false,
+      arch: "[EvalSet (*.evalset.json)] --> [eval_cases: [EvalCase]] --> [conversation: [Invocation(user_content, intermediate_data.tool_uses, final_response)]]",
+      stem: "You are inspecting a golden mortgage_underwriting.evalset.json file used by AgentEvaluator.evaluate(). Within each EvalCase's conversation array (list of Invocation turns), which field stores the expected sequence of tool calls and their expected input arguments for that turn?",
+      opts: [
+        "A. The invocation.session_state.expected_tools array inside the conversation turn object.",
+        "B. The invocation.intermediate_data.tool_uses array inside the conversation turn object.",
+        "C. The invocation.final_response.grounding_metadata field inside the conversation turn.",
+        "D. The invocation.rubric_content.tool_declarations dictionary inside the turn."
+      ],
+      ans: [1],
+      exp: "Correct (B): Inside an ADK EvalCase Invocation object, intermediate_data.tool_uses stores the list of expected FunctionCall objects (tool name and args) that tool_trajectory_avg_score compares against actual execution.",
+      hood: "Architecture rule: Expected tool calls in an ADK EvalCase live in invocation.intermediate_data.tool_uses."
+    },
+    {
+      id: 13, sec: "4.1", multi: false,
+      arch: "[Golden Trajectory: [verify_id, check_credit]] vs. [Actual Run: [check_credit, verify_id]] --> [EXACT Fails, IN_ORDER Fails, ANY_ORDER Passes]",
+      stem: "In your golden EvalCase, the expected tool trajectory is [verify_id, check_credit]. During a test run, the agent calls [check_credit, verify_id] (invoking both tools with valid arguments, but in reverse chronological order). Which statement accurately describes how EXACT, IN_ORDER, and ANY_ORDER score this run?",
+      opts: [
+        "A. MatchType.EXACT fails, MatchType.IN_ORDER passes, and MatchType.ANY_ORDER passes the run.",
+        "B. MatchType.EXACT fails, MatchType.IN_ORDER fails, and MatchType.ANY_ORDER passes the run.",
+        "C. MatchType.EXACT passes, MatchType.IN_ORDER passes, and MatchType.ANY_ORDER passes the run.",
+        "D. MatchType.EXACT fails, MatchType.IN_ORDER passes, and MatchType.ANY_ORDER fails the run."
+      ],
+      ans: [1],
+      exp: "Correct (B): Both EXACT and IN_ORDER require verify_id to occur chronologically before check_credit, so both fail when the order is reversed. Only ANY_ORDER ignores sequence order and passes.",
+      hood: "Architecture rule: IN_ORDER allows extra unlisted tools, but still enforces strict chronological order for the listed tools."
+    },
+    {
+      id: 14, sec: "4.1", multi: false,
+      arch: "[Pre-Populating Session State Before Turn 1 of an EvalCase] --> [EvalCase.session_input (SessionInput: app_name, user_id, state)]",
+      stem: "You want to test Turn 1 of a downstream LoanClosingAgent that expects session.state['user:kyc_verified'] = True and session.state['approved_loan_amount'] = 450000 to already exist before the user says anything. Where in the ADK EvalCase schema should you define this initial state dictionary?",
+      opts: [
+        "A. Inside EvalCase.session_input (using SessionInput(app_name=..., user_id=..., state={...})).",
+        "B. Inside ToolTrajectoryCriterion(initial_state={...}) in the root test_config.json file.",
+        "C. Inside RubricContent(text_property='state: kyc_verified=True') in the rubric config.",
+        "D. Inside JudgeModelOptions(judge_model_config={...}) in the root test_config.json file."
+      ],
+      ans: [0],
+      exp: "Correct (A): Each EvalCase in an EvalSet includes a session_input field (SessionInput) where you specify app_name, user_id, and the initial state dictionary pre-loaded into SessionService before the first Invocation runs.",
+      hood: "Architecture rule: Seed initial session state for an evaluation test case using EvalCase.session_input.state."
+    },
+    {
+      id: 15, sec: "4.1", multi: false,
+      arch: "[Pre-Built Rubric Metric in Vertex AI Eval SDK] --> [MetricPromptTemplateExamples.Pointwise.FLUENCY / GROUNDEDNESS / SAFETY]",
+      stem: "When running EvalTask in the Vertex AI GenAI Evaluation SDK, your team wants to use Google's pre-engineered, calibrated rubric prompt templates for common dimensions like Groundedness, Coherence, Safety, and Instruction Following instead of writing custom rubric text from scratch. Which SDK helper provides these ready-to-use templates?",
+      opts: [
+        "A. MetricPromptTemplateExamples.Pointwise (and Pairwise) passed into PointwiseMetric / PairwiseMetric.",
+        "B. InMemorySessionService.load_default_rubrics() passed directly into the AdkApp wrapper.",
+        "C. OpenAPIToolset.from_rubric_spec() attached to the root LlmAgent tools parameter list.",
+        "D. ModelArmorFloorSettings.default_eval_templates() configured at the GCP Folder node."
+      ],
+      ans: [0],
+      exp: "Correct (A): The Vertex AI Evaluation SDK provides MetricPromptTemplateExamples.Pointwise and MetricPromptTemplateExamples.Pairwise containing pre-validated rubric prompt templates for groundedness, instruction following, safety, fluency, and verbosity.",
+      hood: "Architecture rule: Use MetricPromptTemplateExamples for standard rubric dimensions; use PointwiseMetricPromptTemplate for custom domain rules."
+    },
+    {
+      id: 16, sec: "4.1", multi: true,
+      arch: "[Evaluating Both Sub-Agent Intermediate Replies AND Final Reply] --> [evaluate_intermediate_nl_responses=True in LlmAsAJudgeCriterion]",
+      stem: "In a multi-agent customer support system, Sub-Agent 1 emits an intermediate status message to the user before transferring to Sub-Agent 2 for the final answer. You want hallucinations_v1 and safety_v1 in test_config.json to screen both the intermediate sub-agent messages and the final response. Which two configuration details apply? (Choose two.)",
+      opts: [
+        "A. Configure hallucinations_v1 and safety_v1 using LlmAsAJudgeCriterion inside test_config.json.",
+        "B. Set evaluate_intermediate_nl_responses=True on the LlmAsAJudgeCriterion configuration.",
+        "C. Set include_contents='none' on Sub-Agent 1 so intermediate messages bypass the eval runner.",
+        "D. Use response_match_score with MatchType.ANY_ORDER to check intermediate safety strings.",
+        "E. Disable tool_trajectory_avg_score globally whenever the safety_v1 criterion is active."
+      ],
+      ans: [0, 1],
+      exp: "Correct (A, B): Both hallucinations_v1 and safety_v1 use LlmAsAJudgeCriterion (A), and setting evaluate_intermediate_nl_responses=True instructs the judge to evaluate intermediate natural-language agent messages in addition to the final turn response (B).",
+      hood: "Architecture rule: Set evaluate_intermediate_nl_responses=True on LlmAsAJudgeCriterion to audit intermediate sub-agent messages."
+    },
+    {
+      id: 17, sec: "4.1", multi: false,
+      arch: "[3 Rubrics Scored on 1 Response: Pass (1.0), Pass (1.0), Fail (0.0)] --> [Average Score = 0.67 vs. Threshold 0.8 -> FAILS]",
+      stem: "You configure rubric_based_final_response_quality_v1 in test_config.json with threshold=0.8 and attach three Rubric items (r1, r2, r3). On a test turn, the LLM autorater grades r1=1.0, r2=1.0, and r3=0.0 (average score = 0.67). How does AgentEvaluator evaluate this turn, and how can you ensure a single failed critical compliance rubric always fails the test?",
+      opts: [
+        "A. It passes because two rubrics scored 1.0; set threshold=0.10 to make the check stricter.",
+        "B. It fails because 0.67 < 0.8; setting threshold=1.0 requires 100% of attached rubrics to pass.",
+        "C. It throws a runtime error because RubricBasedCriterion only supports one Rubric item.",
+        "D. It ignores r3 automatically unless MatchType.EXACT is enabled on the rubric object."
+      ],
+      ans: [1],
+      exp: "Correct (B): RubricBasedCriterion averages the individual scores across all defined Rubric items in the criterion ((1.0 + 1.0 + 0.0) / 3 = 0.67) and compares the average against threshold. Setting threshold=1.0 ensures every mandatory rubric item must pass.",
+      hood: "Architecture rule: Set threshold=1.0 on RubricBasedCriterion when every single compliance rubric item is mandatory."
+    },
+    {
+      id: 18, sec: "4.1", multi: false,
+      arch: "[Autorater Calibration] --> [Compare LLM Judge Scores Against Human SME Golden Ratings]",
+      stem: "Before trusting a custom PointwiseMetric LLM autorater to block production deployments of Rosku Bank's tax-advisory agent, the risk committee asks how you validated that the LLM autorater itself grades tax accuracy the same way human tax CPAs do. Which practice validates and calibrates the custom autorater?",
+      opts: [
+        "A. Benchmark the autorater on 100 human-CPA-graded responses and refine rubrics until aligned.",
+        "B. Increase the candidate agent's max_output_tokens limit until the autorater scores 5.0.",
+        "C. Replace the LLM autorater's PointwiseMetricPromptTemplate with lexical ROUGE-1 matching.",
+        "D. Run the LLM autorater using the exact same prompt and temperature as the tax agent."
+      ],
+      ans: [0],
+      exp: "Correct (A): Calibrating an LLM autorater (meta-evaluation) requires benchmarking the judge's scores against a golden set of human subject-matter expert (SME) ratings and refining the criteria and rating_rubric definitions until judge-human agreement is high.",
+      hood: "Architecture rule: Always calibrate custom LLM autorater rubrics against a benchmark of human SME ratings."
+    },
+    {
+      id: 19, sec: "4.1", multi: false,
+      arch: "[Pairwise Autorater Position Bias (Judge Favors First Option)] --> [Swap Candidate/Baseline Order Across Runs]",
+      stem: "When running PairwiseMetric side-by-side evaluations between Baseline Agent v1 and Candidate Agent v2, your data science team notices 'position bias'—the LLM autorater slightly favors whichever response is presented in Slot A over Slot B. How is position bias mitigated in pairwise LLM evaluation?",
+      opts: [
+        "A. Evaluate each pair twice with swapped positions (A/B and B/A) and aggregate consistent wins.",
+        "B. Truncate both Agent v1 and Agent v2 responses to 50 characters before calling the judge.",
+        "C. Set match_type='ANY_ORDER' inside ToolTrajectoryCriterion in the test_config.json file.",
+        "D. Disable PairwiseMetric and use response_match_score lexical ROUGE-1 overlap instead."
+      ],
+      ans: [0],
+      exp: "Correct (A): Pairwise LLM judges can exhibit position bias toward the first or second slot. Running two passes with swapped positions ((v1, v2) and (v2, v1)) ensures a win is counted only when the judge's preference is consistent regardless of slot order.",
+      hood: "Architecture rule: Mitigate pairwise autorater position bias by swapping slot order across evaluation passes."
+    },
+    {
+      id: 20, sec: "4.1", multi: true,
+      arch: "[Complete ADK CI/CD Eval Suite] = [1. Deterministic Trajectory Check (tool_trajectory_avg_score)] + [2. Rubric / Groundedness Autoraters]",
+      stem: "You are designing the test_config.json evaluation suite for Rosku Bank's loan-origination ADK agent. Why is it essential to combine both tool_trajectory_avg_score and rubric/groundedness criteria (rubric_based_final_response_quality_v1 and hallucinations_v1) rather than relying on only one? (Choose two.)",
+      opts: [
+        "A. An agent can write a polite reply while skipping mandatory backend tools (caught by trajectory).",
+        "B. Enabling tool_trajectory_avg_score automatically encrypts all database pools in MCP Toolbox.",
+        "C. An agent can call the right tools (trajectory = 1.0) but still hallucinate or omit notices (caught by rubrics).",
+        "D. rubric_based_final_response_quality_v1 runs without calling any LLM model at zero token cost.",
+        "E. hallucinations_v1 automatically rewrites broken Python syntax inside custom FunctionTool files."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Trajectory evaluation verifies process compliance (did the agent call the right tools with the right arguments in the right order?) (A), while Rubric and Hallucination autoraters verify output quality and groundedness (did the agent synthesize those tool outputs truthfully and obey domain rules?) (C).",
+      hood: "Architecture rule: Complete agent evaluation = process verification (trajectory) + output verification (rubrics and groundedness)."
+    },
+    {
+      id: 21, sec: "4.2", multi: false,
+      arch: "[Turnkey Python ADK Hosting + Zero Dockerfile/K8s Ops + Auto-Wired Managed Sessions & Memory Bank] --> [Managed Agent Runtime]",
+      stem: "Rosku Bank's wealth engineering team built a multi-agent system in Python ADK (AdkApp). They want the fastest path to production with zero Dockerfile authoring or Kubernetes cluster management, and they want managed SessionService, Memory Bank, and Cloud Trace telemetry wired up automatically out of the box. Which runtime should they choose?",
+      opts: [
+        "A. GKE Standard with self-managed Kata Containers and a custom Redis session cluster.",
+        "B. Managed Agent Runtime (Vertex AI Agent Engine) deploying the AdkApp object directly.",
+        "C. Cloud Functions (1st Gen) triggered via unauthenticated public HTTP webhook endpoints.",
+        "D. Compute Engine Managed Instance Groups configured with custom bash startup scripts."
+      ],
+      ans: [1],
+      exp: "Correct (B): Managed Agent Runtime (Agent Engine on the Gemini Enterprise Agent Platform) is the turnkey runtime for ADK: developers wrap their agent in AdkApp and deploy without managing Dockerfiles, with native auto-wired managed Sessions, Memory Bank, and Cloud Trace.",
+      hood: "Architecture rule: Lowest operational overhead + turnkey ADK Sessions and Memory Bank = Managed Agent Runtime."
+    },
+    {
+      id: 22, sec: "4.2", multi: false,
+      arch: "[Custom OS Binaries (LibreOffice/FFmpeg) + Spiky Traffic + Scale-to-Zero Cost Efficiency] --> [Cloud Run + External SessionService]",
+      stem: "A seasonal tax-document assistant requires custom Linux OS binaries (poppler-utils and tesseract-ocr) installed inside a custom Docker container. Traffic spikes to 3,000 concurrent requests during tax week and drops to zero overnight. You want serverless autoscaling with scale-to-zero cost savings. Which hosting architecture should you select?",
+      opts: [
+        "A. Managed Agent Runtime with default Python-only package dependencies and zero containers.",
+        "B. GKE Autopilot configured with a permanent 50-node GPU pool running 24 hours a day.",
+        "C. Serverless Cloud Run with a custom Dockerfile and an external persistent SessionService.",
+        "D. App Engine Standard Python 2.7 environment with local /tmp file session state storage."
+      ],
+      ans: [2],
+      exp: "Correct (C): Cloud Run supports custom Docker containers with arbitrary OS binaries, scales rapidly during traffic spikes, and scales down to zero instances overnight—provided you externalize session state to a persistent SessionService.",
+      hood: "Architecture rule: Custom container binaries + serverless scale-to-zero = Cloud Run (+ external SessionService)."
+    },
+    {
+      id: 23, sec: "4.2", multi: false,
+      arch: "[Untrusted User-Submitted Python/C++ Code Execution + Kernel Isolation] --> [GKE with Agent Sandbox (gVisor / microVMs)]",
+      stem: "Rosku Bank's quantitative research agent allows analysts to upload and execute arbitrary, untrusted Python and C++ scripts inside the agent's tool environment. Security policy requires strict per-execution kernel isolation so a kernel exploit or malicious binary in one session can never escape the container boundary or inspect another user's memory, along with custom GPU node pools for local open-weight models. Which runtime is required?",
+      opts: [
+        "A. GKE with Agent Sandbox (using gVisor / microVM kernel isolation and warm sandbox pools).",
+        "B. Multi-concurrency Cloud Run with 80 requests sharing a single container kernel process.",
+        "C. No-code Agent Designer configured with pre-built Jira and ServiceNow action connectors.",
+        "D. Customer Engagement Suite (CES) configured with deterministic touch-tone DTMF flows."
+      ],
+      ans: [0],
+      exp: "Correct (A): GKE with Agent Sandbox isolates untrusted code execution inside dedicated kernel sandboxes (gVisor user-space kernel or Kata microVMs) with ephemeral filesystems, network egress controls, and warm sandbox pools for sub-second startup alongside Kubernetes GPU node pools.",
+      hood: "Architecture rule: Untrusted code/binary execution requiring kernel isolation or custom GPU node pools = GKE with Agent Sandbox."
+    },
+    {
+      id: 24, sec: "4.2", multi: false,
+      arch: "[Cloud Run Scales Out -> Turn 2 Hits Instance B -> State Lost!] --> [Replace InMemorySessionService with Persistent SessionService]",
+      stem: "An engineering team deploys their ADK agent to Cloud Run. In local testing with 1 instance, multi-turn conversations work perfectly. In production, as soon as Cloud Run scales to 5 instances, customers lose their conversation history and session.state variables on Turn 2! Why did this happen, and what is the architectural fix?",
+      opts: [
+        "A. Cloud Run blocks WebSockets by default; switch the agent model from Flash to Gemini Pro.",
+        "B. InMemorySessionService was left active; use VertexAiSessionService or DatabaseSessionService.",
+        "C. Cloud Run strips description fields from LlmAgent; move state keys into the GEMINI.md file.",
+        "D. The agent used persistent user: state prefixes instead of ephemeral temp: state prefixes."
+      ],
+      ans: [1],
+      exp: "Correct (B): InMemorySessionService stores sessions in local container RAM. When Cloud Run load-balances Turn 2 to a different container instance (or scales an idle instance to zero), local RAM state is lost. Always use VertexAiSessionService or DatabaseSessionService (Cloud SQL / AlloyDB / Spanner) in production!",
+      hood: "Architecture rule: Never use InMemorySessionService on multi-instance Cloud Run or GKE."
+    },
+    {
+      id: 25, sec: "4.2", multi: false,
+      arch: "[Why Load-Balancer Sticky Sessions Alone Fail on Cloud Run] --> [Container Scale-Down, Crash, or New Revision Wipes Local RAM]",
+      stem: "To fix lost InMemorySessionService state on Cloud Run without configuring a database, a developer proposes enabling HTTP cookie-based Session Affinity (Sticky Sessions) on the Cloud Load Balancer. Why is Session Affinity alone insufficient for production stateful agents?",
+      opts: [
+        "A. Cloud Load Balancing Session Affinity is only supported for UDP traffic, not HTTPS calls.",
+        "B. Session Affinity is best-effort; container scale-downs, crashes, or new revisions wipe RAM.",
+        "C. Enabling Session Affinity disables before_tool_callback execution inside the ADK Runner.",
+        "D. Session Affinity forces all 10,000 users onto a single CPU core and disables Cloud Trace."
+      ],
+      ans: [1],
+      exp: "Correct (B): Load-balancer session affinity only attempts to route a client to the same instance while that instance remains healthy and unchanged. Any scale-down event, container restart, or revision rollout permanently wipes InMemorySessionService RAM.",
+      hood: "Architecture rule: Session Affinity is a caching optimization, never a substitute for a persistent external SessionService."
+    },
+    {
+      id: 26, sec: "4.2", multi: false,
+      arch: "[I/O-Bound ADK Agent Waiting on Gemini & MCP Network Calls] --> [Use async def Tools + Cloud Run Concurrency > 1 (e.g., 50-80)]",
+      stem: "An ADK orchestrator agent on Cloud Run spends 95% of each turn waiting on network I/O responses from the Gemini API and remote MCP Toolbox servers. Currently, Cloud Run container concurrency is set to 1, causing 200 cold-start container spin-ups whenever 200 users chat simultaneously. How should you optimize compute cost and cold-start latency?",
+      opts: [
+        "A. Keep concurrency=1 and attach 8 NVIDIA L4 GPUs to every Cloud Run container instance.",
+        "B. Use non-blocking async def tools, raise concurrency (e.g., 50-80), and set min-instances.",
+        "C. Switch all tool functions to blocking time.sleep() loops and disable min-instances warmups.",
+        "D. Move all session state into InMemorySessionService so container instances boot up faster."
+      ],
+      ans: [1],
+      exp: "Correct (B): Because LLM and MCP calls are network I/O-bound rather than CPU-bound, using async def coroutines in Python ADK allows a single container instance to handle dozens of concurrent requests cleanly, while keeping a small min-instances pool eliminates cold starts.",
+      hood: "Architecture rule: Network I/O-bound ADK agents scale efficiently with async tools + high container concurrency."
+    },
+    {
+      id: 27, sec: "4.2", multi: false,
+      arch: "[GKE Agent Sandbox Cold-Boot Latency] --> [Pre-Warmed Sandbox Pools + Filesystem Snapshot Restore]",
+      stem: "On GKE with Agent Sandbox, booting a brand-new microVM or gVisor sandbox and installing Python data-science libraries from scratch on every tool call would add 15 seconds of latency. Which GKE Agent Sandbox feature provides sub-second isolated environment startup?",
+      opts: [
+        "A. Sharing a single unisolated root filesystem across all concurrent customer code runs.",
+        "B. Pre-warmed sandbox Pod pools paired with pre-initialized filesystem snapshot restore.",
+        "C. Disabling gVisor kernel isolation during peak daytime institutional trading hours.",
+        "D. Caching the Linux kernel image inside an ADK temp: session state dictionary variable."
+      ],
+      ans: [1],
+      exp: "Correct (B): GKE Agent Sandbox maintains a warm pool of pre-initialized sandbox pods/snapshots so an incoming tool execution attaches to a ready, isolated sandbox in milliseconds and destroys/resets it immediately after the turn.",
+      hood: "Architecture rule: Warm sandbox pools + snapshots deliver sub-second startup with strict per-turn kernel isolation."
+    },
+    {
+      id: 28, sec: "4.2", multi: true,
+      arch: "[Self-Hosting Open-Weight Gemma on GKE + Co-Locating ADK Agents] = [1. GPU/TPU Node Pools + vLLM] + [2. Low-Latency Cluster-Local Networking]",
+      stem: "A defense contractor must run an air-gapped ADK multi-agent system using self-hosted open-weight Gemma models alongside custom Python tools that execute untrusted binaries. Which two capabilities make Google Kubernetes Engine (GKE) the right runtime for this requirement? (Choose two.)",
+      opts: [
+        "A. Provisioning custom GPU/TPU node pools running vLLM/TGI inference servers in the cluster.",
+        "B. Automatic no-code SharePoint ACL ingestion without configuring any storage volumes.",
+        "C. Per-execution kernel isolation via GKE Agent Sandbox (gVisor/microVMs) for untrusted code.",
+        "D. Zero Kubernetes manifest or node-pool configuration required by the platform engineering team.",
+        "E. Native PSTN touch-tone DTMF voice telephony termination inside the Kubernetes pod spec."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): GKE gives platform teams full hardware control over GPU/TPU node pools for self-hosted open-weight model serving (A) alongside GKE Agent Sandbox kernel isolation for untrusted code execution (C).",
+      hood: "Architecture rule: Self-hosted open models on GPUs/TPUs + kernel-isolated code sandboxes = GKE."
+    },
+    {
+      id: 29, sec: "4.2", multi: false,
+      arch: "[DatabaseSessionService] --> [Persists ADK Sessions in Cloud SQL / AlloyDB / Spanner Relational Tables]",
+      stem: "Rosku Bank deploys an ADK agent on Cloud Run inside a strict PCI-DSS project where company policy requires all application and session tables to reside inside the bank's existing CMEK-encrypted Cloud SQL for PostgreSQL instance. Which ADK SessionService implementation should the team configure?",
+      opts: [
+        "A. Configure InMemorySessionService() with local container disk persistence enabled.",
+        "B. Configure DatabaseSessionService(db_url='postgresql+asyncpg://...') pointing to Cloud SQL.",
+        "C. Configure GcsArtifactService(bucket_name='pci-sessions') as the primary session store.",
+        "D. Configure VertexAiMemoryBankService(project=..., location=...) without a SessionService."
+      ],
+      ans: [1],
+      exp: "Correct (B): ADK's DatabaseSessionService persists sessions, events, and session.state (user:, app:, and session keys) directly inside your relational database (Cloud SQL, AlloyDB, or Spanner) via SQLAlchemy connection URLs.",
+      hood: "Architecture rule: Use VertexAiSessionService for turnkey managed sessions, or DatabaseSessionService for custom relational DB control."
+    },
+    {
+      id: 30, sec: "4.2", multi: false,
+      arch: "[AdkApp on Managed Agent Runtime] --> [Supports Synchronous query() & Streaming stream_query() Out of the Box]",
+      stem: "When you wrap a root ADK agent inside AdkApp and deploy it to Managed Agent Runtime, how do client applications invoke the deployed agent for real-time token-by-token responses versus single-payload responses?",
+      opts: [
+        "A. Call stream_query() for real-time streaming events and query() for synchronous responses.",
+        "B. SSH into the underlying Agent Runtime VM and tail the /var/log/adk.log file directly.",
+        "C. Poll GcsArtifactService every second until artifact revision version v99 appears.",
+        "D. Query BigQuery log sinks synchronously from the customer mobile application UI."
+      ],
+      ans: [0],
+      exp: "Correct (A): AdkApp on Managed Agent Runtime exposes managed query() and stream_query() endpoints (alongside session management methods) out of the box.",
+      hood: "Architecture rule: AdkApp provides turnkey query(), stream_query(), and managed session operations on Agent Runtime."
+    },
+    {
+      id: 31, sec: "4.2", multi: false,
+      arch: "[Container Ephemeral Disk (/tmp) on Cloud Run Consumes RAM!] --> [Stream Large Files Directly to GcsArtifactService]",
+      stem: "An ADK agent running on a Cloud Run instance (configured with 1 GiB of memory) processes 600-MB video files by writing them to the container's local /tmp directory before uploading them. Every time two users upload a video simultaneously, the Cloud Run instance crashes with an Out-Of-Memory (OOM) error! Why does writing to /tmp cause an OOM crash on Cloud Run?",
+      opts: [
+        "A. Cloud Run's /tmp directory is an in-memory tmpfs mount backed by the container's RAM limit.",
+        "B. Writing to /tmp triggers an unbounded infinite loop inside InMemorySessionService.",
+        "C. Cloud Run automatically loads any file in /tmp into the Gemini prompt on every turn.",
+        "D. The /tmp directory is shared across all 100 Cloud Run instances in the cloud region."
+      ],
+      ans: [0],
+      exp: "Correct (A): On Cloud Run, local disk writes to /tmp are stored in an in-memory tmpfs mount that counts directly against the container's memory limit. Large files should be streamed directly to Cloud Storage (GcsArtifactService) or use signed upload URLs.",
+      hood: "Architecture rule: Cloud Run /tmp is backed by RAM—stream large artifacts to Cloud Storage instead of buffering in local /tmp."
+    },
+    {
+      id: 32, sec: "4.2", multi: false,
+      arch: "[Sidecar Pattern on Cloud Run / GKE] --> [Main Container: ADK Agent] + [Sidecar Container: Local MCP Server over localhost]",
+      stem: "You have a lightweight, stateless MCP tool server written in Go that performs fast financial bond math. You want your Python ADK agent on Cloud Run to invoke this Go MCP server with sub-millisecond loopback latency (localhost) and scale both containers together as a single deployment unit. Which Cloud Run feature supports this topology?",
+      opts: [
+        "A. Cloud Run multi-container sidecars where the ADK agent calls the MCP sidecar on localhost.",
+        "B. Deploying the compiled Go binary inside VertexAiMemoryBankService as a semantic memory.",
+        "C. Running the Go binary inside the client browser via WebAssembly and passing app: state.",
+        "D. Configuring a Principal Access Boundary policy to merge two separate Cloud Run projects."
+      ],
+      ans: [0],
+      exp: "Correct (A): Cloud Run (and GKE) supports multi-container sidecar deployments, allowing the primary ADK agent container to communicate with a co-located MCP server or proxy sidecar over localhost within the same instance.",
+      hood: "Architecture rule: Use multi-container sidecars on Cloud Run or GKE when an agent needs a tightly coupled local helper process."
+    },
+    {
+      id: 33, sec: "4.2", multi: false,
+      arch: "[Eliminating Cold Starts on Cloud Run During Predictable Business Hours] --> [Configure min-instances > 0]",
+      stem: "Rosku Bank's retail chat agent on Cloud Run scales to zero overnight to save money. However, at 8:00 AM when the first wave of customers logs in, container initialization takes 9 seconds, causing Turn 1 latency spikes. How should you eliminate morning cold-start latency while keeping serverless autoscaling?",
+      opts: [
+        "A. Set max-instances=1 so Cloud Run never initializes a second container instance.",
+        "B. Configure min-instances (e.g., min-instances=5) and enable Startup CPU Boost on Cloud Run.",
+        "C. Switch SessionService from DatabaseSessionService back to InMemorySessionService.",
+        "D. Disable HTTPS TLS termination on the public-facing Cloud Run service endpoint."
+      ],
+      ans: [1],
+      exp: "Correct (B): Setting min-instances keeps a pre-warmed baseline of containers ready to serve traffic immediately with zero cold-start delay, and Startup CPU Boost accelerates any additional scale-out instances.",
+      hood: "Architecture rule: Eliminate serverless cold starts on latency-sensitive agents with min-instances + Startup CPU Boost."
+    },
+    {
+      id: 34, sec: "4.2", multi: true,
+      arch: "[Runtime Selection Summary] = [1. Turnkey ADK + Managed State = Agent Runtime] + [2. Untrusted Code Kernel Isolation = GKE Agent Sandbox]",
+      stem: "Your architecture guild is publishing a decision matrix for choosing between Managed Agent Runtime, Cloud Run, and GKE with Agent Sandbox. Which two pairings accurately match the workload requirement to the optimal runtime? (Choose two.)",
+      opts: [
+        "A. Turnkey Python ADK hosting with zero Dockerfile ops and auto-wired Sessions -> Agent Runtime.",
+        "B. Executing untrusted user C++ binaries needing gVisor kernel isolation -> Agent Designer.",
+        "C. Self-managed open models on GPU node pools + kernel-isolated code sandboxes -> GKE Sandbox.",
+        "D. Serverless scale-to-zero hosting for a custom Rust/Python container -> BigQuery Scheduled SQL.",
+        "E. Inbound PSTN touch-tone voice telephony IVR replacement -> GKE Standard without CX Studio."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Managed Agent Runtime provides turnkey AdkApp hosting with auto-wired Sessions and Memory Bank (A), while GKE with Agent Sandbox provides GPU/TPU hardware control and gVisor/microVM kernel isolation for untrusted code execution (C).",
+      hood: "Architecture rule: Turnkey ADK = Agent Runtime; custom serverless container = Cloud Run; GPUs + kernel sandbox = GKE."
+    },
+    {
+      id: 35, sec: "4.3", multi: false,
+      arch: "[Bootstrap Production ADK Repo: Terraform IaC + CI/CD Eval Gates + RAG Ingestion + OpenTelemetry/BQ] --> [Agent Starter Pack]",
+      stem: "Rosku Bank's platform team is kicking off 12 new ADK agent projects this quarter. Instead of letting each team spend weeks manually wiring up Terraform infrastructure, Cloud Build / GitHub Actions CI/CD pipelines, RAG data ingestion jobs, evaluation harnesses, and OpenTelemetry-to-BigQuery sinks, which official Google Cloud accelerator scaffolds this entire production foundation in one command?",
+      opts: [
+        "A. The MCP Toolbox for Databases declarative tools.yaml schema generator CLI utility.",
+        "B. The Google Cloud Agent Starter Pack (agent-starter-pack) production repository accelerator.",
+        "C. The Model Armor Organization Floor Settings policy enforcement command-line interface.",
+        "D. The Vertex AI PairwiseMetricPromptTemplate side-by-side autorater calibration utility."
+      ],
+      ans: [1],
+      exp: "Correct (B): The Google Cloud Agent Starter Pack is the official production template accelerator that scaffolds multi-environment Terraform IaC, automated CI/CD evaluation gates, RAG ingestion pipelines, and OpenTelemetry + BigQuery observability for ADK agents.",
+      hood: "Architecture rule: Fast-track production ADK scaffolding (Terraform + CI/CD + RAG + Telemetry) = Agent Starter Pack."
+    },
+    {
+      id: 36, sec: "4.3", multi: false,
+      arch: "[Canary Rollout (90% v1 / 10% v2) for Multi-Turn Stateful Agent] --> [Session-Pinned Routing by session_id]",
+      stem: "You are rolling out Version 2.0 of a stateful mortgage ADK agent on Cloud Run using a 10% Canary traffic split. In Version 2.0, the agent stores the borrower's income as a nested JSON object in session.state['income'], whereas Version 1.0 stored it as a flat float. When the load balancer splits traffic randomly on every HTTP request, active borrowers flip between v1 and v2 mid-conversation and crash! How should you configure the Canary rollout?",
+      opts: [
+        "A. Pin routing by session_id so active chats stay on v1 while 10% of new chats route to v2.",
+        "B. Clear the entire production DatabaseSessionService table every 5 minutes during rollout.",
+        "C. Set include_contents='none' on Version 2.0 so it ignores session.state keys completely.",
+        "D. Switch the Canary split to 50% v1 / 50% v2 without session pinning so errors balance out."
+      ],
+      ans: [0],
+      exp: "Correct (A): Multi-turn stateful agents require Session-Pinned Canary routing: in-flight session_id conversations remain pinned to the revision where Turn 1 started (v1), while 10% of brand-new sessions are assigned to v2.",
+      hood: "Architecture rule: Never split multi-turn agent Canary traffic randomly per turn—always pin routing by session_id!"
+    },
+    {
+      id: 37, sec: "4.3", multi: false,
+      arch: "[Shadow / Dark-Launch Testing on Live Traffic] --> [Mirror Requests Asynchronously to v2 + Mock All Mutating/Write Tools!]",
+      stem: "Rosku Bank wants to test a new foundation model in Candidate Agent v2 by mirroring 100% of live production user prompts asynchronously to v2 in Shadow (Dark Launch) mode while v1 serves the actual customer replies. During a 1-hour test, customers report that wire transfers and support tickets are being executed twice! What mandatory safeguard was omitted from the Shadow environment?",
+      opts: [
+        "A. The engineering team forgot to increase max_output_tokens on the Shadow v2 agent.",
+        "B. The engineering team failed to mock or disable mutating/write tools in Shadow v2 mode.",
+        "C. The engineering team used MatchType.ANY_ORDER instead of MatchType.EXACT in config.",
+        "D. The engineering team enabled Cloud Trace spans on both v1 and v2 simultaneously."
+      ],
+      ans: [1],
+      exp: "Correct (B): In Shadow (Dark Launch) mode, live traffic is replayed against v2 in the background. If v2 is connected to live production write APIs, every mutating tool call (payments, ticket creation, emails) executes twice! Always mock or stub mutating tools in Shadow mode.",
+      hood: "Architecture rule: Shadow / dark launch mode MUST mock or disable all state-mutating tools."
+    },
+    {
+      id: 38, sec: "4.3", multi: false,
+      arch: "[Mocking Mutating Tools in Shadow Mode Without Changing Agent Code] --> [Point Shadow MCP Config at Sandbox OR Use Env-Aware before_tool_callback]",
+      stem: "How can your platform team prevent a Shadow-mode (ENV='SHADOW') ADK agent from executing real database writes or payment API calls without rewriting the agent's core LlmAgent definition or tool docstrings?",
+      opts: [
+        "A. Point Shadow MCP config at a mock server or short-circuit writes in before_tool_callback.",
+        "B. Set the Shadow agent temperature to 2.0 so it invents fake tool names on every turn.",
+        "C. Remove all tool descriptions from the Shadow agent's declarative tools.yaml file.",
+        "D. Configure an egress Model Armor template to redact replies after the DB write finishes."
+      ],
+      ans: [0],
+      exp: "Correct (A): Decoupling tool endpoints via environment-scoped MCP Toolbox configs—or intercepting write calls inside before_tool_callback when ENV == 'SHADOW' (returning a mocked success dict)—prevents side effects with zero changes to core agent logic.",
+      hood: "Architecture rule: Use environment-scoped MCP endpoints or before_tool_callback dict overrides to mock tools in Shadow mode."
+    },
+    {
+      id: 39, sec: "4.3", multi: false,
+      arch: "[Prompt-Only Git Commit] --> [Must Trigger Full AgentEvaluator CI/CD Gate Before Production Promotion]",
+      stem: "A product manager submits a Pull Request that only changes four words inside an LlmAgent's system instruction string without touching any .py logic. To save build time, a developer suggests skipping the AgentEvaluator.evaluate() CI/CD stage whenever a PR only modifies prompt strings. Why should you reject this suggestion?",
+      opts: [
+        "A. Prompt changes alter compilation bytecode in Python 3.12 and cause fatal syntax errors.",
+        "B. Prompts act as executable control flow; a 4-word edit can break trajectories or rubrics.",
+        "C. Skipping AgentEvaluator.evaluate() invalidates the project's SSL certificates in Cloud Run.",
+        "D. Google Cloud Build requires at least 10 minutes of CPU execution before allowing a merge."
+      ],
+      ans: [1],
+      exp: "Correct (B): In agentic systems, natural-language instructions and tool descriptions directly steer control flow and tool selection. Even minor wording tweaks can cause severe trajectory or rubric regressions, so prompt edits must pass the exact same automated CI/CD evaluation gate as code changes.",
+      hood: "Architecture rule: Version prompts alongside code in Git and run automated trajectory + rubric gates on every prompt change."
+    },
+    {
+      id: 40, sec: "4.3", multi: false,
+      arch: "[Instant Zero-Downtime Cutover + Keep Previous Revision Warm for 1-Click Rollback] --> [Blue/Green Deployment]",
+      stem: "Rosku Bank is deploying a major architectural upgrade (v2) of its core banking agent. Regulatory policy requires a deployment strategy where the new v2 environment (Green) is brought up and verified alongside the current v1 environment (Blue), traffic is switched over cleanly, and v1 remains warm so traffic can be switched 100% back in a single click if anomaly alerts fire. Which rollout strategy is this?",
+      opts: [
+        "A. Unpinned random per-turn A/B cohort experimentation across all incoming requests.",
+        "B. Blue/Green deployment with warm revision retention for instantaneous 1-click rollback.",
+        "C. In-place destructive container overwrite with scale-to-zero enabled on all instances.",
+        "D. Offline batch CSV evaluation in BigQuery without any live production traffic routing."
+      ],
+      ans: [1],
+      exp: "Correct (B): Blue/Green deployment provisions the new revision (Green) alongside the active stable revision (Blue), allowing clean traffic cutover while keeping Blue warm to drain existing sessions and support an instantaneous 1-click rollback.",
+      hood: "Architecture rule: Instant cutover + warm standby for 1-click rollback = Blue/Green deployment."
+    },
+    {
+      id: 41, sec: "4.3", multi: false,
+      arch: "[Measuring Business KPI Conversion Between Two Agent Personas] --> [A/B Experimentation with Sticky user_id Cohort Assignment]",
+      stem: "Your growth team wants to test whether a concise, bulleted agent persona (Variant A) drives a higher mortgage application completion rate over a 2-week period than a conversational, explanatory persona (Variant B). How should traffic be routed for this experiment?",
+      opts: [
+        "A. Shadow mode mirroring where Variant B's replies are discarded and never shown to users.",
+        "B. A/B experimentation with deterministic sticky cohort assignment based on user_id hashing.",
+        "C. Random per-turn round-robin routing where Turn 1 uses Variant A and Turn 2 uses Variant B.",
+        "D. Blue/Green cutover that switches 100% of users between Variant A and B every 60 seconds."
+      ],
+      ans: [1],
+      exp: "Correct (B): Measuring user-facing business KPIs (conversion rate, CSAT) across two competing designs requires A/B experimentation with sticky user_id cohort assignment so each user experiences a consistent persona across their journey.",
+      hood: "Architecture rule: Technical safety validation = Canary / Shadow; measuring user business KPIs = sticky A/B experimentation."
+    },
+    {
+      id: 42, sec: "4.3", multi: true,
+      arch: "[Two-Tier CI/CD Eval Strategy] = [1. Fast Smoke Trajectory Eval on PR] + [2. Full Golden EvalSet + Rubric Autoraters in Staging]",
+      stem: "Running a 500-case golden EvalSet with 5-sample LLM Rubric Autoraters takes 18 minutes and costs $12 per run. Developers complain that running the full 500-case suite on every minor Pull Request commit slows down inner-loop velocity, yet you must guarantee zero regressions reach Production. Which two-tier CI/CD gating strategy balances speed and safety? (Choose two.)",
+      opts: [
+        "A. Run unit tests and a fast smoke-test evalset (trajectory checks) on every PR commit.",
+        "B. Delete the 500-case golden EvalSet and rely exclusively on Python flake8 syntax linting.",
+        "C. Run the full 500-case EvalSet with Rubric Autoraters in Staging before Prod promotion.",
+        "D. Run the 500-case evaluation suite only once a year after deploying directly to Production.",
+        "E. Set all thresholds in test_config.json to 0.0 during automated Pull Request builds."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Running fast unit tests + a lightweight trajectory smoke test on PRs keeps developer feedback under 60 seconds (A), while enforcing the full 500-case trajectory + Rubric autorater suite in Staging guarantees comprehensive verification before Production cutover (C).",
+      hood: "Architecture rule: Fast smoke trajectory checks on PR + full golden EvalSet and Rubric autoraters in Staging."
+    },
+    {
+      id: 43, sec: "4.3", multi: false,
+      arch: "[Reproducible Agent Rollbacks] --> [Version Container Image Digest + System Prompts + Tool Schemas Together in Git]",
+      stem: "During a production incident at 2:00 AM, the SRE team rolls back the agent's Cloud Run container image to last week's digest (sha256:88a1...). However, the agent continues failing because its system prompts and MCP tools.yaml definitions are fetched dynamically from an unversioned mutable database table! How should you architect configuration management to guarantee deterministic rollbacks?",
+      opts: [
+        "A. Store system prompts inside ephemeral temp: session state variables on each container.",
+        "B. Version prompts, model IDs, and tool schemas in Git tied to the immutable release revision.",
+        "C. Allow developers to edit live production prompts directly in the Cloud Console UI.",
+        "D. Disable Cloud Run revision history so only one mutable container tag (:latest) exists."
+      ],
+      ans: [1],
+      exp: "Correct (B): An agent's behavior is defined by the combination of its code, model version, system prompts, and tool schemas. Versioning all four together in Git as an immutable release bundle ensures rolling back a revision restores exact prior behavior.",
+      hood: "Architecture rule: Treat prompts, model IDs, and tool schemas as version-controlled code artifacts."
+    },
+    {
+      id: 44, sec: "4.3", multi: false,
+      arch: "[Agent Starter Pack RAG Data Pipeline] --> [Automates Document Parsing, Chunking & Index Sync via Cloud Run Jobs / Vertex Pipelines]",
+      stem: "When scaffolding a grounded ADK agent using the Google Cloud Agent Starter Pack, how does the starter pack handle enterprise document ingestion into Agent Search or Vertex AI RAG Engine across Dev, Staging, and Prod environments?",
+      opts: [
+        "A. It requires developers to manually copy-paste PDF text into the Console UI after deploy.",
+        "B. It scaffolds automated Terraform data-ingestion pipelines that parse, chunk, and sync docs.",
+        "C. It stores all raw enterprise PDFs inside the Git repository's .github/workflows folder.",
+        "D. It disables RAG grounding and forces all agents to use local InMemorySessionService."
+      ],
+      ans: [1],
+      exp: "Correct (B): For RAG-enabled templates, the Agent Starter Pack includes automated, repeatable data-ingestion pipelines provisioned via Terraform that chunk, embed, and synchronize documents from Cloud Storage into your search/RAG index.",
+      hood: "Architecture rule: Agent Starter Pack automates both the agent runtime CI/CD pipeline and the RAG data-ingestion pipeline."
+    },
+    {
+      id: 45, sec: "4.3", multi: false,
+      arch: "[Staging Evaluation Fails Threshold in test_config.json] --> [AgentEvaluator Raises Failure -> CI/CD Pipeline Halts Promotion]",
+      stem: "In your automated Cloud Build deployment pipeline, Step 3 deploys the candidate agent to Staging and Step 4 runs pytest calling AgentEvaluator.evaluate() against golden.evalset.json. On build #402, rubric_based_final_response_quality_v1 scores 0.62 against a configured threshold of 0.85. What happens next in a properly configured CI/CD pipeline?",
+      opts: [
+        "A. AgentEvaluator logs a warning, exits with code 0, and promotes the build to Production.",
+        "B. AgentEvaluator fails with a non-zero exit code, halting the pipeline before Prod promotion.",
+        "C. AgentEvaluator automatically rewrites test_config.json to lower the threshold to 0.60.",
+        "D. Cloud Build deletes the Staging Google Cloud project to save monthly compute billing."
+      ],
+      ans: [1],
+      exp: "Correct (B): When any criterion score falls below the threshold defined in test_config.json, AgentEvaluator.evaluate() fails the test assertion and returns a non-zero exit code—deterministically blocking the CI/CD pipeline from promoting the broken revision to Production.",
+      hood: "Architecture rule: Automated evaluation gates must fail the build (non-zero exit code) when thresholds are breached."
+    },
+    {
+      id: 46, sec: "4.3", multi: false,
+      arch: "[Adding New Tool or Fixing Production Bug] --> [Append Regression EvalCase to *.evalset.json in the Same PR]",
+      stem: "A developer fixes a bug where the Mortgage Agent failed to call verify_flood_zone for coastal zip codes. What release-engineering practice ensures this specific bug can never silently regress in future model or prompt upgrades?",
+      opts: [
+        "A. Add a code comment in the Python file noting the exact date the bug was resolved.",
+        "B. Append a new multi-turn EvalCase reproducing the coastal zip scenario to *.evalset.json.",
+        "C. Switch tool_trajectory_avg_score from MatchType.IN_ORDER to MatchType.ANY_ORDER in config.",
+        "D. Clear the Cloud Trace OpenTelemetry span history in the staging project after deploy."
+      ],
+      ans: [1],
+      exp: "Correct (B): Every resolved production bug or newly added tool should be accompanied by a corresponding EvalCase committed to the version-controlled *.evalset.json suite so the CI/CD gate guards against future regressions permanently.",
+      hood: "Architecture rule: Every bug fix should add a permanent regression EvalCase to your golden evalset."
+    },
+    {
+      id: 47, sec: "4.3", multi: true,
+      arch: "[Multi-Environment Terraform IaC in Agent Starter Pack] = [1. Identical Topology Across Dev/Stage/Prod] + [2. Least-Privilege IAM]",
+      stem: "Which two operational risks are eliminated by using the Terraform Infrastructure-as-Code (IaC) templates provided in the Google Cloud Agent Starter Pack across Dev, Staging, and Production projects? (Choose two.)",
+      opts: [
+        "A. Environment configuration drift caused by manual ClickOps setup in the Cloud Console.",
+        "B. The need to author any domain-specific EvalCase scenarios for custom business logic.",
+        "C. Missing IAM bindings or inconsistent BigQuery/Trace sinks when promoting Staging to Prod.",
+        "D. The context window token limit of the underlying Gemini foundation model in Vertex AI.",
+        "E. The requirement to authenticate external partner agents over the standard A2A protocol."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Provisioning Dev, Staging, and Prod via parameterized Terraform IaC templates eliminates manual ClickOps drift (A) and guarantees that IAM roles, storage buckets, and observability sinks match across environments (C).",
+      hood: "Architecture rule: Declarative Terraform IaC guarantees identical infrastructure parity across Dev, Staging, and Prod."
+    },
+    {
+      id: 48, sec: "4.4", multi: false,
+      arch: "[19-Second Multi-Agent Latency Spike] --> [Inspect OpenTelemetry Span Waterfall in Cloud Trace (invocation -> agent_run -> call_llm -> execute_tool)]",
+      stem: "Customers report that Rosku Bank's 4-agent Commercial Loan Orchestrator intermittently takes 19 seconds to respond. Because a single turn involves a root router, three sub-agents, four Gemini calls, and six MCP database queries, flat text logs in Cloud Logging do not clearly show which sequential or parallel hop is blocking the response. Which Google Cloud tool should you use first to isolate the exact bottleneck?",
+      opts: [
+        "A. Cloud Trace to inspect the nested OpenTelemetry span waterfall across agents and tools.",
+        "B. Cloud Asset Inventory to review historical IAM policy bindings across the organization.",
+        "C. Vertex AI PairwiseMetric to compare two candidate system prompts offline in a notebook.",
+        "D. Sensitive Data Protection discovery scans on the underlying Cloud SQL database tables."
+      ],
+      ans: [0],
+      exp: "Correct (A): Cloud Trace visualizes OpenTelemetry traces emitted by ADK as a hierarchical time waterfall, immediately showing the exact duration of every agent_run, call_llm (including TTFT and token counts), and execute_tool span.",
+      hood: "Architecture rule: Isolate multi-agent latency bottlenecks using the OpenTelemetry span waterfall in Cloud Trace."
+    },
+    {
+      id: 49, sec: "4.4", multi: false,
+      arch: "[Orchestrator Calls Remote A2A Agent & MCP Server] --> [Propagate W3C 'traceparent' HTTP Header for Unified Distributed Trace]",
+      stem: "Your ADK Orchestrator on Managed Agent Runtime calls a remote A2A Appraisal Agent on Cloud Run and an MCP Toolbox server on GKE. In Cloud Trace, you see three separate, unlinked traces instead of one unified end-to-end waterfall! How should you stitch all spans across these three services into a single distributed trace?",
+      opts: [
+        "A. Store the root trace ID inside a global app:trace_id key in InMemorySessionService.",
+        "B. Propagate the standard W3C traceparent HTTP header across outbound A2A and MCP calls.",
+        "C. Set include_contents='none' on the remote A2A Appraisal Agent in its LlmAgent config.",
+        "D. Export all three services' container images to the same Artifact Registry repository."
+      ],
+      ans: [1],
+      exp: "Correct (B): Propagating the W3C Trace Context header (traceparent: 00-<trace_id>-<span_id>-01) in outbound HTTP/gRPC calls allows downstream A2A and MCP services to attach their child spans to the caller's parent trace_id in Cloud Trace.",
+      hood: "Architecture rule: Stitch distributed multi-agent and MCP spans together by propagating the W3C traceparent header."
+    },
+    {
+      id: 50, sec: "4.4", multi: false,
+      arch: "[Continuous Production Quality Monitoring Without Adding Live Latency] --> [Export Logs to BigQuery Sink + Run Async Autorater on 5% Sample]",
+      stem: "Rosku Bank's VP of AI wants to monitor production conversations continuously for subtle hallucinations and tone drift using LLM Rubric Autoraters (PointwiseMetric / hallucinations_v1). However, running an LLM autorater synchronously inline before returning every customer reply would add 2.5 seconds of latency and double token costs. What is the recommended production architecture?",
+      opts: [
+        "A. Export structured logs to BigQuery via a sink and run async autoraters on a 5% sample.",
+        "B. Run the LLM autorater synchronously inline on 100% of turns and disable SSE streaming.",
+        "C. Disable all production monitoring and only run evaluations once a year on synthetic data.",
+        "D. Replace the agent's Gemini foundation model with a static regular-expression table."
+      ],
+      ans: [0],
+      exp: "Correct (A): Exporting structured JSON telemetry to BigQuery via a Cloud Logging sink and running EvalTask LLM autoraters asynchronously on a sampled subset (e.g., 1%-5% of live turns + 100% of thumbs-down turns) detects quality drift with zero added latency to live users.",
+      hood: "Architecture rule: Production LLM autorater monitoring should run asynchronously on sampled BigQuery logs, not inline."
+    },
+    {
+      id: 51, sec: "4.4", multi: false,
+      arch: "[Predictable Mission-Critical Peak Traffic Hitting HTTP 429] --> [Purchase Provisioned Throughput + Implement Exponential Backoff with Jitter]",
+      stem: "Every weekday between 9:00 AM and 10:30 AM (market open), Rosku Bank's mission-critical trading assistant experiences predictable, sustained high volume and intermittently hits HTTP 429 (RESOURCE_EXHAUSTED) quota errors on the standard pay-as-you-go Gemini endpoint. How should you guarantee model capacity and resilience for this workload?",
+      opts: [
+        "A. Reserve Provisioned Throughput capacity and use exponential backoff with random jitter.",
+        "B. Retry failed HTTP 429 requests in a tight while True loop with zero delay (0ms) in code.",
+        "C. Switch tool_trajectory_avg_score to MatchType.ANY_ORDER inside the test_config.json file.",
+        "D. Store all live market-open trades inside a Coldline Cloud Storage archival bucket."
+      ],
+      ans: [0],
+      exp: "Correct (A): Provisioned Throughput reserves dedicated, guaranteed token processing capacity on the Gemini Enterprise Agent Platform for predictable mission-critical workloads, while exponential backoff with random jitter handles any burst spikes gracefully without thundering-herd collisions.",
+      hood: "Architecture rule: Predictable mission-critical capacity SLA = Provisioned Throughput; transient 429 retries = exponential backoff + jitter."
+    },
+    {
+      id: 52, sec: "4.4", multi: false,
+      arch: "[Why Add Random 'Jitter' to Exponential Backoff?] --> [Prevents Synchronized 'Thundering Herd' Retry Collisions]",
+      stem: "When an external credit-bureau MCP tool returns a transient HTTP 503 / 429 error to 400 concurrent agent sessions at t=0, why must your retry logic use exponential backoff with random jitter rather than fixed-interval retries (1.0s, 2.0s, 4.0s)?",
+      opts: [
+        "A. Random jitter automatically encrypts the SQL query parameters inside tools.yaml files.",
+        "B. Without jitter, all 400 sessions retry at the exact same millisecond (thundering herd).",
+        "C. Random jitter converts synchronous Python functions into LongRunningFunctionTool objects.",
+        "D. Fixed-interval retries are blocked by default inside managed VertexAiSessionService."
+      ],
+      ans: [1],
+      exp: "Correct (B): When hundreds of concurrent sessions hit a rate limit simultaneously, deterministic backoff intervals cause all clients to retry in lockstep waves. Adding random millisecond jitter spreads the retries smoothly over time.",
+      hood: "Architecture rule: Exponential backoff + random jitter prevents synchronized thundering-herd retry storms."
+    },
+    {
+      id: 53, sec: "4.4", multi: false,
+      arch: "[The Data Flywheel: Thumbs-Down / Low-Autorater BigQuery Logs] --> [PII Redact + Curate Expected Trajectory -> Append to *.evalset.json]",
+      stem: "You want to build a continuous improvement 'Data Flywheel' where real production failures (turns where users clicked 'Thumbs Down' or offline autoraters scored < 0.5) automatically strengthen your pre-deployment CI/CD gate. Which workflow implements this safely?",
+      opts: [
+        "A. Query failed turns in BigQuery, scrub PII, curate the golden trajectory, and add to evalset.",
+        "B. Pipe raw unredacted customer failures directly into the root GEMINI.md file every minute.",
+        "C. Automatically commit failed production outputs as 'expected' answers without human review.",
+        "D. Delete any EvalCase from *.evalset.json that fails more than twice in the staging build."
+      ],
+      ans: [0],
+      exp: "Correct (A): Harvesting failed production traces from BigQuery, ensuring PII is de-identified, having a human curate the correct expected trajectory/response, and adding the case to *.evalset.json closes the continuous improvement loop. Blindly committing buggy outputs without review (C) codifies bugs!",
+      hood: "Architecture rule: Production log -> PII scrub -> human curation -> golden EvalSet -> CI/CD gate = the agent data flywheel."
+    },
+    {
+      id: 54, sec: "4.4", multi: false,
+      arch: "[Correlating Cloud Logging JSON Entries with Cloud Trace Waterfall Spans] --> [Include 'logging.googleapis.com/trace' Field]",
+      stem: "While inspecting a slow execute_tool span in Cloud Trace, an engineer wants to click a single button to view all structured application log lines emitted during that exact trace and span in Cloud Logging. What field must be present in the structured JSON log payload to enable automatic log-to-trace correlation?",
+      opts: [
+        "A. Populate logging.googleapis.com/trace (with project and trace_id) and spanId in JSON logs.",
+        "B. Set session.state['temp:log_correlation_key'] = True inside the before_tool_callback.",
+        "C. Configure RubricContent(text_property='correlate_logs') inside the test_config.json file.",
+        "D. Set capabilities.streaming = true inside the /.well-known/agent.json discovery card."
+      ],
+      ans: [0],
+      exp: "Correct (A): Populating logging.googleapis.com/trace (projects/PROJECT_ID/traces/TRACE_ID) and logging.googleapis.com/spanId in structured JSON logs links every Cloud Logging entry directly to its parent span in Cloud Trace.",
+      hood: "Architecture rule: Link Cloud Logging to Cloud Trace using logging.googleapis.com/trace and spanId."
+    },
+    {
+      id: 55, sec: "4.4", multi: false,
+      arch: "[Sudden Spike in Average 'call_llm' Spans per User Turn in Cloud Monitoring] --> [Runaway Multi-Agent Loop Alert!]",
+      stem: "Your SRE team is configuring Cloud Monitoring alerting policies for a composite ADK multi-agent system. Which telemetry metric anomaly is the earliest, most direct indicator that two sub-agents have entered a runaway delegation loop in production?",
+      opts: [
+        "A. A decrease in Cloud Storage bucket object count inside the GcsArtifactService bucket.",
+        "B. A sharp spike in average call_llm spans (and token usage) per root user invocation.",
+        "C. A drop in HTTP 200 status codes on the static /.well-known/agent.json discovery URL.",
+        "D. An increase in the Gemini Context Caching hit ratio from 60% to 85% during peak hours."
+      ],
+      ans: [1],
+      exp: "Correct (B): When sub-agents bounce tasks back and forth or a LoopAgent spins without escalating, the number of child call_llm and agent_run spans per root user invocation spikes dramatically before the turn times out.",
+      hood: "Architecture rule: Monitor call_llm count and total tokens per root invocation to catch runaway agent loops."
+    },
+    {
+      id: 56, sec: "4.4", multi: true,
+      arch: "[Cutting Latency & Token Cost by 60%] = [1. Model Tiering (Flash Router + Pro Specialist)] + [2. Context Pruning (include_contents='none' + Caching)]",
+      stem: "Rosku Bank's CFO asks you to reduce the monthly Gemini API bill and p95 latency of a 5-agent underwriting system by 50% without degrading underwriting accuracy. Telemetry shows all 5 agents currently run on Gemini Pro and pass 40 turns of full chat history to every helper sub-agent. Which two optimizations should you implement? (Choose two.)",
+      opts: [
+        "A. Tier Router/Extractor/Formatter sub-agents to Gemini Flash, keeping Pro for Underwriting.",
+        "B. Remove all max_iterations caps from LoopAgent instances so sub-agents think longer.",
+        "C. Set include_contents='none' on stateless helpers and enable Context Caching on manuals.",
+        "D. Replace ParallelAgent with SequentialAgent for all independent credit bureau lookups.",
+        "E. Run synchronous PairwiseMetric LLM autoraters inline before every incoming user turn."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Per-agent model tiering (Flash for routing/extraction/formatting, Pro for deep reasoning) slashes both latency and per-token cost (A), while pruning unneeded chat history via include_contents='none' and caching large static prompt prefixes eliminates redundant input token billing (C).",
+      hood: "Architecture rule: Model tiering (Flash + Pro) + context pruning (include_contents='none') + Context Caching = FinOps trifecta."
+    },
+    {
+      id: 57, sec: "4.4", multi: false,
+      arch: "[Non-Critical Secondary Tool Times Out] --> [Catch Exception in Tool & Return Structured Fallback Dict to Agent]",
+      stem: "During a mortgage consultation turn, the agent calls a primary calculate_monthly_payment tool (which succeeds) and a secondary fetch_local_school_ratings tool (whose third-party API is down and returns HTTP 504). How should your tool and agent architecture handle the secondary tool outage so the customer still receives their mortgage payment calculation?",
+      opts: [
+        "A. Allow the unhandled HTTP 504 exception to crash the ADK Runner and return HTTP 500.",
+        "B. Catch the timeout and return a structured fallback dict so the agent answers gracefully.",
+        "C. Block the entire container worker thread for 15 minutes retrying the school API.",
+        "D. Delete the customer's session_id from DatabaseSessionService on any non-200 status."
+      ],
+      ans: [1],
+      exp: "Correct (B): Catching transient failures in non-critical tools and returning a descriptive fallback dictionary allows the LLM to degrade gracefully—delivering the primary mortgage calculation while informing the customer that school ratings are temporarily unavailable.",
+      hood: "Architecture rule: Graceful degradation = return structured status/fallback dicts from failed tools instead of crashing the turn."
+    },
+    {
+      id: 58, sec: "4.4", multi: false,
+      arch: "[PII Safety in Long-Term BigQuery Telemetry Sinks] --> [Scrub/Redact Sensitive InfoTypes via SDP / Model Armor Before Analytics Storage]",
+      stem: "Your observability pipeline exports all ADK conversation prompts, tool arguments, and model responses to a BigQuery dataset that 60 data analysts query for FinOps and latency reporting. How should you prevent raw customer Social Security Numbers or credit card digits from being exposed to data analysts in BigQuery?",
+      opts: [
+        "A. De-identify PII via Model Armor / SDP and enforce BigQuery column-level policy tags.",
+        "B. Instruct data analysts in GEMINI.md not to run SELECT queries on text columns.",
+        "C. Store the BigQuery dataset in the same region as Cloud Run with public read access.",
+        "D. Set temperature=0.0 on the agent so customers cannot type numbers into the chat box."
+      ],
+      ans: [0],
+      exp: "Correct (A): Combining inline Model Armor / Sensitive Data Protection (SDP) redaction with BigQuery column-level security (Policy Tags / Data Masking) ensures analysts can query latency, token counts, and trajectory metrics without accessing raw customer PII.",
+      hood: "Architecture rule: De-identify PII via SDP/Model Armor and protect telemetry tables with BigQuery Policy Tags."
+    },
+    {
+      id: 59, sec: "4.4", multi: false,
+      arch: "[High Perceived Wait Time on Long 600-Word Reports] --> [Enable End-to-End Streaming (stream_query / SSE) to Lower TTFT]",
+      stem: "Users of Rosku Bank's investment research agent complain that when the agent generates a comprehensive 600-word market report, the chat UI shows a blank loading spinner for 7 seconds until the entire 600-word block appears all at once. Total generation time cannot be shortened further. How can you dramatically improve perceived responsiveness?",
+      opts: [
+        "A. Enable SSE token streaming (run_async / stream_query) so tokens render as TTFT arrives.",
+        "B. Switch the agent's trajectory evaluation mode from MatchType.EXACT to MatchType.IN_ORDER.",
+        "C. Store the 600-word report in GcsArtifactService and email a link 24 hours later.",
+        "D. Increase Cloud Run memory from 2 GiB to 32 GiB while keeping batch synchronous replies."
+      ],
+      ans: [0],
+      exp: "Correct (A): Streaming responses over Server-Sent Events (SSE) using stream_query() delivers the first tokens to the user's screen in under a second (low TTFT), transforming a 7-second blank wait into an immediate, smooth reading experience.",
+      hood: "Architecture rule: Lower perceived user wait time (TTFT) on long generations with SSE token streaming."
+    },
+    {
+      id: 60, sec: "4.4", multi: true,
+      arch: "[OpenTelemetry call_llm Span Attributes] = [1. Input/Output Token Counts & Model ID] + [2. Latency / TTFT & Finish Reason]",
+      stem: "When inspecting a call_llm OpenTelemetry span exported by ADK to Cloud Trace, which two sets of diagnostic attributes are recorded on the span to help architects debug cost and latency anomalies? (Choose two.)",
+      opts: [
+        "A. The invoked model ID, input_tokens (prompt tokens), and output_tokens (candidate tokens).",
+        "B. The plaintext OAuth 2.0 client secret and private TLS key of the GCP organization.",
+        "C. The span duration (latency), Time-To-First-Token (TTFT), temperature, and finish_reason.",
+        "D. The complete Terraform state file (terraform.tfstate) of the host VPC network.",
+        "E. The personal home-directory GEMINI.md file of every developer on the Git repository."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): ADK's OpenTelemetry call_llm spans record GenAI semantic conventions including the invoked model ID, input_tokens, output_tokens (A), and latency duration, sampling parameters, and finish_reason (C)—enabling pinpoint cost and latency attribution per hop.",
+      hood: "Architecture rule: call_llm spans in Cloud Trace capture per-hop token consumption, model ID, and latency."
+    }
+  ];
+  const STORAGE_KEY = "agenticaivantage_paac_sec4_v6_60q";
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { saved = {}; }
+  let pendingMulti = [];
+  let filter = "all";
+  let currentIdx = 0;
+  function isCorrect(q, userPick) {
+    if (!Array.isArray(userPick) || userPick.length !== q.ans.length) return false;
+    const s1 = [...userPick].sort();
+    const s2 = [...q.ans].sort();
+    return s1.every((val, i) => val === s2[i]);
+  }
+  function getFilteredList() {
+    if (filter === "all") return QUESTIONS;
+    if (filter === "missed") {
+      const missed = QUESTIONS.filter(q => saved[q.id] !== undefined && !isCorrect(q, saved[q.id]));
+      return missed.length ? missed : QUESTIONS;
+    }
+    return QUESTIONS.filter(q => q.sec === filter);
+  }
+  function updateScoreBadge() {
+    const keys = Object.keys(saved);
+    let correctCount = 0;
+    keys.forEach(k => {
+      const q = QUESTIONS.find(item => item.id === parseInt(k, 10));
+      if (q && isCorrect(q, saved[k])) correctCount++;
+    });
+    document.getElementById("sim-score").textContent = "Score: " + correctCount + " / " + keys.length + " (of 60)";
+  }
+  function renderQuestion() {
+    const list = getFilteredList();
+    if (currentIdx >= list.length) currentIdx = 0;
+    if (currentIdx < 0) currentIdx = list.length - 1;
+    const q = list[currentIdx];
+    const userPick = saved[q.id];
+    document.getElementById("q-domain").textContent = "Checkpoint " + q.sec + " | Q#" + q.id;
+    document.getElementById("q-type").textContent = q.multi ? "Choose Two (select 2)" : "Single choice";
+    document.getElementById("q-counter").textContent = "Showing " + (currentIdx + 1) + " of " + list.length;
+    document.getElementById("q-stem").textContent = q.stem;
+    const optContainer = document.getElementById("q-options");
+    optContainer.innerHTML = "";
+    q.opts.forEach((optText, idx) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sim-opt";
+      if (userPick !== undefined) {
+        if (q.ans.includes(idx)) btn.classList.add("correct");
+        else if (userPick.includes(idx)) btn.classList.add("wrong");
+      } else if (q.multi && pendingMulti.includes(idx)) {
+        btn.classList.add("selected-pending");
+      }
+      btn.textContent = optText;
+      btn.addEventListener("click", () => {
+        if (!q.multi) {
+          saved[q.id] = [idx];
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (e) {}
+          renderQuestion();
+        } else {
+          if (userPick !== undefined) {
+            delete saved[q.id];
+            pendingMulti = [idx];
+            renderQuestion();
+            return;
+          }
+          if (pendingMulti.includes(idx)) pendingMulti = pendingMulti.filter(i => i !== idx);
+          else pendingMulti.push(idx);
+          if (pendingMulti.length === 2) {
+            saved[q.id] = [...pendingMulti];
+            pendingMulti = [];
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (e) {}
+          }
+          renderQuestion();
+        }
+      });
+      optContainer.appendChild(btn);
+    });
+    const expBox = document.getElementById("q-explain");
+    if (userPick !== undefined) {
+      expBox.classList.add("visible");
+      document.getElementById("q-arch").textContent = "Architecture flow: " + q.arch;
+      document.getElementById("q-exp-text").textContent = q.exp;
+      document.getElementById("q-hood").textContent = q.hood;
+    } else {
+      expBox.classList.remove("visible");
+    }
+    const grid = document.getElementById("q-grid");
+    grid.innerHTML = "";
+    list.forEach((item, i) => {
+      const gBtn = document.createElement("button");
+      gBtn.type = "button";
+      gBtn.className = "sim-num-btn";
+      if (i === currentIdx) gBtn.classList.add("current");
+      if (saved[item.id] !== undefined) {
+        gBtn.classList.add(isCorrect(item, saved[item.id]) ? "ans-ok" : "ans-bad");
+      }
+      gBtn.textContent = item.id;
+      gBtn.addEventListener("click", () => {
+        pendingMulti = [];
+        currentIdx = i;
+        renderQuestion();
+      });
+      grid.appendChild(gBtn);
+    });
+    updateScoreBadge();
+  }
+  document.querySelectorAll(".sim-chip[data-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".sim-chip[data-filter]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      filter = btn.getAttribute("data-filter") || "all";
+      pendingMulti = [];
+      currentIdx = 0;
+      renderQuestion();
+    });
+  });
+  document.getElementById("q-prev")?.addEventListener("click", () => { pendingMulti = []; currentIdx--; renderQuestion(); });
+  document.getElementById("q-next")?.addEventListener("click", () => { pendingMulti = []; currentIdx++; renderQuestion(); });
+  document.getElementById("sim-reset")?.addEventListener("click", () => {
+    saved = {};
+    pendingMulti = [];
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    renderQuestion();
+  });
+  renderQuestion();
+})();
+</script></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec4-qa.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">4.6 Section 4 Q&amp;A</span></span></a><a href="sec5-exam-guide.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">5.0 Domain 5 Roadmap</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

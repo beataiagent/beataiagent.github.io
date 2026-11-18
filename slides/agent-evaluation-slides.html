@@ -1,0 +1,1703 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent Evaluation</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/gdg-favicon-32.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/gdg-favicon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/gdg-apple-touch-180.png" />
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+
+  <style>
+    /* ================= DevFest 2026 theme tokens (from the official template) ================= */
+    :root {
+      --ink: #1e1e1e;            /* Black 02 */
+      --paper: #f0f0f0;          /* Off-White */
+      --white: #fff;
+      --g-blue: #4285f4; --g-green: #34a853; --g-red: #ea4335; --g-yellow: #fbbc04;      /* Google 500 */
+      --h-blue: #57caff; --h-green: #5cdb6d; --h-red: #ff7daf; --h-yellow: #ffd427;      /* Halftone */
+      --p-blue: #c3ecf6; --p-green: #ccf6c5; --p-red: #f8d8d8; --p-yellow: #ffe7a5;      /* Pastel */
+      --muted: #5f6368;
+      --stroke: 3px;
+      --sans: "Google Sans", "Product Sans", system-ui, sans-serif;
+      --mono: "Roboto Mono", ui-monospace, monospace;
+
+      --r-background-color: var(--paper);
+      --r-main-font: var(--sans);
+      --r-heading-font: var(--sans);
+      --r-code-font: var(--mono);
+      --r-main-color: var(--ink);
+      --r-heading-color: var(--ink);
+      --r-heading-text-transform: none;
+      --r-heading-font-weight: 700;
+      --r-heading-letter-spacing: -0.01em;
+      --r-link-color: #1a73e8;
+      --r-link-color-hover: #174ea6;
+      --r-main-font-size: 28px;
+    }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--paper); }
+    .reveal { color: var(--ink); }
+    .reveal strong, .reveal b { font-weight: 700; }
+
+    /* every slide is a fixed 1280×720 canvas, laid out absolutely like the Slides template */
+    .reveal .slides section { width: 1280px; height: 720px; padding: 0; box-sizing: border-box; text-align: left; background: var(--paper); line-height: 1.3; }
+    .reveal .slides section.bg-blue { background: var(--p-blue); }
+    .reveal .slides section.bg-green { background: var(--p-green); }
+    .reveal .slides section.bg-yellow { background: var(--p-yellow); }
+    .reveal .slides section.bg-red { background: var(--p-red); }
+    .reveal h1, .reveal h2, .reveal h3 { margin: 0; text-transform: none; color: var(--ink); line-height: 1.12; }
+    .reveal h1 { font-size: 84px; font-weight: 700; letter-spacing: -.015em; }
+    .reveal h2 { font-size: 46px; font-weight: 700; }
+    .reveal h3 { font-size: 26px; font-weight: 700; }
+    .reveal p { margin: 0; }
+    .reveal .slides img { margin: 0; max-width: none; max-height: none; }
+    .reveal a { text-decoration: none; }
+    .abs { position: absolute; }
+    .mono { font-family: var(--mono); font-weight: 300; }
+    .sub { font-family: var(--mono); font-weight: 300; font-size: 22px; line-height: 1.35; color: var(--ink); }
+    .muted { color: var(--muted); }
+
+    /* ---------- notched card (shape drawn by dfShapes(): data-tl / data-br notches, data-scallop) ---------- */
+    .nc { position: absolute; }
+    .nc > svg.nc-s { position: absolute; inset: 0; overflow: visible; z-index: 0; pointer-events: none; }
+    .nc > .in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; padding: 40px 52px; }
+
+    /* ---------- DevFest badge: { DevFest / location } ---------- */
+    .badge { position: absolute; display: flex; align-items: center; gap: 4px; --bk: var(--g-yellow); }
+    .badge .bk { font: 700 92px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .badge b { font: 700 50px/1 var(--sans); letter-spacing: -.01em; }
+    .badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 6px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .badge.sm .bk { font-size: 64px; -webkit-text-stroke-width: 2.5px; }
+    .badge.sm b { font-size: 34px; }
+    .badge.sm i { font-size: 11px; padding: 4px 0; margin-top: 5px; border-width: 2px; }
+
+    /* ---------- corner logos: Build with Gemini + DevFest/GDG lockup (auto-added bottom-right of every slide) ---------- */
+    .corner-logos { position: absolute; right: 40px; bottom: 38px; display: flex; align-items: flex-end; gap: 14px; z-index: 2; pointer-events: none; }
+    .corner-logos img { height: 94px; width: auto; display: block; }
+
+    /* ---------- line icons (sprite at top of <body>) ---------- */
+    .ico { display: block; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .dots { position: absolute; display: flex; gap: 14px; }
+    .dots i { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--ink); background: var(--dc, var(--g-blue)); box-sizing: border-box; }
+    .numbox { position: absolute; border: var(--stroke) solid var(--ink); border-radius: 28px; background: #fff; font: 300 64px/1 var(--mono); display: flex; align-items: center; padding: 0 28px; box-sizing: border-box; }
+
+    /* ---------- content atoms ---------- */
+    .pc { border: 2.5px solid var(--ink); border-radius: 24px; padding: 22px 24px; background: #fff; box-sizing: border-box; font-size: 20px; line-height: 1.38; }
+    .pc.blue { background: var(--p-blue); } .pc.green { background: var(--p-green); } .pc.yellow { background: var(--p-yellow); } .pc.red { background: var(--p-red); }
+    .pc h3 { margin-bottom: 8px; }
+    .pc .ico { width: 46px; height: 46px; margin-bottom: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 5px 13px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; font-size: 15px; line-height: 1.3; }
+    .tag { display: inline-block; padding: 7px 20px; border-radius: 999px; border: 2.5px solid var(--ink); background: #fff; font: 500 18px/1.2 var(--sans); }
+    .tag.red { background: var(--p-red); } .tag.yellow { background: var(--g-yellow); }
+    .eyebrow { font: 400 17px/1 var(--mono); letter-spacing: .02em; color: var(--ink); margin-bottom: 12px; }
+    .grid { display: grid; gap: 20px; }
+    .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+    .reveal ul.bl { list-style: none; margin: 0; padding: 0; display: block; font-size: 25px; line-height: 1.35; }
+    .reveal ul.bl li { position: relative; padding-left: 34px; margin: 0 0 16px; }
+    .reveal ul.bl li::before { content: ""; position: absolute; left: 2px; top: .38em; width: 15px; height: 15px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--g-blue); }
+    .reveal ul.bl li:nth-child(4n+2)::before { background: var(--g-red); }
+    .reveal ul.bl li:nth-child(4n+3)::before { background: var(--g-yellow); }
+    .reveal ul.bl li:nth-child(4n+4)::before { background: var(--g-green); }
+    .placeholder { border: 2.5px dashed #9aa0a6; border-radius: 24px; display: grid; place-items: center; color: var(--muted); font-size: 18px; text-align: center; padding: 20px; background: var(--paper); box-sizing: border-box; }
+
+    /* code */
+    .reveal pre { width: auto; margin: 0; box-shadow: none; font-size: 15px; line-height: 1.42; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--paper); overflow: hidden; }
+    .reveal pre code { max-height: none; padding: 16px 22px; background: transparent; font-family: var(--mono); font-weight: 400; }
+    .reveal .hljs { background: transparent; color: #1e1e1e; }
+    .reveal .hljs-ln-numbers { color: #9aa0a6; }
+    .cmd { font: 400 15px/1.4 var(--mono); padding: 12px 16px; border-radius: 16px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; }
+    /* "ask your coding agent" prompt bar at the bottom of each step slide */
+    .ask { position: absolute; left: 56px; right: 56px; bottom: 30px; display: flex; align-items: center; gap: 16px; padding: 12px 18px; border: 2px dashed var(--h-yellow); border-radius: 16px; background: #2a2b2f; }
+    .ask b { flex: none; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; border-radius: 999px; background: var(--h-yellow); color: #202124; white-space: nowrap; }
+    .ask span { font: 400 16px/1.4 var(--mono); color: #e8eaed; }
+    .ag-steps .pc { display: flex; flex-direction: column; gap: 12px; }
+    .ag-steps .pc .num { width: 38px; height: 38px; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; font: 500 19px/1 var(--sans); color: #fff; }
+    .ag-steps .pc.blue .num { color: var(--h-blue); } .ag-steps .pc.green .num { color: var(--h-green); } .ag-steps .pc.yellow .num { color: var(--h-yellow); }
+    .ag-steps .pc p { margin: 0; font-size: 17px; }
+    .ag-steps .pc.red .num { color: var(--h-red); }
+    .st4 .pc { height: 310px; padding: 18px; }
+    .st4 .pc .num { flex: none; }
+    .st4 .cmd { font-size: 13.5px; }
+    .st4 .pc p { font-size: 15.5px; line-height: 1.4; }
+
+    /* flow (slide 7) */
+    .flow { display: flex; align-items: center; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 26px 18px; }
+    .flow .node b { display: block; font-size: 24px; margin-bottom: 8px; }
+    .flow .node code { font-family: var(--mono); font-size: 16px; white-space: nowrap; }
+    .flow .arr { width: 46px; flex: none; }
+
+    /* demo */
+    .demo-wrap { position: relative; width: 520px; aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; border: 2.5px solid var(--ink); background: #1e1e1e; }
+    .reveal .demo-wrap video, .reveal .demo-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; object-fit: cover; transform: scaleX(-1); }
+    .demo-ui { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn { font: 500 18px/1 var(--sans); padding: 13px 26px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); color: #fff; cursor: pointer; }
+    .btn.ghost { background: #fff; color: var(--ink); }
+    .btn:disabled { opacity: .45; cursor: default; }
+    #demoStatus { font: 300 16px/1.4 var(--mono); color: var(--ink); }
+    .gesture { position: absolute; left: 14px; top: 12px; font: 500 20px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); z-index: 2; }
+
+    /* ---------- slide 1: speaker cover ---------- */
+    .reveal .slides section.s-cover { overflow: hidden; }
+    .s-cover .cv-pill { position: absolute; left: 129px; top: 44px; width: 556px; height: 93px; border-radius: 999px; background: var(--ink); }
+    .s-cover .cv-dot { position: absolute; left: 670px; top: 44px; width: 91px; height: 91px; border-radius: 50%; background: var(--g-blue); border: 3px solid var(--ink); box-sizing: border-box; }
+    .s-cover .cv-kicker { font: 700 38px/1.1 var(--sans); color: var(--g-blue); margin-bottom: 8px; }
+    .s-cover .cv-title { font-size: 86px; line-height: 1.04; letter-spacing: -.015em; }
+    .s-cover .cv-name { position: absolute; left: 88px; top: 542px; width: 346px; height: 97px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 999px; background: #fff; display: flex; flex-direction: column; justify-content: center; padding: 0 24px; z-index: 2; }
+    .s-cover .cv-name b { font: 700 29px/1.15 var(--sans); white-space: nowrap; }
+    .s-cover .cv-name span { font: 400 15px/1.3 var(--sans); white-space: nowrap; margin-top: 3px; }
+    .s-cover .cv-photo { position: absolute; left: 761px; top: 40px; width: 479px; height: 370px; border: 3px solid #555; border-radius: 66px; overflow: hidden; background: #efeeef; box-sizing: border-box; }
+    .s-cover .cv-photo > img { position: absolute; left: 92px; top: 30px; width: 334px; height: 334px; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); }
+    .s-cover .gde { position: absolute; left: 128px; top: 262px; display: flex; height: 79px; border: 2px solid #c6dafc; border-radius: 9px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .s-cover .gde-l { width: 108px; display: flex; flex-direction: column; align-items: center; padding-top: 8px; position: relative; }
+    .s-cover .gde-l img { width: 36px; height: 18px; object-fit: contain; }
+    .s-cover .gde-l span { font: 400 17px/1 var(--sans); color: #5f6368; margin-top: 4px; }
+    .s-cover .gde-l i { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: #4a86e8; color: #fff; font: 400 12px/18px var(--sans); text-align: center; font-style: normal; }
+    .s-cover .gde-r { width: 108px; display: grid; place-items: center; font: 500 12px/1 var(--sans); color: #3c4043; border-left: 6px solid #e8f0fe; background: #fff; }
+    .s-cover .cv-badge { position: absolute; left: 696px; top: 505px; width: 313px; height: 124px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 42px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .s-cover .cv-badge .bk { font: 700 82px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .s-cover .cv-badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .s-cover .cv-badge b { font: 700 45px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover .cv-badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 5px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .s-cover .cv-blobs { position: absolute; left: 1010px; top: 501px; width: 211px; height: 77px; }
+    .s-cover .cv-gdg { position: absolute; left: 1007px; top: 578px; width: 132px; height: 87px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 44px; background: #fff; display: grid; place-items: center; }
+    .s-cover .cv-gdg img { width: 90px; height: 45px; object-fit: contain; }
+
+    /* ---------- slide 2: agenda ---------- */
+    .s-agenda .ag-title { position: absolute; left: 41px; top: 40px; font-size: 56px; font-weight: 400; }
+    .reveal .s-agenda ol.ag-list { position: absolute; left: 41px; top: 168px; margin: 0; padding: 0; list-style: none; display: grid; gap: 22px; }
+    .s-agenda .ag-list li { position: relative; display: flex; align-items: center; gap: 18px; height: 84px; }
+    .s-agenda .ag-list svg { position: absolute; left: 0; top: -6px; width: 96px; height: 96px; fill: none; stroke: var(--ink); stroke-width: 2.5; }
+    .s-agenda .ag-list b { width: 96px; text-align: center; font: 500 54px/1 var(--sans); flex: none; }
+    .s-agenda .ag-list span { width: 688px; height: 84px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 999px; background: #d3e3f3; display: flex; align-items: center; padding: 0 26px; font: 400 34px/1 var(--sans); }
+
+    /* tasks slide: Text · Audio · Decision · Retrieval / Vision · GenAI */
+    .tasks-grid { display: grid; grid-template-columns: 1.3fr 1.25fr .95fr 1.1fr; grid-template-rows: auto auto; gap: 14px; }
+    .tasks-grid .pc { padding: 16px 16px; }
+    .tasks-grid .pc.span3 { grid-column: span 3; }
+    .tasks-grid h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 24px; }
+    .tasks-grid .ord { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid var(--ink); background: #fff; display: grid; place-items: center; font: 500 16px/1 var(--sans); box-sizing: border-box; }
+    .tasks-grid .tcount { font: 300 13px/1 var(--mono); margin-left: auto; padding-left: 6px; white-space: nowrap; }
+    .tasks-grid .chips { gap: 6px; }
+    .tasks-grid .chip { font-size: 13.5px; padding: 4px 10px; }
+
+    /* ---------- task deep-dive slides ---------- */
+    .tk { padding: 34px 44px !important; }
+    .tk-head { position: absolute; left: 44px; top: 30px; right: 44px; }
+    .tk-head .eyebrow { margin-bottom: 6px; }
+    .tk-head h2 { font-size: 40px; }
+    .tk-desc { font-size: 19px; line-height: 1.35; margin-top: 6px !important; }
+    .tk-media { position: absolute; left: 44px; top: 150px; width: 400px; height: 225px; margin: 0; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
+    .tk-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tk-info { position: absolute; left: 474px; top: 156px; right: 44px; display: flex; flex-direction: column; gap: 10px; }
+    .tk-io { display: flex; align-items: flex-start; gap: 12px; }
+    .tk-io > b { width: 64px; flex: none; font: 400 14px/28px var(--mono); }
+    .tk-io .chips { gap: 6px; }
+    .tk-io .chip { font-size: 15px; padding: 4px 12px; }
+    .tk-diagram { position: absolute; left: 30px; top: 392px; width: 800px; height: auto; }
+    .tk-stat { position: absolute; left: 872px; top: 400px; width: 284px; height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 12px 22px !important; }
+    .tk-stat b { font: 700 46px/1 var(--sans); letter-spacing: -.02em; }
+    .tk-stat span { font: 300 15px/1.3 var(--mono); margin-top: 6px; }
+    .tk-stat i { font: 300 11px/1.3 var(--mono); font-style: normal; color: var(--muted); margin-top: 6px; white-space: nowrap; }
+    .tk-size .chip.sz { background: var(--p-yellow); font-size: 14px; }
+    .tk-size .chip.sz em { font: 500 12.5px/1 var(--mono); font-style: normal; margin-left: 4px; }
+
+    /* section dividers: MediaPipe logo tile */
+    .div-logo { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .div-logo img { width: 150px; height: 150px; object-fit: contain; }
+
+
+    /* ---------- AI Studio how-to slides ---------- */
+    .as-left { position: absolute; left: 44px; top: 132px; width: 690px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+    .as-shot { width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 18px; display: block; }
+    .as-link { font: 400 16px/1 var(--mono); padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-blue); color: var(--ink) !important; }
+    .reveal ol.as-steps { position: absolute; left: 766px; top: 128px; width: 390px; margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+    .as-steps li { display: flex; gap: 14px; align-items: flex-start; font-size: 19px; line-height: 1.35; }
+    .as-steps li b { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid var(--ink); display: grid; place-items: center; font: 500 20px/1 var(--sans); background: #fff; box-sizing: border-box; }
+    .as-steps li:nth-child(1) b { background: var(--p-blue); } .as-steps li:nth-child(2) b { background: var(--p-green); }
+    .as-steps li:nth-child(3) b { background: var(--p-yellow); } .as-steps li:nth-child(4) b { background: var(--p-red); }
+    .as-steps li span { padding-top: 6px; }
+    .as-recipe { display: flex; gap: 22px; align-items: flex-start; }
+    .reveal ul.as-parts { list-style: none; margin: 0; padding: 0; width: 330px; flex: none; display: grid; gap: 9px; }
+    .as-parts li { padding: 10px 16px !important; font-size: 15.5px; line-height: 1.3; border-radius: 16px !important; }
+    .as-parts li b { display: block; font-size: 18px; margin-bottom: 2px; }
+    .as-prompt { flex: 1; border: 2.5px solid var(--ink); border-radius: 20px; background: var(--ink); color: #fff; overflow: hidden; max-width: 740px; }
+    .as-ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 10px 18px; font: 400 14px/1 var(--mono); color: #c4c7c5; border-bottom: 1px solid #3c3c3c; }
+    .reveal pre.as-text { margin: 0; padding: 14px 18px 18px; border: 0; border-radius: 0; background: transparent; color: #fff; white-space: pre-wrap; font: 400 15px/1.5 var(--mono); }
+    .copy { font: 500 13px/1 var(--sans); padding: 8px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .copy:hover { background: var(--g-yellow); }
+    .copy.done { background: var(--g-green); color: #fff; }
+    .as-ideas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .as-idea { display: flex; flex-direction: column; gap: 10px; height: 338px; padding: 18px 20px !important; }
+    .as-ih { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+    .as-ih b { font-size: 22px; }
+    .as-ih .chip { font-size: 13px; padding: 3px 10px; }
+    .as-idea .as-text { flex: 1; margin: 0; font: 400 13.5px/1.42 var(--mono); background: #fff; border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; }
+    .as-idea .copy { align-self: flex-start; }
+    .as-tip { margin-top: 16px !important; font-size: 17px; max-width: 800px; }
+    .as-tip b { font: 500 13px/1 var(--mono); padding: 4px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); margin-right: 8px; }
+    .as-tip code { font-family: var(--mono); font-size: 15px; }
+
+    /* thank-you: round speaker photo + name */
+    .ty-who { display: flex; align-items: center; gap: 20px; margin-top: 44px; }
+    .ty-who img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 3px solid var(--ink); background: #fff; flex: none; }
+    .ty-who .sub { margin: 0; }
+
+    /* Hydrogen slide */
+    .hy-word { background: linear-gradient(90deg, #0b1f5c, #2f6fd6 55%, #7cc7f5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    html.print-pdf .hy-word { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #2f6fd6; }
+    .hy-left { position: absolute; left: 44px; top: 128px; width: 620px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .hy-right { position: absolute; left: 696px; top: 128px; width: 460px; display: flex; flex-direction: column; gap: 16px; }
+    .hy-badge { align-self: flex-start; font: 500 18px/1 var(--sans); letter-spacing: .22em; color: #fff; padding: 12px 34px; border-radius: 999px; border: 2.5px solid var(--ink); background: linear-gradient(90deg, #0b1f5c, #2f6fd6 60%, #a8dcfb); }
+    .reveal ul.hy-facts { font-size: 18.5px; line-height: 1.32; }
+    .reveal ul.hy-facts li { margin-bottom: 8px; }
+    .hy-how { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.38; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .hy-how b { font: 500 13px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); flex: none; margin-top: 1px; }
+
+    /* What is Google AI Edge / MediaPipe */
+    .ae-logo { position: absolute; right: 44px; top: 40px; height: 54px; width: auto; }
+    .ae-stack { position: absolute; left: 44px; top: 186px; width: 720px; display: grid; gap: 12px; }
+    .ae-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .ae-row .pc { font-size: 16px; line-height: 1.35; padding: 16px 18px; min-height: 150px; position: relative; }
+    .ae-row h3 { font-size: 24px; margin-bottom: 6px; }
+    .ae-hl { box-shadow: 6px 6px 0 var(--ink); }
+    .ae-tag { position: absolute; right: 12px; top: -14px; font: 500 12px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); }
+    .ae-hw { display: grid; grid-template-columns: 90px repeat(3, 1fr); border: 2.5px solid var(--ink); border-radius: 16px; overflow: hidden; background: #fff; }
+    .ae-hw span, .ae-tools > span { font: 400 14px/1 var(--mono); display: grid; place-items: center; }
+    .ae-hw b { text-align: center; font: 700 22px/1 var(--sans); padding: 14px 0; border-left: 2px solid var(--ink); background: var(--paper); }
+    .ae-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .ae-tools > span { width: 90px; flex: none; }
+    .ae-tools .chip { font-style: normal; font-size: 13.5px; }
+    .ae-side { position: absolute; left: 800px; top: 186px; width: 356px; display: flex; flex-direction: column; gap: 12px; }
+    .ae-sh { font: 700 22px/1.2 var(--sans); }
+    .ae-side ul.bl { font-size: 19px; }
+    .ae-try { font-size: 16px; line-height: 1.4; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .mp-feats { position: absolute; left: 44px; top: 178px; width: 1112px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .mp-feats figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .mp-feats img { width: 100%; height: auto; border-radius: 18px; border: 2px solid var(--ink); }
+    .mp-feats figcaption { font-size: 15px; line-height: 1.3; }
+    .mp-feats figcaption b { display: block; font-size: 19px; margin-bottom: 2px; }
+    .mp-pipe { position: absolute; left: 30px; top: 438px; width: 800px; height: auto; }
+    .mp-facts { position: absolute; left: 860px; top: 432px; width: 296px; display: flex; align-items: center; gap: 14px; padding: 12px 20px; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--p-green); box-sizing: border-box; }
+    .mp-facts b { font: 700 46px/1 var(--sans); }
+    .mp-facts span { display: block; font: 300 15px/1.35 var(--mono); }
+    .mp-facts p { font: 300 12.5px/1.4 var(--mono); color: var(--muted); margin-top: 8px !important; }
+
+    /* why on-device: numbered cards, revealed one per click */
+    .why-card { position: relative; }
+    .why-n { position: absolute; right: 16px; top: 14px; font: 300 30px/1 var(--mono); padding: 6px 12px; border: 2.5px solid var(--ink); border-radius: 14px; background: #fff; }
+
+    /* platforms slide */
+    .pl-grid { position: absolute; left: 44px; top: 190px; width: 1112px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .pl-card { display: flex; flex-direction: column; gap: 8px; height: 310px; padding: 18px 16px !important; }
+    .pl-card img { height: 72px; width: 72px; object-fit: contain; box-sizing: border-box; padding: 11px; background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; }
+    .pl-card img.ios { padding: 6px; }
+    .pl-card h3 { font-size: 26px; margin: 4px 0 0; }
+    .pl-card p { font-size: 17px; line-height: 1.35; flex: 1; }
+    .pl-card p span { font: 300 13.5px/1.4 var(--mono); }
+    .pl-card code { font: 400 12px/1.35 var(--mono); background: var(--ink); color: #fff; border-radius: 10px; padding: 8px 10px; word-break: break-all; }
+
+    /* model-size charts (log scale) */
+    .szc { display: grid; gap: 4px; }
+    .szc-row { display: grid; grid-template-columns: 230px 1fr 132px; align-items: center; gap: 14px; }
+    .szc-row > b { font: 500 17px/1.15 var(--sans); }
+    .szc-row > b small { display: block; font: 300 12px/1.3 var(--mono); color: var(--muted); margin-top: 2px; }
+    .szc-row > em { font: 400 14px/1 var(--mono); font-style: normal; text-align: right; white-space: nowrap; }
+    .szc-track { position: relative; height: 30px; }
+    .szc-track > i { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed #c8c8c8; }
+    .szc-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid #e0e0e0; }
+    .szc-bar { position: absolute; top: 6px; height: 18px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); box-sizing: border-box; min-width: 18px; }
+    .szc-axis .szc-track { height: 18px; }
+    .szc-axis .szc-track::before { display: none; }
+    .szc-axis .szc-track span { position: absolute; transform: translateX(-50%); font: 300 12px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+    .szc-all { position: absolute; left: 44px; top: 168px; width: 1112px; gap: 4px; }
+    .szc-all .szc-row { grid-template-columns: 220px 1fr 170px; }
+    .szc-all .szc-row > b { font-size: 22px; }
+    .szc-all .szc-track { height: 44px; }
+    .szc-all .szc-row > b small { display: inline; margin-left: 8px; }
+    .szc-all .szc-bar { top: 7px; height: 26px; }
+    .szc-all .szc-row:nth-child(2) .szc-bar { background: var(--g-green); }
+    .szc-all .szc-row:nth-child(3) .szc-bar { background: var(--g-yellow); }
+    .szc-all .szc-row:nth-child(4) .szc-bar { background: var(--g-red); }
+    .szc-all .szc-row:nth-child(5) .szc-bar { background: #a142f4; }
+    .szc-all .szc-row:nth-child(6) .szc-bar { background: var(--g-blue); }
+    .szc-all .szc-row > em { font-size: 16px; }
+    .sz-notes { position: absolute; left: 44px; top: 474px; width: 760px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sz-notes .pc { font-size: 15px; line-height: 1.35; padding: 12px 16px !important; }
+    .sz-notes .pc b { display: block; font: 700 19px/1.2 var(--sans); margin-bottom: 2px; }
+    .szc-dense { gap: 0; }
+    .szc-dense .szc-row > b { font-size: 14.5px; }
+    .szc-dense .szc-row > b small { display: none; }
+    .szc-dense .szc-row > b { white-space: nowrap; }
+    .szc-dense .szc-track { height: 25px; }
+    .szc-dense .szc-bar { top: 4px; height: 17px; }
+    .szc-dense .szc-row > em { font-size: 13px; }
+    /* category dividers */
+    .cat-ico { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .cat-ico svg { width: 120px; height: 120px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .cat-side { position: absolute; left: 70px; top: 456px; width: 230px; text-align: center; }
+    .cat-side b { display: block; font: 700 34px/1.1 var(--sans); }
+    .cat-side span { display: block; font: 300 15px/1.4 var(--mono); margin-top: 4px; }
+    .cat-in { padding: 30px 40px !important; }
+    .cat-h { font-size: 64px !important; }
+    .cat-take { font-size: 17px; line-height: 1.35; margin: 8px 0 16px !important; max-width: 760px; }
+    .szc-cat .szc-row { grid-template-columns: 200px 1fr 118px; }
+    .szc-cat .szc-row > b { font-size: 15.5px; }
+    .bg-green .szc-cat .szc-bar { background: var(--g-green); }
+    .bg-yellow .szc-cat .szc-bar { background: var(--g-yellow); }
+    .bg-red .szc-cat .szc-bar { background: var(--g-red); }
+
+    /* ---------- Try it: sample-image demo ---------- */
+    .try-stage { position: relative; width: 640px; height: 470px; flex: none; border: 2.5px solid var(--ink); border-radius: 24px; overflow: hidden; background: #1e1e1e; }
+    .try-stage canvas, .try-stage .try-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .try-stage canvas { z-index: 1; }
+    .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
+    .try-what { font-size: 18px; line-height: 1.35; }
+    .try-actions { display: flex; gap: 10px; }
+    .try-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; flex: 1; }
+    .try-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .try-tabs button { font: 500 15px/1 var(--sans); padding: 9px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .try-tabs button:hover { background: var(--p-blue); }
+    .try-tabs button.on { background: var(--g-blue); color: #fff; }
+    .try-tabs button:disabled { opacity: .5; cursor: progress; }
+    .reveal ol.try-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 17px/1.3 var(--mono); max-height: 200px; overflow: hidden; }
+    .try-results li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; border-radius: 10px; background: var(--paper); border: 1.5px solid #d0d0d0; }
+    .try-results li b { font-weight: 500; }
+    .try-status { font: 300 14px/1.4 var(--mono); color: var(--muted); }
+
+    /* ---------- slide 4: MediaPipe · Google AI Edge (real loops + logos) ---------- */
+    .s-what .wp { position: absolute; background: #fff; border: var(--stroke) solid var(--ink); border-radius: 30px; box-sizing: border-box; }
+    .s-what .wp-main { left: 40px; top: 96px; width: 1200px; padding: 22px 28px 26px; }
+    .s-what .wp-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+    .s-what .tag { font-size: 22px; padding: 8px 26px; background: var(--g-yellow); }
+    .s-what .lockups { display: flex; align-items: center; gap: 34px; }
+    .s-what .mp-lockup, .s-what .edge-lockup { display: flex; align-items: center; font-size: 50px; line-height: 1; white-space: nowrap; }
+    .s-what .mp-lockup { gap: 12px; font-weight: 500; color: #3c4043; }
+    .s-what .mp-lockup img { height: 50px; }
+    .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
+    .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
+    .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what figure { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 2.5px solid var(--ink); background: #f1f3f4; }
+    .s-what figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s-what figcaption { position: absolute; left: 8px; bottom: 7px; font: 500 13px/1 var(--sans); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); color: var(--ink); }
+    .s-what .wp-plat { left: 40px; bottom: 26px; display: flex; align-items: center; gap: 52px; padding: 14px 38px; }
+    .s-what .wp-plat span { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 500; color: #3c4043; }
+    .s-what .wp-plat img { height: 58px; }
+    .s-what .wp-plat img.ios { border-radius: 13px; box-shadow: 0 0 0 1px #dadce0; }
+
+    /* ================= Slide controls (shopio-style) ================= */
+    .reveal .controls, .reveal .progress, html:not(.print-pdf) .reveal .slide-number { display: none !important; }
+    #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; z-index: 40; background: linear-gradient(90deg, var(--g-blue), var(--g-green), var(--g-yellow), var(--g-red)); transition: width .6s cubic-bezier(.16,1,.3,1); }
+    #ctrl { position: fixed; right: 18px; bottom: 16px; z-index: 40; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(30,30,30,.86); backdrop-filter: blur(8px); color: #fff; font: 13px var(--sans); transition: opacity .4s; }
+    #ctrl button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0; }
+    #ctrl button:hover { background: rgba(255,255,255,.25); }
+    #ctrl button.on { background: var(--g-blue); }
+    #ctrl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #ctrl .cnt { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; cursor: pointer; }
+    body.idle #ctrl { opacity: 0; }
+    body.idle { cursor: none; }
+    #menu, #exportMenu { position: fixed; right: 18px; bottom: 64px; z-index: 41; padding: 8px; border-radius: 14px; background: rgba(30,30,30,.96); backdrop-filter: blur(10px); box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); font-family: var(--sans); display: none; }
+    #menu { width: 380px; max-height: 70vh; overflow: auto; }
+    #menu.open, #exportMenu.open { display: block; }
+    #menu a { display: flex; gap: 10px; color: #cfd2d6; text-decoration: none; font-size: 13px; padding: 7px 10px; border-radius: 8px; }
+    #menu a:hover, #menu a.cur { background: rgba(255,255,255,.12); color: #fff; }
+    #menu a span { opacity: .5; width: 22px; text-align: right; flex: none; }
+    #exportMenu { min-width: 230px; padding: 6px; }
+    #exportMenu button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 12px; border: 0; border-radius: 9px; background: transparent; color: #fff; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+    #exportMenu button:hover, #exportMenu button:focus-visible { background: #3a3a3a; outline: none; }
+    #exportMenu kbd { font-family: var(--mono); font-size: 11px; color: #9aa0a6; border: 1px solid #444; border-radius: 5px; padding: 1px 6px; }
+    #exportMenu .sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 12px; line-height: 1.5; margin-top: 2px; color: #9aa0a6; }
+    #exportMenu button > span { line-height: 1.3; }
+    /* all-slides overview (scrollable grid of live thumbnails) */
+    #ov { position: fixed; inset: 0; z-index: 45; background: #1e1e1e; overflow: auto; padding: 28px 32px 40px; display: none; font-family: var(--sans); }
+    #ov.open { display: block; }
+    #ov .ovh { display: flex; justify-content: space-between; align-items: center; color: #fff; max-width: 1700px; margin: 0 auto 18px; font-size: 18px; font-weight: 500; }
+    #ov .ovh button { border: 0; background: rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+    #ov .ovh button:hover { background: rgba(255,255,255,.25); }
+    #ov .ovg { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px 18px; max-width: 1700px; margin: 0 auto; }
+    #ov .ovt { cursor: pointer; color: #cfd2d6; font-size: 13px; }
+    #ov .fr { position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: var(--paper); outline: 2px solid #3a3a3a; outline-offset: 3px; transition: outline-color .15s; }
+    #ov .ovt:hover .fr { outline-color: rgba(255,255,255,.5); }
+    #ov .ovt.cur .fr { outline-color: var(--g-yellow); }
+    #ov .cap { display: flex; gap: 8px; margin-top: 10px; line-height: 1.35; }
+    #ov .cap span { opacity: .5; flex: none; }
+    #ov .fr > .reveal { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; pointer-events: none; overflow: hidden; }
+    #ov .fr > .reveal > .slides { position: absolute; inset: 0; width: 1280px; height: 720px; margin: 0; transform: none; zoom: 1; pointer-events: none; }
+    #ov .fr > .reveal > .slides > section { display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; }
+    #ov .fr .fragment { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+    #ov .fr pre code.fragment { display: none !important; }
+    #ov .fr .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    html.print-pdf #progress, html.print-pdf #ctrl, html.print-pdf #menu, html.print-pdf #exportMenu { display: none !important; }
+    @media print { #progress, #ctrl, #menu, #exportMenu { display: none !important; } }
+    /* print view: show the full code block, not the stacked line-highlight step clones */
+    html.print-pdf .reveal pre code.fragment { display: none !important; }
+    html.print-pdf .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    /* Build challenge (rules + 15-min countdown) */
+    .ch-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 26px; }
+    .ch-grid .pc { display: flex; flex-direction: column; gap: 10px; min-height: 300px; }
+    .ch-grid .pc h3 { font: 700 26px/1.1 var(--sans); margin: 0 0 4px; }
+    .ch-grid ol { margin: 0; padding-left: 22px; } .ch-grid ol li { margin-bottom: 8px; }
+    .ch-crit { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px dashed #9aa0a6; padding-bottom: 8px; }
+    .ch-crit em { font: 400 16px/1.4 var(--mono); font-style: normal; white-space: nowrap; }
+    .ch-prize { font: 700 30px/1.15 var(--sans); }
+    .ch-time { position: absolute; right: 44px; top: 34px; font: 300 22px/1 var(--mono); padding: 12px 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-yellow); }
+    .ch-clock { font: 300 230px/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin: 18px 0 10px; }
+    .ch-bar { height: 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; overflow: hidden; box-sizing: border-box; }
+    .ch-bar i { display: block; height: 100%; width: 100%; background: var(--g-green); transition: width .4s linear, background .4s; }
+    .ch-ctrl { display: flex; gap: 12px; margin-top: 26px; align-items: center; }
+    .ch-ctrl .btn.ghost { background: #fff; color: var(--ink); }
+    .ch-ctrl span { font: 400 17px/1.3 var(--mono); margin-left: 12px; }
+    .ch-warn .ch-clock { color: var(--g-red); }
+    .ch-warn .ch-bar i { background: var(--g-red); }
+    .ch-done .ch-clock { animation: chblink 1s steps(2) infinite; }
+    @keyframes chblink { 50% { opacity: .25; } }
+
+    /* ---------- Gemini Decisions deck ---------- */
+    .pc.stat { display: flex; flex-direction: column; gap: 8px; min-height: 160px; }
+    .pc.stat b { font: 700 54px/1 var(--sans); letter-spacing: -.02em; }
+    .pc.stat b small { font: 300 24px/1 var(--mono); margin-left: 6px; }
+    .pc.stat span { font-size: 19px; line-height: 1.3; }
+    .pc.qt { min-height: 300px; }
+    .pc.qt code, .pc.stat code { font: 400 18px/1 var(--mono); display: inline-block; padding: 6px 12px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; margin-bottom: 16px; }
+    .pc code { font-family: var(--mono); font-size: .9em; }
+    .chips.mm .chip, .chips.eco .chip { font-size: 22px; padding: 9px 22px; }
+    .rl { border-collapse: collapse; width: 100%; font: 400 17px/1.3 var(--mono); }
+    .rl th, .rl td { border-bottom: 2px solid var(--ink); padding: 7px 8px; text-align: left; }
+    .rl th { font-family: var(--sans); font-weight: 700; }
+    .rl tr:last-child td { border-bottom: 0; }
+    .lat { display: grid; gap: 12px; margin-top: 14px; }
+    .lat div { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 12px; font: 400 16px/1 var(--mono); }
+    .lat i { display: block; height: 26px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-blue); box-sizing: border-box; }
+    /* ---------- Agents CLI deck ---------- */
+    .lc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 1088px; }
+    .lc .pc { padding: 14px 16px 16px; font-size: 16px; line-height: 1.3; position: relative; }
+    .lc .pc > b { position: absolute; right: 14px; top: 10px; font: 700 26px/1 var(--sans); opacity: .35; }
+    .lc .pc h3 { font-size: 21px; margin: 0 0 4px; }
+    .lc code, .cm code { font-size: .92em; }
+    .cm { display: grid; grid-template-columns: 170px 1fr; width: 1088px; border: 2.5px solid var(--ink); border-radius: 18px; overflow: hidden; font-size: 18px; }
+    .cm > * { padding: 11px 16px; border-top: 1.5px solid #dadce0; }
+    .cm > b:first-child, .cm > b:first-child + span { border-top: 0; }
+    .cm > b { background: var(--paper); font: 500 16px/1.3 var(--mono); }
+    .cm-metrics { grid-template-columns: 380px 1fr; }
+    .sk { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 1088px; }
+    .sk .pc { padding: 14px 16px; font-size: 16px; line-height: 1.3; }
+    .sk .pc b { display: block; font: 700 19px/1.2 var(--mono); margin-bottom: 6px; }
+    .cm-metrics > b { font: 500 17px/1.3 var(--sans); }
+
+    /* ===================== Dark theme (DevFest 2026 dark template) ===================== */
+    :root { --dk-bg: #202124; --dk-card: #2a2b2f; --dk-line: #5f6368; --dk-text: #e8eaed; --dk-sub: #bdc1c6;
+      --r-background-color: var(--dk-bg); --r-main-color: var(--dk-text); --r-heading-color: #fff; --r-link-color: var(--h-blue); --r-link-color-hover: #8ab4f8; }
+    body, .reveal .slides section, .reveal .slides section.bg-blue, .reveal .slides section.bg-green,
+    .reveal .slides section.bg-yellow, .reveal .slides section.bg-red { background: var(--dk-bg); color: var(--dk-text); }
+    .nc > svg.nc-s { display: none; }
+    .reveal h1, .reveal h2, .reveal h3 { color: #fff; }
+    .reveal h1 { font-weight: 500; } .reveal h2 { font-weight: 400; }
+    .sub { color: var(--dk-sub); } .muted { color: #9aa0a6 !important; }
+    .eyebrow { color: var(--h-blue); }
+    .pc { background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 16px; color: var(--dk-text); }
+    .pc.blue { background: var(--dk-card); border-color: var(--h-blue); }
+    .pc.green { background: var(--dk-card); border-color: var(--h-green); }
+    .pc.yellow { background: var(--dk-card); border-color: var(--h-yellow); }
+    .pc.red { background: var(--dk-card); border-color: var(--h-red); }
+    .pc h3, .pc b { color: #fff; }
+    .tag { background: var(--h-yellow); color: #202124; border: 0; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; }
+    .tag.yellow { background: var(--h-blue); } .tag.red { background: var(--h-red); }
+    .pc code, .cm code, p code, li code, .lc code { background: #3c4043; color: var(--dk-text); padding: 1px 6px; border-radius: 6px; font-size: .9em; }
+    .cmd { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre code { color: var(--dk-text); }
+    .ico { stroke: var(--dk-text); }
+    .reveal ul.bl li::before { border-color: var(--dk-bg); }
+    .numbox { background: transparent; border: 2px solid var(--dk-line); color: #fff; }
+    .bg-blue .numbox { color: var(--h-blue); border-color: var(--h-blue); } .bg-green .numbox { color: var(--h-green); border-color: var(--h-green); }
+    .bg-yellow .numbox { color: var(--h-yellow); border-color: var(--h-yellow); } .bg-red .numbox { color: var(--h-red); border-color: var(--h-red); }
+    .dots i { border-color: var(--dk-bg); }
+    .reveal .slides section[class*="bg-"] .numbox { top: 92px !important; }
+    .reveal .slides section[class*="bg-"] svg.ico.abs { top: 260px !important; }
+    .reveal .slides section[class*="bg-"] .dots { top: 548px !important; }
+    .cm { border: 2px solid var(--dk-line); } .cm > * { border-top-color: #3c4043; } .cm > b { background: var(--dk-card); color: var(--dk-sub); }
+    .lc .pc > b { color: #fff; }
+    .badge { display: none; }
+    .ty-who p { color: var(--dk-sub); }
+    /* logos: GDG top-left, Build with Gemini top-right (as in the dark template) */
+    .corner-logos { display: none; }
+    .top-gdg { position: absolute; left: 44px; top: 22px; z-index: 3; display: flex; align-items: center; gap: 10px; font: 500 17px/1.15 var(--sans); color: var(--dk-text); pointer-events: none; }
+    .top-gdg img { height: 24px; width: auto; }
+    .top-gdg small { display: block; font: 400 12px/1.2 var(--sans); color: #9aa0a6; }
+    .reveal .top-bwg { position: absolute; right: 40px; top: 14px; height: 54px; width: auto; margin: 0; z-index: 3; pointer-events: none; }
+    /* cover */
+    .s-cover-dk .chev-rows { position: absolute; left: 50px; top: 92px; right: 0; display: grid; gap: 26px; overflow: hidden; }
+    .s-cover-dk .cr { display: flex; align-items: center; gap: 22px; white-space: nowrap; }
+    .s-cover-dk .ch { width: 46px; height: 78px; color: #fff; flex: none; }
+    .s-cover-dk .ch.cb { color: #1fa3a3; } .s-cover-dk .ch.cg { color: #1fa3a3; } .s-cover-dk .ch.cp { color: #1fa3a3; }
+    .s-cover-dk .w { font: 400 84px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover-dk .w.b { color: var(--h-blue); } .s-cover-dk .w.g { color: var(--h-green); } .s-cover-dk .w.p { color: var(--h-red); }
+    .s-cover-dk .cv-sub-dk { position: absolute; right: 56px; top: 456px; text-align: right; font: 400 28px/1.4 var(--sans); color: var(--dk-text); }
+    .s-cover-dk .cv-sub-dk b { display: block; font: 500 46px/1.2 var(--sans); color: #fff; margin-bottom: 6px; }
+    .s-cover-dk .cv-who-dk { position: absolute; left: 56px; bottom: 44px; display: flex; align-items: center; gap: 14px; }
+    .reveal .s-cover-dk .cv-who-dk img { width: 62px; height: 62px; border-radius: 50%; object-fit: cover; margin: 0; border: 2px solid var(--dk-line); }
+    .s-cover-dk .cv-who-dk span { font: 400 15px/1.35 var(--mono); color: var(--dk-sub); } .s-cover-dk .cv-who-dk b { display: block; font: 500 21px/1.2 var(--sans); color: #fff; }
+    /* agenda */
+    .s-agenda-dk .agd-title { position: absolute; left: 56px; top: 110px; font: 300 96px/1 var(--sans); color: #fff; }
+    .s-agenda-dk .agd-arrow { position: absolute; left: 20px; top: 300px; width: 330px; height: 330px; }
+    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 420px; top: 104px; width: 560px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .s-agenda-dk .agd-qr { position: absolute; left: 1004px; top: 104px; width: 236px; box-sizing: border-box; padding: 16px 16px 14px; border-radius: 16px; background: #fff; text-align: center; }
+    .reveal .s-agenda-dk .agd-qr img { display: block; width: 204px; height: 204px; margin: 0; }
+    .s-agenda-dk .agd-qr b { display: block; margin-top: 10px; font: 500 17px/1.25 var(--sans); color: #202124; }
+    .s-agenda-dk .agd-list li { display: flex; align-items: center; gap: 22px; padding: 18px 24px; background: var(--dk-card); border-radius: 10px; border-left: 6px solid var(--c); }
+    .s-agenda-dk .agd-list b { font: 500 34px/1 var(--sans); color: var(--c); width: 48px; }
+    .s-agenda-dk .agd-list strong { display: block; font: 500 30px/1.15 var(--sans); color: var(--c); }
+    .s-agenda-dk .agd-list span { display: block; font: 400 17px/1.3 var(--sans); color: var(--dk-sub); margin-top: 4px; }
+    /* coding-agent strip: agents-cli + Skills → Antigravity · Claude Code · Gemini CLI · Codex */
+    .ac-strip { position: relative; display: flex; align-items: center; gap: 18px; height: 64px; }
+    .reveal .ac-strip img { height: 58px; width: auto; position: relative; z-index: 1; }
+    .ac-strip .ac-name { font: 500 30px/1 var(--mono); color: #202124; background: #e8eaed; padding: 6px 12px; border-radius: 8px; position: relative; z-index: 1; }
+    .ac-strip .ac-plus { font: 700 30px/1 var(--sans); color: var(--h-green); position: relative; z-index: 1; margin-right: 14px; }
+    .ac-strip .ac-arrow { flex: 1; align-self: stretch; position: relative; display: flex; align-items: center; justify-content: space-evenly; padding-right: 60px; }
+    .ac-strip .ac-arrow::before { content: ""; position: absolute; left: 0; right: 26px; top: 50%; height: 18px; transform: translateY(-50%); background: #4a4b4f; }
+    .ac-strip .ac-arrow::after { content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%); border: 26px solid transparent; border-left: 28px solid #4a4b4f; border-right: 0; }
+    .ac-strip .ac-arrow figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; z-index: 1; }
+    .ac-strip .ac-arrow figcaption { font: 400 12px/1 var(--mono); color: var(--dk-sub); }
+    /* Gemini Enterprise Agent Platform */
+    .gp { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 1088px; }
+    .gp .pc { --c: var(--h-blue); border-top: 6px solid var(--c); padding: 18px 20px; height: 370px; display: flex; flex-direction: column; gap: 14px; }
+    .gp .pc.green { --c: var(--h-green); } .gp .pc.yellow { --c: var(--h-yellow); } .gp .pc.red { --c: var(--h-red); }
+    .gp-h { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .gp-h i { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--c); color: #202124; display: grid; place-items: center; font: 500 20px/1 var(--sans); font-style: normal; }
+    .gp-h b { display: block; font: 500 28px/1.05 var(--sans); color: var(--c) !important; }
+    .gp-h span { display: block; font: 400 15px/1.3 var(--sans); color: var(--dk-sub); margin-top: 3px; }
+    .gp-it { font-size: 17px; line-height: 1.3; display: flex; align-items: flex-start; gap: 10px; min-height: 40px; }
+    .gp-it::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c); margin-top: 6px; }
+    .gp-key { font: 500 16px/1.2 var(--sans); text-align: center; padding: 10px 12px; border: 2px solid var(--c); border-radius: 999px; color: #fff; background: color-mix(in srgb, var(--c) 18%, transparent); }
+    .gp-pills { display: flex; gap: 12px; }
+    .gp-pills span { font: 500 17px/1 var(--sans); padding: 9px 20px; border-radius: 999px; color: #fff; }
+    /* architecture: agents-cli covers the whole stack */
+    .arch { position: relative; width: 1088px; height: 412px; }
+    .arch > svg.arch-l { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .arch-l path { fill: none; stroke: #9aa0a6; stroke-width: 2; }
+    .arch-l marker path { fill: #e8eaed; stroke: none; }
+    .arch .bx { position: absolute; box-sizing: border-box; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; padding: 8px 12px; }
+    .arch .bx > h4 { margin: 0 0 6px; font: 500 17px/1.2 var(--sans); color: #fff; }
+    .arch .it { display: flex; align-items: center; gap: 10px; box-sizing: border-box; border: 1.5px solid #80868b; border-radius: 8px; padding: 6px 10px; font: 400 14px/1.25 var(--sans); color: var(--dk-text); background: #202124; }
+    .arch .it + .it { margin-top: 6px; }
+    .arch .it i { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--h-blue)); }
+    .arch .row { display: flex; gap: 6px; } .arch .row .it { flex: 1; margin: 0; }
+    .arch .user { position: absolute; left: 30px; top: 70px; width: 80px; text-align: center; font: 500 17px/1 var(--sans); color: #fff; }
+    .arch .user svg { display: block; width: 64px; height: 64px; margin: 8px auto 0; }
+    .s-agenda-dk .c1 { --c: var(--h-blue); } .s-agenda-dk .c2 { --c: var(--h-green); } .s-agenda-dk .c3 { --c: var(--h-yellow); } .s-agenda-dk .c4 { --c: var(--h-red); }
+  </style>
+  <style>
+    /* ---------- Hermes deck extras ---------- */
+    .hx-arch { position: relative; width: 1088px; height: 440px; }
+    .hx-arch .pc { position: absolute; padding: 14px 18px; }
+    .hx-arch .pc h3 { font-size: 22px; margin-bottom: 6px; }
+    .hx-arch .pc p { font-size: 16px; line-height: 1.4; }
+    .hx-user { left: 0; top: 40px; width: 230px; }
+    .hx-inst { left: 306px; top: 10px; width: 500px; height: 190px; }
+    .hx-sup { font: 400 15px/1.3 var(--mono); color: var(--dk-sub); margin: 4px 0 12px; }
+    .hx-sup b { color: var(--h-blue); font-weight: 500; }
+    .hx-row { display: flex; gap: 12px; }
+    .hx-box { flex: 1; border: 1.5px solid #80868b; border-radius: 10px; padding: 14px 10px; text-align: center; font: 500 17px/1.35 var(--sans); background: #202124; }
+    .hx-box.hy { border-color: var(--h-yellow); border-style: dashed; font-weight: 400; font-size: 15px; }
+    .hx-gcs { left: 886px; top: 10px; width: 202px; height: 190px; }
+    .hx-vx { left: 306px; top: 228px; width: 240px; }
+    .hx-sm { left: 566px; top: 228px; width: 240px; }
+    .hx-ln { position: absolute; fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .hx-cap { position: absolute; left: 820px; top: 110px; width: 260px; font: 400 14px/1.3 var(--mono); color: var(--dk-sub); }
+    .reveal pre code.hljs { color: var(--dk-text); }
+    .grid > * { min-width: 0; }
+    .reveal ol.hx-steps { list-style: none; margin: 0; padding: 0; width: 470px; flex: none; display: grid; gap: 8px; }
+    .hx-steps li { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; font-size: 16px; line-height: 1.35; }
+    .hx-steps li code { padding: 0 4px; }
+    .hx-steps li > b { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--h-yellow); color: var(--h-yellow); display: grid; place-items: center; font: 500 16px/1 var(--sans); }
+    .hx-flags { flex: 1; display: grid; gap: 12px; }
+    .hx-flags .pc { padding: 12px 16px; font-size: 16px; }
+    .hx-flags .pc b { display: block; font: 500 15px/1.3 var(--mono); margin-bottom: 4px; }
+    /* ---------- Hermes cover: round speaker photo ---------- */
+    .s-cover-dk.hx-cover .chev-rows { top: 104px; right: auto; width: 730px; gap: 16px; -webkit-mask-image: linear-gradient(90deg, #000 78%, transparent); mask-image: linear-gradient(90deg, #000 78%, transparent); }
+    .s-cover-dk.hx-cover .ch { width: 38px; height: 66px; }
+    .s-cover-dk.hx-cover .cr { gap: 18px; }
+    .s-cover-dk.hx-cover .w { font-size: 72px; }
+    .hx-cover .hx-title { position: absolute; left: 56px; top: 400px; width: 700px; }
+    .hx-cover .hx-title b { display: block; font: 500 46px/1.15 var(--sans); color: #fff; letter-spacing: -.01em; }
+    .hx-cover .hx-title span { display: block; font: 400 22px/1.4 var(--sans); color: var(--dk-sub); margin-top: 12px; }
+    .hx-cover .hx-chips { position: absolute; left: 56px; top: 600px; display: flex; gap: 10px; }
+    .hx-cover .hx-chips i { font: 400 15px/1 var(--mono); font-style: normal; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .hx-cover .hx-orbit { position: absolute; left: 800px; top: 76px; width: 420px; height: 420px; border-radius: 50%; border: 2px dashed #5f6368; box-sizing: border-box; }
+    .hx-cover .hx-orbit i { position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--dk-bg); }
+    .hx-cover .hx-ring { position: absolute; left: 836px; top: 112px; width: 348px; height: 348px; border-radius: 50%; padding: 9px; box-sizing: border-box; background: conic-gradient(from -45deg, var(--h-blue) 0 25%, var(--h-red) 0 50%, var(--h-yellow) 0 75%, var(--h-green) 0 100%); box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+    .hx-cover .hx-ring > div { width: 100%; height: 100%; border-radius: 50%; padding: 7px; box-sizing: border-box; background: var(--dk-bg); }
+    .reveal .hx-cover .hx-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; margin: 0; }
+    .hx-cover .hx-who { position: absolute; left: 790px; top: 520px; width: 440px; text-align: center; }
+    .hx-cover .hx-who b { display: block; font: 500 30px/1.2 var(--sans); color: #fff; }
+    .hx-cover .hx-who span { display: inline-block; margin-top: 10px; font: 400 15px/1 var(--mono); color: var(--dk-sub); padding: 8px 16px; border: 1.5px solid var(--dk-line); border-radius: 999px; }
+  </style>
+  <style>
+    /* ---------- Harness² deck extras ---------- */
+    .flow { display: flex; align-items: stretch; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 22px 16px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .flow .node b { display: block; font-size: 23px; margin-bottom: 8px; }
+    .flow .node p { font-size: 15.5px; line-height: 1.35; color: var(--dk-sub); }
+    .flow .arr { width: 40px; flex: none; align-self: center; fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .flow.tight { gap: 8px; } .flow.tight .arr { width: 26px; } .flow.tight .node { padding: 18px 10px; } .flow.tight .node b { font-size: 21px; }
+    .h2-eq { display: flex; align-items: center; gap: 18px; font: 400 40px/1 var(--sans); color: #fff; }
+    .h2-eq span { padding: 14px 26px; border-radius: 999px; border: 2px solid var(--c); color: var(--c); }
+    .h2-eq i { font-style: normal; color: var(--dk-sub); white-space: nowrap; font-size: 28px; }
+    .h2-eq i.op { font-size: 40px; }
+    .h2-comp .pc { --c: var(--h-blue); border-top: 6px solid var(--c); padding: 16px 18px; }
+    .h2-comp .pc.green { --c: var(--h-green); } .h2-comp .pc.yellow { --c: var(--h-yellow); } .h2-comp .pc.red { --c: var(--h-red); }
+    .h2-comp h3 { font-size: 21px; color: var(--c) !important; margin-bottom: 10px; }
+    .h2-comp .chips { gap: 6px; }
+    .h2-comp .chip { background: #202124; border: 1.5px solid #80868b; color: var(--dk-text); font: 400 14px/1.3 var(--mono); }
+    .h2-stat { display: flex; flex-direction: column; gap: 6px; padding: 16px 20px; }
+    .h2-stat b { font: 500 46px/1 var(--sans); color: var(--c, #fff) !important; letter-spacing: -.02em; }
+    .h2-stat span { font-size: 16px; line-height: 1.35; color: var(--dk-sub); }
+    .reveal table.h2-tbl { border-collapse: collapse; width: 100%; font: 400 17px/1.25 var(--mono); color: var(--dk-text); margin: 0; }
+    .reveal .h2-tbl th, .reveal .h2-tbl td { border: 0; border-bottom: 1.5px solid #3c4043; padding: 9px 12px; text-align: right; }
+    .reveal .h2-tbl th:first-child, .reveal .h2-tbl td:first-child { text-align: left; font-family: var(--sans); }
+    .reveal .h2-tbl th { font: 500 15px/1.2 var(--mono); color: var(--dk-sub); }
+    .reveal .h2-tbl tr.hi td { color: #fff; background: rgba(92,219,109,.14); font-weight: 500; }
+    .reveal .h2-tbl tr.hi2 td { color: #fff; background: rgba(92,219,109,.28); font-weight: 700; }
+    .reveal .h2-tbl tr:last-child td { border-bottom: 0; }
+    .h2-bars { display: grid; gap: 12px; }
+    .h2-bars > div { display: grid; grid-template-columns: 230px 1fr 130px; align-items: center; gap: 12px; font-size: 16px; }
+    .h2-bars i { display: block; height: 20px; border-radius: 999px; background: var(--c, var(--h-red)); }
+    .h2-bars em { font: 400 15px/1 var(--mono); font-style: normal; text-align: right; white-space: nowrap; }
+    .reveal ul.h2-tree { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 15px/1.35 var(--mono); }
+    .h2-tree li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 12px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
+    .h2-tree li span { color: var(--dk-sub); font-family: var(--sans); font-size: 14px; }
+  </style>
+  <style>
+    /* ---------- Secure ADK agents deck extras ---------- */
+    .zt-prompt { font: 400 17px/1.45 var(--mono); color: #fff; background: #202124; border: 1.5px solid #3c4043; border-left: 6px solid var(--c, var(--h-red)); border-radius: 10px; padding: 14px 18px; }
+    .zt-prompt small { display: block; font: 500 13px/1 var(--mono); color: var(--c, var(--h-red)); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
+    .zt-v { display: inline-flex; align-items: center; gap: 8px; font: 500 16px/1 var(--mono); padding: 9px 14px; border-radius: 999px; border: 2px solid var(--c); color: var(--c); }
+    .zt-v.block { --c: var(--h-red); } .zt-v.allow { --c: var(--h-green); } .zt-v.warn { --c: var(--h-yellow); }
+    .zt-stack { display: grid; gap: 12px; }
+    .zt-stack .pc { padding: 12px 16px; font-size: 16px; line-height: 1.4; }
+    .zt-stack .pc b { color: #fff; }
+    .zt-stage { font: 500 13px/1 var(--mono); color: var(--dk-sub); letter-spacing: .05em; text-transform: uppercase; display: block; margin-bottom: 8px; }
+    .flow .node .zt-stage { margin-bottom: 10px; }
+    .zt-meter { position: relative; height: 54px; display: flex; gap: 4px; }
+    .zt-meter i { flex: 1; border-radius: 6px; background: rgba(92,219,109,.25); border: 1.5px solid var(--h-green); display: grid; place-items: center; font: 500 15px/1 var(--mono); color: #fff; font-style: normal; }
+    .zt-meter i.over { background: rgba(255,125,175,.25); border-color: var(--h-red); }
+    .zt-limit { position: absolute; top: -14px; bottom: -14px; width: 0; border-left: 3px dashed var(--h-yellow); }
+    .zt-limit span { position: absolute; top: -26px; left: -60px; width: 120px; text-align: center; font: 500 14px/1 var(--mono); color: var(--h-yellow); }
+    .zt-scale { display: flex; justify-content: space-between; font: 400 14px/1 var(--mono); color: var(--dk-sub); margin-top: 22px; }
+    .reveal table.zt-tbl { border-collapse: collapse; width: 100%; font-size: 16px; line-height: 1.3; color: var(--dk-text); margin: 0; table-layout: fixed; }
+    .reveal .zt-tbl th, .reveal .zt-tbl td { border: 0; border-bottom: 1.5px solid #3c4043; padding: 10px 12px; text-align: left; vertical-align: top; }
+    .reveal .zt-tbl th { font: 500 14px/1.2 var(--mono); color: var(--dk-sub); text-transform: uppercase; letter-spacing: .04em; }
+    .reveal .zt-tbl td:first-child { color: #fff; font-weight: 500; }
+    .reveal .zt-tbl td b { color: var(--h-green); font-weight: 500; }
+    .reveal .zt-tbl tr:last-child td { border-bottom: 0; }
+    .zt-map { position: relative; width: 1088px; height: 400px; }
+    .zt-wires { position: absolute; inset: 0; width: 1088px; height: 400px; overflow: visible; }
+    .zt-wires path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .zt-wires .w, .zt-wires .w-tip { stroke: var(--dk-text); }
+    .zt-wires .w-tel { stroke: var(--h-yellow); stroke-dasharray: 2 8; }
+    .zt-wires .w-tel-tip { stroke: var(--h-yellow); }
+    .zt-wires .w-pol, .zt-wires .w-pol-tip { stroke: var(--h-green); }
+    .zt-n { position: absolute; top: 0; width: 158px; height: 104px; padding: 14px 14px; display: flex; flex-direction: column; justify-content: center; }
+    .zt-n b { font-size: 19px; line-height: 1.2; color: #fff; }
+    .zt-n.build { border-style: dashed; }
+    .zt-b { position: absolute; top: 252px; width: 330px; height: 100px; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+    .zt-b b { font-size: 19px; color: #fff; }
+    .zt-b span { font-size: 15px; line-height: 1.35; color: var(--dk-sub); }
+    .zt-wl { position: absolute; font: 500 14px/1 var(--mono); color: var(--h-yellow); background: var(--dk-card); padding: 4px 8px; white-space: nowrap; }
+    .zt-legend { position: absolute; left: 0; bottom: 0; display: flex; gap: 28px; font: 400 15px/1 var(--mono); color: var(--dk-sub); }
+    .zt-legend span { display: flex; align-items: center; gap: 10px; }
+    .zt-legend i { width: 30px; height: 18px; border-radius: 5px; border: 2px solid var(--dk-text); }
+    .zt-legend i.build { border-style: dashed; }
+    .zt-cap { font: 400 13px/1.3 var(--mono); color: var(--dk-sub); margin-top: 10px; }
+    .zt-lim .pc { padding: 18px 20px; }
+    .zt-lim .pc h3 { font-size: 21px; margin-bottom: 10px; }
+    .zt-lim .pc p { font-size: 17px; line-height: 1.45; color: var(--dk-text); }
+    .zt-lim .pc p.muted { font-size: 15px; margin-top: 10px; }
+  </style>
+  <style>
+    /* ---------- Agent Evaluation deck extras ---------- */
+    .ev-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: 1088px; }
+    .ev-steps .pc { padding: 16px 18px; min-height: 150px; }
+    .ev-steps .pc .n { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--c, var(--h-blue)); color: var(--c, var(--h-blue)); font: 500 16px/1 var(--sans); margin-bottom: 10px; }
+    .ev-steps .pc.green { --c: var(--h-green); } .ev-steps .pc.yellow { --c: var(--h-yellow); } .ev-steps .pc.red { --c: var(--h-red); }
+    .ev-steps .pc b.t { display: block; font-size: 21px; color: #fff; margin-bottom: 6px; }
+    .ev-steps .pc p { font-size: 16px; line-height: 1.4; color: var(--dk-sub); }
+    .ev-concepts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; width: 1088px; }
+    .ev-concepts .pc { padding: 14px 18px; }
+    .ev-concepts .pc b { display: block; font-size: 20px; color: #fff; margin-bottom: 6px; }
+    .ev-concepts .pc p { font-size: 16px; line-height: 1.4; color: var(--dk-sub); }
+    .ev-case { padding: 16px 18px; }
+    .ev-case .row { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; padding: 10px 0; border-bottom: 1.5px solid #3c4043; font-size: 16px; line-height: 1.4; }
+    .ev-case .row:last-child { border-bottom: 0; }
+    .ev-case .row b { font: 500 15px/1.4 var(--mono); color: var(--h-yellow); }
+    .ev-case .row span { color: var(--dk-text); }
+    .ev-fly { position: relative; width: 520px; height: 400px; flex: none; }
+    .ev-fly svg.ring { position: absolute; inset: 0; width: 520px; height: 400px; overflow: visible; }
+    .ev-fly svg.ring path { fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .ev-fly .pc { position: absolute; width: 200px; height: 104px; padding: 12px 14px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+    .ev-fly .pc b { font-size: 21px; color: #fff; }
+    .ev-fly .pc span { font: 400 14px/1.3 var(--mono); color: var(--dk-sub); margin-top: 6px; }
+    .ev-fly .mid { position: absolute; left: 160px; top: 168px; width: 200px; text-align: center; font: 500 15px/1.3 var(--mono); color: var(--h-yellow); }
+    .ev-score { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; width: 1088px; }
+    .ev-score .pc { padding: 18px 20px; }
+    .ev-score h3 { font-size: 22px; margin-bottom: 10px; }
+    .ev-score p { font-size: 16px; line-height: 1.45; color: var(--dk-text); }
+    .ev-rub { display: grid; gap: 8px; margin-top: 14px; }
+    .ev-rub div { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 10px; align-items: center; font-size: 15px; line-height: 1.3; padding: 8px 12px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
+    .ev-rub em { font: 500 13px/1 var(--mono); font-style: normal; text-align: center; padding: 5px 0; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .ev-rub em.p { --c: var(--h-green); } .ev-rub em.f { --c: var(--h-red); }
+    .ev-big { font: 500 44px/1 var(--sans); color: var(--c, #fff); margin-top: 14px; }
+    .ev-big small { font: 400 15px/1.3 var(--mono); color: var(--dk-sub); margin-left: 10px; }
+    .ev-tax { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .ev-tax div { padding: 10px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .ev-tax div b { display: block; font: 500 15px/1.3 var(--mono); color: var(--h-yellow); margin-bottom: 4px; }
+    .ev-tax div span { display: block; font-size: 15px; line-height: 1.35; color: var(--dk-sub); }
+    .reveal table.zt-tbl td code { font-size: 13.5px; }
+    .ev-lg { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; background: #fff; flex: none; }
+    .reveal .slides .ev-lg img { width: 30px; height: 30px; object-fit: contain; }
+    .ev-lgs { display: flex; gap: 8px; margin-bottom: 14px; }
+    .ev-ico { display: block; width: 44px; height: 44px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; }
+    .flow .node .ev-ico { margin: 0 auto 10px; width: 40px; height: 40px; }
+    .reveal .slides .hx-cover .hx-chips i img { width: 18px; height: 18px; vertical-align: -4px; margin-right: 7px; }
+    .ev-chat { display: grid; gap: 10px; width: 620px; flex: none; }
+    .ev-msg { max-width: 78%; padding: 10px 14px; border-radius: 14px; font-size: 16px; line-height: 1.4; color: #fff; }
+    .ev-msg small { display: block; font: 500 12px/1 var(--mono); color: var(--dk-sub); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+    .ev-msg.u { justify-self: start; background: rgba(87,202,255,.12); border: 1.5px solid var(--h-blue); border-bottom-left-radius: 4px; }
+    .ev-msg.a { justify-self: end; background: rgba(92,219,109,.12); border: 1.5px solid var(--h-green); border-bottom-right-radius: 4px; }
+    .ev-call { justify-self: end; font: 400 14px/1 var(--mono); color: var(--h-yellow); border: 1.5px dashed var(--h-yellow); padding: 8px 12px; border-radius: 999px; }
+    .ev-plan { font: 400 15px/1.45 var(--mono); color: var(--dk-text); background: #202124; border: 1.5px dashed #80868b; border-radius: 10px; padding: 12px 14px; }
+    .ev-plan b { display: block; font: 500 12px/1 var(--mono); color: var(--dk-sub); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
+  </style>
+</head>
+<body>
+  <!-- line-icon sprite (DevFest template style: 3px ink outlines, pastel fills) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 200 220"><path d="M100 8 L188 112 H138 V212 H62 V112 H12 Z" fill="var(--p-yellow)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-scallop" viewBox="0 0 240 40"><path d="M4 36 A36 30 0 0 1 80 36 A36 30 0 0 1 160 36 A36 30 0 0 1 236 36" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><ellipse cx="32" cy="32" rx="12" ry="28"/><path d="M4 32h56M9 18h46M9 46h46"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 120 90"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M2 2l20 20M8.5 16.4a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.3-1.7M2 8.8a15 15 0 0 1 4.2-2.7M22 8.8A15 15 0 0 0 10.7 5M12 20h.01"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18M7 6h1v4M16.7 13.9l.7.7-2.8 2.8"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-next" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M19 9h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v3l-4-3h-3"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z"/></symbol>
+    <symbol id="i-empty" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M9 12h6"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4Z"/></symbol>
+    <symbol id="i-trace" viewBox="0 0 24 24"><circle cx="5" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="5" cy="19" r="2"/><path d="M9 5h12M9 12h8M9 19h10"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M3.5 17a9 9 0 1 1 17 0"/><path d="M12 14l4-5"/><circle cx="12" cy="14" r="1.5"/></symbol>
+  </svg>
+
+  <!-- Slide controls (shopio-style): progress · ‹ n/N › · overview · fullscreen · notes · export -->
+  <div id="progress"></div>
+  <div id="ctrl">
+    <button id="bPrev" title="Previous (←)">‹</button>
+    <span class="cnt" id="cnt" title="Slide list">1 / 28</span>
+    <button id="bNext" title="Next (→)">›</button>
+    <button id="bOv" title="All slides (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+    <button id="bFs" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    <button id="bNotes" title="Speaker notes (N / S)"><svg viewBox="0 0 24 24"><path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg></button>
+    <button id="bPdf" title="Export PDF (E = this slide, Shift+E = all)" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg></button>
+  </div>
+  <div id="menu"></div>
+  <div id="ov"><div class="ovh"><span>All slides</span><button id="ovX" title="Close (Esc)">✕</button></div><div class="ovg"></div></div>
+  <div id="exportMenu" role="menu">
+    <button role="menuitem" data-export="all"><span>All slides<span class="sub">PDF of every slide</span></span><kbd>Shift+E</kbd></button>
+    <button role="menuitem" data-export="slide"><span>This slide<span class="sub" id="exportCur">PDF of the current slide</span></span><kbd>E</kbd></button>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Agent Evaluation">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Evaluate</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Analyze</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><span class="w p">Optimize</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Agent Evaluation<br>on Agent Platform</b><span>Simulate users, grade every trace, fix what fails</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="">Agent Platform</i><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-red)"><img src="../images/shared/logos/gemini.svg" alt="">Gemini</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • วันนี้คุยเรื่อง Agent Evaluation บน Gemini Enterprise Agent Platform • คำถามหลักคือ agent ของเราดีพอจะขึ้น production หรือยัง และถ้ายังไม่ดี มันพังตรงไหน • เนื้อหามาจากเอกสาร Agent Evaluation ในหมวด Optimize ของ Agent Platform</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Why evaluate agents</strong><span>Non-deterministic, multi-turn, and calling tools</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Core concepts</strong><span>Eval case · inference · trace · metric</span></div></li>
+          <li class="c3"><b>03</b><div><strong>The workflow in code</strong><span>Generate scenarios, simulate users, evaluate</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Metrics and the flywheel</strong><span>Rubrics, custom metrics, loss clusters, optimize</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/agent-evaluation-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">4 ช่วง: (1) ทำไมการทดสอบ agent ถึงยากกว่าทดสอบโมเดล (2) ศัพท์หลักที่ต้องรู้ (3) เดินผ่าน workflow ด้วยโค้ด SDK (4) metric การให้คะแนน การหาสาเหตุที่พัง และการ optimize • สแกน QR เพื่อเปิดสไลด์นี้ในมือถือได้</aside>
+      </section>
+
+      <!-- Section 01 -->
+      <section class="bg-blue" data-title="01 · Why evaluate agents">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Why evaluate<br>agents</h1>
+            <p class="sub" style="margin-top:28px">"It worked when I tried it"<br>is not a test plan</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • ลอง chat กับ agent เองสองสามรอบแล้วบอกว่าใช้ได้ ไม่ใช่การทดสอบ • มาดูว่าทำไม agent ทดสอบยาก</aside>
+      </section>
+
+      <!-- Why hard -->
+      <section data-title="Agents are hard to test">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">More than one prompt, one answer</div>
+            <h2 style="margin-bottom:14px">Agents are hard to test</h2>
+            <p class="sub" style="font-size:20px; margin-bottom:24px">The final answer can look fine while the path to it was wrong.</p>
+            <div class="grid g3 zt-lim" style="width:1088px; gap:20px">
+              <div class="pc red fragment" style="height:220px"><svg class="ev-ico" style="--c:var(--h-red)"><use href="#i-chat"/></svg><h3>Multi-turn</h3><p>The user asks, the agent asks back, the goal shifts. A single prompt test misses this.</p></div>
+              <div class="pc yellow fragment" style="height:220px"><svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-tool"/></svg><h3>Tool calls</h3><p>Wrong tool, wrong argument, or a call at the wrong time. You only see it in the trace.</p></div>
+              <div class="pc blue fragment" style="height:220px"><svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-empty"/></svg><h3>No test data</h3><p>New agents have no history of real conversations to replay.</p></div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Agent Evaluation</b><span>Generates scenarios, simulates users, and grades every multi-turn trace.</span></div>
+        </div>
+        <aside class="notes">ทำไม agent ทดสอบยาก • (คลิก) คุยหลายรอบ: ผู้ใช้ถาม agent ถามกลับ เป้าหมายเปลี่ยนระหว่างทาง test แบบ prompt เดียวจับไม่ได้ • (คลิก) tool call: เลือก tool ผิด ใส่ argument ผิด หรือเรียกผิดจังหวะ ต้องดูใน trace ถึงจะเห็น • (คลิก) ไม่มีข้อมูลทดสอบ: agent ใหม่ยังไม่มีบทสนทนาจริงให้ replay • (คลิก) Agent Evaluation แก้ทั้งสามข้อ: สร้าง scenario ให้ จำลองผู้ใช้ แล้วให้คะแนนทุก trace อัตโนมัติ สร้างบน Gen AI evaluation service</aside>
+      </section>
+
+      <!-- Three modes -->
+      <section data-title="Three ways to evaluate">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">From laptop to production</div>
+            <h2 style="margin-bottom:26px">Three ways to evaluate</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" style="height:260px"><div class="ev-lgs"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span></div><h3>Rapid evaluation</h3><p style="font-size:17px">Try new agent logic or a model change against a local ADK agent.</p><div class="chips" style="margin-top:16px"><span class="chip">Development</span><span class="chip">frequent</span></div></div>
+              <div class="pc green fragment" style="height:260px"><div class="ev-lgs"><span class="ev-lg"><img src="../images/shared/logos/github.svg" alt="GitHub"></span><span class="ev-lg"><img src="../images/shared/logos/gcp-build.png" alt="Cloud Build"></span></div><h3>Test case evaluation</h3><p style="font-size:17px">Regression tests against a fixed dataset, so a fix today does not break yesterday's cases.</p><div class="chips" style="margin-top:16px"><span class="chip">CI/CD</span><span class="chip">scheduled</span></div></div>
+              <div class="pc yellow fragment" style="height:260px"><div class="ev-lgs"><span class="ev-lg"><img src="../images/shared/logos/gcp-monitoring.png" alt="Cloud Monitoring"></span><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Agent Platform"></span></div><h3>Online monitoring</h3><p style="font-size:17px">Score live traces from a deployed agent and watch quality trends across versions.</p><div class="chips" style="margin-top:16px"><span class="chip">Production</span><span class="chip">continuous</span></div></div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Targets</b><span>A local ADK agent, or a deployed agent via its endpoint or historical traces.</span></div>
+        </div>
+        <aside class="notes">ประเมินได้ 3 แบบตามช่วงของงาน • (คลิก) Rapid evaluation: ช่วงพัฒนา เปลี่ยน logic หรือเปลี่ยนโมเดลแล้วรันบ่อย ๆ กับ agent ADK ในเครื่อง • (คลิก) Test case evaluation: regression test กับ dataset ชุดเดิม รันตามรอบใน CI/CD • (คลิก) Online monitoring: ให้คะแนน trace จริงใน production ต่อเนื่อง ดูแนวโน้มคุณภาพข้าม version • (คลิก) เป้าหมายคือ agent ADK ในเครื่อง หรือ agent ที่ deploy แล้ว ผ่าน endpoint หรือ trace ย้อนหลัง</aside>
+      </section>
+
+      <!-- Section 02 -->
+      <section class="bg-green" data-title="02 · Core concepts">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Core<br>concepts</h1>
+            <p class="sub" style="margin-top:28px">Eval case, inference,<br>trace and metric</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • ศัพท์ 4-5 คำที่ใช้ตลอดทั้ง workflow</aside>
+      </section>
+
+      <!-- Eval case -->
+      <section data-title="Anatomy of an eval case">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">The unit of a test</div>
+            <h2 style="margin-bottom:22px">Anatomy of an eval case</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div class="pc ev-case" style="width:640px; flex:none">
+                <span class="tag">Eval case · refund request</span>
+                <div class="row fragment" style="margin-top:10px"><b>Starting prompt</b><span>"I want a refund for order 1042."</span></div>
+                <div class="row fragment"><b>Conversation plan</b><span>Hidden from the agent. If asked why, say the item arrived broken. Accept store credit only if a refund is refused.</span></div>
+                <div class="row fragment"><b>Context</b><span>Agent state at the start, e.g. the signed-in customer.</span></div>
+              </div>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc blue fragment">The <b>starting prompt</b> is the first user message</div>
+                <div class="pc green fragment">The <b>conversation plan</b> tells the simulated user its goal and how to react</div>
+                <div class="pc yellow fragment">Together they make one repeatable multi-turn test</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">eval case คือหน่วยของการทดสอบ 1 ชิ้น • (คลิก) starting prompt: ข้อความแรกของผู้ใช้ • (คลิก) conversation plan: คำสั่งลับที่ agent มองไม่เห็น บอกผู้ใช้จำลองว่าเป้าหมายคืออะไร และถ้า agent ถามกลับให้ตอบยังไง • (คลิก) context: สถานะของ agent ตอนเริ่ม • ด้านขวา: (คลิก) starting prompt คือข้อความแรก (คลิก) plan ทำให้ผู้ใช้จำลองตอบได้สมจริง (คลิก) รวมกันได้ test หลายรอบที่รันซ้ำได้ • ตัวอย่างนี้แต่งขึ้นเพื่ออธิบาย ไม่ใช่จากเอกสาร</aside>
+      </section>
+
+      <!-- Vocabulary -->
+      <section data-title="From case to score">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Vocabulary</div>
+            <h2 style="margin-bottom:24px">From eval case to score</h2>
+            <div class="flow tight" style="width:1088px; height:220px">
+              <div class="pc blue node fragment" data-fragment-index="1"><svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-doc"/></svg><b>Eval case</b><p>Prompt, plan and context</p></div>
+              <svg class="arr fragment" data-fragment-index="2" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc green node fragment" data-fragment-index="2"><svg class="ev-ico" style="--c:var(--h-green)"><use href="#i-play"/></svg><b>Inference</b><p>Run the agent. A simulated user replies</p></div>
+              <svg class="arr fragment" data-fragment-index="3" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="3"><svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-trace"/></svg><b>Trace</b><p>Immutable record: model inputs, replies, tool calls</p></div>
+              <svg class="arr fragment" data-fragment-index="4" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc red node fragment" data-fragment-index="4"><svg class="ev-ico" style="--c:var(--h-red)"><use href="#i-gauge"/></svg><b>Metric</b><p>A score per trace from a prebuilt or custom rater</p></div>
+            </div>
+            <div class="ev-concepts fragment" data-fragment-index="5" style="margin-top:24px">
+              <div class="pc"><b>Reference-based</b><p>Needs a known good answer to compare against, e.g. exact match.</p></div>
+              <div class="pc"><b>Reference-free</b><p>Judges the trace on its own, e.g. helpfulness or task success.</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลำดับคำศัพท์ • (คลิก 1) eval case คือสเปกของงาน • (คลิก 2) inference คือการรัน case นั้นกับ agent ถ้ามี conversation plan ระบบจะจำลองคำตอบของผู้ใช้ให้ • (คลิก 3) trace คือบันทึกพฤติกรรมของ agent ที่แก้ไม่ได้ มี input ของโมเดล คำตอบ และ tool call ครบ • (คลิก 4) metric ให้คะแนนแต่ละ trace จาก rater สำเร็จรูปหรือที่เราเขียนเอง • (คลิก 5) metric มี 2 ประเภท: reference-based ต้องมีคำตอบที่ถูกไว้เทียบ เช่น exact match / reference-free ตัดสินจาก trace อย่างเดียว เช่น helpfulness ซึ่งเหมาะกับ agent เพราะคำตอบที่ถูกมีได้หลายแบบ</aside>
+      </section>
+
+      <!-- Section 03 -->
+      <section class="bg-yellow" data-title="03 · The workflow in code">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">The workflow<br>in code</h1>
+            <p class="sub" style="margin-top:28px">Agent Platform SDK<br>client.evals</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • ทั้งหมดทำผ่าน Agent Platform SDK (แพ็กเกจ vertexai) ที่ client.evals</aside>
+      </section>
+
+      <!-- Six steps -->
+      <section data-title="Six steps">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Design · execute · score · refine</div>
+            <h2 style="margin-bottom:24px">Six steps, one loop</h2>
+            <div class="ev-steps">
+              <div class="pc blue fragment"><span class="n">1</span><b class="t">Define eval cases</b><p>Write them, or generate from instructions and tools</p></div>
+              <div class="pc blue fragment"><span class="n">2</span><b class="t">Run inference</b><p>Execute each case, with a simulated user</p></div>
+              <div class="pc green fragment"><span class="n">3</span><b class="t">Generate traces</b><p>Every model input, reply and tool call</p></div>
+              <div class="pc green fragment"><span class="n">4</span><b class="t">Compute metrics</b><p>Task success, tool use, safety and more</p></div>
+              <div class="pc yellow fragment"><span class="n">5</span><b class="t">Analyze</b><p>Rubric verdicts linked to each test case</p></div>
+              <div class="pc red fragment"><span class="n">6</span><b class="t">Optimize</b><p>Propose a change, rerun, verify it helped</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">workflow 6 ขั้นจากเอกสาร • (คลิก) 1 กำหนด eval case เขียนเองหรือให้ระบบสร้างจาก instruction และ tool ของ agent • (คลิก) 2 รัน inference มีผู้ใช้จำลองตอบโต้ • (คลิก) 3 ได้ trace ครบทุก step • (คลิก) 4 คำนวณ metric • (คลิก) 5 วิเคราะห์ผล มี rubric และคำตัดสินผูกกับแต่ละ case • (คลิก) 6 optimize: เสนอการแก้ รันใหม่ ยืนยันว่าดีขึ้นจริง • ย่อได้เป็น design, execute, score, refine</aside>
+      </section>
+
+      <!-- Setup + scenarios -->
+      <section data-title="Generate scenarios">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 1 · no test data needed</div>
+            <h2 style="margin-bottom:22px">Generate scenarios from the agent</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:680px; flex:none; font-size:15px"><code class="language-python" data-trim>
+# pip install google-cloud-aiplatform[adk,evaluation]
+from vertexai import Client, types
+
+client = Client(project="YOUR_PROJECT_ID",
+                location="YOUR_LOCATION")
+
+my_agent_info = types.evals.AgentInfo.load_from_agent(
+    agent=my_agent)
+
+eval_dataset = client.evals.generate_conversation_scenarios(
+    agent_info=my_agent_info,
+    config={
+        "count": 5,
+        "generation_instruction":
+            "Generate scenarios where a user asks for a refund.",
+    },
+)
+              </code></pre>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc blue fragment"><b>AgentInfo</b> reads the agent's instructions and tool definitions</div>
+                <div class="pc green fragment"><b>count</b> and <b>generation_instruction</b> steer what to test</div>
+                <div class="pc yellow fragment">Each scenario has a starting prompt and a conversation plan</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Console</b><span>Agents › Evaluation › New evaluation › Simulate sessions. The table is editable.</span></div>
+        </div>
+        <aside class="notes">ขั้นที่ 1 ไม่ต้องมีข้อมูลทดสอบ • ติดตั้งด้วย extra adk กับ evaluation แล้วสร้าง Client • (คลิก) AgentInfo.load_from_agent อ่าน instruction และนิยาม tool ของ agent ADK • (คลิก) count คือจำนวน scenario, generation_instruction คือโจทย์ เช่น ให้สร้างกรณีลูกค้าขอคืนเงิน • (คลิก) แต่ละ scenario ได้ starting prompt และ conversation plan • (คลิก) ทำผ่าน console ได้เหมือนกัน และแก้ตารางที่สร้างได้ • หมายเหตุ: import ตัด vertexai ออกเพื่อให้สั้น ในเอกสารมี import vertexai ด้วย</aside>
+      </section>
+
+      <!-- Run inference -->
+      <section data-title="Simulate the user">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Steps 2–3 · inference produces traces</div>
+            <h2 style="margin-bottom:22px">Simulate the user, record the trace</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; flex:none; font-size:15px"><code class="language-python" data-trim>
+traces = client.evals.run_inference(
+    agent=my_agent,
+    src=eval_dataset,
+    config={
+        "user_simulator_config": {
+            "max_turn": 5,
+        },
+    },
+)
+              </code></pre>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc blue fragment">A <b>simulated user</b> follows the conversation plan and answers the agent's questions</div>
+                <div class="pc green fragment"><b>max_turn</b> caps the conversation length. The console default is 5</div>
+                <div class="pc yellow fragment">Each run returns a <b>trace</b>. Deployed agents also show it in the Traces tab</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Requirement</b><span>Simulation needs an agent version registered in the Agent Registry.</span></div>
+        </div>
+        <aside class="notes">ขั้นที่ 2-3 • run_inference รัน agent กับทุก scenario • (คลิก) ผู้ใช้จำลองทำตาม conversation plan และตอบคำถามที่ agent ถามกลับ • (คลิก) max_turn จำกัดจำนวนรอบ ใน console ค่าเริ่มต้นคือ 5 ตั้ง model ของผู้ใช้จำลองได้ด้วย • (คลิก) ได้ trace ของแต่ละ case ถ้า agent deploy แล้วดูได้ในแท็บ Traces: บทสนทนาเต็ม input ของโมเดล tool call และคำตอบ • (คลิก) การจำลองต้องใช้ agent version ที่ลงทะเบียนใน Agent Registry คือ snapshot ของ instruction, tool และ model ที่แก้ไม่ได้</aside>
+      </section>
+
+      <!-- Simulated session illustration -->
+      <section data-title="A simulated session">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Illustration · one eval case, end to end</div>
+            <h2 style="margin-bottom:20px">What a simulated session looks like</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div class="ev-chat">
+                <div class="ev-msg u fragment" data-fragment-index="1"><small>Simulated user · starting prompt</small>I want a refund for order 1042.</div>
+                <div class="ev-msg a fragment" data-fragment-index="2"><small>Agent</small>Sure. What was wrong with the item?</div>
+                <div class="ev-msg u fragment" data-fragment-index="3"><small>Simulated user · follows the plan</small>It arrived broken.</div>
+                <div class="ev-call fragment" data-fragment-index="4">verify_order(order_id="1042") → ok</div>
+                <div class="ev-call fragment" data-fragment-index="4">issue_refund(order_id="1042")</div>
+                <div class="ev-msg a fragment" data-fragment-index="5"><small>Agent</small>Done. Your refund is on its way.</div>
+              </div>
+              <div style="flex:1; min-width:0; display:grid; gap:14px">
+                <div class="ev-plan fragment" data-fragment-index="1"><b>Conversation plan · hidden from the agent</b>Goal: get a refund. If asked why, say the item arrived broken.</div>
+                <div class="pc fragment" data-fragment-index="6" style="padding:14px 16px">
+                  <b style="display:block; font-size:18px; color:#fff; margin-bottom:10px">Trace scored</b>
+                  <div class="ev-rub" style="margin-top:0">
+                    <div>Task success: refund issued<em class="p">PASS</em></div>
+                    <div>Tool use: verified before refunding<em class="p">PASS</em></div>
+                    <div>Trajectory: no extra turns<em class="p">PASS</em></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพประกอบ (ไม่ใช่ screenshot) ของ eval case 1 ชิ้นตั้งแต่ต้นจนจบ • (คลิก 1) ผู้ใช้จำลองเริ่มด้วย starting prompt ส่วน conversation plan ด้านขวา agent มองไม่เห็น • (คลิก 2) agent ถามกลับว่าสินค้ามีปัญหาอะไร • (คลิก 3) ผู้ใช้จำลองตอบตาม plan • (คลิก 4) agent เรียก tool: ตรวจ order ก่อนแล้วค่อยคืนเงิน ทั้งหมดถูกบันทึกใน trace • (คลิก 5) agent ตอบปิดงาน • (คลิก 6) trace นี้ถูกให้คะแนนด้วย metric หลายรอบ: task success, tool use และ trajectory • ชื่อ tool และบทสนทนาแต่งขึ้นเพื่ออธิบาย</aside>
+      </section>
+
+      <!-- Evaluate -->
+      <section data-title="Evaluate the traces">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 4 · compute metrics</div>
+            <h2 style="margin-bottom:22px">Score every trace</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; flex:none; font-size:15px"><code class="language-python" data-trim>
+eval_result = client.evals.evaluate(
+    traces=traces,
+    metrics=[
+        "MULTI_TURN_TASK_SUCCESS",
+        "MULTI_TURN_TOOL_USE_QUALITY",
+    ],
+)
+
+eval_result.show()  # Colab or Jupyter
+              </code></pre>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc blue fragment">Pick metrics by name, or as <code>types.RubricMetric</code></div>
+                <div class="pc green fragment"><b>show()</b> renders mean score, pass rate and standard deviation</div>
+                <div class="pc yellow fragment">Expand any case to read each rubric verdict and its rationale</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Next</b><span>Which metrics exist, and how is each one scored?</span></div>
+        </div>
+        <aside class="notes">ขั้นที่ 4 ส่ง trace เข้า evaluate พร้อมรายชื่อ metric • (คลิก) ระบุ metric เป็นชื่อ string หรือใช้ types.RubricMetric ก็ได้ • (คลิก) show() ใน Colab หรือ Jupyter แสดงสรุป: คะแนนเฉลี่ย pass rate และส่วนเบี่ยงเบนมาตรฐาน • (คลิก) กดขยายแต่ละ case เพื่ออ่าน verdict ของแต่ละ rubric พร้อมเหตุผล • หมายเหตุ: หน้า overview ใช้ traces= ส่วนหน้า manage metrics ใช้ dataset= กับ types.RubricMetric ให้เช็กเวอร์ชัน SDK ก่อนใช้จริง • (คลิก) ต่อไปดูว่ามี metric อะไรบ้าง</aside>
+      </section>
+
+      <!-- Section 04 -->
+      <section class="bg-red" data-title="04 · Metrics and the flywheel">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Metrics and<br>the flywheel</h1>
+            <p class="sub" style="margin-top:28px">Score it, find why it failed,<br>fix it, score it again</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 4 • metric, การให้คะแนน, การหาสาเหตุ และการปิดลูปด้วย optimize</aside>
+      </section>
+
+      <!-- Predefined metrics -->
+      <section data-title="Predefined metrics">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Google-managed · types.RubricMetric</div>
+            <h2 style="margin-bottom:20px">Seven predefined agent metrics</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <tr><th style="width:21%">Metric</th><th style="width:33%">Accessor</th><th style="width:10%">Rubric</th><th>Checks</th></tr>
+              <tr><td>Final Response Quality</td><td><code>FINAL_RESPONSE_QUALITY</code></td><td>adaptive</td><td>The last answer, against criteria built from the config and prompt</td></tr>
+              <tr><td>Hallucination</td><td><code>HALLUCINATION</code></td><td>static</td><td>Each claim in the answer is backed by a tool result</td></tr>
+              <tr><td>Tool Use Quality</td><td><code>TOOL_USE_QUALITY</code></td><td>adaptive</td><td>Tool choice, parameters, sequence</td></tr>
+              <tr><td>Safety</td><td><code>SAFETY</code></td><td>static</td><td>PII, hate, harassment, dangerous or explicit content</td></tr>
+              <tr class="fragment"><td>Task Success</td><td><code>MULTI_TURN_TASK_SUCCESS</code></td><td>adaptive</td><td><b>Was</b> the user's goal reached?</td></tr>
+              <tr class="fragment"><td>Trajectory Quality</td><td><code>MULTI_TURN_TRAJECTORY_QUALITY</code></td><td>adaptive</td><td><b>How</b> was it reached: logical, efficient?</td></tr>
+              <tr class="fragment"><td>Multi-turn Tool Use</td><td><code>MULTI_TURN_TOOL_USE_QUALITY</code></td><td>adaptive</td><td>Right tool, right args, right time</td></tr>
+            </table>
+          </div>
+        </div>
+        <aside class="notes">metric สำเร็จรูป 7 ตัว • 4 ตัวบนเป็นแบบรอบเดียว: final response quality สร้างเกณฑ์จาก system instruction, tool และ prompt / hallucination แตกคำตอบเป็น claim ย่อยแล้วเช็กว่ามีผลจาก tool รองรับไหม / tool use quality ดูการเลือก tool พารามิเตอร์ และลำดับ / safety ได้ 1 คือปลอดภัย 0 คือไม่ปลอดภัย • (คลิก) multi-turn task success: ไปถึงเป้าหมายของผู้ใช้ไหม เป็น reference-free • (คลิก) trajectory quality: ไปถึงด้วยเส้นทางที่สมเหตุผลและไม่อ้อมไหม — task success ดูว่า "ถึงไหม" trajectory ดูว่า "ไปยังไง" • (คลิก) multi-turn tool use: tool ถูก argument ถูก จังหวะถูก</aside>
+      </section>
+
+      <!-- Predefined metrics in the SDK -->
+      <section data-title="Predefined metrics in the SDK">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">types.RubricMetric.METRIC_NAME</div>
+            <h2 style="margin-bottom:22px">Use predefined metrics in the SDK</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:15px"><code class="language-python" data-trim>
+from vertexai import evals, types
+
+# Run an evaluation with predefined metrics
+result = client.evals.evaluate(
+    dataset=eval_dataset,
+    metrics=[
+        types.RubricMetric.FINAL_RESPONSE_QUALITY,
+        types.RubricMetric.TOOL_USE_QUALITY,
+        types.RubricMetric.HALLUCINATION,
+        types.RubricMetric.SAFETY,
+    ],
+)
+
+# Visualize results in Colab
+result.show()
+              </code></pre>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc blue fragment">Google manages these metrics. Pass them by <b>accessor</b>, no setup</div>
+                <div class="pc green fragment">Mix <b>single-turn</b> and <b>multi-turn</b> metrics in one run</div>
+                <div class="pc yellow fragment">Inputs and outputs of each one: <b>Details for managed rubric-based metrics</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ใช้ metric สำเร็จรูปใน SDK: ส่ง types.RubricMetric ตามด้วยชื่อ metric ใส่ใน list • ตัวอย่างนี้จากหน้า Manage metrics ใช้ 4 ตัวแบบรอบเดียว • (คลิก) Google ดูแล metric เหล่านี้ ไม่ต้องตั้งค่าอะไร • (คลิก) ผสม metric แบบรอบเดียวและหลายรอบใน run เดียวได้ • (คลิก) ถ้าอยากรู้ว่าแต่ละตัวต้องการ input อะไรและคืนผลแบบไหน ดูหน้า Details for managed rubric-based metrics • หมายเหตุ: หน้านี้ใช้ dataset= ส่วนหน้า overview ใช้ traces= กับชื่อแบบ string ให้เช็กกับ SDK เวอร์ชันที่ใช้</aside>
+      </section>
+
+      <!-- Scoring -->
+      <section data-title="How scoring works">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">LLM-as-judge, with reasons</div>
+            <h2 style="margin-bottom:22px">Two kinds of rubric</h2>
+            <div class="ev-score">
+              <div class="pc green fragment">
+                <h3 style="color:var(--h-green)">Adaptive rubric</h3>
+                <p>The judge writes criteria for <b>this</b> case, then gives each a pass or fail with a rationale.</p>
+                <div class="ev-rub">
+                  <div>Verified the order before refunding<em class="p">PASS</em></div>
+                  <div>Asked for the reason only once<em class="f">FAIL</em></div>
+                  <div>Offered the refund policy correctly<em class="p">PASS</em></div>
+                </div>
+                <div class="ev-big" style="--c:var(--h-green)">67%<small>score = pass rate</small></div>
+              </div>
+              <div class="pc yellow fragment">
+                <h3 style="color:var(--h-yellow)">Static rubric</h3>
+                <p>The same fixed criteria for every case. The result is one score between 0 and 1.</p>
+                <div class="ev-rub">
+                  <div>Hallucination: claims backed by tools<em class="p">0.9</em></div>
+                  <div>Safety: no unsafe content<em class="p">1</em></div>
+                </div>
+                <div class="ev-big" style="--c:var(--h-yellow)">0 – 1<small>one score per trace</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">การให้คะแนนมี 2 แบบ • (คลิก) adaptive rubric: ตัวตัดสินสร้างเกณฑ์เฉพาะของ case นั้น แล้วให้ผ่านหรือไม่ผ่านทีละข้อพร้อมเหตุผล คะแนนรวมคือสัดส่วนข้อที่ผ่าน ตัวอย่างผ่าน 2 ใน 3 ได้ 67% • (คลิก) static rubric: เกณฑ์เดียวกันทุก case ได้คะแนนเดียวระหว่าง 0 ถึง 1 ใช้กับ hallucination และ safety • ตัวอย่าง rubric และตัวเลขบนสไลด์แต่งขึ้นเพื่ออธิบาย</aside>
+      </section>
+
+      <!-- Metric Registry -->
+      <section data-title="The Metric Registry">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Define once, reuse everywhere</div>
+            <h2 style="margin-bottom:14px">The Metric Registry</h2>
+            <p class="sub" style="font-size:20px; margin-bottom:24px">Save your evaluation criteria once. Apply them to offline runs and online monitors alike.</p>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" style="height:250px"><div class="ev-lgs"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span></div><h3>Predefined</h3><p style="font-size:17px">Managed by Google, including multi-turn raters for task success, tool use and trajectory.</p><div class="chips" style="margin-top:16px"><span class="chip">types.RubricMetric</span></div></div>
+              <div class="pc green fragment" style="height:250px"><div class="ev-lgs"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span></div><h3>Custom LLM</h3><p style="font-size:17px">A natural-language rubric. A judge LLM scores the response against your criteria and rating scale.</p><div class="chips" style="margin-top:16px"><span class="chip">types.LLMMetric</span></div></div>
+              <div class="pc yellow fragment" style="height:250px"><div class="ev-lgs"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span></div><h3>Custom code</h3><p style="font-size:17px">A Python function that checks behavior exactly, such as output format or a tool response.</p><div class="chips" style="margin-top:16px"><span class="chip">types.CodeExecutionMetric</span></div></div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Prerequisite</b><span>A Google Cloud project with the Agent Platform API enabled.</span></div>
+        </div>
+        <aside class="notes">Metric Registry คือที่เก็บการตั้งค่า metric ที่ใช้ซ้ำได้ ไม่ต้องตั้งเกณฑ์ใหม่ทุกครั้งที่รัน และใช้เกณฑ์เดียวกันทั้งการประเมิน offline และ online monitor • มี 3 ประเภท • (คลิก) Predefined: Google ดูแล มีตัววัดแบบหลายรอบ เช่น task success, tool use และ trajectory • (คลิก) Custom LLM: เขียน rubric เป็นภาษาธรรมดา ให้ judge LLM ให้คะแนนตามเกณฑ์และสเกลของเรา เช่น rubric ด้าน safety ของบริษัทเอง • (คลิก) Custom code: ฟังก์ชัน Python ตรวจแบบแม่นยำ เช่น format ของคำตอบ หรือผลจาก tool • (คลิก) ต้องเปิด Agent Platform API ในโปรเจกต์ก่อน • หมายเหตุ: ย่อหน้าแรกของเอกสารเขียนว่า "trajectory compliance" แต่ในตารางชื่อ Trajectory Quality</aside>
+      </section>
+
+      <!-- Custom LLM metric -->
+      <section data-title="Register a custom LLM metric">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Judge LLM · natural-language rubric</div>
+            <h2 style="margin-bottom:20px">Register a custom LLM metric</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:700px; flex:none; font-size:13px"><code class="language-python" data-trim>
+from vertexai import evals, types
+
+tone_check_metric = types.LLMMetric(
+        name="tone_check",
+        prompt_template="Analyze the tone of the response ...",
+        result_parsing_function="""
+          import json, re
+          def parse_results(responses):
+              response = json.loads(responses[0])
+              return {"score": response.get("score", 0.0),
+                      "explanation": response.get(
+                          "explanation", "default explanation")}
+          """
+)
+
+tone_check_metric_path = client.evals.create_evaluation_metric(
+    metric=tone_check_metric
+)
+              </code></pre>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc blue fragment"><b>prompt_template</b> is the rubric the judge LLM follows</div>
+                <div class="pc green fragment"><b>result_parsing_function</b> is Python, passed as a string. It turns the judge's JSON reply into a score and an explanation</div>
+                <div class="pc yellow fragment"><b>create_evaluation_metric</b> saves it to the registry and returns its path</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลงทะเบียน custom LLM metric • ตัวอย่างจากเอกสารชื่อ tone_check ตรวจน้ำเสียงของคำตอบ • (คลิก) prompt_template คือ rubric ที่ judge LLM ใช้ตัดสิน ในเอกสารย่อไว้เป็น "..." ของจริงควรเขียนเกณฑ์และสเกลคะแนนให้ชัด • (คลิก) result_parsing_function เป็นโค้ด Python ในรูป string รับคำตอบของ judge ที่เป็น JSON แล้วคืน score และ explanation • (คลิก) create_evaluation_metric บันทึกลง registry และคืน path ของ metric ไว้ใช้อ้างอิง • หมายเหตุ: บรรทัด explanation แบ่งเป็นสองบรรทัดเพื่อให้พอดีสไลด์ ความหมายเหมือนเดิม</aside>
+      </section>
+
+      <!-- Custom code metric -->
+      <section data-title="Register a custom code metric">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Deterministic checks in Python</div>
+            <h2 style="margin-bottom:22px">Register a custom code metric</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from vertexai import evals, types
+
+accuracy_metric_code = """
+def evaluate(instance: dict) -> float:
+    agent_data = instance.get('agent_eval_data', {})
+    turns = agent_data.get('turns', [])
+    for turn in turns:
+        ...
+"""
+
+accuracy_metric = types.CodeExecutionMetric(
+    name="multi_turn_accuracy",
+    custom_function=accuracy_metric_code
+)
+
+accuracy_metric_path = client.evals.create_evaluation_metric(
+    metric=accuracy_metric
+)
+              </code></pre>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc blue fragment"><b>evaluate(instance)</b> returns a float score</div>
+                <div class="pc green fragment">The conversation is in <b>instance['agent_eval_data']['turns']</b></div>
+                <div class="pc yellow fragment">Use it for checks with one right answer: output format, a tool's response</div>
+                <div class="pc red fragment">The docs leave the loop body as <b>...</b>. Write your own logic and return a number</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลงทะเบียน custom code metric • เขียนฟังก์ชัน evaluate เป็น string แล้วห่อด้วย CodeExecutionMetric • (คลิก) evaluate รับ instance เป็น dict และคืนคะแนนเป็น float • (คลิก) บทสนทนาอยู่ใน agent_eval_data ที่มี turns เป็น list ให้วนดูทีละ turn • (คลิก) เหมาะกับสิ่งที่ตรวจได้แน่นอน ไม่ต้องใช้ LLM ตัดสิน เช่น format ของคำตอบ หรือ tool ตอบค่าที่ถูกไหม ถูกกว่าและให้ผลเหมือนเดิมทุกครั้ง • (คลิก) ในเอกสารส่วนในลูปเป็น ... และไม่มี return ต้องเขียน logic เอง</aside>
+      </section>
+
+      <!-- Console -->
+      <section data-title="Manage metrics in the console">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Agent Platform › Agents › Evaluation</div>
+            <h2 style="margin-bottom:24px">Manage metrics in the console</h2>
+            <ol class="hx-steps" style="width:1088px">
+              <li class="fragment"><b>1</b><span>Open <strong>Agent Platform › Agents › Evaluation</strong> in the Google Cloud console</span></li>
+              <li class="fragment"><b>2</b><span>Click the <strong>Metrics</strong> tab to see the registry</span></li>
+              <li class="fragment"><b>3</b><span>Click <strong>New metric</strong>, then choose <strong>Custom LLM metric</strong> or <strong>Custom code metric</strong></span></li>
+              <li class="fragment"><b>4</b><span>For an LLM metric, the <strong>Sample</strong> buttons fill in instructions, criteria such as Clarity and Excitement, and rating scores</span></li>
+              <li class="fragment"><b>5</b><span>Click a metric name to view it read-only. <strong>More options</strong> lets you Duplicate or Delete it</span></li>
+            </ol>
+          </div>
+        </div>
+        <aside class="notes">ทำผ่าน console ได้เหมือนกัน • (คลิก) ไปที่ Agent Platform › Agents › Evaluation • (คลิก) กดแท็บ Metrics จะเห็น registry • (คลิก) กด New metric แล้วเลือกว่าจะสร้าง Custom LLM metric หรือ Custom code metric • (คลิก) ถ้าเป็น LLM metric มีปุ่ม Sample เติมตัวอย่างคำสั่ง เกณฑ์ เช่น Clarity และ Excitement และสเกลคะแนนให้ แล้วค่อยแก้ตามงานเรา • (คลิก) กดชื่อ metric เพื่อดูแบบอ่านอย่างเดียว ส่วนเมนู More options มี Duplicate และ Delete • ในเอกสารหน้านี้ SDK มีแค่การสร้าง การลบทำผ่าน console</aside>
+      </section>
+
+      <!-- Loss analysis -->
+      <section data-title="Automatic loss analysis">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 5 · from scores to causes</div>
+            <h2 style="margin-bottom:20px">Group failures into loss clusters</h2>
+            <pre style="width:1088px; font-size:15px"><code class="language-python" data-trim>
+loss_clusters = client.evals.generate_loss_clusters(eval_result=eval_result)
+            </code></pre>
+            <p class="sub fragment" data-fragment-index="1" style="font-size:18px; margin:18px 0 14px">Failures are sorted into a fixed taxonomy, for example for Task Success:</p>
+            <div class="ev-tax fragment" data-fragment-index="1" style="width:1088px">
+              <div><b>Hallucination</b><span>of an action, of missing info, of a tool</span></div>
+              <div><b>Instruction following</b><span>constraint violation, incomplete execution, over-punting</span></div>
+              <div><b>Tool calling</b><span>wrong tool, wrong or invalid parameters</span></div>
+              <div><b>Tool output handling</b><span>tool result read or used wrongly</span></div>
+              <div><b>Tool quality</b><span>tool failed or returned too little</span></div>
+              <div><b>…per metric</b><span>Tool Use Quality has its own taxonomy</span></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="2"><b>Console</b><span>Open an evaluation run. Failure Clusters show examples and rationales.</span></div>
+        </div>
+        <aside class="notes">ขั้นที่ 5 รู้คะแนนแล้วต้องรู้สาเหตุ • generate_loss_clusters จัดกลุ่ม case ที่พังด้วยกัน • (คลิก 1) จัดเข้าหมวดตาม taxonomy เช่น ของ task success (multi_turn_task_success_v1): hallucination, instruction following, tool calling, การใช้ผลของ tool และคุณภาพของ tool เอง • over-punting คือ agent โยนงานกลับให้ผู้ใช้ทั้งที่ทำเองได้ • tool use quality มี taxonomy ของตัวเองที่ละเอียดกว่า เช่น parameter ผิดชนิด ลืมเรียก tool ที่จำเป็น • (คลิก 2) ใน console เปิด run แล้วดูส่วน Failure Clusters มีตัวอย่าง scenario และเหตุผล</aside>
+      </section>
+
+      <!-- Optimize + flywheel -->
+      <section data-title="The Quality Flywheel">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 6 · close the loop</div>
+            <h2 style="margin-bottom:20px">The Quality Flywheel</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div class="ev-fly">
+                <svg class="ring" viewBox="0 0 520 400" aria-hidden="true">
+                  <path d="M362 52 C 440 52, 450 200, 424 288"/><path d="M414 278 L424 290 L432 276"/>
+                  <path d="M318 348 H208"/><path d="M218 340 L206 348 L218 356"/>
+                  <path d="M96 290 C 70 200, 80 52, 154 52"/><path d="M144 44 L156 52 L144 60"/>
+                </svg>
+                <div class="pc blue" style="left:160px; top:0"><b>Evaluate</b><span>evaluate()</span></div>
+                <div class="pc yellow" style="left:320px; top:296px"><b>Analyze</b><span>loss clusters</span></div>
+                <div class="pc green" style="left:0; top:296px"><b>Optimize</b><span>optimizer.optimize()</span></div>
+                <div class="mid">re-run and<br>compare</div>
+              </div>
+              <div style="flex:1; min-width:0">
+                <pre style="font-size:14px"><code class="language-python" data-trim>
+result = client.optimizer.optimize(
+    targets=["system_prompt"],
+    benchmark=eval_result,
+    tests=eval_dataset,
+)
+                </code></pre>
+                <div class="zt-stack fragment" style="margin-top:16px">
+                  <div class="pc green">Proposes a new <b>system prompt</b> from the failures</div>
+                  <div class="pc blue">Re-run the same eval cases to prove it improved</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ขั้นที่ 6 ปิดลูป เรียกว่า Quality Flywheel: evaluate → analyze → optimize แล้ววนกลับ • optimizer.optimize รับผลประเมินเป็น benchmark และ eval_dataset เป็นชุดทดสอบ target คือ system_prompt • (คลิก) ระบบเสนอ system prompt ใหม่จากจุดที่พัง แล้วต้องรัน case เดิมซ้ำเพื่อยืนยันว่าดีขึ้นจริง ไม่ใช่แค่เดา • ใช้ agent version ที่แก้ไม่ได้ช่วยให้เทียบก่อน-หลังได้ชัด</aside>
+      </section>
+
+      <!-- Triage -->
+      <section data-title="Triage a failing agent">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">A routine for every failed run</div>
+            <h2 style="margin-bottom:26px">Triage, top down</h2>
+            <div class="flow tight" style="width:1088px; height:180px">
+              <div class="pc blue node fragment" data-fragment-index="1"><b>Summary</b><p>Which metric dropped?</p></div>
+              <svg class="arr fragment" data-fragment-index="2" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc green node fragment" data-fragment-index="2"><b>Cases</b><p>Which verdicts failed, and why?</p></div>
+              <svg class="arr fragment" data-fragment-index="3" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="3"><b>Clusters</b><p>Is it one pattern or many?</p></div>
+              <svg class="arr fragment" data-fragment-index="4" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc red node fragment" data-fragment-index="4"><b>Traces</b><p>Prompt, tool config or data?</p></div>
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="5" style="width:1088px; gap:20px; margin-top:26px">
+              <div class="pc" style="padding:14px 18px; font-size:17px"><b style="color:var(--h-green)">Fix one cause</b> at a time, then re-run the same cases</div>
+              <div class="pc" style="padding:14px 18px; font-size:17px"><span style="display:flex; align-items:center; gap:14px"><span class="ev-lg"><img src="../images/shared/logos/gcp-monitoring.png" alt="Monitoring"></span><span><b style="color:var(--h-yellow)">Dashboard › Evaluation</b> shows trends across versions</span></span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ขั้นตอนไล่ปัญหาเมื่อผลตก • (คลิก 1) ดูภาพรวมก่อนว่า metric ไหนตก • (คลิก 2) ลงไปที่ case ที่ไม่ผ่าน อ่าน verdict และเหตุผล • (คลิก 3) ดู cluster ว่าเป็นปัญหาแบบเดียวหรือหลายแบบ • (คลิก 4) เปิด trace หาต้นเหตุ: prompt, การตั้งค่า tool หรือข้อมูล • (คลิก 5) แก้ทีละสาเหตุแล้วรันชุดเดิม ส่วน Dashboard › Evaluation ของ agent ที่ deploy แล้วแสดง Performance Trends ข้าม version และบอกจุดที่ยังไม่มีการทดสอบ</aside>
+      </section>
+
+      <!-- Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:24px">Evaluate agents like software</h2>
+            <div class="grid g4" style="width:1088px; gap:16px">
+              <div class="pc blue fragment" style="height:250px"><h3>Simulate</h3><p style="font-size:17px">Generate scenarios from the agent and let a simulated user talk to it.</p></div>
+              <div class="pc green fragment" style="height:250px"><h3>Score</h3><p style="font-size:17px">Rubric metrics grade the answer and the path, with reasons.</p></div>
+              <div class="pc yellow fragment" style="height:250px"><h3>Explain</h3><p style="font-size:17px">Loss clusters turn many failures into a few causes.</p></div>
+              <div class="pc red fragment" style="height:250px"><h3>Improve</h3><p style="font-size:17px">Optimize the prompt, re-run, and track quality in production.</p></div>
+            </div>
+            <p class="sub fragment" style="font-size:21px; margin-top:30px">Start with <code>generate_conversation_scenarios</code> on your ADK agent today</p>
+          </div>
+        </div>
+        <aside class="notes">สรุป 4 คำ • (คลิก) Simulate: สร้าง scenario จาก agent แล้วให้ผู้ใช้จำลองคุยด้วย • (คลิก) Score: metric แบบ rubric ให้คะแนนทั้งคำตอบและเส้นทาง พร้อมเหตุผล • (คลิก) Explain: loss cluster ย่อความล้มเหลวจำนวนมากเหลือไม่กี่สาเหตุ • (คลิก) Improve: optimize prompt รันซ้ำ แล้วติดตามคุณภาพใน production • (คลิก) เริ่มได้วันนี้ด้วย generate_conversation_scenarios กับ agent ADK ของตัวเอง</aside>
+      </section>
+
+      <!-- Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:26px">Read more and try it</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue"><h3>Agent Evaluation</h3><a class="mono" style="font-size:14px" href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/agent-evaluation" target="_blank">Overview</a> · <a class="mono" style="font-size:14px" href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/evaluate-agents" target="_blank">Evaluate agents</a></div>
+              <div class="pc blue"><h3>Simulation · Metrics</h3><a class="mono" style="font-size:14px" href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/evaluate-simulated" target="_blank">Simulated sessions</a> · <a class="mono" style="font-size:14px" href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/manage-metrics" target="_blank">Manage metrics</a></div>
+              <div class="pc green"><h3>Results</h3><a class="mono" style="font-size:14px" href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/optimize/evaluation/view-results" target="_blank">View and analyze results</a></div>
+              <div class="pc green"><h3>Notebook</h3><a class="mono" style="font-size:14px" href="https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/evaluation/multi_turn_agent_evaluation_with_user_simulation_metric_registration_auto_loss_analysis.ipynb" target="_blank">Multi-turn eval with user simulation</a></div>
+              <div class="pc yellow"><h3>Agent skills</h3><span class="mono" style="font-size:14px">google-agents-cli-eval · agent-platform-eval-flywheel</span></div>
+              <div class="pc red"><h3>ADK</h3><a class="mono" style="font-size:14px" href="https://adk.dev/" target="_blank">adk.dev</a></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลิงก์ทั้งหมด: หน้า overview และ evaluate agents, การจำลอง session, การจัดการ metric, การดูผล, Colab notebook ที่ทำครบทั้งการจำลองผู้ใช้ ลงทะเบียน metric และ loss analysis • skill สำหรับ coding agent: google-agents-cli-eval จาก google/agents-cli และ agent-platform-eval-flywheel จาก google/skills • ให้เวลาถ่ายรูป หรือสแกน QR ในหน้า agenda</aside>
+      </section>
+
+      <!-- Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <svg class="ico abs" style="left:930px; top:240px; width:200px; height:200px; stroke-width:4"><use href="#i-star"/></svg>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณครับ/ค่ะ • เปิดถาม-ตอบ • ชวนลองรัน notebook multi-turn evaluation กับ agent ของตัวเอง แล้วดู loss cluster ว่า agent พังตรงไหน</aside>
+      </section>
+
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <!-- DevFest template shapes: notched/scalloped cards + GDG lockup on every slide -->
+  <script>
+    (function () {
+      const NS = "http://www.w3.org/2000/svg", S = 3, o = S / 2;
+      function cardPath(W, H, el) {
+        const r = +(el.dataset.r || 34);
+        const [a, b] = (el.dataset.tl || "0x0").split("x").map(Number);
+        const [c, d] = (el.dataset.br || "0x0").split("x").map(Number);
+        const n = +(el.dataset.scallop || 0);
+        const L = o, T = o, R = W - o, B = H - o, P = [];
+        if (n) P.push(`M${L},${T}`); else if (a && b) P.push(`M${L + a + r},${T}`); else P.push(`M${L + r},${T}`);
+        P.push(`H${R - r}`, `A${r},${r} 0 0 1 ${R},${T + r}`);
+        if (c && d) P.push(`V${B - d - r}`, `A${r},${r} 0 0 1 ${R - r},${B - d}`, `H${R - c + r}`, `A${r},${r} 0 0 0 ${R - c},${B - d + r}`, `V${B - r}`, `A${r},${r} 0 0 1 ${R - c - r},${B}`);
+        else P.push(`V${B - r}`, `A${r},${r} 0 0 1 ${R - r},${B}`);
+        if (n) { // scalloped left edge (statement slides)
+          P.push(`H${L}`); const h = (B - T) / n;
+          for (let i = 0; i < n; i++) P.push(`A${h / 2},${h / 2} 0 0 1 ${L},${B - h * (i + 1)}`);
+        } else {
+          P.push(`H${L + r}`, `A${r},${r} 0 0 1 ${L},${B - r}`);
+          if (a && b) P.push(`V${T + b + r}`, `A${r},${r} 0 0 1 ${L + r},${T + b}`, `H${L + a - r}`, `A${r},${r} 0 0 0 ${L + a},${T + b - r}`, `V${T + r}`, `A${r},${r} 0 0 1 ${L + a + r},${T}`);
+          else P.push(`V${T + r}`, `A${r},${r} 0 0 1 ${L + r},${T}`);
+        }
+        return P.join(" ") + " Z";
+      }
+      document.querySelectorAll(".reveal .nc").forEach((el) => {
+        const cs = getComputedStyle(el), W = parseFloat(cs.width), H = parseFloat(cs.height);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "nc-s"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+        svg.setAttribute("width", W); svg.setAttribute("height", H);
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", cardPath(W, H, el));
+        p.setAttribute("fill", el.dataset.fill || "#fff"); p.setAttribute("stroke", "#1e1e1e"); p.setAttribute("stroke-width", S);
+        svg.appendChild(p); el.prepend(svg);
+      });
+      document.querySelectorAll(".reveal .slides section:not([data-corner=off])").forEach((s) => {
+        s.insertAdjacentHTML("beforeend", '<div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok</small></span></div><img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">');
+      });
+    })();
+  </script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      hashOneBasedIndex: true,  // URL #/7 = slide 7, same as the counter
+      fragmentInURL: false,     // keep the URL to just the slide number
+      controls: false,     // replaced by the shopio-style #ctrl bar
+      overview: false,     // replaced by the scrollable #ov grid
+      progress: false,
+      slideNumber: "c/t",
+      showSlideNumber: "print", // page numbers only in exported PDF
+      transition: "fade",
+      backgroundTransition: "fade",
+      width: 1280,
+      height: 720,
+      margin: 0,
+      center: false,       // slides are absolutely laid out 1280×720 canvases
+      plugins: [RevealHighlight, RevealNotes],
+      // export: one page per slide, all fragments shown
+      view: /[?&]print-pdf\b/.test(location.search) ? "print" : null,
+      pdfSeparateFragments: false,
+      pdfMaxPagesPerSlide: 1,
+    });
+  </script>
+
+  <!-- Export PDF: All slides / This slide -->
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const isPrint = params.has("print-pdf");
+
+      if (isPrint) {
+        // ---- print view (opened in a new tab by the menu) ----
+        const only = params.get("slide");
+        Reveal.on("pdf-ready", async () => {
+          if (only !== null) {
+            const target = Reveal.getSlides()[+only]?.closest(".pdf-page");
+            if (target) document.querySelectorAll(".reveal .slides .pdf-page").forEach((p) => { if (p !== target) p.remove(); });
+            document.title = `Agent Evaluation – slide ${+only + 1}`;
+          } else {
+            document.title = "Agent Evaluation – all slides";
+          }
+          if (!params.has("autoprint")) return;
+          await document.fonts.ready;
+          addEventListener("afterprint", () => window.close());
+          setTimeout(() => window.print(), 300);
+        });
+        return;
+      }
+
+      // ---- normal view: shopio-style control bar ----
+      const $ = (id) => document.getElementById(id);
+      const slides = Reveal.getSlides(), N = slides.length;
+      const idx = () => slides.indexOf(Reveal.getCurrentSlide());
+      const cnt = $("cnt"), prog = $("progress"), list = $("menu"), xMenu = $("exportMenu"), bPdf = $("bPdf"), bNotes = $("bNotes");
+      const titleOf = (s, i) => s.dataset.title || s.querySelector("h1,h2")?.textContent.trim() || `Slide ${i + 1}`;
+
+      // slide list (click the counter)
+      list.innerHTML = slides.map((s, i) => `<a href="#" data-i="${i}"><span>${i + 1}</span>${titleOf(s, i).replace(/</g, "&lt;")}</a>`).join("");
+      function sync() {
+        const i = idx();
+        cnt.textContent = `${i + 1} / ${N}`;
+        prog.style.width = (N > 1 ? (i / (N - 1)) * 100 : 100) + "%";
+        list.querySelectorAll("a").forEach((a, k) => a.classList.toggle("cur", k === i));
+      }
+      Reveal.on("ready", sync); Reveal.on("slidechanged", sync); sync();
+
+      const menus = [list, xMenu];
+      function openOnly(m) {
+        const willOpen = m && !m.classList.contains("open");
+        menus.forEach((x) => x.classList.remove("open"));
+        if (willOpen) { m.classList.add("open"); wake(); }
+        bPdf.setAttribute("aria-expanded", xMenu.classList.contains("open"));
+        if (list.classList.contains("open")) list.querySelector("a.cur")?.scrollIntoView({ block: "center" });
+        if (xMenu.classList.contains("open")) $("exportCur").textContent = `PDF of slide ${idx() + 1} / ${N}`;
+      }
+
+      $("bPrev").onclick = () => Reveal.prev();
+      $("bNext").onclick = () => Reveal.next();
+      cnt.onclick = (e) => { e.stopPropagation(); openOnly(list); };
+      list.onclick = (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); Reveal.slide(+a.dataset.i); openOnly(null); };
+      // all-slides overview: clone each slide into a scaled 1280×720 thumbnail
+      const ov = $("ov"), ovg = ov.querySelector(".ovg");
+      function buildOv() {
+        const cur = idx();
+        ovg.innerHTML = "";
+        slides.forEach((s, i) => {
+          const t = document.createElement("div");
+          t.className = "ovt" + (i === cur ? " cur" : ""); t.dataset.i = i;
+          const fr = document.createElement("div"); fr.className = "fr";
+          const rv = document.createElement("div"); rv.className = "reveal";
+          const sl = document.createElement("div"); sl.className = "slides";
+          const c = s.cloneNode(true);
+          c.removeAttribute("hidden"); c.removeAttribute("aria-hidden");
+          c.classList.remove("past", "future"); c.classList.add("present");
+          c.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+          c.querySelectorAll("video").forEach((v) => v.remove());
+          c.querySelectorAll("aside.notes").forEach((n) => n.remove());
+          sl.appendChild(c); rv.appendChild(sl); fr.appendChild(rv);
+          const cap = document.createElement("div"); cap.className = "cap";
+          cap.innerHTML = `<span>${i + 1}</span>`; cap.append(titleOf(s, i));
+          t.append(fr, cap); ovg.appendChild(t);
+          // reveal only vertically-centres slides near the current one; centre every clone here
+          c.style.top = "0px";
+          c.style.top = Math.max((720 - c.offsetHeight) / 2, 0) + "px";
+        });
+        sizeOv();
+      }
+      function sizeOv() { ovg.querySelectorAll(".fr").forEach((fr) => { fr.firstChild.style.transform = `scale(${fr.clientWidth / 1280})`; }); }
+      const ovOpen = () => ov.classList.contains("open");
+      function toggleOv(force) {
+        const open = force ?? !ovOpen();
+        openOnly(null);
+        ov.classList.toggle("open", open);
+        $("bOv").classList.toggle("on", open);
+        if (open) { buildOv(); ovg.querySelector(".cur")?.scrollIntoView({ block: "center" }); }
+        else ovg.innerHTML = "";
+      }
+      $("bOv").onclick = () => toggleOv();
+      $("ovX").onclick = () => toggleOv(false);
+      ovg.onclick = (e) => { const t = e.target.closest(".ovt"); if (!t) return; Reveal.slide(+t.dataset.i); toggleOv(false); };
+      addEventListener("resize", () => { if (ovOpen()) sizeOv(); });
+      const toggleFs = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+      $("bFs").onclick = toggleFs;
+
+      // speaker notes → reveal's presenter window (current + next slide, timer, notes)
+      const notes = () => Reveal.getPlugin("notes");
+      bNotes.onclick = () => notes()?.open();
+
+      // export
+      function exportPdf(mode) {
+        const q = new URLSearchParams({ "print-pdf": "", autoprint: "" });
+        if (mode === "slide") q.set("slide", idx());
+        const url = location.pathname + "?" + q.toString().replace(/=(&|$)/g, "$1");
+        if (!window.open(url, "_blank")) location.href = url; // popup blocked → same tab
+        openOnly(null);
+      }
+      bPdf.onclick = (e) => { e.stopPropagation(); openOnly(xMenu); };
+      xMenu.onclick = (e) => { const b = e.target.closest("[data-export]"); if (b) exportPdf(b.dataset.export); };
+
+      // close menus on outside click; click on the slide = next (like shopio)
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("#ctrl,#menu,#exportMenu,#ov")) return;
+        const wasOpen = menus.some((m) => m.classList.contains("open"));
+        openOnly(null);
+        if (wasOpen) return;
+        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,video,canvas,pre,.demo-wrap")) return;
+        if (String(getSelection?.() || "").length) return;
+        Reveal.next();
+      }, true); // capture: read isOverview() before reveal handles the overview click
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menus.some((m) => m.classList.contains("open"))) { openOnly(null); e.stopPropagation(); e.preventDefault(); return; }
+        if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+        if (e.key === "o" || e.key === "O") { e.preventDefault(); e.stopPropagation(); toggleOv(); return; }
+        if (ovOpen()) { // overview owns the keyboard: Esc closes, arrows/space scroll the grid instead of changing slides
+          e.stopPropagation();
+          if (e.key === "Escape") { e.preventDefault(); toggleOv(false); }
+          return;
+        }
+        if (e.key === "e" || e.key === "E") { e.preventDefault(); e.stopPropagation(); exportPdf(e.shiftKey ? "all" : "slide"); }
+        else if (e.key === "n" || e.key === "N") { e.preventDefault(); e.stopPropagation(); notes()?.open(); }
+      }, true);
+
+      // hide the bar when the mouse is idle
+      let idle;
+      const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => { if (!menus.some((m) => m.classList.contains("open"))) document.body.classList.add("idle"); }, 2500); };
+      addEventListener("mousemove", wake); wake();
+    })();
+  </script>
+</body>
+</html>

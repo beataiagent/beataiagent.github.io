@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5.6 Section 5 Q&amp;A: Security, identity, and governance · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="sec5-qa">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">5.6 Section 5 Q&amp;A: Security, identity, and governance</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.qa-wrap { display: flex; flex-direction: column; gap: 14px; margin: 16px 0; }
+.qa-top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px; padding: 12px 16px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+.qa-count { font-size: 0.85rem; font-weight: 700; color: var(--sl-color-white); }
+.qa-btn-row { display: flex; gap: 8px; }
+.qa-chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+.qa-chip:hover { border-color: #10b981; color: var(--sl-color-white); }
+.qa-list { display: flex; flex-direction: column; gap: 12px; }
+details.qa-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 12px; padding: 14px 18px; transition: all 0.2s ease; }
+details.qa-card[open] { border-color: #10b981; background: var(--sl-color-bg); }
+details.qa-card > summary.qa-summary {
+  list-style: none !important;
+  list-style-type: none !important;
+  cursor: pointer;
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+details.qa-card > summary.qa-summary::-webkit-details-marker,
+details.qa-card > summary.qa-summary::marker,
+details.qa-card > summary.qa-summary::before,
+details.qa-card > summary.qa-summary::after {
+  display: none !important;
+  content: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+.qa-question { font-size: 0.96rem; font-weight: 700; color: var(--sl-color-white); line-height: 1.45; }
+.qa-reveal-hint { font-size: 0.75rem; font-weight: 700; color: #10b981; white-space: nowrap; flex-shrink: 0; }
+.qa-body { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--sl-color-gray-5); display: flex; flex-direction: column; gap: 10px; font-size: 0.88rem; color: var(--sl-color-text); line-height: 1.55; }
+.qa-arch { padding: 10px 14px; border-radius: 8px; background: var(--sl-color-bg-nav); border: 1px dashed #3b82f6; font-family: monospace; font-size: 0.8rem; color: var(--sl-color-white); overflow-x: auto; white-space: pre; }
+.qa-body ul { margin: 0; padding-left: 18px; }
+</style>
+<div class="qa-wrap"><div class="qa-top-bar"><span class="qa-count">20 essential security &amp; governance questions (click any question to reveal the answer)</span><div class="qa-btn-row"><button id="qa-expand-all" class="qa-chip" type="button">Expand all</button><button id="qa-collapse-all" class="qa-chip" type="button">Collapse all</button></div></div><div id="qa-container" class="qa-list"></div></div>
+<script>
+(function() {
+  const CARDS = [
+    {
+      id: 1,
+      q: "1. How does Agent Gateway secure AI communication and tool usage?",
+      arch: "[Client / Agent] ──(A2A / MCP JSON-RPC)──► [Agent Gateway: IAP UAP + Model Armor] ──► [Target Agent / Tool]",
+      bullets: [
+        "Agent Gateway acts as a managed Layer 7/8 AI-aware proxy for agent-to-agent (A2A) and agent-to-tool (MCP) traffic.",
+        "It unpacks JSON-RPC payloads, enforces granular per-tool access via IAP Unified Access Policies (roles/iap.egressor), and screens both ingress prompts and egress responses inline using Model Armor."
+      ]
+    },
+    {
+      id: 2,
+      q: "2. What happens when Model Armor detects multiple threats simultaneously?",
+      arch: "Single SDP Hit Only ──► REDACT & ALLOW  |  SDP Hit + Prompt Injection Threat ──► HARD BLOCK!",
+      bullets: [
+        "When Sensitive Data Protection (SDP) is the only detector triggered in a prompt, Model Armor masks the PII inline (e.g., [REDACTED_CC]) and allows the sanitized prompt to proceed to the model.",
+        "When multiple detectors fire simultaneously (such as an SDP hit combined with a Prompt Injection, Jailbreak, or Malicious URI threat), Model Armor's verdict hierarchy enforces the strictest action and blocks the request immediately."
+      ]
+    },
+    {
+      id: 3,
+      q: "3. How do ADK agents troubleshoot customer issues without seeing raw PII?",
+      arch: "[Sanitized Prompt: '[REDACTED]'] ──► [ADK Tool Reads Out-of-Band OAuth user_id / Surrogate Token] ──► [Database]",
+      bullets: [
+        "Model Armor and Sensitive Data Protection (SDP) scrub raw PII and PCI digits before the prompt ever reaches the Gemini model.",
+        "To look up the customer's records safely, the ADK tool retrieves the user's verified identity out-of-band from the authenticated OAuth 2.0 session token (via Auth Manager) or passes an SDP cryptographic surrogate token that is detokenized only inside the backend."
+      ]
+    },
+    {
+      id: 4,
+      q: "4. How do you enable and view OpenTelemetry traces on Agent Gateway?",
+      arch: "gcloud beta network-services telemetry-policies import ──► Cloud Trace (roles/cloudtrace.user)",
+      bullets: [
+        "Network administrators (roles/compute.networkAdmin) enable distributed tracing on Agent Gateway by importing a telemetry policy YAML via gcloud beta network-services telemetry-policies import with a configured samplingRate.",
+        "Developers and SREs inspect the resulting end-to-end A2A and MCP latency spans in Cloud Trace using roles/cloudtrace.user."
+      ]
+    },
+    {
+      id: 5,
+      q: "5. How do you audit MCP tool invocations and security verdicts in Cloud Logging?",
+      arch: "resource.type='networkservices.googleapis.com/Gateway' + jsonPayload.agentGatewayInfo.mcpInfo.toolName",
+      bullets: [
+        "Agent Gateway writes structured audit logs under resource.type='networkservices.googleapis.com/Gateway'.",
+        "You can filter exact MCP methods and tool names via jsonPayload.agentGatewayInfo.mcpInfo (method and toolName) and inspect IAP or Model Armor allow/deny outcomes via jsonPayload.serviceExtensionsInfo.verdict."
+      ]
+    },
+    {
+      id: 6,
+      q: "6. How does Principal Access Boundary (PAB) prevent cross-folder privilege creep?",
+      arch: "[Agent Identity] ──► [PAB Eligibility Fence (Max Allowed Folders/Projects)] ──► Blocks Out-of-Scope IAM Grants!",
+      bullets: [
+        "A Principal Access Boundary (PAB) defines an identity-centric outer boundary specifying which Google Cloud folders or projects an agent principal is eligible to access (up to 500 resources per rule).",
+        "Even if a project owner accidentally grants a public Support Agent roles/owner on a sensitive R&D project, PAB strips that effective access because the R&D project is outside the agent's eligible boundary."
+      ]
+    },
+    {
+      id: 7,
+      q: "7. Explain how OAuth 2.0 Auth Manager prevents Confused Deputy attacks.",
+      arch: "[Customer A] ──► [Agent + Auth Manager (3-Legged OAuth 2.0)] ──► [Backend Verifies Customer A Token]",
+      bullets: [
+        "A Confused Deputy attack occurs when an agent uses its own privileged workload service account to call a backend API on behalf of a user, allowing Customer A to trick the agent into modifying Customer B's data.",
+        "Agent Identity Auth Manager enforces 3-legged OAuth 2.0 user delegation—attaching Customer A's personal, scoped OAuth bearer token to the tool request so the backend API enforces Customer A's exact permissions."
+      ]
+    },
+    {
+      id: 8,
+      q: "8. What is the unified policy evaluation order for agent security?",
+      arch: "1. Principal Access Boundary (PAB) ──► 2. IAM Deny Policy ──► 3. IAM Allow Policy",
+      bullets: [
+        "Google Cloud evaluates access across three sequential gates: Gate 1 checks Principal Access Boundary (PAB) eligibility; Gate 2 checks IAM Deny policies for explicit vetoes; Gate 3 checks IAM Allow roles for explicit grants.",
+        "If a request fails Gate 1 (PAB) or is vetoed at Gate 2 (IAM Deny), access is blocked immediately regardless of any IAM Allow roles at Gate 3."
+      ]
+    },
+    {
+      id: 9,
+      q: "9. Why does passing a Principal Access Boundary (PAB) check still result in Permission Denied?",
+      arch: "Effective Access = [Gate 1: PAB Eligibility Pass] AND [Gate 3: Explicit IAM Allow Role]",
+      bullets: [
+        "A Principal Access Boundary (PAB) is an eligibility ceiling, never a permission grant! Passing Gate 1 only proves the agent principal is allowed to operate within that project or folder boundary.",
+        "You must still grant the agent's Managed Agent Identity an explicit least-privilege IAM Allow role (such as roles/bigquery.dataViewer) at Gate 3."
+      ]
+    },
+    {
+      id: 10,
+      q: "10. How does Managed Agent Identity prevent stolen bearer token replay?",
+      arch: "[spiffe://agents.global.org-...] + [24h X.509 Rotation + mTLS / DPoP Proof-of-Possession]",
+      bullets: [
+        "Managed Agent Identity assigns each agent a cryptographic SPIFFE ID backed by short-lived X.509 certificates that rotate automatically every 24 hours (eliminating static JSON service account keys).",
+        "By enforcing mutual TLS (mTLS) or DPoP (Demonstrating Proof-of-Possession) token binding, the receiving service verifies that the caller possesses the private key matching the token—making stolen tokens unusable."
+      ]
+    },
+    {
+      id: 11,
+      q: "11. How do Principal Access Boundaries (PAB) and VPC Service Controls (VPC-SC) work together?",
+      arch: "PAB = Identity-Centric Fence (Who the Agent Can Touch) | VPC-SC = Resource-Centric Fence (Where Data Can Go)",
+      bullets: [
+        "Principal Access Boundaries (PAB) are identity-centric: they govern which projects and folders a specific agent principal is eligible to access.",
+        "VPC Service Controls (VPC-SC) are resource- and network-centric: they draw a security perimeter around sensitive services (like BigQuery and Cloud Storage) to prevent data exfiltration."
+      ]
+    },
+    {
+      id: 12,
+      q: "12. When should an agent use its own Managed Agent Identity versus OAuth 2.0 user delegation?",
+      arch: "Autonomous System Task ──► Managed Agent Identity (SPIFFE) | User-Specific Data ──► OAuth 2.0 Auth Manager",
+      bullets: [
+        "Use the agent's own Managed Agent Identity (SPIFFE workload identity) when the agent performs autonomous background jobs or reads shared system-level resources that do not belong to a specific end user.",
+        "Use OAuth 2.0 user delegation (via Auth Manager) whenever a tool reads or modifies a specific human user's personal records, calendar, tickets, or financial accounts."
+      ]
+    },
+    {
+      id: 13,
+      q: "13. How do ADK lifecycle callbacks block requests at zero LLM token cost?",
+      arch: "before_agent ──► types.Content | before_model ──► LlmResponse ($0 Token Cost!) | before_tool ──► dict",
+      bullets: [
+        "ADK lifecycle callbacks execute deterministically in Python before the model or tool is invoked.",
+        "When before_model_callback returns an LlmResponse object (instead of None), the ADK Runner short-circuits the turn and skips calling the Gemini API completely—resulting in zero LLM token cost and sub-millisecond enforcement."
+      ]
+    },
+    {
+      id: 14,
+      q: "14. What are the exact return types required to short-circuit before_agent, before_model, and before_tool callbacks?",
+      arch: "before_agent: Optional[types.Content] | before_model: Optional[LlmResponse] | before_tool: Optional[dict]",
+      bullets: [
+        "Returning None from any of the three callbacks allows normal execution to continue.",
+        "To short-circuit execution: return types.Content from before_agent_callback (skips the entire agent); return LlmResponse from before_model_callback (skips the Gemini call); or return a Python dict from before_tool_callback (skips the tool execution and passes that dict back as the tool result)."
+      ]
+    },
+    {
+      id: 15,
+      q: "15. How does before_tool_callback enforce Tool-Level Human-in-the-Loop (HITL) approval?",
+      arch: "[LLM Calls issue_refund(amount=500)] ──► [before_tool_callback Inspects args] ──► [Returns Pending Approval Dict]",
+      bullets: [
+        "Right before a sensitive tool executes, before_tool_callback inspects the tool name and argument values (e.g., args.get('amount') > 200) deterministically in Python.",
+        "If the threshold is exceeded and supervisor approval is not yet present in session.state, the callback skips executing the tool and returns {'status': 'pending_supervisor_approval'} until a human approves the action."
+      ]
+    },
+    {
+      id: 16,
+      q: "16. Why should hard security rules be enforced in ADK callbacks rather than system instructions?",
+      arch: "System Prompt Rules = Probabilistic (Bypassable) | ADK Python Callbacks = Deterministic (100% Enforced)",
+      bullets: [
+        "System instructions are probabilistic guidance interpreted by the LLM—meaning a sophisticated prompt injection or jailbreak can convince the model to ignore a prompt rule.",
+        "ADK callbacks (before_agent_callback, before_model_callback, before_tool_callback) execute in deterministic Python code outside the LLM's reasoning loop, guaranteeing 100% policy enforcement."
+      ]
+    },
+    {
+      id: 17,
+      q: "17. How do after_model_callback and after_tool_callback sanitize outputs before they reach the user or LLM?",
+      arch: "after_tool_callback (Sanitizes Tool Dict Before LLM) | after_model_callback (Sanitizes LlmResponse Before User)",
+      bullets: [
+        "after_tool_callback inspects the dictionary returned by a tool and can mask sensitive fields or strip internal metadata before that data enters the LLM context window.",
+        "after_model_callback inspects the generated LlmResponse and can redact forbidden terms or enforce compliance disclaimers before the message is sent to the user."
+      ]
+    },
+    {
+      id: 18,
+      q: "18. How does Agent Registry govern external endpoints outside your management boundary?",
+      arch: "Inside Boundary = Automatic Discovery | Outside Boundary = Declarative 'Service' + 'Binding' YAML",
+      bullets: [
+        "While Google Cloud agents inside your management boundary are discovered automatically, external partner or multi-cloud A2A and MCP endpoints must be registered declaratively.",
+        "Platform administrators define a Service resource (specifying the external endpointUri) and a Binding resource (mapping the caller's SPIFFE principal to roles/iap.egressor), supporting up to 5,000 services per gateway."
+      ]
+    },
+    {
+      id: 19,
+      q: "19. How do Application Design Center (ADC), App Hub, and Agent Registry divide fleet governance?",
+      arch: "ADC (Day-0 Blueprint Design) ──► App Hub (Day-1/2 App Ownership & Topology) ──► Agent Registry (AI A2A/MCP Catalog)",
+      bullets: [
+        "Application Design Center (ADC) handles Day-0 visual infrastructure blueprint design and Terraform generation. App Hub tracks Day-1/Day-2 application topology, service dependencies, and business owner metadata.",
+        "Agent Registry is the specialized catalog for AI agents (A2A Agent Cards) and MCP tool servers, preventing shadow agents and governing cross-team discovery."
+      ]
+    },
+    {
+      id: 20,
+      q: "20. How do Private Service Connect (PSC) egress attachments work inside a VPC Service Controls perimeter?",
+      arch: "[Agent Inside VPC-SC Perimeter] ──(PSC Interface / Egress Attachment)──► [Approved Private Partner Endpoint]",
+      bullets: [
+        "VPC Service Controls (VPC-SC) blocks unauthorized public internet egress to prevent data exfiltration from sensitive storage and BigQuery resources.",
+        "When an agent inside a VPC-SC perimeter must call a vetted partner endpoint or private MCP server in another VPC, a Private Service Connect (PSC) egress attachment provides a private, identity-verified network bridge without opening public internet access."
+      ]
+    }
+  ];
+
+  const container = document.getElementById("qa-container");
+
+  function render() {
+    container.innerHTML = CARDS.map(c => {
+      const bulletsHtml = c.bullets.map(b => "<li>" + b + "</li>").join("");
+      return (
+        "<details class='qa-card'>" +
+          "<summary class='qa-summary'>" +
+            "<span class='qa-question'>" + c.q + "</span>" +
+            "<span class='qa-reveal-hint'>Answer</span>" +
+          "</summary>" +
+          "<div class='qa-body'>" +
+            "<div class='qa-arch'>" + c.arch + "</div>" +
+            "<ul>" + bulletsHtml + "</ul>" +
+          "</div>" +
+        "</details>"
+      );
+    }).join("");
+  }
+
+  document.getElementById("qa-expand-all")?.addEventListener("click", () => {
+    container.querySelectorAll("details.qa-card").forEach(d => { d.open = true; });
+  });
+  document.getElementById("qa-collapse-all")?.addEventListener("click", () => {
+    container.querySelectorAll("details.qa-card").forEach(d => { d.open = false; });
+  });
+
+  render();
+})();
+</script></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec5-takeaway.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">5.5 Section 5 Master Takeaway</span></span></a><a href="mcq-sec5.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">Section 5 Practice Questions</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

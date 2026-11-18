@@ -1,0 +1,615 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Section 2 simulator: Practice questions · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="mcq-sec2">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">Section 2 simulator: Practice questions</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.sim-wrap { display: flex; flex-direction: column; gap: 16px; margin: 16px 0; }
+.sim-top-bar { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; padding: 14px 16px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+.sim-score-pill { font-size: 0.85rem; font-weight: 700; padding: 6px 12px; border-radius: 999px; background: rgba(16, 185, 129, 0.16); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
+.sim-filter-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.sim-chip { padding: 6px 12px; border-radius: 999px; border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.78rem; font-weight: 600; cursor: pointer; transition: all 0.15s ease; }
+.sim-chip.active { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; color: var(--sl-color-white); }
+.sim-card { background: var(--sl-color-bg-nav); border: 1.5px solid var(--sl-color-gray-5); border-radius: 14px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.sim-meta-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
+.sim-domain-tag { font-size: 0.75rem; font-weight: 700; color: #3b82f6; background: rgba(59, 130, 246, 0.14); padding: 4px 10px; border-radius: 999px; }
+.sim-type-tag { font-size: 0.75rem; font-weight: 700; color: #f59e0b; background: rgba(245, 158, 11, 0.15); padding: 4px 10px; border-radius: 999px; }
+.sim-stem { font-size: 0.98rem; line-height: 1.6; color: var(--sl-color-white); font-weight: 500; }
+.sim-options { display: flex; flex-direction: column; gap: 10px; }
+.sim-opt { text-align: left; padding: 12px 16px; border-radius: 10px; border: 1.5px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-white); font-size: 0.9rem; line-height: 1.45; cursor: pointer; transition: all 0.15s ease; }
+.sim-opt:hover { border-color: #3b82f6; }
+.sim-opt.selected-pending { border-color: #3b82f6; background: rgba(59, 130, 246, 0.15); }
+.sim-opt.correct { border-color: #10b981; background: rgba(16, 185, 129, 0.15); }
+.sim-opt.wrong { border-color: #ef4444; background: rgba(239, 68, 68, 0.15); }
+.sim-explain { display: none; padding: 16px; border-radius: 10px; background: var(--sl-color-bg); border-left: 4px solid #10b981; font-size: 0.88rem; line-height: 1.5; color: var(--sl-color-text); }
+.sim-explain.visible { display: flex; flex-direction: column; gap: 10px; }
+.sim-arch-strip { padding: 10px 14px; border-radius: 8px; background: var(--sl-color-bg-nav); border: 1px dashed #3b82f6; font-family: monospace; font-size: 0.82rem; color: var(--sl-color-white); overflow-x: auto; }
+.sim-hood { padding: 10px 12px; border-radius: 8px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); font-size: 0.82rem; color: var(--sl-color-white); }
+.sim-nav-row { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+.sim-grid { display: flex; flex-wrap: wrap; gap: 6px; padding: 14px; background: var(--sl-color-bg-nav); border: 1px solid var(--sl-color-gray-5); border-radius: 12px; }
+.sim-num-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--sl-color-gray-5); background: var(--sl-color-bg); color: var(--sl-color-text); font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.sim-num-btn.current { border-color: #3b82f6; border-width: 2px; color: var(--sl-color-white); }
+.sim-num-btn.ans-ok { background: rgba(16, 185, 129, 0.2); border-color: #10b981; color: #10b981; }
+.sim-num-btn.ans-bad { background: rgba(239, 68, 68, 0.2); border-color: #ef4444; color: #ef4444; }
+</style>
+<div class="sim-wrap"><div class="sim-top-bar"><div class="sim-filter-row"><button class="sim-chip active" data-filter="all" type="button">All questions</button><button class="sim-chip" data-filter="2.1" type="button">2.1 Rules, skills &amp; hooks (10)</button><button class="sim-chip" data-filter="2.2" type="button">2.2 agents-cli, MCP &amp; subagents (10)</button><button class="sim-chip" data-filter="2.3" type="button">2.3 CI/CD, GKE Sandbox &amp; tuning (10)</button><button class="sim-chip" data-filter="missed" type="button">Retry missed only</button></div><div style="display:flex; gap:8px; align-items:center;"><span id="sim-score" class="sim-score-pill">Score: 0 / 0</span><button id="sim-reset" class="sim-chip" type="button">Reset progress</button></div></div><div class="sim-card"><div class="sim-meta-row"><div style="display:flex; gap:8px; align-items:center;"><span id="q-domain" class="sim-domain-tag">2.1 Rules &amp; hooks</span><span id="q-type" class="sim-type-tag">Single choice</span></div><span id="q-counter" style="font-size:0.85rem; font-weight:700;">Question 1 of 30</span></div><div id="q-stem" class="sim-stem">Loading scenario…</div><div id="q-options" class="sim-options"></div><div id="q-explain" class="sim-explain"><div id="q-arch" class="sim-arch-strip"></div><div id="q-exp-text"></div><div id="q-hood" class="sim-hood"></div></div><div class="sim-nav-row"><button id="q-prev" class="sim-chip" type="button">← Previous question</button><button id="q-next" class="sim-chip active" type="button">Next question →</button></div></div><div><div style="font-size:0.8rem; font-weight:700; margin-bottom:6px; color:var(--sl-color-text);">Quick-jump question navigator:</div><div id="q-grid" class="sim-grid"></div></div></div>
+<script>
+(function() {
+  const QUESTIONS = [
+    {
+      id: 1, sec: "2.1", multi: false,
+      arch: "[.agents/rules/terraform.md] --> [YAML Frontmatter: trigger: glob, globs: ['**/*.tf']] --> [Loads Only on .tf Edits]",
+      stem: "Rosku Bank's platform team uses Google Antigravity in a monorepo containing Python ADK agents, React UI components, and Terraform modules. Currently, 4,000 tokens of Terraform security rules are placed in a root always-on file, bloating every Python and React prompt turn. How should you configure the Terraform rule in '.agents/rules/terraform.md' so it activates automatically ONLY when editing '.tf' files?",
+      opts: [
+        "A. Set YAML frontmatter trigger: manual and require developers to type @terraform on every file edit.",
+        "B. Set YAML frontmatter trigger: glob with globs: ['**/*.tf'] inside the .agents/rules/terraform.md file.",
+        "C. Set YAML frontmatter trigger: always_on and add *.py and *.tsx patterns to the .geminiignore file.",
+        "D. Move the Terraform security rules into ~/.gemini/config/hooks.json under the AfterAgent lifecycle key."
+      ],
+      ans: [1],
+      exp: "Correct (B): In Google Antigravity, modular rules inside .agents/rules/*.md support four YAML frontmatter triggers: always_on, glob, model_decision, and manual. Using trigger: glob with globs: ['**/*.tf'] loads the rule only when matching Terraform files are accessed.",
+      hood: "Architecture rule: File-pattern or directory-scoped rules in Antigravity = .agents/rules/*.md with trigger: glob."
+    },
+    {
+      id: 2, sec: "2.1", multi: false,
+      arch: "[Deprecated .agents/workflows/*.md] --(Run /migrate-workflows)--> [.agents/skills/<name>/SKILL.md (Progressive Disclosure)]",
+      stem: "An engineering team upgrading their Google Antigravity workspace has 20 legacy multi-step runbooks stored in the deprecated '.agents/workflows/' directory. They want to convert these runbooks to the current standard so that only short capability descriptions load at session startup while full instructions and helper scripts load on demand. What should they do?",
+      opts: [
+        "A. Concatenate all 20 workflow files into the repository root GEMINI.md file under an always_on trigger.",
+        "B. Rename the directory to .agents/rules/ and set trigger: always_on inside every markdown header block.",
+        "C. Run /migrate-workflows to convert them into .agents/skills/<name>/SKILL.md progressive skill packages.",
+        "D. Move the 20 workflow files into .gemini/settings.json under the synchronous PreToolUse hook matcher."
+      ],
+      ans: [2],
+      exp: "Correct (C): Legacy .agents/workflows/ are deprecated in Google Antigravity in favor of .agents/skills/<name>/SKILL.md (migrated via the built-in /migrate-workflows command), which uses progressive disclosure to load only summaries at startup.",
+      hood: "Architecture rule: Upgrade deprecated .agents/workflows/ to .agents/skills/<name>/SKILL.md via /migrate-workflows."
+    },
+    {
+      id: 3, sec: "2.1", multi: false,
+      arch: "[.agents/hooks.json] --> [PreToolUse / BeforeTool + Regex Matcher 'Bash'] --> [Exit Code 2 Deterministically Blocks Command]",
+      stem: "During a security audit at Rosku Bank, the CISO requires a deterministic control in Google Antigravity and Gemini CLI ensuring the coding agent can never execute 'git push --force' or 'rm -rf /' via shell tools—even if a prompt injection attempts to trick the model. Adding an English warning in GEMINI.md failed penetration testing. Which mechanism enforces this deterministically?",
+      opts: [
+        "A. Configure a PreToolUse / BeforeTool hook in hooks.json with a Bash regex matcher and non-zero exit.",
+        "B. Create a modular rule in .agents/rules/security.md configured with YAML frontmatter trigger: manual.",
+        "C. Define an AfterModel hook in plugin.json that appends a warning banner after the command completes.",
+        "D. Set trigger: model_decision in CLAUDE.md so the model evaluates whether force-pushing is safe first."
+      ],
+      ans: [0],
+      exp: "Correct (A): Both Google Antigravity (.agents/hooks.json and ~/.gemini/config/hooks.json) and Gemini CLI (.gemini/hooks/) support synchronous Lifecycle Hooks. A PreToolUse / BeforeTool hook matching Bash/shell tools inspects the command outside the LLM and blocks execution when exiting with a non-zero block code.",
+      hood: "Architecture rule: Never use prompt rules for hard security gates—use synchronous PreToolUse / BeforeTool hooks in hooks.json."
+    },
+    {
+      id: 4, sec: "2.1", multi: false,
+      arch: "[Agent Edits Python File] --> [PostToolUse Hook in hooks.json Matches 'Edit|Write'] --> [Auto-Runs 'ruff format' Deterministically]",
+      stem: "Your Python ADK team wants every file modified by Google Antigravity or Gemini CLI to be formatted with 'ruff format' and checked with 'mypy' immediately after the edit tool finishes, without relying on the LLM to remember to run the formatter or spending extra reasoning tokens. How should you configure the workspace?",
+      opts: [
+        "A. Add a PostToolUse hook in .agents/hooks.json with a regex matcher for file-edit tools to run ruff.",
+        "B. Add a capitalized instruction in the global ~/.gemini/GEMINI.md file asking the LLM to run ruff.",
+        "C. Configure a BeforeAgent hook in plugin.json that runs ruff format once before the user types a prompt.",
+        "D. Place the ruff binary path inside .geminiignore so the coding agent skips formatting during edits."
+      ],
+      ans: [0],
+      exp: "Correct (A): Configuring a synchronous PostToolUse hook in .agents/hooks.json (or .gemini/hooks/) with a regex tool matcher targeting file-write/edit tools automatically runs deterministic linters and formatters after every file edit at zero LLM token cost.",
+      hood: "Architecture rule: Deterministic post-edit formatting and linting = PostToolUse hook in hooks.json."
+    },
+    {
+      id: 5, sec: "2.1", multi: true,
+      arch: "[.agents/rules/*.md YAML Frontmatter Triggers] = [1. model_decision (Semantic Match)] + [2. manual (@-Mention Only)]",
+      stem: "You are organizing 15 modular rule files inside '.agents/rules/*.md' in Google Antigravity. Rule A ('oauth-delegation.md') should load automatically whenever the user's request semantically involves authentication, regardless of file type. Rule B ('quarterly-audit.md') is a heavy checklist that must NEVER load automatically and should only activate when a developer explicitly tags '@quarterly-audit' in chat. Which two YAML frontmatter trigger configurations should you use? (Choose two.)",
+      opts: [
+        "A. Configure Rule A with trigger: always_on and globs: ['**/*'] in its YAML frontmatter header block.",
+        "B. Configure Rule A with trigger: model_decision and a clear description in its YAML frontmatter block.",
+        "C. Configure Rule B with trigger: glob and globs: ['!*.md'] inside the .agents/hooks.json manifest file.",
+        "D. Configure Rule B with trigger: manual in its YAML frontmatter so it only loads via @-mention in chat.",
+        "E. Place both Rule A and Rule B inside .aiexclude so Antigravity indexes them only during CI/CD builds."
+      ],
+      ans: [1, 3],
+      exp: "Correct (B, D): In .agents/rules/*.md, trigger: model_decision reads the short description first and loads the full rule when semantically relevant to the task (B), while trigger: manual keeps the rule out of context until explicitly invoked via @-mention (D).",
+      hood: "Architecture rule: Know all 4 Antigravity rule triggers: always_on, glob, model_decision, and manual."
+    },
+    {
+      id: 6, sec: "2.1", multi: false,
+      arch: "[Shareable Enterprise Bundle: Skills + Rules + Subagents + hooks.json + MCP] --> [Package via plugin.json Manifest]",
+      stem: "Rosku Bank's central AI platform team has authored a standardized suite of 5 ADK skills, 4 '.agents/rules/' files, a 'hooks.json' security gate, 2 custom subagents, and a read-only BigQuery MCP server configuration. They need to package and version all five asset types into a single installable extension that 60 engineering teams can enable across their repositories without manual file copying. What should they create?",
+      opts: [
+        "A. A single 20,000-line global ~/.gemini/GEMINI.md file emailed to developers on a weekly schedule.",
+        "B. A plugin packaged with a plugin.json manifest bundling the skills, rules, hooks, agents, and MCP.",
+        "C. A workspace .aiexclude file listing the remote URLs of the five platform repositories in Cloud Storage.",
+        "D. An unauthenticated Cloud Run webhook triggered by a Stop hook inside the developer's local browser."
+      ],
+      ans: [1],
+      exp: "Correct (B): A plugin defined by a plugin.json manifest (and Gemini CLI extension manifests) packages skills, rules, subagent definitions, hooks.json guardrails, and MCP server configs into a versioned, distributable unit across teams.",
+      hood: "Architecture rule: Cross-repo packaging and distribution of skills + rules + hooks + subagents + MCP = plugin.json."
+    },
+    {
+      id: 7, sec: "2.1", multi: false,
+      arch: "[Preventing .env & Key Leaks into Prompt Context] --> [.geminiignore / .aiexclude + PreToolUse File-Read Deny Rules]",
+      stem: "During a security review, the CISO notices that developers keep local '.env.staging' files and test service-account JSON keys in their workspace. A developer added a sentence in GEMINI.md stating: 'Never read or display any .env or .json key files.' Why does this fail enterprise security requirements, and what should you configure instead?",
+      opts: [
+        "A. Root context files only apply to code generation; move the English rule into a SKILL.md header block.",
+        "B. Context rules are overridden by MCP servers; encrypt the root GEMINI.md file using a Cloud KMS key.",
+        "C. English rules only apply in interactive mode; pass the text rule via a headless CLI system prompt flag.",
+        "D. Prompt rules are probabilistic; block access via .geminiignore, .aiexclude, and PreToolUse deny hooks."
+      ],
+      ans: [3],
+      exp: "Correct (D): Natural-language prompt instructions cannot stop workspace grep or file-indexing tools from reading sensitive files into context. Deterministic ignore files (.geminiignore, .aiexclude) and PreToolUse deny hooks block access at the system boundary.",
+      hood: "Architecture rule: Never use natural-language prompt instructions as a security boundary for local secrets."
+    },
+    {
+      id: 8, sec: "2.1", multi: false,
+      arch: "[Hierarchical Precedence: Global (~/.gemini/) -> Repo Root -> Subdirectory] --> [More Specific Subdirectory Rule Wins]",
+      stem: "In a repository configured for Gemini CLI and Claude Code, the Repository Root context file states: 'All Python services must use asynchronous asyncpg database drivers.' However, the '/legacy-batch' subdirectory contains a scoped context file stating: 'This legacy package must use synchronous psycopg2 drivers only.' When editing '/legacy-batch/worker.py', which rule takes precedence?",
+      opts: [
+        "A. The Repository Root rule overrides the subdirectory file because root files are evaluated last.",
+        "B. The coding assistant halts execution and prompts the developer to delete one of the context files.",
+        "C. The closer '/legacy-batch' subdirectory rule overrides the broader Repository Root rule for that file.",
+        "D. The Global ~/.gemini/ user-level context file overrides both Repo Root and subdirectory rules."
+      ],
+      ans: [2],
+      exp: "Correct (C): In hierarchical context resolution across Antigravity, Gemini CLI, and Claude Code, closer/more-specific directory instructions override conflicting general rules from higher-level parent or root files.",
+      hood: "Architecture rule: Context hierarchy cascades from Global -> Repo Root -> Subdirectory, where specificity wins."
+    },
+    {
+      id: 9, sec: "2.1", multi: false,
+      arch: "[Bloated node_modules / dist / .venv / Build Logs] --> [Add to .geminiignore / .aiexclude to Speed Up Search]",
+      stem: "Developers using Google Antigravity and Gemini CLI on a full-stack repository complain that workspace codebase search is slow and returns hundreds of irrelevant matches from compiled bundles in 'dist/', third-party packages in '.venv/', and 200-MB local test log files. What should you configure to improve search accuracy and reduce token waste?",
+      opts: [
+        "A. Move the 'dist/', '.venv/', and log directories into an on-demand .agents/skills/ subfolder.",
+        "B. Add 'dist/', '.venv/', and local log directories to the workspace .geminiignore and .aiexclude files.",
+        "C. Set include_contents='none' inside the repository's root GEMINI.md and CLAUDE.md context files.",
+        "D. Configure an AfterAgent hook in hooks.json to summarize the contents of '.venv/' on every turn."
+      ],
+      ans: [1],
+      exp: "Correct (B): Excluding generated build artifacts ('dist/'), vendor dependencies ('node_modules/', '.venv/'), and large log dumps via .geminiignore and .aiexclude keeps codebase indexing fast and prevents noisy tokens from polluting search results.",
+      hood: "Architecture rule: Context ignore files protect both security (blocking secrets) and context quality (blocking build/vendor noise)."
+    },
+    {
+      id: 10, sec: "2.1", multi: true,
+      arch: "[Lifecycle Hook Events in hooks.json] = [1. PreToolUse / PostToolUse (Tool Boundary)] + [2. BeforeAgent / AfterModel / Stop (Loop Boundary)]",
+      stem: "Your platform security team is standardizing synchronous Lifecycle Hooks across Google Antigravity ('.agents/hooks.json' and '~/.gemini/config/hooks.json') and Gemini CLI ('.gemini/hooks/'). Which two statements accurately describe how these hooks operate? (Choose two.)",
+      opts: [
+        "A. PreToolUse / BeforeTool hooks can filter specific tools using a regex matcher and block execution.",
+        "B. Hooks in hooks.json are probabilistic natural-language hints that the LLM can choose to ignore.",
+        "C. PostToolUse, BeforeAgent, AfterModel, AfterAgent, and Stop hooks trigger deterministic scripts at each stage.",
+        "D. Adding a hooks.json file automatically disables all .agents/skills/ and MCP servers in the workspace.",
+        "E. Hooks can only be triggered manually by a developer typing /run-hook in an interactive chat window."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Lifecycle hooks in hooks.json use regex matchers on PreToolUse / BeforeTool to deterministically inspect and allow/block tool calls (A), and provide synchronous interception points across PostToolUse, BeforeAgent, AfterModel, AfterAgent, and Stop (C).",
+      hood: "Architecture rule: hooks.json provides deterministic code interception across PreToolUse, PostToolUse, BeforeAgent, AfterModel, AfterAgent, and Stop."
+    },
+    {
+      id: 11, sec: "2.2", multi: false,
+      arch: "[Coding Agent Hallucinating Outdated ADK & A2A Syntax] --> [Augment Workspace with 'agents-cli' (7 Built-In Skills)]",
+      stem: "Engineers using Google Antigravity, Gemini CLI, and Claude Code to build agents on the Gemini Enterprise Agent Platform notice that the coding assistants frequently generate outdated Vertex SDK imports instead of current ADK classes, RubricBasedCriterion configs, and Agent Runtime deployment commands. Which official Google Cloud tool and skill suite is specifically designed to augment coding agents for the end-to-end ADK lifecycle?",
+      opts: [
+        "A. Augment the coding workspace with agents-cli and its 7 built-in ADK build, eval, and deploy skills.",
+        "B. Install the legacy gcloud app deploy plugin and disable all progressive skills in the IDE workspace.",
+        "C. Export the entire Python site-packages directory into a single always_on rule in .agents/rules/.",
+        "D. Replace the coding assistant with a static Cloud Workflows YAML linter running in Cloud Scheduler."
+      ],
+      ans: [0],
+      exp: "Correct (A): Google Cloud's agents-cli (google.github.io/agents-cli) is the official CLI and skill suite that augments Antigravity, Gemini CLI, and Claude Code with 7 built-in skills to build, evaluate, deploy, scale, govern, and optimize ADK agents.",
+      hood: "Architecture rule: Augment coding assistants for ADK & Gemini Enterprise Agent Platform development using agents-cli (7 built-in skills)."
+    },
+    {
+      id: 12, sec: "2.2", multi: false,
+      arch: "[50-File Refactoring in 1 Chat Thread (Context Rot)] --> [Define Custom Subagents (define_subagent / .agents/) with Isolated Contexts]",
+      stem: "A developer uses Google Antigravity (agy) and Claude Code to migrate 50 microservices to OpenTelemetry. When they run the entire search, code edit, and pytest verification inside a single continuous conversation thread, accuracy degrades severely after the 20th file and breaks earlier imports. What is the root cause and proper fix?",
+      opts: [
+        "A. The .geminiignore file blocked OpenTelemetry imports; delete .geminiignore and rerun the single thread.",
+        "B. The model temperature drifted over time; restart the single thread and paste all 50 files into Turn 1.",
+        "C. The root context file was too short; copy all 50 microservice files into GEMINI.md and CLAUDE.md.",
+        "D. The thread hit context rot; decompose work via define_subagent / .agents/ with isolated context windows."
+      ],
+      ans: [3],
+      exp: "Correct (D): Accumulating massive search results, file reads, and test stack traces in one thread causes context rot. Defining custom subagents (via define_subagent or .agents/ manifests) gives each subagent a clean, isolated context window and returns only concise summaries.",
+      hood: "Architecture rule: Cure multi-file context rot by delegating to custom subagents (define_subagent / .agents/) with isolated contexts."
+    },
+    {
+      id: 13, sec: "2.2", multi: false,
+      arch: "[Coding Agent Hallucinating BigQuery/AlloyDB Columns] --> [Attach Read-Only Database MCP Server in mcp_config.json / settings.json]",
+      stem: "Engineers using Google Antigravity and Gemini CLI to write data-analysis tools for Rosku Bank's mortgage agent spend 30 minutes per task switching to the Cloud Console to look up BigQuery and AlloyDB column names, and the coding assistant frequently hallucinates non-existent column names when generating SQL. How should you streamline this workflow?",
+      opts: [
+        "A. Export the production BigQuery and AlloyDB tables to CSV files and commit them to the Git repository.",
+        "B. Connect a read-only database MCP server in IDE/CLI settings so the agent inspects schemas on demand.",
+        "C. Grant the local coding assistant roles/bigquery.admin on the production project via a static JSON key.",
+        "D. Paste the entire database DDL history into the developer's global home-directory context file."
+      ],
+      ans: [1],
+      exp: "Correct (B): Connecting Google Antigravity, Gemini CLI, or Claude Code to a read-only database MCP server (such as MCP Toolbox for Databases) allows the coding agent to query live table schemas and metadata directly within the development loop.",
+      hood: "Architecture rule: Live external schema/log/ticket awareness in the IDE or CLI = Model Context Protocol (MCP) server integration."
+    },
+    {
+      id: 14, sec: "2.2", multi: false,
+      arch: "[Complex Feature Request] --> [Spec -> Plan (Human Architect Review!) -> Incremental Act -> Automated Verify]",
+      stem: "Rosku Bank's lead architect notices that junior developers often give one-shot prompts (such as 'Add OAuth 2.0 delegation to all payment tools') to their coding assistant, resulting in 15 modified files that use the wrong authentication library and take hours to untangle. Which development workflow should the team enforce?",
+      opts: [
+        "A. Enforce a Spec -> Plan -> Act -> Verify loop where a human reviews the proposed Plan before coding.",
+        "B. Run three one-shot coding prompts concurrently across three terminals and merge the shortest diff.",
+        "C. Disable static type checkers and unit tests during coding sessions so one-shot edits complete faster.",
+        "D. Restrict AI coding assistants strictly to generating docstrings rather than implementation code."
+      ],
+      ans: [0],
+      exp: "Correct (A): Separating Specification and Planning (with a mandatory human review gate on the proposed implementation plan) from incremental Code Execution and Automated Verification catches architectural misunderstandings before code is modified.",
+      hood: "Architecture rule: Reviewing a 20-line implementation plan takes 1 minute; untangling 20 wrongly generated code files takes hours."
+    },
+    {
+      id: 15, sec: "2.2", multi: false,
+      arch: "[Explorer Subagent (define_subagent)] --> [Restricted to Read-Only Search Tools -> Absorbs Grep Noise & Returns 15-Line Map]",
+      stem: "When configuring a custom Explorer Subagent (using 'define_subagent' or '.agents/' subagent definitions) in Google Antigravity to scan a 200-file repository for deprecated ADK calls, how should you scope the Explorer Subagent's tools and context?",
+      opts: [
+        "A. Grant full file-write and bash execution tools and merge its entire raw search log into the root thread.",
+        "B. Restrict it to read-only search tools in an isolated context and return only a concise file summary.",
+        "C. Configure it to bypass .geminiignore and .aiexclude so it can inspect production .env credential files.",
+        "D. Bind it to a PostToolUse hook that automatically force-pushes unreviewed changes to the main branch."
+      ],
+      ans: [1],
+      exp: "Correct (B): An Explorer Subagent defined via define_subagent should be restricted to read-only discovery tools (read_file, grep, glob) inside an isolated context window, discarding raw search noise and returning only a distilled file map to the coordinator.",
+      hood: "Architecture rule: Scope Explorer subagents to read-only tools in an isolated context window."
+    },
+    {
+      id: 16, sec: "2.2", multi: true,
+      arch: "[Safe Developer MCP Governance] = [1. Read-Only / Dev Environment Credentials] + [2. Version-Controlled Config with Env Placeholders]",
+      stem: "Your platform team is rolling out pre-configured MCP servers (for BigQuery schema discovery, Cloud Logging inspection, and internal API documentation) to 100 developers using Google Antigravity, Gemini CLI, and Claude Code. Which two governance practices should you implement? (Choose two.)",
+      opts: [
+        "A. Scope developer MCP server credentials strictly to read-only metadata/logs or non-prod dev projects.",
+        "B. Bind the roles/owner production IAM role to every developer's local IDE MCP server configuration.",
+        "C. Hardcode plaintext production database passwords directly into the Git-committed mcp_config.json file.",
+        "D. Commit sanitized MCP configs with environment-variable placeholders to Git for team consistency.",
+        "E. Expose local developer stdio MCP servers directly to the public internet without authentication."
+      ],
+      ans: [0, 3],
+      exp: "Correct (A, D): Developer IDE/CLI MCP servers must follow least privilege—scoping access to read-only metadata or non-production environments (A)—and use environment-variable placeholders in version-controlled configs so secrets are never committed to Git (D).",
+      hood: "Architecture rule: Never give an interactive developer coding assistant write access to production databases via MCP."
+    },
+    {
+      id: 17, sec: "2.2", multi: false,
+      arch: "[Independent Monorepo Packages (/auth, /billing, /notifications)] --> [Parallel Implementer Subagents on Disjoint File Sets]",
+      stem: "Rosku Bank needs to upgrade docstrings and Pydantic v2 validators across three completely independent packages ('/auth', '/billing', and '/notifications') in a monorepo. None of the three packages import files from each other. How can a developer use custom Subagents in Google Antigravity or Claude Code to complete this migration fastest without file-write race conditions?",
+      opts: [
+        "A. Spawn three parallel Implementer Subagents and instruct all three to edit the entire monorepo at once.",
+        "B. Run a single monolithic conversation thread with max_output_tokens set to 64,000 across all folders.",
+        "C. Spawn three parallel Implementer Subagents, assigning each exclusive ownership of one disjoint folder.",
+        "D. Add '/auth', '/billing', and '/notifications' to .geminiignore and run the task in interactive mode."
+      ],
+      ans: [2],
+      exp: "Correct (C): When file sets are completely disjoint (no overlapping files), spawning parallel Implementer Subagents—each scoped to its own package directory and isolated context window—accelerates refactoring while avoiding file-write conflicts.",
+      hood: "Architecture rule: Parallel coding subagents must always be partitioned across non-overlapping (disjoint) file paths."
+    },
+    {
+      id: 18, sec: "2.2", multi: false,
+      arch: "[Implementer Subagent Writes Code] --> [Independent Verifier Subagent (Fresh Context with Spec + Diff + Pytest) Audits Changes]",
+      stem: "In a high-security payment module at Rosku Bank, when the same coding agent thread both writes a feature and reviews its own code in the same context window, it frequently exhibits confirmation bias and overlooks edge cases it forgot to implement. Which subagent pattern eliminates this confirmation bias?",
+      opts: [
+        "A. Spawn an independent Verifier Subagent with a fresh context containing only the spec, diff, and tests.",
+        "B. Prompt the same coding thread to grade its own output on a 1-to-5 scale right after writing the code.",
+        "C. Increase the model temperature to 1.2 during the self-review prompt inside the same chat thread.",
+        "D. Copy the generated implementation code into GEMINI.md so the thread treats its code as ground truth."
+      ],
+      ans: [0],
+      exp: "Correct (A): Evaluating a git diff inside a separate Verifier/Reviewer Subagent that did not generate the code (and only sees the written specification, security rubric, test runner, and diff) eliminates self-justification bias from prior reasoning turns.",
+      hood: "Architecture rule: Separate generation context from review/verification context to eliminate confirmation bias."
+    },
+    {
+      id: 19, sec: "2.2", multi: false,
+      arch: "[Terminal-Driven Antigravity Workflows] --> [Use Antigravity CLI ('agy') Binary for Workspace, Plugin & Headless Runs]",
+      stem: "A platform engineer wants to launch Google Antigravity workspaces, manage installed skill plugins, and trigger automated agentic refactoring tasks directly from terminal scripts and developer workstation setup hooks. Which command-line binary and documentation interface provides this capability for Google Antigravity?",
+      opts: [
+        "A. The Antigravity CLI (agy) binary documented at antigravity.google/docs/cli for terminal workflows.",
+        "B. The legacy gcloud compute ssh wrapper script configured with static service account JSON keys.",
+        "C. The Cloud SQL Auth Proxy binary invoked with the --auto-refactor-workspace command-line flag.",
+        "D. The bq command-line tool configured with a custom .aiexclude file in the root directory."
+      ],
+      ans: [0],
+      exp: "Correct (A): Google Antigravity provides the Antigravity CLI (agy) command-line interface (antigravity.google/docs/cli) to open workspaces, manage rules/skills/plugins, and invoke headless or scripted agent runs from the terminal.",
+      hood: "Architecture rule: Know the two key CLIs in Domain 2: Antigravity CLI (agy) and Google Cloud Agents CLI (agents-cli)."
+    },
+    {
+      id: 20, sec: "2.2", multi: true,
+      arch: "[What 'agents-cli' Provides] = [1. 7 Built-In ADK Lifecycle Skills] + [2. Works Across Antigravity, Gemini CLI & Claude Code]",
+      stem: "Your architecture guild is evaluating Google Cloud's 'agents-cli' (google.github.io/agents-cli) to standardize ADK agent development across 120 engineers. Which two statements accurately describe 'agents-cli'? (Choose two.)",
+      opts: [
+        "A. It ships with 7 built-in skills to build, evaluate, deploy, scale, govern, and optimize ADK agents.",
+        "B. It replaces the Python interpreter and requires rewriting all ADK agents in proprietary YAML code.",
+        "C. It augments Google Antigravity, Gemini CLI, and Claude Code with authoritative ADK patterns and tools.",
+        "D. It disables Cloud Trace telemetry and forces all deployed agents to use InMemorySessionService.",
+        "E. It can only be used for legacy Dialogflow ES bots and does not support the Gemini Enterprise platform."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Google Cloud's agents-cli ships with 7 built-in progressive-disclosure skills covering the full ADK lifecycle (A) and augments Antigravity, Gemini CLI, and Claude Code so they generate accurate, production-ready ADK and Gemini Enterprise code (C).",
+      hood: "Architecture rule: agents-cli = 7 built-in skills augmenting Antigravity, Gemini CLI, and Claude Code for the ADK lifecycle."
+    },
+    {
+      id: 21, sec: "2.3", multi: false,
+      arch: "[Untrusted AI/User Code Execution at Scale] --> [Agent Sandbox on GKE (gVisor / Kata microVMs + Pre-Warmed Sandbox Pools)]",
+      stem: "Rosku Bank's autonomous coding and quantitative research agents execute dynamically generated, untrusted Python and bash scripts inside tool environments. Security policy mandates strict per-execution kernel isolation so a kernel exploit in one run can never escape the container boundary, alongside sub-second sandbox startup without 15-second cold boots. Which runtime architecture should you select?",
+      opts: [
+        "A. Multi-concurrency Cloud Run instances with 80 requests sharing a single container kernel and /tmp.",
+        "B. Agent Sandbox on GKE using gVisor or Kata microVM kernel isolation with pre-warmed sandbox pools.",
+        "C. Standard Docker containers running in privileged mode (--privileged) on a single shared Compute VM.",
+        "D. No-code Agent Designer connected to a shared Google Drive folder with public edit permissions."
+      ],
+      ans: [1],
+      exp: "Correct (B): Agent Sandbox on GKE isolates untrusted code and shell execution inside dedicated gVisor (user-space kernel) or Kata microVM sandboxes, and maintains pre-warmed sandbox pod pools initialized from snapshots for sub-second startup.",
+      hood: "Architecture rule: Untrusted code/command execution requiring kernel isolation + fast startup = Agent Sandbox on GKE."
+    },
+    {
+      id: 22, sec: "2.3", multi: false,
+      arch: "[Slow 14s Deployed Multi-Agent Runtime] --> [Profile Cloud Trace Spans -> Tier to Flash + Prune History + Cache -> Verify via AgentEvaluator]",
+      stem: "A deployed 4-agent ADK underwriting workflow suffers from 14-second end-to-end latency and high token costs because all four sub-agents use Gemini Pro and receive 40 turns of full conversation history. Using 'agents-cli' and Google Cloud observability, which systematic workflow should you follow to optimize the execution runtime?",
+      opts: [
+        "A. Profile spans in Cloud Trace, tier helpers to Flash with include_contents='none', and verify via evals.",
+        "B. Delete the golden *.evalset.json test suite and lower max_output_tokens to 32 across all sub-agents.",
+        "C. Replace ParallelAgent with SequentialAgent and switch SessionService back to InMemorySessionService.",
+        "D. Disable OpenTelemetry tracing in production and increase the model temperature parameter to 1.5."
+      ],
+      ans: [0],
+      exp: "Correct (A): Optimizing an execution runtime follows a closed loop: profile call_llm and execute_tool spans in Cloud Trace, apply per-agent model tiering (Gemini Flash for routers/formatters), prune unneeded chat history (include_contents='none') and enable Context Caching, then run AgentEvaluator to prove zero quality regression.",
+      hood: "Architecture rule: Profile in Cloud Trace -> Tier (Flash/Pro) + Prune (include_contents='none') + Cache -> Verify with AgentEvaluator."
+    },
+    {
+      id: 23, sec: "2.3", multi: false,
+      arch: "[Cloud Build PR Pipeline Hangs at Interactive Prompt] --> [Run 'agy' / 'gemini' in Non-Interactive Headless Mode + JSON Output]",
+      stem: "Rosku Bank's DevOps team adds a Cloud Build step that runs Gemini CLI or Antigravity CLI (agy) on every Pull Request to check for ADK security anti-patterns. However, every triggered Cloud Build job hangs for 60 minutes until it times out waiting at 'Allow tool to read file? [y/N]'. How should you fix the CI/CD step?",
+      opts: [
+        "A. Increase the Cloud Build step timeout to 24 hours and allocate a higher vCPU machine configuration.",
+        "B. Grant the Cloud Build service account roles/owner so interactive confirmation prompts are bypassed.",
+        "C. Run the CLI in non-interactive headless mode with a read-only tool allowlist and structured JSON output.",
+        "D. Replace the Cloud Build step with an interactive SSH session managed by the on-call release engineer."
+      ],
+      ans: [2],
+      exp: "Correct (C): Automated CI/CD runners have no interactive terminal user. Running agy or gemini in non-interactive headless mode with a pre-approved allowlist of read-only tools and structured JSON output lets the agent finish and exit cleanly.",
+      hood: "Architecture rule: CI/CD coding agent steps must ALWAYS use non-interactive headless mode + read-only allowlists + JSON output."
+    },
+    {
+      id: 24, sec: "2.3", multi: false,
+      arch: "[AI Synthesizes Tests Solely from Buggy Code (TRAP!)] --> [Anchor Synthesis on Written Spec + Mandatory Human Review]",
+      stem: "An engineer uses Google Antigravity and 'agents-cli' to automatically generate pytest unit tests and golden '*.evalset.json' trajectories for a newly written Loan-Eligibility ADK agent, and commits them without review. A week later, auditors discover an off-by-one bug in the agent's DTI math—and the AI-generated test suite had codified that exact buggy output as the 'expected' golden result! How do you prevent this?",
+      opts: [
+        "A. Run the AI test generator three times on the implementation code and keep the longest test file.",
+        "B. Synthesize tests and evalsets from the written specification and require human review of assertions.",
+        "C. Switch the trajectory evaluation config in test_config.json from MatchType.EXACT to MatchType.ANY_ORDER.",
+        "D. Disable automated trajectory evaluation in CI/CD and rely exclusively on Cloud Monitoring alerts."
+      ],
+      ans: [1],
+      exp: "Correct (B): When an LLM generates tests solely by inspecting buggy implementation code, it asserts the buggy behavior as ground truth. Anchoring test synthesis on the requirements specification and enforcing human curation of golden assertions prevents codifying bugs.",
+      hood: "Architecture rule: AI accelerates test & evalset synthesis, but humans must curate and approve ground-truth assertions."
+    },
+    {
+      id: 25, sec: "2.3", multi: false,
+      arch: "[Untrusted External PR Comment (Indirect Prompt Injection)] --> [Sandbox CI Agent + Read-Only Tools + Zero Privileged Secrets]",
+      stem: "Your open-source SDK repository runs a headless coding agent in GitHub Actions to review external community Pull Requests. A malicious contributor submits a PR containing hidden prompt-injection instructions inside a docstring attempting to trick the review agent into running curl to exfiltrate the CI runner's environment variables. Which defense-in-depth architecture neutralizes this threat?",
+      opts: [
+        "A. Add a warning in the root CLAUDE.md and GEMINI.md files instructing the agent to ignore docstrings.",
+        "B. Run the PR review agent with repository write tokens but set the foundation model temperature to 0.0.",
+        "C. Encode the CI runner's environment variables using Base64 before starting the headless review job.",
+        "D. Isolate the CI agent in a network-restricted sandbox with read-only diff tools and zero prod secrets."
+      ],
+      ans: [3],
+      exp: "Correct (D): Treating untrusted PR diffs/comments as potential indirect prompt injections requires deterministic containment: disable arbitrary shell execution (read-only diff tools only), restrict outbound network egress in a sandbox, and pass zero privileged tokens to the review job.",
+      hood: "Architecture rule: Untrusted code/PR review in CI = Read-only tools + No shell execution + Network sandbox + Zero privileged tokens."
+    },
+    {
+      id: 26, sec: "2.3", multi: false,
+      arch: "[Local Developer Workstation] --> [3-Tier Command Policy: Auto-Allow Read/Test | Ask (HITL) on Writes/Installs | Deny Destructive]",
+      stem: "Rosku Bank's developer security team wants to configure command-execution governance across Google Antigravity, Gemini CLI, and Claude Code on developer laptops. They want fast, frictionless execution when the agent runs pytest or git status, while preventing the agent from silently installing unvetted third-party packages or deleting directories without approval. Which configuration achieves this?",
+      opts: [
+        "A. Use a 3-tier policy: Allowlist safe reads/tests, require HITL Ask for installs/writes, and Deny rm -rf.",
+        "B. Enable global autonomous 'auto-approve all shell commands' mode directly on the developer's host OS.",
+        "C. Block 100% of terminal commands including pytest so developers must run all tests manually outside IDE.",
+        "D. Allow the agent to run any shell command automatically as long as it logs the command to a local file."
+      ],
+      ans: [0],
+      exp: "Correct (A): Tiered approval policies (Allowlist for safe read/test loops, Ask/HITL for state-changing or package-install commands, and Deny for destructive operations) reinforced by PreToolUse hooks maximize velocity while keeping a human in the loop for risky actions.",
+      hood: "Architecture rule: Requiring HITL approval on package installs also prevents 'slopsquatting' (installing hallucinated malware packages)."
+    },
+    {
+      id: 27, sec: "2.3", multi: true,
+      arch: "[Agent Sandbox on GKE Advantages] = [1. gVisor / Kata microVM Kernel Isolation] + [2. Pre-Warmed Sandbox Pools for Fast Startup]",
+      stem: "Your platform engineering team is deploying an ADK code-execution service on Google Kubernetes Engine (GKE) using Agent Sandbox. Which two technical capabilities does Agent Sandbox on GKE provide for untrusted agentic code execution? (Choose two.)",
+      opts: [
+        "A. Kernel-level workload isolation using gVisor or Kata microVMs so untrusted code cannot escape the pod.",
+        "B. Direct unisolated root access to the host GKE node's Linux kernel and sibling container memory spaces.",
+        "C. Pre-warmed sandbox pod pools and snapshots that eliminate cold-boot delays for sub-second execution.",
+        "D. Automatic conversion of Python ADK agents into CX Agent Studio PSTN voice telephony dialplans.",
+        "E. Permanent storage of raw customer credit card numbers inside unencrypted node-local /tmp directories."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Agent Sandbox on GKE provides strong kernel isolation via gVisor or Kata Containers microVMs (A) paired with pre-warmed sandbox pools and filesystem snapshots so each tool turn attaches to a fresh sandbox in milliseconds (C).",
+      hood: "Architecture rule: Agent Sandbox on GKE = gVisor/microVM kernel isolation + pre-warmed sandbox pools."
+    },
+    {
+      id: 28, sec: "2.3", multi: false,
+      arch: "[Hallucinated Package Name in pip install ('Slopsquatting')] --> [Require HITL Approval + Vetted Artifact Registry Mirror]",
+      stem: "While assisting a developer, an AI coding agent suggests running 'pip install gcp-adk-fast-helper'—a package name that the LLM hallucinated. An external attacker had registered that exact hallucinated name on public PyPI with malicious code (an attack known as 'slopsquatting'). Which enterprise control prevents this supply-chain compromise?",
+      opts: [
+        "A. Configure the coding agent to auto-approve all pip and npm install commands in local interactive mode.",
+        "B. Add pyproject.toml and requirements.txt to .geminiignore so the agent cannot view project dependencies.",
+        "C. Disable SSL certificate verification on the workstation's package manager to speed up package downloads.",
+        "D. Require HITL approval for dependency changes and route installs through a vetted Artifact Registry mirror."
+      ],
+      ans: [3],
+      exp: "Correct (D): Combining Human-in-the-Loop (HITL) review on dependency additions (or a PreToolUse hook) with routing package managers through an enterprise-vetted Artifact Registry remote/virtual repository neutralizes hallucinated package ('slopsquatting') attacks.",
+      hood: "Architecture rule: Never allow an autonomous coding agent to install unvetted public packages silently."
+    },
+    {
+      id: 29, sec: "2.3", multi: false,
+      arch: "[Headless CLI in CI/CD] --(Emits Structured JSON Schema)--> [Downstream Pipeline Script Parses Severity & Fails Build]",
+      stem: "You are integrating a headless Gemini CLI / Antigravity CLI (agy) security-audit step into a GitLab CI pipeline. If the coding agent identifies a high-severity Confused Deputy flaw in an ADK tool definition, the pipeline must automatically parse the finding, post an inline comment on the Pull Request, and exit with a non-zero status code to block the merge. How should you configure the headless CLI output?",
+      opts: [
+        "A. Have the CLI emit conversational markdown paragraphs with ANSI color codes and grep for 'warning'.",
+        "B. Have the CLI commit its review thoughts directly into the repository's root GEMINI.md file on every build.",
+        "C. Configure the headless CLI run to emit structured JSON output conforming to a deterministic schema.",
+        "D. Store the CLI's free-text output in an unprefixed ADK temp: state variable inside the CI container."
+      ],
+      ans: [2],
+      exp: "Correct (C): Requesting structured JSON output (--output-format json) in headless CI mode allows downstream pipeline scripts to deterministically parse findings, file paths, line numbers, and severity levels to enforce automated merge gates.",
+      hood: "Architecture rule: Headless CI/CD integration relies on structured JSON output for deterministic downstream automation."
+    },
+    {
+      id: 30, sec: "2.3", multi: true,
+      arch: "[Optimizing Deployed Agent Runtimes] = [1. Async I/O Tools + ParallelAgent Fan-Out] + [2. Model Tiering + Context Caching]",
+      stem: "Using 'agents-cli' and Cloud Trace, you discover that a deployed ADK agent spends 6 seconds running three independent MCP database queries sequentially using blocking Python code, and spends another 5 seconds re-tokenizing a static 60,000-token policy manual on Gemini Pro for simple formatting turns. Which two runtime optimizations should you implement? (Choose two.)",
+      opts: [
+        "A. Convert tools to non-blocking async def coroutines and run independent queries inside a ParallelAgent.",
+        "B. Set Cloud Run container concurrency to 1 and replace async def tools with blocking time.sleep() calls.",
+        "C. Enable Gemini Context Caching for the 60k-token manual and tier simple formatting turns to Gemini Flash.",
+        "D. Set include_contents='default' on all stateless formatting sub-agents and disable ContextCacheConfig.",
+        "E. Remove all max_iterations bounds from LoopAgent instances so sub-agents can run unbounded retries."
+      ],
+      ans: [0, 2],
+      exp: "Correct (A, C): Converting blocking tools to async def and running independent lookups concurrently in a ParallelAgent slashes I/O wait time (A), while caching the 60k-token static manual via Gemini Context Caching and tiering formatting turns to Gemini Flash slashes LLM prefill latency and cost (C).",
+      hood: "Architecture rule: Combine async I/O + ParallelAgent fan-out with Model Tiering + Context Caching to optimize runtimes."
+    }
+  ];
+  const STORAGE_KEY = "agenticaivantage_paac_sec2_v6_30q";
+  let saved = {};
+  try { saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}"); } catch (e) { saved = {}; }
+  let pendingMulti = [];
+  let filter = "all";
+  let currentIdx = 0;
+  function isCorrect(q, userPick) {
+    if (!Array.isArray(userPick) || userPick.length !== q.ans.length) return false;
+    const s1 = [...userPick].sort();
+    const s2 = [...q.ans].sort();
+    return s1.every((val, i) => val === s2[i]);
+  }
+  function getFilteredList() {
+    if (filter === "all") return QUESTIONS;
+    if (filter === "missed") {
+      const missed = QUESTIONS.filter(q => saved[q.id] !== undefined && !isCorrect(q, saved[q.id]));
+      return missed.length ? missed : QUESTIONS;
+    }
+    return QUESTIONS.filter(q => q.sec === filter);
+  }
+  function updateScoreBadge() {
+    const keys = Object.keys(saved);
+    let correctCount = 0;
+    keys.forEach(k => {
+      const q = QUESTIONS.find(item => item.id === parseInt(k, 10));
+      if (q && isCorrect(q, saved[k])) correctCount++;
+    });
+    document.getElementById("sim-score").textContent = "Score: " + correctCount + " / " + keys.length + " (of 30)";
+  }
+  function renderQuestion() {
+    const list = getFilteredList();
+    if (currentIdx >= list.length) currentIdx = 0;
+    if (currentIdx < 0) currentIdx = list.length - 1;
+    const q = list[currentIdx];
+    const userPick = saved[q.id];
+    document.getElementById("q-domain").textContent = "Checkpoint " + q.sec + " | Q#" + q.id;
+    document.getElementById("q-type").textContent = q.multi ? "Choose Two (select 2)" : "Single choice";
+    document.getElementById("q-counter").textContent = "Showing " + (currentIdx + 1) + " of " + list.length;
+    document.getElementById("q-stem").textContent = q.stem;
+    const optContainer = document.getElementById("q-options");
+    optContainer.innerHTML = "";
+    q.opts.forEach((optText, idx) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "sim-opt";
+      if (userPick !== undefined) {
+        if (q.ans.includes(idx)) btn.classList.add("correct");
+        else if (userPick.includes(idx)) btn.classList.add("wrong");
+      } else if (q.multi && pendingMulti.includes(idx)) {
+        btn.classList.add("selected-pending");
+      }
+      btn.textContent = optText;
+      btn.addEventListener("click", () => {
+        if (!q.multi) {
+          saved[q.id] = [idx];
+          try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (e) {}
+          renderQuestion();
+        } else {
+          if (userPick !== undefined) {
+            delete saved[q.id];
+            pendingMulti = [idx];
+            renderQuestion();
+            return;
+          }
+          if (pendingMulti.includes(idx)) pendingMulti = pendingMulti.filter(i => i !== idx);
+          else pendingMulti.push(idx);
+          if (pendingMulti.length === 2) {
+            saved[q.id] = [...pendingMulti];
+            pendingMulti = [];
+            try { localStorage.setItem(STORAGE_KEY, JSON.stringify(saved)); } catch (e) {}
+          }
+          renderQuestion();
+        }
+      });
+      optContainer.appendChild(btn);
+    });
+    const expBox = document.getElementById("q-explain");
+    if (userPick !== undefined) {
+      expBox.classList.add("visible");
+      document.getElementById("q-arch").textContent = "Architecture flow: " + q.arch;
+      document.getElementById("q-exp-text").textContent = q.exp;
+      document.getElementById("q-hood").textContent = q.hood;
+    } else {
+      expBox.classList.remove("visible");
+    }
+    const grid = document.getElementById("q-grid");
+    grid.innerHTML = "";
+    list.forEach((item, i) => {
+      const gBtn = document.createElement("button");
+      gBtn.type = "button";
+      gBtn.className = "sim-num-btn";
+      if (i === currentIdx) gBtn.classList.add("current");
+      if (saved[item.id] !== undefined) {
+        gBtn.classList.add(isCorrect(item, saved[item.id]) ? "ans-ok" : "ans-bad");
+      }
+      gBtn.textContent = item.id;
+      gBtn.addEventListener("click", () => {
+        pendingMulti = [];
+        currentIdx = i;
+        renderQuestion();
+      });
+      grid.appendChild(gBtn);
+    });
+    updateScoreBadge();
+  }
+  document.querySelectorAll(".sim-chip[data-filter]").forEach(btn => {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".sim-chip[data-filter]").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      filter = btn.getAttribute("data-filter") || "all";
+      pendingMulti = [];
+      currentIdx = 0;
+      renderQuestion();
+    });
+  });
+  document.getElementById("q-prev")?.addEventListener("click", () => { pendingMulti = []; currentIdx--; renderQuestion(); });
+  document.getElementById("q-next")?.addEventListener("click", () => { pendingMulti = []; currentIdx++; renderQuestion(); });
+  document.getElementById("sim-reset")?.addEventListener("click", () => {
+    saved = {};
+    pendingMulti = [];
+    try { localStorage.removeItem(STORAGE_KEY); } catch (e) {}
+    renderQuestion();
+  });
+  renderQuestion();
+})();
+</script></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec2-qa.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">2.5 Section 2 Q&amp;A</span></span></a><a href="sec3-exam-guide.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">3.0 Domain 3 Roadmap</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

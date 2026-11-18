@@ -1,0 +1,462 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>5.2 Agent Identity, Principal Access Boundaries (PAB) &amp; OAuth 2.0 · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/workflows.svg">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+</head>
+<body data-slug="sec5-identity">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page">
+<main>
+<div class="content-panel"><div class="sl-container"><h1 id="_top">5.2 Agent Identity, Principal Access Boundaries (PAB) &amp; OAuth 2.0</h1></div></div><div class="content-panel"><div class="sl-container"><div class="sl-markdown-content"><style>
+.def-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  margin: 16px 0;
+}
+.def-card {
+  background: var(--sl-color-bg-nav);
+  border: 1.5px solid var(--sl-color-gray-5);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.def-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--sl-color-white);
+}
+.def-text {
+  font-size: 0.85rem;
+  color: var(--sl-color-text);
+  line-height: 1.45;
+}
+.id-widget {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 18px;
+  border-radius: 14px;
+  background: var(--sl-color-bg-nav);
+  border: 1px solid var(--sl-color-gray-5);
+  margin: 20px 0;
+}
+.id-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 10px 14px;
+  background: var(--sl-color-bg);
+  border-radius: 10px;
+  border: 1px solid var(--sl-color-gray-5);
+}
+.id-toggle-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.id-btn {
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--sl-color-gray-5);
+  background: transparent;
+  color: var(--sl-color-text);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.id-btn.active {
+  background: rgba(59, 130, 246, 0.2);
+  border-color: #3b82f6;
+  color: var(--sl-color-white);
+}
+.id-svg-box {
+  width: 100%;
+  background: var(--sl-color-bg);
+  border-radius: 12px;
+  padding: 12px;
+  border: 1px solid var(--sl-color-gray-5);
+}
+.id-svg {
+  width: 100%;
+  max-width: 680px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.id-node {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.id-node rect {
+  fill: var(--sl-color-bg-nav);
+  stroke: var(--sl-color-gray-4);
+  stroke-width: 1.5px;
+  rx: 12px;
+}
+.id-node.is-selected rect {
+  stroke: #10b981;
+  stroke-width: 2.5px;
+}
+.id-node.is-dimmed {
+  opacity: 0.42;
+}
+.id-title {
+  font-size: 12px;
+  font-weight: 700;
+  fill: var(--sl-color-white);
+  pointer-events: none;
+}
+.id-sub {
+  font-size: 10.5px;
+  fill: var(--sl-color-text);
+  pointer-events: none;
+}
+.id-edge {
+  stroke: var(--sl-color-gray-4);
+  stroke-width: 2px;
+  stroke-dasharray: 5 5;
+}
+.id-edge.active-edge {
+  stroke: #10b981;
+  stroke-width: 2.5px;
+  animation: idPulse 0.8s linear infinite;
+}
+@keyframes idPulse {
+  from { stroke-dashoffset: 20; }
+  to { stroke-dashoffset: 0; }
+}
+.id-card {
+  background: var(--sl-color-bg);
+  border: 1px solid var(--sl-color-gray-5);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.id-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.id-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.18);
+  color: #10b981;
+}
+.id-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+}
+.id-meta {
+  background: var(--sl-color-bg-nav);
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid var(--sl-color-hairline);
+}
+.id-meta-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--sl-color-text-accent);
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+.id-meta-val {
+  font-size: 0.88rem;
+  color: var(--sl-color-white);
+  line-height: 1.45;
+}
+table {
+  display: table !important;
+  table-layout: fixed !important;
+  border-collapse: collapse !important;
+  width: 100% !important;
+  border: 1px solid var(--sl-color-gray-5) !important;
+}
+th, td {
+  border: 1px solid var(--sl-color-gray-5) !important;
+  padding: 10px 12px !important;
+  word-break: break-word !important;
+  overflow-wrap: anywhere !important;
+  white-space: normal !important;
+  vertical-align: top !important;
+}
+td code, th code {
+  white-space: normal !important;
+  word-break: break-word !important;
+}
+th {
+  background: var(--sl-color-bg-nav) !important;
+}
+</style>
+<aside aria-label="The Rosku Bank Identity Crisis: The Confused Deputy &amp; Over-Privileged Agents!" class="starlight-aside starlight-aside--danger"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path d="M12 7a1 1 0 0 0-1 1v4a1 1 0 0 0 2 0V8a1 1 0 0 0-1-1Zm0 8a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm9.71-7.44-5.27-5.27a1.05 1.05 0 0 0-.71-.29H8.27a1.05 1.05 0 0 0-.71.29L2.29 7.56a1.05 1.05 0 0 0-.29.71v7.46c.004.265.107.518.29.71l5.27 5.27c.192.183.445.286.71.29h7.46a1.05 1.05 0 0 0 .71-.29l5.27-5.27a1.05 1.05 0 0 0 .29-.71V8.27a1.05 1.05 0 0 0-.29-.71ZM20 15.31 15.31 20H8.69L4 15.31V8.69L8.69 4h6.62L20 8.69v6.62Z"/></svg>The Rosku Bank Identity Crisis: The Confused Deputy &amp; Over-Privileged Agents!</p><div class="starlight-aside__content"><p>Rosku Bank runs four specialist agents (Wealth, Tax, Fraud, and Support) under a single shared Compute Engine default service account. Two major security incidents occur in staging:</p><ol>
+<li><strong>The Confused Deputy Attack:</strong> A customer tricks the Wealth Agent into calling the <code dir="auto">execute_stock_trade</code> API for <em>another</em> customer’s portfolio—and because the agent authenticates using its own privileged service account instead of the logged-in human’s identity, the backend API allows the unauthorized trade!</li>
+<li><strong>Cross-Folder Privilege Creep:</strong> A developer in the <code dir="auto">Proprietary-Algorithm-R&amp;D</code> folder accidentally grants an IAM role to the public-facing Support Agent!</li>
+</ol></div></aside>
+<div class="sl-heading-wrapper level-h2"><h2 id="1-key-concept-definitions-the-zero-trust-identity-stack">1. Key Concept Definitions: The Zero-Trust Identity Stack</h2></div>
+<div class="def-grid"><div class="def-card"><div class="def-name">1. Managed Agent Identity</div><div class="def-text">A verifiable, keyless SPIFFE cryptographic workload identity assigned to each individual agent. Eliminates shared service accounts and static JSON keys while enabling per-agent Cloud Audit Logs.</div></div><div class="def-card"><div class="def-name">2. Agent Identity Auth Manager</div><div class="def-text">Manages <strong>OAuth 2.0 user delegation</strong> flows, consent redirects, encrypted token caching, and automatic refreshes so tools execute strictly with the logged-in human user’s permissions.</div></div><div class="def-card"><div class="def-name">3. Principal Access Boundary (PAB)</div><div class="def-text">Defines the maximum set of Google Cloud folders/projects an agent principal is <strong>eligible</strong> to access. Even if someone grants an IAM Allow role outside the PAB, access is blocked!</div></div><div class="def-card"><div class="def-name">4. IAM Deny Policy</div><div class="def-text">An explicit permission veto attached to an Organization, Folder, or Project. Always overrides any IAM Allow grant (even Project Owner) to block dangerous actions like deleting audit logs.</div></div></div>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="2-interactive-identity-oauth-20--unified-policy-evaluation-explorer">2. Interactive Identity, OAuth 2.0 &amp; Unified Policy Evaluation Explorer</h2></div>
+<p>Switch between the <strong>3 Identity &amp; Access Modes</strong> below and click the 4 stages to trace <strong>OAuth 2.0 User Delegation</strong>, <strong>Unified Policy Evaluation (<code dir="auto">PAB -&gt; IAM Deny -&gt; IAM Allow</code>)</strong>, and <strong>Defense-in-Depth (<code dir="auto">PAB + VPC-SC</code>)</strong>:</p>
+<div class="id-widget"><div class="id-toolbar"><div class="id-toggle-group"><button id="id-mode-oauth" class="id-btn active" type="button">1. OAuth 2.0 User Delegation vs. Workload</button><button id="id-mode-eval" class="id-btn" type="button">2. Unified Policy Evaluation Order</button><button id="id-mode-depth" class="id-btn" type="button">3. Defense-in-Depth: PAB + VPC-SC</button></div><div style="display:flex; gap:8px; align-items:center;"><button id="id-prev" class="id-btn" type="button">← Prev</button><span id="id-step-label" style="font-size:0.82rem; font-weight:700;">Stage 1 / 4</span><button id="id-next" class="id-btn" type="button">Next →</button></div></div><div class="id-svg-box"><svg class="id-svg" viewBox="0 0 680 130" xmlns="http://www.w3.org/2000/svg"><line id="id-edge-1" class="id-edge active-edge" x1="155" y1="65" x2="180" y2="65"></line><line id="id-edge-2" class="id-edge" x1="325" y1="65" x2="350" y2="65"></line><line id="id-edge-3" class="id-edge" x1="495" y1="65" x2="520" y2="65"></line><g id="id-node-1" class="id-node is-selected" data-step="1" transform="translate(10, 25)"><rect x="0" y="0" width="145" height="80"></rect><text id="idn1-title" x="12" y="32" class="id-title">1. Confused Deputy</text><text id="idn1-sub" x="12" y="54" class="id-sub">Agent Token Risk</text></g><g id="id-node-2" class="id-node is-dimmed" data-step="2" transform="translate(180, 25)"><rect x="0" y="0" width="145" height="80"></rect><text id="idn2-title" x="12" y="32" class="id-title">2. Auth Manager</text><text id="idn2-sub" x="12" y="54" class="id-sub">OAuth 2.0 Consent</text></g><g id="id-node-3" class="id-node is-dimmed" data-step="3" transform="translate(350, 25)"><rect x="0" y="0" width="145" height="80"></rect><text id="idn3-title" x="12" y="32" class="id-title">3. Scoped Token</text><text id="idn3-sub" x="12" y="54" class="id-sub">User-Specific Access</text></g><g id="id-node-4" class="id-node is-dimmed" data-step="4" transform="translate(520, 25)"><rect x="0" y="0" width="145" height="80"></rect><text id="idn4-title" x="12" y="32" class="id-title">4. Backend API</text><text id="idn4-sub" x="12" y="54" class="id-sub">Verifies Human User</text></g></svg></div><div class="id-card"><div class="id-card-top"><div><div id="id-card-type" style="font-size:0.75rem; font-weight:700; color:#3b82f6;">OAUTH 2.0 USER DELEGATION VS. WORKLOAD IDENTITY</div><div id="id-card-title" style="font-size:1.1rem; font-weight:700; color:var(--sl-color-white);">1. What Is the Confused Deputy Vulnerability?</div></div></div><div class="id-grid"><div class="id-meta"><div class="id-meta-label">How It Happens</div><div id="id-card-how" class="id-meta-val">An agent uses its own broad workload identity to call a backend API on behalf of a human user, allowing a prompt injection to access other users’ records.</div></div><div class="id-meta"><div class="id-meta-label">Winning Architectural Fix</div><div id="id-card-trap" class="id-meta-val">Use Managed Agent Identity ONLY for autonomous service-to-service tasks; use OAuth 2.0 User Delegation (Auth Manager) whenever acting on a user’s personal data!</div></div></div></div></div>
+<script>
+(function() {
+  const DATA = {
+    oauth: {
+      badge: "OAuth 2.0 Delegation Mode",
+      nodes: [
+        ["1. Confused Deputy", "Shared Agent Token"],
+        ["2. Auth Manager", "OAuth 2.0 Consent"],
+        ["3. Scoped Token", "User-Specific Token"],
+        ["4. Backend API", "Enforces User ACL"]
+      ],
+      steps: [
+        {
+          type: "STAGE 1: THE CONFUSED DEPUTY VULNERABILITY",
+          title: "1. Why Workload Identity Alone Fails on User-Specific Tools",
+          how: "If Rosku Bank's Wealth Agent authenticates to the Portfolio API using its own privileged agent service account, the Portfolio API cannot tell which human customer initiated the request.",
+          trap: "Security Pattern: Whenever an attacker tricks an agent into modifying another user's data, that is a Confused Deputy attack!"
+        },
+        {
+          type: "STAGE 2: AGENT IDENTITY AUTH MANAGER",
+          title: "2. Managed OAuth 2.0 Consent, Token Storage & Refresh",
+          how: "Configure OAuth 2.0 client credentials inside Agent Identity Auth Manager. It handles user consent redirects, encrypted token caching, and automatic token refreshes.",
+          trap: "Developers never have to write custom token-encryption code or store raw user tokens inside session.state!"
+        },
+        {
+          type: "STAGE 3: INJECTING THE USER-DELEGATED ACCESS TOKEN",
+          title: "3. Passing the Logged-In Human's Scoped OAuth Token to the Tool",
+          how: "When the ADK agent invokes execute_stock_trade, Auth Manager supplies the logged-in customer's scoped OAuth 2.0 bearer token.",
+          trap: "Rule of Thumb: System-to-system background job = Managed Agent Identity; user-specific data/action = OAuth 2.0 Auth Manager!"
+        },
+        {
+          type: "STAGE 4: DOWNSTREAM API ENFORCEMENT",
+          title: "4. Backend API Verifies the Human Principal Directly",
+          how: "Even if a prompt injection tricks the LLM into passing another customer's account_id, the downstream Portfolio API rejects the call with HTTP 403 because the OAuth token belongs to the caller!",
+          trap: "Completely neutralizes Confused Deputy privilege escalation at the cryptographic identity layer."
+        }
+      ]
+    },
+    eval: {
+      badge: "Unified Policy Evaluation Mode",
+      nodes: [
+        ["1. Gate 1: PAB", "Is Principal Eligible?"],
+        ["2. Gate 2: Deny", "Is Action Vetoed?"],
+        ["3. Gate 3: Allow", "Is Role Granted?"],
+        ["4. Final Verdict", "All 3 Must Pass!"]
+      ],
+      steps: [
+        {
+          type: "GATE 1: PRINCIPAL ACCESS BOUNDARY (PAB)",
+          title: "1. First Check: Is the Agent Principal Eligible for This Resource?",
+          how: "Google Cloud evaluates the Principal Access Boundary (PAB) bound to the agent identity. If the target project/folder is outside the PAB, access is DENIED immediately!",
+          trap: "Core Principle: A PAB policy NEVER grants access by itself—it only defines the maximum boundary of resources the principal is eligible to access!"
+        },
+        {
+          type: "GATE 2: IAM DENY POLICIES",
+          title: "2. Second Check: Does an IAM Deny Rule Veto This Permission?",
+          how: "If the resource is inside the PAB, Google Cloud checks IAM Deny policies across the Organization, Folder, and Project hierarchy.",
+          trap: "If an IAM Deny rule blocks the permission (e.g., cloudkms.cryptoKeyVersions.destroy), access is DENIED even if the agent has the Project Owner role!"
+        },
+        {
+          type: "GATE 3: IAM ALLOW POLICIES",
+          title: "3. Third Check: Does an IAM Allow Policy Grant the Permission?",
+          how: "Finally, Google Cloud checks whether an IAM Allow policy explicitly grants the required least-privilege role (e.g., roles/bigquery.dataViewer) to the agent identity.",
+          trap: "If no IAM Allow binding exists, access is denied by default (implicit deny)."
+        },
+        {
+          type: "GATE 4: EFFECTIVE ACCESS GRANTED",
+          title: "4. Summary: PAB Eligible + Not Denied + Explicitly Allowed",
+          how: "Access succeeds ONLY when all three gates pass in sequence: (1) Inside PAB boundary, (2) Not blocked by IAM Deny, and (3) Granted by IAM Allow.",
+          trap: "Evaluation sequence: 1. Principal Access Boundary -> 2. IAM Deny -> 3. IAM Allow!"
+        }
+      ]
+    },
+    depth: {
+      badge: "Defense-in-Depth Mode",
+      nodes: [
+        ["1. Unique Identity", "1 Identity Per Agent"],
+        ["2. PAB Policy", "Identity-Centric Fence"],
+        ["3. VPC-SC Perimeter", "Resource/Data Fence"],
+        ["4. Cloud Audit Logs", "Immutable Attribution"]
+      ],
+      steps: [
+        {
+          type: "LAYER 1: WORKLOAD ISOLATION",
+          title: "1. Provisioning a Dedicated Managed Agent Identity per Agent",
+          how: "Instead of sharing one default service account across 4 agents, provision a distinct managed Agent Identity for Scheduling, Billing, Tax, and Fraud.",
+          trap: "Ensures a compromise in the Scheduling Agent has zero permissions to touch Fraud or Tax databases!"
+        },
+        {
+          type: "LAYER 2: IDENTITY-CENTRIC BOUNDARY (PAB)",
+          title: "2. Bounding Where Dev vs. Prod Agent Identities Can Go",
+          how: "Attach a PAB policy to Dev agent principals restricting their eligibility strictly to the 'Dev' folder.",
+          trap: "Even if a Prod project owner accidentally grants a Dev agent an IAM Allow role in Prod, PAB blocks the Dev agent!"
+        },
+        {
+          type: "LAYER 3: RESOURCE & NETWORK-CENTRIC BOUNDARY (VPC-SC)",
+          title: "3. Preventing Data Exfiltration with VPC Service Controls (VPC-SC)",
+          how: "Place production BigQuery datasets and Cloud Storage buckets inside a VPC Service Controls perimeter.",
+          trap: "Architectural Contrast: PAB is identity-centric (controls which resources a principal can touch); VPC-SC is resource/network-centric (stops data exfiltration out of a perimeter)!"
+        },
+        {
+          type: "LAYER 4: CRYPTOGRAPHIC AUDITABILITY",
+          title: "4. Proving Per-Agent Actions in Cloud Audit Logs",
+          how: "Every MCP tool call and database query is logged in Cloud Audit Logs with the exact SPIFFE principal of the specific agent that invoked it.",
+          trap: "Never rely on spoofable custom HTTP headers for compliance auditing—use distinct Agent Identities in Cloud Audit Logs!"
+        }
+      ]
+    }
+  };
+
+  let mode = "oauth";
+  let step = 1;
+
+  function render() {
+    const mData = DATA[mode];
+    const sData = mData.steps[step - 1];
+
+    document.getElementById("id-step-label").textContent = "Stage " + step + " / 4";
+    document.getElementById("id-mode-oauth").className = "id-btn" + (mode === "oauth" ? " active" : "");
+    document.getElementById("id-mode-eval").className = "id-btn" + (mode === "eval" ? " active" : "");
+    document.getElementById("id-mode-depth").className = "id-btn" + (mode === "depth" ? " active" : "");
+
+    for (let i = 1; i <= 4; i++) {
+      document.getElementById("idn" + i + "-title").textContent = mData.nodes[i - 1][0];
+      document.getElementById("idn" + i + "-sub").textContent = mData.nodes[i - 1][1];
+      const node = document.getElementById("id-node-" + i);
+      if (!node) continue;
+      node.classList.remove("is-selected", "is-dimmed");
+      node.classList.add(i === step ? "is-selected" : "is-dimmed");
+    }
+
+    for (let e = 1; e <= 3; e++) {
+      const edge = document.getElementById("id-edge-" + e);
+      if (!edge) continue;
+      edge.classList.remove("active-edge");
+      if (e === step || e === step - 1) edge.classList.add("active-edge");
+    }
+
+    document.getElementById("id-card-type").textContent = sData.type;
+    document.getElementById("id-card-title").textContent = sData.title;
+    document.getElementById("id-card-how").textContent = sData.how;
+    document.getElementById("id-card-trap").textContent = sData.trap;
+  }
+
+  document.getElementById("id-mode-oauth")?.addEventListener("click", () => { mode = "oauth"; step = 1; render(); });
+  document.getElementById("id-mode-eval")?.addEventListener("click", () => { mode = "eval"; step = 1; render(); });
+  document.getElementById("id-mode-depth")?.addEventListener("click", () => { mode = "depth"; step = 1; render(); });
+  document.getElementById("id-prev")?.addEventListener("click", () => { step = step > 1 ? step - 1 : 4; render(); });
+  document.getElementById("id-next")?.addEventListener("click", () => { step = step < 4 ? step + 1 : 1; render(); });
+
+  document.querySelectorAll(".id-node").forEach(el => {
+    el.addEventListener("click", () => {
+      step = parseInt(el.getAttribute("data-step") || "1", 10);
+      render();
+    });
+  });
+
+  render();
+})();
+</script>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="3-real-world-deep-dive-common-identity--pab-brain-twisters">3. Real-World Deep Dive: Common Identity &amp; PAB Brain-Twisters</h2></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Architect Question</th>
+<th style="text-align: left">How It Works Under the Hood in Production</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>“If a Principal Access Boundary (PAB) says an agent is eligible for the <code dir="auto">Retail-Support</code> folder, why is the agent STILL blocked from reading a Cloud Storage bucket in that folder?”</strong></td>
+<td style="text-align: left"><strong>PAB is a filter, not a grant!</strong> A Principal Access Boundary only defines the <em>outer perimeter of eligibility</em>. Effective access requires <strong>BOTH</strong> PAB eligibility <strong>AND</strong> an explicit <strong>IAM Allow</strong> role (such as <code dir="auto">roles/storage.objectViewer</code>) on that bucket!</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“How does an ADK tool know which OAuth 2.0 token to pass when 500 users are chatting with the same agent container simultaneously?”</strong></td>
+<td style="text-align: left"><strong>Session-Scoped Token Resolution via Auth Manager:</strong> When a user logs in, their session is bound to their authenticated <code dir="auto">user_id</code>. Inside the tool execution, <strong>Agent Identity Auth Manager</strong> looks up the encrypted OAuth 2.0 token specifically bound to that invocation’s <code dir="auto">user_id</code>—never mixing tokens across concurrent users!</td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>“When should I use PAB vs. IAM Deny vs. VPC Service Controls?”</strong></td>
+<td style="text-align: left"><strong>PAB:</strong> Restrict <em>where</em> an agent identity is allowed to operate (e.g., <code dir="auto">Dev</code> folder only).<br><strong>IAM Deny:</strong> Block <em>specific dangerous permissions</em> (e.g., deleting logs/KMS keys) regardless of role.<br><strong>VPC-SC:</strong> Draw a <em>network/data exfiltration perimeter</em> around sensitive resources (e.g., Prod BigQuery).</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<div class="sl-heading-wrapper level-h2"><h2 id="4-identity--access-control-reference-matrix">4. Identity &amp; Access Control Reference Matrix</h2></div>
+<table>
+<thead>
+<tr>
+<th style="text-align: left">Security Control</th>
+<th style="text-align: left">Primary Target</th>
+<th style="text-align: left">What It Prevents</th>
+<th style="text-align: left">Architectural Trigger / Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: left"><strong>Dedicated Managed Agent Identity</strong></td>
+<td style="text-align: left">Individual agent workload</td>
+<td style="text-align: left">Blast-radius spread across co-located agents &amp; static service account key leaks.</td>
+<td style="text-align: left"><em>“Isolate 4 agents sharing a default service account,” “per-agent audit trail.”</em></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Agent Identity Auth Manager (OAuth 2.0)</strong></td>
+<td style="text-align: left">User-delegated tool invocations</td>
+<td style="text-align: left"><strong>Confused Deputy attacks</strong> (agent tricked into accessing User B’s data for User A).</td>
+<td style="text-align: left"><em>“Execute trades/tickets on behalf of logged-in user,” “manage OAuth consent &amp; token refresh.”</em></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>Principal Access Boundary (PAB)</strong></td>
+<td style="text-align: left">Principal resource eligibility</td>
+<td style="text-align: left">Accidental IAM Allow grants giving an agent access to out-of-scope folders/projects.</td>
+<td style="text-align: left"><em>“Ensure Customer-Support agents are never eligible to access R&amp;D folder even if granted IAM Allow.”</em></td>
+</tr>
+<tr>
+<td style="text-align: left"><strong>IAM Deny Policy</strong></td>
+<td style="text-align: left">Specific IAM permissions</td>
+<td style="text-align: left">Privileged principals (even <code dir="auto">roles/owner</code>) executing destructive actions.</td>
+<td style="text-align: left"><em>“Ensure no agent can ever delete Cloud Audit Logs or disable KMS keys.”</em></td>
+</tr>
+</tbody>
+</table>
+<aside aria-label="Golden Rule for Module 5.2" class="starlight-aside starlight-aside--tip"><p class="starlight-aside__title" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" class="starlight-aside__icon"><path fill-rule="evenodd" d="M1.44 8.855v-.001l3.527-3.516c.34-.344.802-.541 1.285-.548h6.649l.947-.947c3.07-3.07 6.207-3.072 7.62-2.868a1.821 1.821 0 0 1 1.557 1.557c.204 1.413.203 4.55-2.868 7.62l-.946.946v6.649a1.845 1.845 0 0 1-.549 1.286l-3.516 3.528a1.844 1.844 0 0 1-3.11-.944l-.858-4.275-4.52-4.52-2.31-.463-1.964-.394A1.847 1.847 0 0 1 .98 10.693a1.843 1.843 0 0 1 .46-1.838Zm5.379 2.017-3.873-.776L6.32 6.733h4.638l-4.14 4.14Zm8.403-5.655c2.459-2.46 4.856-2.463 5.89-2.33.134 1.035.13 3.432-2.329 5.891l-6.71 6.71-3.561-3.56 6.71-6.711Zm-1.318 15.837-.776-3.873 4.14-4.14v4.639l-3.364 3.374Z" clip-rule="evenodd"/><path d="M9.318 18.345a.972.972 0 0 0-1.86-.561c-.482 1.435-1.687 2.204-2.934 2.619a8.22 8.22 0 0 1-1.23.302c.062-.365.157-.79.303-1.229.415-1.247 1.184-2.452 2.62-2.935a.971.971 0 1 0-.62-1.842c-.12.04-.236.084-.35.13-2.02.828-3.012 2.588-3.493 4.033a10.383 10.383 0 0 0-.51 2.845l-.001.016v.063c0 .536.434.972.97.972H2.24a7.21 7.21 0 0 0 .878-.065c.527-.063 1.248-.19 2.02-.447 1.445-.48 3.205-1.472 4.033-3.494a5.828 5.828 0 0 0 .147-.407Z"/></svg>Golden Rule for Module 5.2</p><div class="starlight-aside__content"><ol>
+<li><strong>1 Agent = 1 Dedicated Managed Agent Identity</strong> (for service-to-service calls &amp; audit attribution).</li>
+<li><strong>Acting on behalf of a human user = OAuth 2.0 User Delegation via Auth Manager</strong> (cures Confused Deputy).</li>
+<li><strong>Unified Policy Evaluation Order = <code dir="auto">1. PAB (Eligibility)</code> -&gt; <code dir="auto">2. IAM Deny (Veto)</code> -&gt; <code dir="auto">3. IAM Allow (Grant)</code></strong>!</li>
+</ol></div></aside>
+<div class="doc-footer"><div class="doc-footer-title">Official Google Cloud Documentation &amp; Further Reading</div><div class="doc-footer-note">Refer to the official Google Cloud IAM and ADK documentation below for full policy syntax and authentication workflows:</div><div class="doc-footer-links"><a href="https://docs.cloud.google.com/iam/docs/principal-access-boundary-policies" target="_blank" rel="noopener noreferrer">Principal Access Boundary (PAB) Policies →</a><a href="https://cloud.google.com/iam/docs/deny-overview" target="_blank" rel="noopener noreferrer">IAM Deny Policies Overview →</a><a href="https://cloud.google.com/vpc-service-controls/docs/overview" target="_blank" rel="noopener noreferrer">VPC Service Controls Documentation →</a></div></div></div><footer class="sl-flex"><div class="meta sl-flex"></div><div class="pagination-links print:hidden" dir="ltr"><a href="sec5-perimeter.html" rel="prev"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17 11H9.41l3.3-3.29a1.004 1.004 0 1 0-1.42-1.42l-5 5a1 1 0 0 0-.21.33 1 1 0 0 0 0 .76 1 1 0 0 0 .21.33l5 5a1.002 1.002 0 0 0 1.639-.325 1 1 0 0 0-.219-1.095L9.41 13H17a1 1 0 0 0 0-2Z"/></svg><span>Previous<br><span class="link-title">5.1 Follow the Prompt: Perimeter</span></span></a><a href="sec5-callbacks.html" rel="next"><svg aria-hidden="true" class="astro-b5raizh3" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="--sl-icon-size: 1.5rem;"><path d="M17.92 11.62a1.001 1.001 0 0 0-.21-.33l-5-5a1.003 1.003 0 1 0-1.42 1.42l3.3 3.29H7a1 1 0 0 0 0 2h7.59l-3.3 3.29a1.002 1.002 0 0 0 .325 1.639 1 1 0 0 0 1.095-.219l5-5a1 1 0 0 0 .21-.33 1 1 0 0 0 0-.76Z"/></svg><span>Next<br><span class="link-title">5.3 ADK Callbacks &amp; HITL</span></span></a></div></footer></div></div>
+</main>
+<nav class="toc" id="toc" aria-label="On this page"></nav>
+</div>
+</div>
+<script src="assets/doc.js"></script>
+</body>
+</html>

@@ -137,6 +137,84 @@
     .uc-q { font-style: italic; }
     .uc-a { display: block; margin-top: 6px; font: 400 13.5px/1.35 var(--mono); color: var(--muted); }
 
+    /* full-bleed image slides + wide screenshot */
+    /* generate vs decide SVG */
+    .gd-svg { display: block; width: 1088px; height: 340px; overflow: visible; font-family: var(--sans); }
+    .gd-svg .pn { stroke: var(--ink); stroke-width: 2.5; } .gd-svg .pn-g { fill: var(--p-blue); } .gd-svg .pn-d { fill: #efe6fd; }
+    .gd-svg .hd-g { fill: #4285f4; stroke: none; } .gd-svg .sp { fill: #fff; }
+    .gd-svg .hd-d { fill: #8a5cf6; } .gd-svg .ckw { fill: none; stroke: #fff; stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+    .gd-svg .ttl { font: 700 28px var(--sans); fill: var(--ink); } .gd-svg .ttl2 { font-weight: 400; font-size: 22px; }
+    .gd-svg .box rect { fill: #fff; stroke: var(--ink); stroke-width: 2.5; }
+    .gd-svg .box .m-g { fill: #e8f0fe; } .gd-svg .box .m-d { fill: #fff; stroke: #8a5cf6; stroke-width: 3.5; }
+    .gd-svg .ic-b { fill: #8ab4f8; } .gd-svg .ic-l { fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; } .gd-svg .ic-w { fill: #fff; }
+    .gd-svg .dots { font: 700 22px var(--sans); fill: #1a56db; }
+    .gd-svg .lbl { font: 500 18px var(--sans); fill: var(--ink); text-anchor: middle; } .gd-svg .lbl.b { font-weight: 700; }
+    .gd-svg .ar { fill: none; stroke: #1a3fb8; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; } .gd-svg .ar-d { stroke: #7c3aed; }
+    .gd-svg .tag-g { fill: #7c4dff; stroke: var(--ink); stroke-width: 2; } .gd-svg .tagt { font: 700 15px var(--sans); fill: #fff; text-anchor: middle; }
+    .gd-svg .ln { stroke: #c5cad3; stroke-width: 8; stroke-linecap: round; } .gd-svg .cur { stroke: #5f6368; stroke-width: 2; }
+    .gd-svg .hl { fill: #ccf6c5; }
+    .gd-svg .opt { font: 700 18px var(--sans); fill: var(--ink); } .gd-svg .val { font: 500 15px var(--sans); fill: var(--ink); }
+    .gd-svg .tr { fill: #e2e4e8; } .gd-svg .b1 { fill: #8a5cf6; } .gd-svg .b2 { fill: #a78bfa; } .gd-svg .b3 { fill: #9aa0a6; }
+    .gd-svg .ckg { fill: none; stroke: #188038; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .gd-svg .cap { font: 700 17px var(--sans); fill: var(--ink); text-anchor: middle; } .gd-svg .cap2 { font: 400 15px var(--mono); fill: var(--muted); text-anchor: middle; }
+
+    /* key features: six SVG cards */
+    .kf-grid { position: absolute; left: 48px; top: 124px; width: 1184px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+    .kf-grid .pc { padding: 18px 18px 16px; min-width: 0; height: 270px; }
+    .kf-grid .pc.purple { background: #efe6fd; }
+    .kf-grid h3 { font-size: 22px; margin: 14px 0 6px; }
+    .kf-grid p { font-size: 16px; line-height: 1.32; }
+    .kf-v { display: block; width: 100%; height: auto; overflow: visible; font-family: var(--sans); }
+    .kf-v .t rect:first-child { fill: #fff; stroke: var(--ink); stroke-width: 2; }
+    .kf-v .t path, .kf-v .t .n { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .kf-v .t .k { fill: var(--ink); stroke: none; }
+    .kf-v .pdf { font: 700 9px var(--sans); fill: #d93025; text-anchor: middle; }
+    .kf-v .badge { fill: #fff; stroke: var(--ink); stroke-width: 2; }
+    .kf-v .bt { font: 500 15px var(--sans); text-anchor: middle; fill: #1a56db; }
+    .kf-v .q rect:first-child { fill: #fff; stroke: var(--ink); stroke-width: 2; }
+    .kf-v .q text { font: 700 14px var(--sans); fill: var(--ink); }
+    .kf-v .ok { fill: #34a853; } .kf-v .ck { fill: none; stroke: #fff; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .kf-v .tr { fill: #e2e4e8; } .kf-v .fl { fill: #6c8cff; }
+    .kf-v .dots { font: 700 12px var(--sans); fill: var(--muted); text-anchor: middle; }
+    .kf-v .big { font: 700 40px var(--sans); text-anchor: middle; fill: #5b3fd6; }
+    .kf-v .sm { font: 500 16px var(--sans); text-anchor: middle; fill: var(--ink); }
+    .kf-v .p rect:first-child { fill: #fff; stroke: var(--ink); stroke-width: 2; }
+    .kf-v .p .chip { fill: var(--p-green); stroke: var(--ink); stroke-width: 1.5; }
+    .kf-v .p .code { font: 400 14px var(--mono); text-anchor: middle; fill: var(--ink); }
+    .kf-v .p text { font: 500 16px var(--sans); fill: var(--ink); }
+    .kf-v .hl { fill: #ccf6c5; stroke: var(--ink); stroke-width: 1.5; }
+    .kf-v .cf text { font: 500 17px var(--sans); fill: var(--ink); } .kf-v .cf .l { font-weight: 700; }
+    .kf-v .g { fill: #8a5cf6; } .kf-v .g2 { fill: #a78bfa; } .kf-v .g3 { fill: #9aa0a6; }
+    .kf-v .ckg { fill: none; stroke: #188038; stroke-width: 3.5; stroke-linecap: round; stroke-linejoin: round; }
+    .kf-v .arc { fill: none; stroke: #c9cff8; stroke-width: 14; stroke-linecap: round; }
+    .kf-v .arc2 { fill: none; stroke: #4285f4; stroke-width: 14; stroke-linecap: round; }
+    .kf-v .tk { stroke: var(--muted); stroke-width: 2; stroke-linecap: round; }
+    .kf-v .nd { stroke: var(--ink); stroke-width: 4; stroke-linecap: round; } .kf-v .hub { fill: var(--ink); }
+    .kf-v .big2 { font: 700 27px var(--sans); fill: #1a56db; } .kf-v .mid { font: 700 20px var(--sans); fill: var(--ink); }
+    .kf-v .sm2, .kf-v .sm3 { font: 400 14px var(--sans); fill: var(--muted); }
+    .kf-v .coin ellipse { fill: #8ab4f8; stroke: var(--ink); stroke-width: 2; } .kf-v .coin path { stroke: var(--ink); stroke-width: 2; }
+    .kf-v .dn { fill: #8a5cf6; stroke: var(--ink); stroke-width: 2; } .kf-v .dna { fill: none; stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .kf-v .big3 { font: 700 34px var(--sans); fill: #1a56db; }
+
+    /* SVG: multimodal input strip */
+    .mm-svg { display: block; width: 1088px; height: 140px; margin-bottom: 26px; overflow: visible; }
+    .mm-svg .mm-group { fill: none; stroke: var(--muted); stroke-width: 2; stroke-dasharray: 7 6; }
+    .mm-svg .mm-tile rect, .mm-svg .mm-tile path, .mm-svg .mm-tile circle { stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .mm-svg .mm-tile path, .mm-svg .mm-tile rect + rect, .mm-svg .mm-tile circle { fill: none; }
+    .mm-svg .mm-tile .fillk { fill: var(--ink); }
+    .mm-svg text { font: 500 15px var(--sans); fill: var(--ink); text-anchor: middle; }
+    .mm-svg .mm-pdf { font: 700 11px var(--sans); fill: #d93025; }
+    .mm-svg .mm-arr { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .mm-svg .mm-pill { fill: #fff; stroke: var(--ink); stroke-width: 2.5; }
+    .mm-svg .mm-big { font: 700 22px var(--sans); }
+    .mm-svg .mm-small { font: 400 14px var(--mono); fill: var(--muted); }
+    .mm-svg .mm-glow { fill: #efe6fd; stroke: var(--ink); stroke-width: 2.5; }
+
+    /* SVG: product icons on the "Already powering" cards */
+    .pc.has-ico { position: relative; padding-right: 86px; }
+    .pc-ico { position: absolute; right: 18px; top: 18px; width: 52px; height: 52px; fill: none; stroke: var(--ink); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .pc-ico .f { fill: #fff; }
+
     /* "Try it in AI Studio" slide */
     .tas-head { display: flex; align-items: center; gap: 20px; width: 1088px; margin-bottom: 18px; }
     .reveal .tas-logo { width: 68px; height: 68px; flex: none; }
@@ -638,24 +716,137 @@
         <aside class="notes">ในแอป AI จริง ๆ หลาย call เป็นคำถามปิด: จะเรียก tool ไหน, ผิด policy ไหม, ส่งไปโมเดลไหน, context นี้เกี่ยวข้องไหม • ถ้าใช้โมเดล generative ต้องรอมันเขียนทีละ token, จ่ายค่า output/thinking, แล้ว parse ข้อความกลับเป็น label และไม่รู้ว่ามั่นใจแค่ไหน • Gemini Decision 1 ให้คะแนนทุกตัวเลือกใน forward pass เดียว คืนค่าเป็นความน่าจะเป็นพร้อม confidence 0–1</aside>
       </section>
 
-      <!-- At a glance numbers -->
-      <section data-title="At a glance">
+      <!-- Generate vs decide visual -->
+      <section data-title="Generate or decide">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:48px 56px">
-            <div class="eyebrow">Gemini Decision 1 · gemini-decision-1</div>
-            <h2 style="margin-bottom:34px">At a glance</h2>
-            <div class="grid g3" style="width:1000px; gap:22px">
-              <div class="pc blue stat fragment"><b>1,000</b><span>questions in a single request</span></div>
-              <div class="pc yellow stat fragment"><b>150–250<small>ms</small></b><span>end-to-end latency (50–100 ms median model compute)</span></div>
-              <div class="pc green stat fragment"><b>$0.10</b><span>per 1M input tokens · <strong>$0</strong> for output</span></div>
-              <div class="pc red stat fragment"><b>256K</b><span>tokens of multimodal input</span></div>
-              <div class="pc stat fragment"><b>0 → 1</b><span>confidence score on every answer</span></div>
-              <div class="pc blue stat fragment"><b>~5×</b><span>cheaper than Gemini 3.5 Flash-Lite + Interactions API*</span></div>
-            </div>
-            <p class="muted" style="font-size:15px; margin-top:16px">* across Google's shared benchmark suite · latency figure for contexts up to 16K tokens</p>
+            <div class="eyebrow">Same input, different job</div>
+            <h2 style="margin-bottom:34px">Write the answer, or just pick it</h2>
+            <svg class="gd-svg" viewBox="0 0 1088 340" role="img" aria-label="Generate: input goes to an LLM that writes a multi-token text response. Decide: the same input goes to Gemini Decision 1, which returns scores for options A 0.95, B 0.82 and C 0.12.">
+              <!-- left panel: generate -->
+              <rect x="1.5" y="1.5" width="529" height="337" rx="26" class="pn pn-g"/>
+              <rect x="24" y="22" width="52" height="46" rx="14" class="hd-g"/><path class="sp" d="M44 34l3 8 8 3-8 3-3 8-3-8-8-3 8-3zM60 32l1.5 3.5 3.5 1.5-3.5 1.5-1.5 3.5-1.5-3.5-3.5-1.5 3.5-1.5z"/><path class="hd-g" d="M30 62l-6 12 16-8z"/>
+              <text x="92" y="56" class="ttl">Generate <tspan class="ttl2">(general LLM)</tspan></text>
+              <g class="box"><rect x="20" y="125" width="120" height="110" rx="20"/></g>
+                <rect x="32" y="146" width="30" height="34" rx="5" class="ic-b"/><path class="ic-l" d="M38 156h18M38 163h18M38 170h11"/>
+                <rect x="68" y="146" width="34" height="34" rx="6" class="ic-b"/><path class="ic-l" d="M71 176l9-11 7 7 5-4 7 8"/><circle cx="93" cy="155" r="3" class="ic-w"/>
+                <text x="108" y="168" class="dots">···</text>
+                <text x="80" y="215" class="lbl">Input</text>
+              <path class="ar" d="M146 180h26m-9-8 9 8-9 8"/>
+              <g class="box"><rect x="180" y="112" width="130" height="136" rx="22" class="m-g"/></g>
+              <image href="../images/gemini-decisions-slides/gemini-logo.svg" x="221" y="126" width="48" height="48"/>
+              <text x="245" y="200" class="lbl b">LLM</text><text x="245" y="222" class="lbl">(generate)</text>
+              <path class="ar" d="M316 180h26m-9-8 9 8-9 8"/>
+              <g class="box"><rect x="350" y="125" width="162" height="110" rx="18"/></g>
+              <rect x="362" y="104" width="138" height="34" rx="17" class="tag-g"/><text x="431" y="126" class="tagt">Text response</text>
+              <path class="ln" d="M368 158h126M368 174h126M368 190h96M368 206h52"/><path class="cur" d="M428 199v14"/>
+              <text x="266" y="296" class="cap">Writes token by token · you parse the text</text>
+              <text x="266" y="318" class="cap2">pay for output &amp; thinking tokens</text>
+
+              <!-- right panel: decide -->
+              <rect x="557.5" y="1.5" width="529" height="337" rx="26" class="pn pn-d"/>
+              <rect x="580" y="22" width="48" height="48" rx="13" class="hd-d"/><path class="ckw" d="M592 46l8 8 15-16"/>
+              <text x="644" y="56" class="ttl">Decide <tspan class="ttl2">(Decisions API)</tspan></text>
+              <g class="box"><rect x="576" y="125" width="120" height="110" rx="20"/></g>
+                <rect x="588" y="146" width="30" height="34" rx="5" class="ic-b"/><path class="ic-l" d="M594 156h18M594 163h18M594 170h11"/>
+                <rect x="624" y="146" width="34" height="34" rx="6" class="ic-b"/><path class="ic-l" d="M627 176l9-11 7 7 5-4 7 8"/><circle cx="649" cy="155" r="3" class="ic-w"/>
+                <text x="664" y="168" class="dots">···</text>
+                <text x="636" y="215" class="lbl">Input</text>
+              <path class="ar ar-d" d="M702 180h26m-9-8 9 8-9 8"/>
+              <g class="box"><rect x="736" y="112" width="130" height="136" rx="22" class="m-d"/></g>
+              <image href="../images/gemini-decisions-slides/gemini-logo.svg" x="777" y="124" width="48" height="48"/>
+              <text x="801" y="196" class="lbl b">Gemini</text><text x="801" y="218" class="lbl b">Decision 1</text>
+              <path class="ar ar-d" d="M872 180h26m-9-8 9 8-9 8"/>
+              <g class="box"><rect x="906" y="112" width="164" height="136" rx="18"/></g>
+              <rect x="914" y="122" width="148" height="34" rx="10" class="hl"/>
+              <text x="926" y="145" class="opt">A</text><rect x="946" y="134" width="52" height="9" rx="4.5" class="tr"/><rect x="946" y="134" width="49" height="9" rx="4.5" class="b1"/><text x="1006" y="145" class="val">0.95</text><path class="ckg" d="M1046 139l4 4 8-9"/>
+              <text x="926" y="187" class="opt">B</text><rect x="946" y="176" width="52" height="9" rx="4.5" class="tr"/><rect x="946" y="176" width="43" height="9" rx="4.5" class="b2"/><text x="1006" y="187" class="val">0.82</text>
+              <text x="926" y="227" class="opt">C</text><rect x="946" y="216" width="52" height="9" rx="4.5" class="tr"/><rect x="946" y="216" width="8" height="9" rx="4.5" class="b3"/><text x="1006" y="227" class="val">0.12</text>
+              <text x="822" y="296" class="cap">One pass · scores every option at once</text>
+              <text x="822" y="318" class="cap2">probabilities + confidence · $0 output</text>
+            </svg>
           </div>
         </div>
-        <aside class="notes">ตัวเลขสำคัญ: ถามได้ถึง 1,000 คำถามใน request เดียว • latency end-to-end 150–250 ms (เวลาโมเดลคำนวณ median 50–100 ms) สำหรับ context ไม่เกิน 16K tokens • ราคา $0.10 ต่อล้าน input tokens และ output ฟรี • รับ input ได้ถึง 256K tokens • ทุกคำตอบมี confidence 0–1 • Google บอกว่าถูกกว่า Gemini 3.5 Flash-Lite ที่ใช้ผ่าน Interactions API ราว 5 เท่าบน benchmark ชุดเดียวกัน และมี calibration error ต่ำที่สุดในชุดทดสอบ</aside>
+        <aside class="notes">เทียบให้เห็นภาพ: ซ้าย LLM ทั่วไป รับ input แล้วเขียนคำตอบเป็นข้อความหลาย token ต้องรอและต้อง parse เอง • ขวา Decisions API รับ input เดียวกัน แต่คืนคะแนนของแต่ละตัวเลือกทันที เช่น A 0.95, B 0.82, C 0.12 แอปเอาตัวเลขไปใช้ต่อได้เลย</aside>
+      </section>
+
+      <!-- Key features infographic -->
+      <section class="kf" data-corner="off" data-title="Key features">
+        <div class="eyebrow abs" style="left:48px; top:34px">Gemini Decision 1</div>
+        <h2 class="abs" style="left:48px; top:58px; font-size:38px">Six things to remember</h2>
+        <div class="kf-grid">
+          <div class="pc blue">
+            <svg class="kf-v" viewBox="0 0 348 110" aria-hidden="true">
+              <g class="t"><rect x="4" y="4" width="56" height="56" rx="12"/><path d="M18 22h28M18 32h28M18 42h18"/></g>
+              <g class="t"><rect x="76" y="4" width="56" height="56" rx="12"/><rect class="n" x="88" y="18" width="32" height="26" rx="4"/><path class="n" d="M90 42l9-10 7 6 5-4 8 8"/><circle class="n" cx="113" cy="25" r="3"/></g>
+              <g class="t"><rect x="148" y="4" width="56" height="56" rx="12"/><path d="M162 28v8M169 22v20M176 16v32M183 22v20M190 28v8"/></g>
+              <g class="t"><rect x="220" y="4" width="56" height="56" rx="12"/><rect class="n" x="232" y="18" width="32" height="26" rx="5"/><path class="k" d="M245 25v12l9-6z"/></g>
+              <g class="t"><rect x="292" y="4" width="52" height="56" rx="12"/><path class="n" d="M306 14h16l8 8v28h-24z"/><text x="318" y="42" class="pdf">PDF</text></g>
+              <rect x="74" y="74" width="200" height="32" rx="16" class="badge"/>
+              <text x="174" y="96" class="bt">up to ~256K tokens</text>
+            </svg>
+            <h3>Multimodal input</h3>
+            <p>Text, image, audio, video and PDF in a single input.</p>
+          </div>
+          <div class="pc yellow">
+            <svg class="kf-v" viewBox="0 0 348 110" aria-hidden="true">
+              <g class="q"><rect x="4" y="4" width="190" height="28" rx="14"/><text x="18" y="24">Q1</text><circle cx="78" cy="18" r="8" class="ok"/><path class="ck" d="M74 18l3 3 5-6"/><rect x="96" y="14" width="84" height="8" rx="4" class="tr"/><rect x="96" y="14" width="60" height="8" rx="4" class="fl"/></g>
+              <g class="q"><rect x="4" y="38" width="190" height="28" rx="14"/><text x="18" y="58">Q2</text><circle cx="78" cy="52" r="8" class="ok"/><path class="ck" d="M74 52l3 3 5-6"/><rect x="96" y="48" width="84" height="8" rx="4" class="tr"/><rect x="96" y="48" width="44" height="8" rx="4" class="fl"/></g>
+              <text x="99" y="80" class="dots">• • •</text>
+              <g class="q"><rect x="4" y="80" width="190" height="28" rx="14"/><text x="18" y="100">Q1000</text><circle cx="78" cy="94" r="8" class="ok"/><path class="ck" d="M74 94l3 3 5-6"/><rect x="96" y="90" width="84" height="8" rx="4" class="tr"/><rect x="96" y="90" width="70" height="8" rx="4" class="fl"/></g>
+              <text x="276" y="62" class="big">1,000</text>
+              <text x="276" y="86" class="sm">questions</text>
+            </svg>
+            <h3>Many questions, one request</h3>
+            <p>Each question is evaluated independently on the same input.</p>
+          </div>
+          <div class="pc green">
+            <svg class="kf-v" viewBox="0 0 348 110" aria-hidden="true">
+              <g class="p"><rect x="4" y="2" width="340" height="32" rx="16"/><rect x="10" y="7" width="96" height="22" rx="11" class="chip"/><text x="58" y="22" class="code">noul</text><text x="122" y="23">Yes / No</text></g>
+              <g class="p"><rect x="4" y="39" width="340" height="32" rx="16"/><rect x="10" y="44" width="96" height="22" rx="11" class="chip"/><text x="58" y="59" class="code">choice</text><text x="122" y="60">Fixed options</text></g>
+              <g class="p"><rect x="4" y="76" width="340" height="32" rx="16"/><rect x="10" y="81" width="96" height="22" rx="11" class="chip"/><text x="58" y="96" class="code">score</text><text x="122" y="97">Rubric levels</text></g>
+            </svg>
+            <h3>Three question types</h3>
+            <p>Mix yes/no, choice and rubric questions in the same request.</p>
+          </div>
+          <div class="pc red">
+            <svg class="kf-v" viewBox="0 0 348 110" aria-hidden="true">
+              <rect x="2" y="2" width="340" height="32" rx="12" class="hl"/>
+              <g class="cf"><text x="14" y="25" class="l">A</text><rect x="40" y="13" width="190" height="10" rx="5" class="tr"/><rect x="40" y="13" width="180" height="10" rx="5" class="g"/><text x="244" y="25">0.95</text><path class="ckg" d="M296 18l6 6 11-12"/></g>
+              <g class="cf"><text x="14" y="63" class="l">B</text><rect x="40" y="51" width="190" height="10" rx="5" class="tr"/><rect x="40" y="51" width="156" height="10" rx="5" class="g2"/><text x="244" y="63">0.82</text></g>
+              <g class="cf"><text x="14" y="101" class="l">C</text><rect x="40" y="89" width="190" height="10" rx="5" class="tr"/><rect x="40" y="89" width="23" height="10" rx="5" class="g3"/><text x="244" y="101">0.12</text></g>
+            </svg>
+            <h3>Confidence score</h3>
+            <p>Every answer has a 0–1 confidence. Send low-confidence cases to a fallback or a human.</p>
+          </div>
+          <div class="pc">
+            <svg class="kf-v" viewBox="0 0 348 110" aria-hidden="true">
+              <path class="arc" d="M14 100a70 70 0 0 1 140 0"/>
+              <path class="arc2" d="M14 100a70 70 0 0 1 35-60.6"/>
+              <path class="tk" d="M24 100h10M84 30v10M144 100h-10M35 51l7 7M133 51l-7 7"/>
+              <path class="nd" d="M84 100L124 62"/><circle cx="84" cy="100" r="7" class="hub"/>
+              <text x="182" y="48" class="big2">150–250 ms</text>
+              <text x="182" y="66" class="sm2">end-to-end</text>
+              <text x="182" y="94" class="mid">50–100 ms</text>
+              <text x="182" y="109" class="sm2">model compute</text>
+            </svg>
+            <h3>Fast</h3>
+            <p>Low, stable latency from 1 to 100 questions (contexts up to 16K tokens).</p>
+          </div>
+          <div class="pc purple">
+            <svg class="kf-v" viewBox="0 0 348 110" aria-hidden="true">
+              <g class="coin"><ellipse cx="54" cy="88" rx="44" ry="13"/><path d="M10 88v-14M98 88v-14"/><ellipse cx="54" cy="74" rx="44" ry="13"/><path d="M10 74v-14M98 74v-14"/><ellipse cx="54" cy="60" rx="44" ry="13"/><path d="M10 60v-14M98 60v-14"/><ellipse cx="54" cy="46" rx="44" ry="13"/></g>
+              <circle cx="100" cy="88" r="18" class="dn"/><path class="dna" d="M100 79v18m-7-7 7 7 7-7"/>
+              <text x="140" y="44" class="big3">$0.10</text>
+              <text x="242" y="44" class="sm3">/ 1M input</text>
+              <text x="140" y="92" class="big3">$0</text>
+              <text x="186" y="92" class="sm3">output tokens</text>
+            </svg>
+            <h3>Cost-effective</h3>
+            <p>Shared input is billed once per request. ~5× cheaper than Gemini 3.5 Flash-Lite.</p>
+          </div>
+        </div>
+        <aside class="notes">สรุป 6 จุดสำคัญ: (1) input มัลติโมดัล ข้อความ รูป เสียง วิดีโอ PDF ในก้อนเดียว ถึงราว 256K tokens (2) ถามได้ถึง 1,000 คำถามใน request เดียว แต่ละข้อประเมินแยกกันบน input เดียวกัน (3) คำถาม 3 แบบ noul, choice, score (4) ทุกคำตอบมี confidence 0–1 ใช้ส่งเคสที่ไม่มั่นใจไปให้ระบบสำรองหรือคนตรวจ (5) เร็ว 150–250 ms end-to-end (โมเดลคำนวณ 50–100 ms) และนิ่งแม้เพิ่มคำถามจาก 1 เป็น 100 (6) ราคา input $0.10 ต่อล้าน tokens, output $0, input ที่แชร์คิดเงินครั้งเดียวต่อ request, ถูกกว่า Gemini 3.5 Flash-Lite ราว 5 เท่า</aside>
       </section>
 
       <!-- Section 02 -->
@@ -723,7 +914,7 @@
               </div>
               <div class="dg-box q-box" style="left:0; top:210px; width:384px; height:210px">
                 <div class="dg-t">Questions</div>
-                <div class="dg-row"><code>bool</code>Is there a liquid spill?</div>
+                <div class="dg-row"><code>noul</code>Is there a liquid spill?</div>
                 <div class="dg-row"><code>choice</code>What action should be taken?</div>
                 <div class="dg-row"><code>score</code>Rate spill severity (0 to 2)</div>
               </div>
@@ -733,14 +924,14 @@
               <div class="dg-box a-box" style="left:722px; top:30px; width:366px">
                 <div class="dg-t">Calibrated answers</div>
                 <div class="dg-s">Parallel isolated scoring</div>
-                <div class="dg-ans"><div><code>bool</code>has_spill: 0.95</div><small>confidence: 0.95</small></div>
+                <div class="dg-ans"><div><code>noul</code>has_spill: 0.95</div><small>confidence: 0.95</small></div>
                 <div class="dg-ans"><div><code>choice</code>next_action: "wipe_with_cloth"</div><small>confidence: 0.98</small></div>
                 <div class="dg-ans"><div><code>score</code>severity: 1.19 / 2.00</div><small>confidence: 0.77</small></div>
               </div>
             </div>
           </div>
         </div>
-        <aside class="notes">ภาพรวมทั้งระบบ (ตัวอย่างจาก docs: ตรวจน้ำหกในห้องพักพนักงาน) • ซ้ายบน: input มัลติโมดัลก้อนเดียว ข้อความ/JSON, PDF, รูป, เสียง, วิดีโอ สูงสุดราว 256K tokens • ซ้ายล่าง: คำถามหลายแบบในคำขอเดียว bool "มีน้ำหกไหม", choice "ควรทำอะไร", score "ความรุนแรง 0–2" • ตรงกลาง: โมเดล Gemini Decision 1 • ขวา: คำตอบที่ calibrate แล้ว ให้คะแนนแต่ละคำถามแยกกันแบบขนาน has_spill 0.95, next_action = wipe_with_cloth (confidence 0.98), severity 1.19 จาก 2 (confidence 0.77) • confidence ต่ำ = ส่งให้คนหรือโมเดลใหญ่ตรวจต่อ</aside>
+        <aside class="notes">ภาพรวมทั้งระบบ (ตัวอย่างจาก docs: ตรวจน้ำหกในห้องพักพนักงาน) • ซ้ายบน: input มัลติโมดัลก้อนเดียว ข้อความ/JSON, PDF, รูป, เสียง, วิดีโอ สูงสุดราว 256K tokens • ซ้ายล่าง: คำถามหลายแบบในคำขอเดียว noul "มีน้ำหกไหม", choice "ควรทำอะไร", score "ความรุนแรง 0–2" • ตรงกลาง: โมเดล Gemini Decision 1 • ขวา: คำตอบที่ calibrate แล้ว ให้คะแนนแต่ละคำถามแยกกันแบบขนาน has_spill 0.95, next_action = wipe_with_cloth (confidence 0.98), severity 1.19 จาก 2 (confidence 0.77) • confidence ต่ำ = ส่งให้คนหรือโมเดลใหญ่ตรวจต่อ</aside>
       </section>
 
       <!-- Question types -->
@@ -765,9 +956,21 @@
           <div class="in" style="padding:48px 56px">
             <div class="eyebrow">Input</div>
             <h2 style="margin-bottom:30px">Natively multimodal</h2>
-            <div class="chips mm" style="margin-bottom:34px">
-              <span class="chip" style="background:var(--p-blue)">Text</span><span class="chip" style="background:var(--p-yellow)">Images</span><span class="chip" style="background:var(--p-green)">Audio</span><span class="chip" style="background:var(--p-red)">Video</span><span class="chip">PDFs</span>
-            </div>
+            <svg class="mm-svg" viewBox="0 0 1088 140" role="img" aria-label="Text, image, audio, video and PDF go into one request of up to 256K tokens, then into Gemini">
+              <rect x="1.5" y="6" width="545" height="128" rx="26" class="mm-group"/>
+              <g class="mm-tile"><rect x="12" y="18" width="96" height="104" rx="18" fill="var(--p-blue)"/><path d="M40 42h40M40 54h40M40 66h26"/><text x="60" y="108">Text</text></g>
+              <g class="mm-tile"><rect x="120" y="18" width="96" height="104" rx="18" fill="var(--p-yellow)"/><rect x="144" y="36" width="48" height="38" rx="6"/><path d="M146 70l14-16 10 10 8-7 12 13"/><circle cx="181" cy="47" r="4"/><text x="168" y="108">Image</text></g>
+              <g class="mm-tile"><rect x="228" y="18" width="96" height="104" rx="18" fill="var(--p-green)"/><path d="M256 50v12M266 42v28M276 36v40M286 44v24M296 52v8"/><text x="276" y="108">Audio</text></g>
+              <g class="mm-tile"><rect x="336" y="18" width="96" height="104" rx="18" fill="var(--p-red)"/><rect x="358" y="36" width="52" height="38" rx="8"/><path d="M379 46v18l14-9z" class="fillk"/><text x="384" y="108">Video</text></g>
+              <g class="mm-tile"><rect x="444" y="18" width="96" height="104" rx="18" fill="#fff"/><path d="M476 32h24l12 12v34h-36z"/><path d="M500 32v12h12"/><text x="494" y="64" class="mm-pdf">PDF</text><text x="492" y="108">PDF</text></g>
+              <path class="mm-arr" d="M560 70h58m-10-8 10 8-10 8"/>
+              <rect x="634" y="32" width="276" height="76" rx="38" class="mm-pill"/>
+              <text x="772" y="66" class="mm-big">One request</text>
+              <text x="772" y="90" class="mm-small">up to 256K tokens</text>
+              <path class="mm-arr" d="M922 70h48m-10-8 10 8-10 8"/>
+              <circle cx="1032" cy="70" r="52" class="mm-glow"/>
+              <image href="../images/gemini-decisions-slides/gemini-logo.svg" x="996" y="34" width="72" height="72"/>
+            </svg>
             <div class="grid g3" style="width:1088px; gap:24px">
               <div class="pc fragment"><h3>Combine modalities</h3>A call recording + account metadata, or a scanned PDF claim + damage photos — in one input.</div>
               <div class="pc fragment"><h3>Tunable resolution</h3>Set image &amp; video resolution to trade visual detail against token cost.</div>
@@ -1045,10 +1248,10 @@ curl -X POST \
             <div class="eyebrow">In production</div>
             <h2 style="margin-bottom:30px">Already powering Google products</h2>
             <div class="grid g2" style="width:1088px; gap:22px">
-              <div class="pc blue fragment"><h3>Gemini Notebook · model routing</h3>Real-time router picks the model tier &amp; thinking level — everyday queries with <b>up to 40% lower latency</b>.</div>
-              <div class="pc yellow fragment"><h3>Stitch Rapid · design iteration</h3>Generates playable wireframes of a product flow in seconds; voice or tap edits apply almost instantly.</div>
-              <div class="pc green fragment"><h3>CC (Google Labs) · emoji picks</h3>Chooses an emoji reaction from a palette of <b>200+ options</b> in a fraction of a second.</div>
-              <div class="pc red fragment"><h3>Search · MCP tool safety</h3>A safety layer that detects adversarial behavior &amp; content, within the latency envelope.</div>
+              <div class="pc blue fragment has-ico"><svg class="pc-ico" viewBox="0 0 52 52" aria-hidden="true"><circle class="f" cx="9" cy="26" r="6"/><path d="M15 26h8c6 0 8-12 14-12h6M23 26c6 0 8 12 14 12h6M39 9l5 5-5 5M39 33l5 5-5 5"/></svg><h3>Gemini Notebook · model routing</h3>Real-time router picks the model tier &amp; thinking level — everyday queries with <b>up to 40% lower latency</b>.</div>
+              <div class="pc yellow fragment has-ico"><svg class="pc-ico" viewBox="0 0 52 52" aria-hidden="true"><rect class="f" x="4" y="8" width="22" height="36" rx="4"/><rect class="f" x="26" y="8" width="22" height="36" rx="4"/><path d="M9 16h12M9 22h8M31 16h12M31 22h12M31 28h6"/><rect x="9" y="30" width="12" height="8" rx="2"/></svg><h3>Stitch Rapid · design iteration</h3>Generates playable wireframes of a product flow in seconds; voice or tap edits apply almost instantly.</div>
+              <div class="pc green fragment has-ico"><svg class="pc-ico" viewBox="0 0 52 52" aria-hidden="true"><circle class="f" cx="26" cy="26" r="20"/><path d="M17 30c3 5 15 5 18 0"/><circle cx="19" cy="21" r="1.5"/><circle cx="33" cy="21" r="1.5"/></svg><h3>CC (Google Labs) · emoji picks</h3>Chooses an emoji reaction from a palette of <b>200+ options</b> in a fraction of a second.</div>
+              <div class="pc red fragment has-ico"><svg class="pc-ico" viewBox="0 0 52 52" aria-hidden="true"><path class="f" d="M26 5l17 6v13c0 11-7 19-17 23C16 43 9 35 9 24V11z"/><path d="M18 26l6 6 11-12"/></svg><h3>Search · MCP tool safety</h3>A safety layer that detects adversarial behavior &amp; content, within the latency envelope.</div>
             </div>
           </div>
         </div>
@@ -1091,15 +1294,15 @@ curl -X POST \
             <h2 style="font-size:42px; margin-bottom:24px">What you can decide</h2>
             <div class="uc-grid">
               <div class="pc blue fragment"><div class="uc-top"><span class="chip">Text</span><code>choice</code></div><h3>Route a support ticket</h3><span class="uc-q">“Which team should handle this ticket?”</span><span class="uc-a">billing 0.95 · technical 0.04</span></div>
-              <div class="pc green fragment"><div class="uc-top"><span class="chip">Image</span><code>bool</code></div><h3>Inspect a return photo</h3><span class="uc-q">“Does this photo show visible damage?”</span><span class="uc-a">true 0.92 → approve refund</span></div>
+              <div class="pc green fragment"><div class="uc-top"><span class="chip">Image</span><code>noul</code></div><h3>Inspect a return photo</h3><span class="uc-q">“Does this photo show visible damage?”</span><span class="uc-a">true 0.92 → approve refund</span></div>
               <div class="pc yellow fragment"><div class="uc-top"><span class="chip">Audio</span><code>score</code></div><h3>Analyze a support call</h3><span class="uc-q">“How frustrated is the caller?”</span><span class="uc-a">high score → escalate to a lead</span></div>
               <div class="pc red fragment"><div class="uc-top"><span class="chip">Video</span><code>score</code></div><h3>Review a bug recording</h3><span class="uc-q">“How severe is this bug?”</span><span class="uc-a">cosmetic · workaround · blocked</span></div>
-              <div class="pc fragment"><div class="uc-top"><span class="chip">PDF</span><code>bool</code></div><h3>Audit an expense receipt</h3><span class="uc-q">“Does this receipt follow the policy?”</span><span class="uc-a">low confidence → human review</span></div>
-              <div class="pc blue fragment"><div class="uc-top"><span class="chip">Code</span><code>bool</code></div><h3>Gate a code review</h3><span class="uc-q">“Is this diff safe to merge?”</span><span class="uc-a">false → block the PR</span></div>
+              <div class="pc fragment"><div class="uc-top"><span class="chip">PDF</span><code>noul</code></div><h3>Audit an expense receipt</h3><span class="uc-q">“Does this receipt follow the policy?”</span><span class="uc-a">low confidence → human review</span></div>
+              <div class="pc blue fragment"><div class="uc-top"><span class="chip">Code</span><code>noul</code></div><h3>Gate a code review</h3><span class="uc-q">“Is this diff safe to merge?”</span><span class="uc-a">false → block the PR</span></div>
             </div>
           </div>
         </div>
-        <aside class="notes">use case ตัวอย่างจาก Decisions API Playground ใน AI Studio ครบทุก modality: (1) Text: route ticket ไปทีมที่ถูก (choice: billing/technical/shipping) (2) Image: ดูรูปสินค้าตีกลับว่าเสียหายไหม (bool) ถ้าใช่ก็อนุมัติคืนเงินอัตโนมัติ (3) Audio: ฟังสาย support ให้คะแนนความหงุดหงิดของลูกค้า (score) คะแนนสูงส่งหัวหน้า (4) Video: ดูวิดีโอบั๊กแล้วให้ระดับความรุนแรง cosmetic/workaround/blocked (5) PDF: ตรวจใบเสร็จว่าตรงนโยบายไหม confidence ต่ำส่งคนตรวจ (6) Code: gate code review ถ้าไม่ปลอดภัยก็ block PR • คำถามในสไลด์เป็นตัวอย่างที่เขียนขึ้นประกอบ ลองตัวจริงได้ใน Playground</aside>
+        <aside class="notes">use case ตัวอย่างจาก Decisions API Playground ใน AI Studio ครบทุก modality: (1) Text: route ticket ไปทีมที่ถูก (choice: billing/technical/shipping) (2) Image: ดูรูปสินค้าตีกลับว่าเสียหายไหม (noul) ถ้าใช่ก็อนุมัติคืนเงินอัตโนมัติ (3) Audio: ฟังสาย support ให้คะแนนความหงุดหงิดของลูกค้า (score) คะแนนสูงส่งหัวหน้า (4) Video: ดูวิดีโอบั๊กแล้วให้ระดับความรุนแรง cosmetic/workaround/blocked (5) PDF: ตรวจใบเสร็จว่าตรงนโยบายไหม confidence ต่ำส่งคนตรวจ (6) Code: gate code review ถ้าไม่ปลอดภัยก็ block PR • คำถามในสไลด์เป็นตัวอย่างที่เขียนขึ้นประกอบ ลองตัวจริงได้ใน Playground</aside>
       </section>
 
       <!-- Section 04 -->
