@@ -4,7 +4,7 @@
 
   const NAV = [
     { title: "Start here", icon: "googlecloud.svg", items: [
-      ["index", "Home"], ["overview", "Certification Blueprint"]] },
+      ["index", "Home"], ["roadmap", "Learning Roadmap"], ["overview", "Certification Blueprint"], ["exam", "Mock Exam · 118 questions"]] },
     { title: "Sec 1: Agent Solutions", icon: "workflows.svg", items: [
       ["sec1-exam-guide", "1.0 Domain 1 Roadmap"], ["sec1-architecture", "1.1 Automation vs. Single vs. Multi-Agent"],
       ["sec1-platform-selection", "1.2 Agent Designer vs. Code-First ADK"], ["sec1-ces-omnichannel", "1.3 CES: Flows, Playbooks & Omnichannel"],
@@ -147,18 +147,34 @@
     try { localStorage.setItem("doc-theme", next); } catch (e) {}
   });
 
-  /* sidebar */
+  /* sidebar — each domain's modules live as sections of one page: secN.html#<old-slug> */
   const slug = document.body.dataset.slug;
+  const pageOf = k => { const m = /^(?:mcq-)?sec(\d)/.exec(k); return m ? "sec" + m[1] : k; };
+  const hrefOf = k => pageOf(k) === k ? k + ".html" : pageOf(k) + ".html#" + k;
   const side = document.getElementById("sidebar");
   if (side) {
     side.innerHTML = NAV.map(g => {
-      const open = g.items.some(i => i[0] === slug) || g.title === "Start here";
+      const open = g.items.some(i => pageOf(i[0]) === slug) || g.title === "Start here";
       return '<details' + (open ? " open" : "") + '><summary><img src="' + LOGO + g.icon + '" alt="">' + g.title + '</summary>' +
-        g.items.map(i => '<a href="' + i[0] + '.html"' + (i[0] === slug ? ' class="cur" aria-current="page"' : "") + '>' + i[1].replace(/&/g, "&amp;") + '</a>').join("") +
+        g.items.map(i => '<a href="' + hrefOf(i[0]) + '" data-key="' + i[0] + '"' + (i[0] === slug ? ' class="cur" aria-current="page"' : "") + '>' + i[1].replace(/&/g, "&amp;") + '</a>').join("") +
         '</details>';
     }).join("");
     const cur = side.querySelector(".cur");
     if (cur) side.scrollTop = cur.offsetTop - side.clientHeight / 2;
+    /* merged domain pages: highlight the section in view */
+    const parts = [...document.querySelectorAll("section.part")];
+    if (parts.length) {
+      const links = {};
+      side.querySelectorAll("a[data-key]").forEach(a => { if (pageOf(a.dataset.key) === slug) links[a.dataset.key] = a; });
+      const mark = () => {
+        let id = parts[0].id.replace(/-part$/, "");
+        for (const p of parts) if (p.getBoundingClientRect().top < 140) id = p.id.replace(/-part$/, "");
+        Object.entries(links).forEach(([k, a]) => { const on = k === id; a.classList.toggle("cur", on); if (on) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current"); });
+      };
+      let raf = 0;
+      addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; mark(); }); }, { passive: true });
+      mark();
+    }
   }
   document.getElementById("menu-btn")?.addEventListener("click", () => document.body.classList.toggle("nav-open"));
   side?.addEventListener("click", e => { if (e.target.closest("a")) document.body.classList.remove("nav-open"); });
@@ -172,7 +188,7 @@
       h2s.map(h => '<a href="#' + h.id + '">' + h.textContent.trim() + "</a>").join("");
   } else if (toc) toc.remove();
 
-  if (!main || slug === "index") return;
+  if (!main || slug === "index" || slug === "roadmap" || slug === "exam") return;
   const hand = document.body.classList.contains("hand");
 
   /* 1. logos next to headings, card names and table headers (hand-built pages place their own) */
@@ -186,7 +202,7 @@
       span.innerHTML = m.map(linkedIcon).join("");
       el.prepend(span);
     };
-    main.querySelectorAll("h2, .def-name, .def-title, thead th").forEach(el => decorate(el, 3));
+    main.querySelectorAll("h2, h3, .def-name, .def-title, thead th").forEach(el => { if (!el.closest(".hand")) decorate(el, 3); });
   }
 
   /* 2. "Services in this module" strip under the title — each chip opens the official docs */

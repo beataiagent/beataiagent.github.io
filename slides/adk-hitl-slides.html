@@ -1,0 +1,1974 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Human-in-the-loop with ADK</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+
+  <style>
+    /* ================= DevFest 2026 theme tokens (from the official template) ================= */
+    :root {
+      --ink: #1e1e1e;            /* Black 02 */
+      --paper: #f0f0f0;          /* Off-White */
+      --white: #fff;
+      --g-blue: #4285f4; --g-green: #34a853; --g-red: #ea4335; --g-yellow: #fbbc04;      /* Google 500 */
+      --h-blue: #57caff; --h-green: #5cdb6d; --h-red: #ff7daf; --h-yellow: #ffd427;      /* Halftone */
+      --p-blue: #c3ecf6; --p-green: #ccf6c5; --p-red: #f8d8d8; --p-yellow: #ffe7a5;      /* Pastel */
+      --muted: #5f6368;
+      --stroke: 3px;
+      --sans: "Google Sans", "Product Sans", system-ui, sans-serif;
+      --mono: "Roboto Mono", ui-monospace, monospace;
+
+      --r-background-color: var(--paper);
+      --r-main-font: var(--sans);
+      --r-heading-font: var(--sans);
+      --r-code-font: var(--mono);
+      --r-main-color: var(--ink);
+      --r-heading-color: var(--ink);
+      --r-heading-text-transform: none;
+      --r-heading-font-weight: 700;
+      --r-heading-letter-spacing: -0.01em;
+      --r-link-color: #1a73e8;
+      --r-link-color-hover: #174ea6;
+      --r-main-font-size: 28px;
+    }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--paper); }
+    .reveal { color: var(--ink); }
+    .reveal strong, .reveal b { font-weight: 700; }
+
+    /* every slide is a fixed 1280×720 canvas, laid out absolutely like the Slides template */
+    .reveal .slides section { width: 1280px; height: 720px; padding: 0; box-sizing: border-box; text-align: left; background: var(--paper); line-height: 1.3; }
+    .reveal .slides section.bg-blue { background: var(--p-blue); }
+    .reveal .slides section.bg-green { background: var(--p-green); }
+    .reveal .slides section.bg-yellow { background: var(--p-yellow); }
+    .reveal .slides section.bg-red { background: var(--p-red); }
+    .reveal h1, .reveal h2, .reveal h3 { margin: 0; text-transform: none; color: var(--ink); line-height: 1.12; }
+    .reveal h1 { font-size: 84px; font-weight: 700; letter-spacing: -.015em; }
+    .reveal h2 { font-size: 46px; font-weight: 700; }
+    .reveal h3 { font-size: 26px; font-weight: 700; }
+    .reveal p { margin: 0; }
+    .reveal .slides img { margin: 0; max-width: none; max-height: none; }
+    .reveal a { text-decoration: none; }
+    .abs { position: absolute; }
+    .mono { font-family: var(--mono); font-weight: 300; }
+    .sub { font-family: var(--mono); font-weight: 300; font-size: 22px; line-height: 1.35; color: var(--ink); }
+    .muted { color: var(--muted); }
+
+    /* ---------- notched card (shape drawn by dfShapes(): data-tl / data-br notches, data-scallop) ---------- */
+    .nc { position: absolute; }
+    .nc > svg.nc-s { position: absolute; inset: 0; overflow: visible; z-index: 0; pointer-events: none; }
+    .nc > .in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; padding: 40px 52px; }
+
+    /* ---------- DevFest badge: { DevFest / location } ---------- */
+    .badge { position: absolute; display: flex; align-items: center; gap: 4px; --bk: var(--g-yellow); }
+    .badge .bk { font: 700 92px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .badge b { font: 700 50px/1 var(--sans); letter-spacing: -.01em; }
+    .badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 6px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .badge.sm .bk { font-size: 64px; -webkit-text-stroke-width: 2.5px; }
+    .badge.sm b { font-size: 34px; }
+    .badge.sm i { font-size: 11px; padding: 4px 0; margin-top: 5px; border-width: 2px; }
+
+    /* ---------- corner logos: Build with Gemini + DevFest/GDG lockup (auto-added bottom-right of every slide) ---------- */
+    .corner-logos { position: absolute; right: 40px; bottom: 38px; display: flex; align-items: flex-end; gap: 14px; z-index: 2; pointer-events: none; }
+    .corner-logos img { height: 94px; width: auto; display: block; }
+
+    /* ---------- line icons (sprite at top of <body>) ---------- */
+    .ico { display: block; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .dots { position: absolute; display: flex; gap: 14px; }
+    .dots i { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--ink); background: var(--dc, var(--g-blue)); box-sizing: border-box; }
+    .numbox { position: absolute; border: var(--stroke) solid var(--ink); border-radius: 28px; background: #fff; font: 300 64px/1 var(--mono); display: flex; align-items: center; padding: 0 28px; box-sizing: border-box; }
+
+    /* ---------- content atoms ---------- */
+    .pc { border: 2.5px solid var(--ink); border-radius: 24px; padding: 22px 24px; background: #fff; box-sizing: border-box; font-size: 20px; line-height: 1.38; }
+    .pc.blue { background: var(--p-blue); } .pc.green { background: var(--p-green); } .pc.yellow { background: var(--p-yellow); } .pc.red { background: var(--p-red); }
+    .pc h3 { margin-bottom: 8px; }
+    .pc .ico { width: 46px; height: 46px; margin-bottom: 14px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 5px 13px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; font-size: 15px; line-height: 1.3; }
+    .tag { display: inline-block; padding: 7px 20px; border-radius: 999px; border: 2.5px solid var(--ink); background: #fff; font: 500 18px/1.2 var(--sans); }
+    .tag.red { background: var(--p-red); } .tag.yellow { background: var(--g-yellow); }
+    .eyebrow { font: 400 17px/1 var(--mono); letter-spacing: .02em; color: var(--ink); margin-bottom: 12px; }
+    .grid { display: grid; gap: 20px; }
+    .g2 { grid-template-columns: 1fr 1fr; } .g3 { grid-template-columns: repeat(3, 1fr); } .g4 { grid-template-columns: repeat(4, 1fr); }
+    .reveal ul.bl { list-style: none; margin: 0; padding: 0; display: block; font-size: 25px; line-height: 1.35; }
+    .reveal ul.bl li { position: relative; padding-left: 34px; margin: 0 0 16px; }
+    .reveal ul.bl li::before { content: ""; position: absolute; left: 2px; top: .38em; width: 15px; height: 15px; border-radius: 50%; border: 2.5px solid var(--ink); background: var(--g-blue); }
+    .reveal ul.bl li:nth-child(4n+2)::before { background: var(--g-red); }
+    .reveal ul.bl li:nth-child(4n+3)::before { background: var(--g-yellow); }
+    .reveal ul.bl li:nth-child(4n+4)::before { background: var(--g-green); }
+    .placeholder { border: 2.5px dashed #9aa0a6; border-radius: 24px; display: grid; place-items: center; color: var(--muted); font-size: 18px; text-align: center; padding: 20px; background: var(--paper); box-sizing: border-box; }
+
+    /* code */
+    .reveal pre { width: auto; margin: 0; box-shadow: none; font-size: 15px; line-height: 1.42; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--paper); overflow: hidden; }
+    .reveal pre code { max-height: none; padding: 16px 22px; background: transparent; font-family: var(--mono); font-weight: 400; }
+    .reveal .hljs { background: transparent; color: #1e1e1e; }
+    .reveal .hljs-ln-numbers { color: #9aa0a6; }
+    .cmd { font: 400 15px/1.4 var(--mono); padding: 12px 16px; border-radius: 16px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; }
+    /* "ask your coding agent" prompt bar at the bottom of each step slide */
+    .ask { position: absolute; left: 56px; right: 56px; bottom: 30px; display: flex; align-items: center; gap: 16px; padding: 12px 18px; border: 2px dashed var(--h-yellow); border-radius: 16px; background: #2a2b2f; }
+    .ask b { flex: none; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; border-radius: 999px; background: var(--h-yellow); color: #202124; white-space: nowrap; }
+    .ask span { font: 400 16px/1.4 var(--mono); color: #e8eaed; }
+    .ag-steps .pc { display: flex; flex-direction: column; gap: 12px; }
+    .ag-steps .pc .num { width: 38px; height: 38px; border-radius: 50%; border: 2px solid currentColor; display: grid; place-items: center; font: 500 19px/1 var(--sans); color: #fff; }
+    .ag-steps .pc.blue .num { color: var(--h-blue); } .ag-steps .pc.green .num { color: var(--h-green); } .ag-steps .pc.yellow .num { color: var(--h-yellow); }
+    .ag-steps .pc p { margin: 0; font-size: 17px; }
+    .ag-steps .pc.red .num { color: var(--h-red); }
+    .st4 .pc { height: 310px; padding: 18px; }
+    .st4 .pc .num { flex: none; }
+    .st4 .cmd { font-size: 13.5px; }
+    .st4 .pc p { font-size: 15.5px; line-height: 1.4; }
+
+    /* flow (slide 7) */
+    .flow { display: flex; align-items: center; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 26px 18px; }
+    .flow .node b { display: block; font-size: 24px; margin-bottom: 8px; }
+    .flow .node code { font-family: var(--mono); font-size: 16px; white-space: nowrap; }
+    .flow .arr { width: 46px; flex: none; }
+
+    /* demo */
+    .demo-wrap { position: relative; width: 520px; aspect-ratio: 4 / 3; border-radius: 24px; overflow: hidden; border: 2.5px solid var(--ink); background: #1e1e1e; }
+    .reveal .demo-wrap video, .reveal .demo-wrap canvas { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; max-height: none; margin: 0; object-fit: cover; transform: scaleX(-1); }
+    .demo-ui { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .btn { font: 500 18px/1 var(--sans); padding: 13px 26px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); color: #fff; cursor: pointer; }
+    .btn.ghost { background: #fff; color: var(--ink); }
+    .btn:disabled { opacity: .45; cursor: default; }
+    #demoStatus { font: 300 16px/1.4 var(--mono); color: var(--ink); }
+    .gesture { position: absolute; left: 14px; top: 12px; font: 500 20px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); z-index: 2; }
+
+    /* ---------- slide 1: speaker cover ---------- */
+    .reveal .slides section.s-cover { overflow: hidden; }
+    .s-cover .cv-pill { position: absolute; left: 129px; top: 44px; width: 556px; height: 93px; border-radius: 999px; background: var(--ink); }
+    .s-cover .cv-dot { position: absolute; left: 670px; top: 44px; width: 91px; height: 91px; border-radius: 50%; background: var(--g-blue); border: 3px solid var(--ink); box-sizing: border-box; }
+    .s-cover .cv-kicker { font: 700 38px/1.1 var(--sans); color: var(--g-blue); margin-bottom: 8px; }
+    .s-cover .cv-title { font-size: 86px; line-height: 1.04; letter-spacing: -.015em; }
+    .s-cover .cv-name { position: absolute; left: 88px; top: 542px; width: 346px; height: 97px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 999px; background: #fff; display: flex; flex-direction: column; justify-content: center; padding: 0 24px; z-index: 2; }
+    .s-cover .cv-name b { font: 700 29px/1.15 var(--sans); white-space: nowrap; }
+    .s-cover .cv-name span { font: 400 15px/1.3 var(--sans); white-space: nowrap; margin-top: 3px; }
+    .s-cover .cv-photo { position: absolute; left: 761px; top: 40px; width: 479px; height: 370px; border: 3px solid #555; border-radius: 66px; overflow: hidden; background: #efeeef; box-sizing: border-box; }
+    .s-cover .cv-photo > img { position: absolute; left: 92px; top: 30px; width: 334px; height: 334px; object-fit: cover; -webkit-mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); mask-image: linear-gradient(90deg, transparent, #000 14%, #000 88%, transparent); }
+    .s-cover .gde { position: absolute; left: 128px; top: 262px; display: flex; height: 79px; border: 2px solid #c6dafc; border-radius: 9px; overflow: hidden; background: #fff; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .s-cover .gde-l { width: 108px; display: flex; flex-direction: column; align-items: center; padding-top: 8px; position: relative; }
+    .s-cover .gde-l img { width: 36px; height: 18px; object-fit: contain; }
+    .s-cover .gde-l span { font: 400 17px/1 var(--sans); color: #5f6368; margin-top: 4px; }
+    .s-cover .gde-l i { position: absolute; left: 0; right: 0; bottom: 0; height: 18px; background: #4a86e8; color: #fff; font: 400 12px/18px var(--sans); text-align: center; font-style: normal; }
+    .s-cover .gde-r { width: 108px; display: grid; place-items: center; font: 500 12px/1 var(--sans); color: #3c4043; border-left: 6px solid #e8f0fe; background: #fff; }
+    .s-cover .cv-badge { position: absolute; left: 696px; top: 505px; width: 313px; height: 124px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 42px; background: #f7f7f7; display: flex; align-items: center; justify-content: center; gap: 4px; }
+    .s-cover .cv-badge .bk { font: 700 82px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .s-cover .cv-badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .s-cover .cv-badge b { font: 700 45px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover .cv-badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 5px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+    .s-cover .cv-blobs { position: absolute; left: 1010px; top: 501px; width: 211px; height: 77px; }
+    .s-cover .cv-gdg { position: absolute; left: 1007px; top: 578px; width: 132px; height: 87px; box-sizing: border-box; border: 3px solid var(--ink); border-radius: 44px; background: #fff; display: grid; place-items: center; }
+    .s-cover .cv-gdg img { width: 90px; height: 45px; object-fit: contain; }
+
+    /* ---------- slide 2: agenda ---------- */
+    .s-agenda .ag-title { position: absolute; left: 41px; top: 40px; font-size: 56px; font-weight: 400; }
+    .reveal .s-agenda ol.ag-list { position: absolute; left: 41px; top: 168px; margin: 0; padding: 0; list-style: none; display: grid; gap: 22px; }
+    .s-agenda .ag-list li { position: relative; display: flex; align-items: center; gap: 18px; height: 84px; }
+    .s-agenda .ag-list svg { position: absolute; left: 0; top: -6px; width: 96px; height: 96px; fill: none; stroke: var(--ink); stroke-width: 2.5; }
+    .s-agenda .ag-list b { width: 96px; text-align: center; font: 500 54px/1 var(--sans); flex: none; }
+    .s-agenda .ag-list span { width: 688px; height: 84px; box-sizing: border-box; border: 2.5px solid var(--ink); border-radius: 999px; background: #d3e3f3; display: flex; align-items: center; padding: 0 26px; font: 400 34px/1 var(--sans); }
+
+    /* tasks slide: Text · Audio · Decision · Retrieval / Vision · GenAI */
+    .tasks-grid { display: grid; grid-template-columns: 1.3fr 1.25fr .95fr 1.1fr; grid-template-rows: auto auto; gap: 14px; }
+    .tasks-grid .pc { padding: 16px 16px; }
+    .tasks-grid .pc.span3 { grid-column: span 3; }
+    .tasks-grid h3 { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font-size: 24px; }
+    .tasks-grid .ord { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 2.5px solid var(--ink); background: #fff; display: grid; place-items: center; font: 500 16px/1 var(--sans); box-sizing: border-box; }
+    .tasks-grid .tcount { font: 300 13px/1 var(--mono); margin-left: auto; padding-left: 6px; white-space: nowrap; }
+    .tasks-grid .chips { gap: 6px; }
+    .tasks-grid .chip { font-size: 13.5px; padding: 4px 10px; }
+
+    /* ---------- task deep-dive slides ---------- */
+    .tk { padding: 34px 44px !important; }
+    .tk-head { position: absolute; left: 44px; top: 30px; right: 44px; }
+    .tk-head .eyebrow { margin-bottom: 6px; }
+    .tk-head h2 { font-size: 40px; }
+    .tk-desc { font-size: 19px; line-height: 1.35; margin-top: 6px !important; }
+    .tk-media { position: absolute; left: 44px; top: 150px; width: 400px; height: 225px; margin: 0; border: 2.5px solid var(--ink); border-radius: 20px; overflow: hidden; background: #f1f3f4; }
+    .tk-media img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .tk-info { position: absolute; left: 474px; top: 156px; right: 44px; display: flex; flex-direction: column; gap: 10px; }
+    .tk-io { display: flex; align-items: flex-start; gap: 12px; }
+    .tk-io > b { width: 64px; flex: none; font: 400 14px/28px var(--mono); }
+    .tk-io .chips { gap: 6px; }
+    .tk-io .chip { font-size: 15px; padding: 4px 12px; }
+    .tk-diagram { position: absolute; left: 30px; top: 392px; width: 800px; height: auto; }
+    .tk-stat { position: absolute; left: 872px; top: 400px; width: 284px; height: 120px; display: flex; flex-direction: column; justify-content: center; padding: 12px 22px !important; }
+    .tk-stat b { font: 700 46px/1 var(--sans); letter-spacing: -.02em; }
+    .tk-stat span { font: 300 15px/1.3 var(--mono); margin-top: 6px; }
+    .tk-stat i { font: 300 11px/1.3 var(--mono); font-style: normal; color: var(--muted); margin-top: 6px; white-space: nowrap; }
+    .tk-size .chip.sz { background: var(--p-yellow); font-size: 14px; }
+    .tk-size .chip.sz em { font: 500 12.5px/1 var(--mono); font-style: normal; margin-left: 4px; }
+
+    /* section dividers: MediaPipe logo tile */
+    .div-logo { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .div-logo img { width: 150px; height: 150px; object-fit: contain; }
+
+
+    /* ---------- AI Studio how-to slides ---------- */
+    .as-left { position: absolute; left: 44px; top: 132px; width: 690px; display: flex; flex-direction: column; align-items: flex-start; gap: 18px; }
+    .as-shot { width: 100%; height: auto; border: 2.5px solid var(--ink); border-radius: 18px; display: block; }
+    .as-link { font: 400 16px/1 var(--mono); padding: 10px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--p-blue); color: var(--ink) !important; }
+    .reveal ol.as-steps { position: absolute; left: 766px; top: 128px; width: 390px; margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+    .as-steps li { display: flex; gap: 14px; align-items: flex-start; font-size: 19px; line-height: 1.35; }
+    .as-steps li b { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2.5px solid var(--ink); display: grid; place-items: center; font: 500 20px/1 var(--sans); background: #fff; box-sizing: border-box; }
+    .as-steps li:nth-child(1) b { background: var(--p-blue); } .as-steps li:nth-child(2) b { background: var(--p-green); }
+    .as-steps li:nth-child(3) b { background: var(--p-yellow); } .as-steps li:nth-child(4) b { background: var(--p-red); }
+    .as-steps li span { padding-top: 6px; }
+    .as-recipe { display: flex; gap: 22px; align-items: flex-start; }
+    .reveal ul.as-parts { list-style: none; margin: 0; padding: 0; width: 330px; flex: none; display: grid; gap: 9px; }
+    .as-parts li { padding: 10px 16px !important; font-size: 15.5px; line-height: 1.3; border-radius: 16px !important; }
+    .as-parts li b { display: block; font-size: 18px; margin-bottom: 2px; }
+    .as-prompt { flex: 1; border: 2.5px solid var(--ink); border-radius: 20px; background: var(--ink); color: #fff; overflow: hidden; max-width: 740px; }
+    .as-ph { display: flex; justify-content: space-between; align-items: center; padding: 10px 14px 10px 18px; font: 400 14px/1 var(--mono); color: #c4c7c5; border-bottom: 1px solid #3c3c3c; }
+    .reveal pre.as-text { margin: 0; padding: 14px 18px 18px; border: 0; border-radius: 0; background: transparent; color: #fff; white-space: pre-wrap; font: 400 15px/1.5 var(--mono); }
+    .copy { font: 500 13px/1 var(--sans); padding: 8px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .copy:hover { background: var(--g-yellow); }
+    .copy.done { background: var(--g-green); color: #fff; }
+    .as-ideas { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .as-idea { display: flex; flex-direction: column; gap: 10px; height: 338px; padding: 18px 20px !important; }
+    .as-ih { display: flex; flex-direction: column; gap: 6px; align-items: flex-start; }
+    .as-ih b { font-size: 22px; }
+    .as-ih .chip { font-size: 13px; padding: 3px 10px; }
+    .as-idea .as-text { flex: 1; margin: 0; font: 400 13.5px/1.42 var(--mono); background: #fff; border: 2px solid var(--ink); border-radius: 14px; padding: 12px 14px; }
+    .as-idea .copy { align-self: flex-start; }
+    .as-tip { margin-top: 16px !important; font-size: 17px; max-width: 800px; }
+    .as-tip b { font: 500 13px/1 var(--mono); padding: 4px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); margin-right: 8px; }
+    .as-tip code { font-family: var(--mono); font-size: 15px; }
+
+    /* thank-you: round speaker photo + name */
+    .ty-who { display: flex; align-items: center; gap: 20px; margin-top: 44px; }
+    .ty-who img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 3px solid var(--ink); background: #fff; flex: none; }
+    .ty-who .sub { margin: 0; }
+
+    /* Hydrogen slide */
+    .hy-word { background: linear-gradient(90deg, #0b1f5c, #2f6fd6 55%, #7cc7f5); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    html.print-pdf .hy-word { background: none; -webkit-background-clip: border-box; background-clip: border-box; color: #2f6fd6; }
+    .hy-left { position: absolute; left: 44px; top: 128px; width: 620px; display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .hy-right { position: absolute; left: 696px; top: 128px; width: 460px; display: flex; flex-direction: column; gap: 16px; }
+    .hy-badge { align-self: flex-start; font: 500 18px/1 var(--sans); letter-spacing: .22em; color: #fff; padding: 12px 34px; border-radius: 999px; border: 2.5px solid var(--ink); background: linear-gradient(90deg, #0b1f5c, #2f6fd6 60%, #a8dcfb); }
+    .reveal ul.hy-facts { font-size: 18.5px; line-height: 1.32; }
+    .reveal ul.hy-facts li { margin-bottom: 8px; }
+    .hy-how { display: flex; gap: 12px; align-items: flex-start; font-size: 16px; line-height: 1.38; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .hy-how b { font: 500 13px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); flex: none; margin-top: 1px; }
+
+    /* What is Google AI Edge / MediaPipe */
+    .ae-logo { position: absolute; right: 44px; top: 40px; height: 54px; width: auto; }
+    .ae-stack { position: absolute; left: 44px; top: 186px; width: 720px; display: grid; gap: 12px; }
+    .ae-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .ae-row .pc { font-size: 16px; line-height: 1.35; padding: 16px 18px; min-height: 150px; position: relative; }
+    .ae-row h3 { font-size: 24px; margin-bottom: 6px; }
+    .ae-hl { box-shadow: 6px 6px 0 var(--ink); }
+    .ae-tag { position: absolute; right: 12px; top: -14px; font: 500 12px/1 var(--mono); padding: 5px 10px; border-radius: 999px; background: var(--g-yellow); border: 2px solid var(--ink); }
+    .ae-hw { display: grid; grid-template-columns: 90px repeat(3, 1fr); border: 2.5px solid var(--ink); border-radius: 16px; overflow: hidden; background: #fff; }
+    .ae-hw span, .ae-tools > span { font: 400 14px/1 var(--mono); display: grid; place-items: center; }
+    .ae-hw b { text-align: center; font: 700 22px/1 var(--sans); padding: 14px 0; border-left: 2px solid var(--ink); background: var(--paper); }
+    .ae-tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .ae-tools > span { width: 90px; flex: none; }
+    .ae-tools .chip { font-style: normal; font-size: 13.5px; }
+    .ae-side { position: absolute; left: 800px; top: 186px; width: 356px; display: flex; flex-direction: column; gap: 12px; }
+    .ae-sh { font: 700 22px/1.2 var(--sans); }
+    .ae-side ul.bl { font-size: 19px; }
+    .ae-try { font-size: 16px; line-height: 1.4; padding: 12px 16px; border: 2px solid var(--ink); border-radius: 16px; background: var(--p-blue); }
+    .mp-feats { position: absolute; left: 44px; top: 178px; width: 1112px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+    .mp-feats figure { margin: 0; display: flex; flex-direction: column; gap: 8px; }
+    .mp-feats img { width: 100%; height: auto; border-radius: 18px; border: 2px solid var(--ink); }
+    .mp-feats figcaption { font-size: 15px; line-height: 1.3; }
+    .mp-feats figcaption b { display: block; font-size: 19px; margin-bottom: 2px; }
+    .mp-pipe { position: absolute; left: 30px; top: 438px; width: 800px; height: auto; }
+    .mp-facts { position: absolute; left: 860px; top: 432px; width: 296px; display: flex; align-items: center; gap: 14px; padding: 12px 20px; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--p-green); box-sizing: border-box; }
+    .mp-facts b { font: 700 46px/1 var(--sans); }
+    .mp-facts span { display: block; font: 300 15px/1.35 var(--mono); }
+    .mp-facts p { font: 300 12.5px/1.4 var(--mono); color: var(--muted); margin-top: 8px !important; }
+
+    /* why on-device: numbered cards, revealed one per click */
+    .why-card { position: relative; }
+    .why-n { position: absolute; right: 16px; top: 14px; font: 300 30px/1 var(--mono); padding: 6px 12px; border: 2.5px solid var(--ink); border-radius: 14px; background: #fff; }
+
+    /* platforms slide */
+    .pl-grid { position: absolute; left: 44px; top: 190px; width: 1112px; display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+    .pl-card { display: flex; flex-direction: column; gap: 8px; height: 310px; padding: 18px 16px !important; }
+    .pl-card img { height: 72px; width: 72px; object-fit: contain; box-sizing: border-box; padding: 11px; background: #fff; border: 2.5px solid var(--ink); border-radius: 18px; }
+    .pl-card img.ios { padding: 6px; }
+    .pl-card h3 { font-size: 26px; margin: 4px 0 0; }
+    .pl-card p { font-size: 17px; line-height: 1.35; flex: 1; }
+    .pl-card p span { font: 300 13.5px/1.4 var(--mono); }
+    .pl-card code { font: 400 12px/1.35 var(--mono); background: var(--ink); color: #fff; border-radius: 10px; padding: 8px 10px; word-break: break-all; }
+
+    /* model-size charts (log scale) */
+    .szc { display: grid; gap: 4px; }
+    .szc-row { display: grid; grid-template-columns: 230px 1fr 132px; align-items: center; gap: 14px; }
+    .szc-row > b { font: 500 17px/1.15 var(--sans); }
+    .szc-row > b small { display: block; font: 300 12px/1.3 var(--mono); color: var(--muted); margin-top: 2px; }
+    .szc-row > em { font: 400 14px/1 var(--mono); font-style: normal; text-align: right; white-space: nowrap; }
+    .szc-track { position: relative; height: 30px; }
+    .szc-track > i { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed #c8c8c8; }
+    .szc-track::before { content: ""; position: absolute; left: 0; right: 0; top: 50%; border-top: 2px solid #e0e0e0; }
+    .szc-bar { position: absolute; top: 6px; height: 18px; border-radius: 999px; border: 2.5px solid var(--ink); background: var(--g-blue); box-sizing: border-box; min-width: 18px; }
+    .szc-axis .szc-track { height: 18px; }
+    .szc-axis .szc-track::before { display: none; }
+    .szc-axis .szc-track span { position: absolute; transform: translateX(-50%); font: 300 12px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+    .szc-all { position: absolute; left: 44px; top: 168px; width: 1112px; gap: 4px; }
+    .szc-all .szc-row { grid-template-columns: 220px 1fr 170px; }
+    .szc-all .szc-row > b { font-size: 22px; }
+    .szc-all .szc-track { height: 44px; }
+    .szc-all .szc-row > b small { display: inline; margin-left: 8px; }
+    .szc-all .szc-bar { top: 7px; height: 26px; }
+    .szc-all .szc-row:nth-child(2) .szc-bar { background: var(--g-green); }
+    .szc-all .szc-row:nth-child(3) .szc-bar { background: var(--g-yellow); }
+    .szc-all .szc-row:nth-child(4) .szc-bar { background: var(--g-red); }
+    .szc-all .szc-row:nth-child(5) .szc-bar { background: #a142f4; }
+    .szc-all .szc-row:nth-child(6) .szc-bar { background: var(--g-blue); }
+    .szc-all .szc-row > em { font-size: 16px; }
+    .sz-notes { position: absolute; left: 44px; top: 474px; width: 760px; display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sz-notes .pc { font-size: 15px; line-height: 1.35; padding: 12px 16px !important; }
+    .sz-notes .pc b { display: block; font: 700 19px/1.2 var(--sans); margin-bottom: 2px; }
+    .szc-dense { gap: 0; }
+    .szc-dense .szc-row > b { font-size: 14.5px; }
+    .szc-dense .szc-row > b small { display: none; }
+    .szc-dense .szc-row > b { white-space: nowrap; }
+    .szc-dense .szc-track { height: 25px; }
+    .szc-dense .szc-bar { top: 4px; height: 17px; }
+    .szc-dense .szc-row > em { font-size: 13px; }
+    /* category dividers */
+    .cat-ico { position: absolute; left: 70px; top: 200px; width: 230px; height: 230px; border: 3px solid var(--ink); border-radius: 40px; background: #fff; display: grid; place-items: center; box-sizing: border-box; }
+    .cat-ico svg { width: 120px; height: 120px; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .cat-side { position: absolute; left: 70px; top: 456px; width: 230px; text-align: center; }
+    .cat-side b { display: block; font: 700 34px/1.1 var(--sans); }
+    .cat-side span { display: block; font: 300 15px/1.4 var(--mono); margin-top: 4px; }
+    .cat-in { padding: 30px 40px !important; }
+    .cat-h { font-size: 64px !important; }
+    .cat-take { font-size: 17px; line-height: 1.35; margin: 8px 0 16px !important; max-width: 760px; }
+    .szc-cat .szc-row { grid-template-columns: 200px 1fr 118px; }
+    .szc-cat .szc-row > b { font-size: 15.5px; }
+    .bg-green .szc-cat .szc-bar { background: var(--g-green); }
+    .bg-yellow .szc-cat .szc-bar { background: var(--g-yellow); }
+    .bg-red .szc-cat .szc-bar { background: var(--g-red); }
+
+    /* ---------- Try it: sample-image demo ---------- */
+    .try-stage { position: relative; width: 640px; height: 470px; flex: none; border: 2.5px solid var(--ink); border-radius: 24px; overflow: hidden; background: #1e1e1e; }
+    .try-stage canvas, .try-stage .try-fallback { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+    .try-stage canvas { z-index: 1; }
+    .try-pill { position: absolute; left: 14px; top: 12px; z-index: 2; font: 500 18px/1 var(--sans); padding: 8px 14px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); }
+    .try-what { font-size: 18px; line-height: 1.35; }
+    .try-actions { display: flex; gap: 10px; }
+    .try-side { display: flex; flex-direction: column; gap: 16px; min-width: 0; flex: 1; }
+    .try-tabs { display: flex; flex-wrap: wrap; gap: 8px; }
+    .try-tabs button { font: 500 15px/1 var(--sans); padding: 9px 14px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; color: var(--ink); cursor: pointer; }
+    .try-tabs button:hover { background: var(--p-blue); }
+    .try-tabs button.on { background: var(--g-blue); color: #fff; }
+    .try-tabs button:disabled { opacity: .5; cursor: progress; }
+    .reveal ol.try-results { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 17px/1.3 var(--mono); max-height: 200px; overflow: hidden; }
+    .try-results li { display: flex; justify-content: space-between; gap: 12px; padding: 6px 12px; border-radius: 10px; background: var(--paper); border: 1.5px solid #d0d0d0; }
+    .try-results li b { font-weight: 500; }
+    .try-status { font: 300 14px/1.4 var(--mono); color: var(--muted); }
+
+    /* ---------- slide 4: MediaPipe · Google AI Edge (real loops + logos) ---------- */
+    .s-what .wp { position: absolute; background: #fff; border: var(--stroke) solid var(--ink); border-radius: 30px; box-sizing: border-box; }
+    .s-what .wp-main { left: 40px; top: 96px; width: 1200px; padding: 22px 28px 26px; }
+    .s-what .wp-head { display: flex; align-items: center; justify-content: space-between; gap: 24px; margin-bottom: 18px; }
+    .s-what .tag { font-size: 22px; padding: 8px 26px; background: var(--g-yellow); }
+    .s-what .lockups { display: flex; align-items: center; gap: 34px; }
+    .s-what .mp-lockup, .s-what .edge-lockup { display: flex; align-items: center; font-size: 50px; line-height: 1; white-space: nowrap; }
+    .s-what .mp-lockup { gap: 12px; font-weight: 500; color: #3c4043; }
+    .s-what .mp-lockup img { height: 50px; }
+    .s-what .edge-lockup { gap: 12px; font-weight: 400; color: #5f6368; }
+    .s-what .edge-lockup img { height: 44px; transform: translateY(5px); }
+    .s-what .tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px 20px; }
+    .s-what figure { position: relative; margin: 0; aspect-ratio: 16 / 9; border-radius: 16px; overflow: hidden; border: 2.5px solid var(--ink); background: #f1f3f4; }
+    .s-what figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .s-what figcaption { position: absolute; left: 8px; bottom: 7px; font: 500 13px/1 var(--sans); padding: 5px 10px; border-radius: 999px; background: #fff; border: 2px solid var(--ink); color: var(--ink); }
+    .s-what .wp-plat { left: 40px; bottom: 26px; display: flex; align-items: center; gap: 52px; padding: 14px 38px; }
+    .s-what .wp-plat span { display: flex; align-items: center; gap: 12px; font-size: 24px; font-weight: 500; color: #3c4043; }
+    .s-what .wp-plat img { height: 58px; }
+    .s-what .wp-plat img.ios { border-radius: 13px; box-shadow: 0 0 0 1px #dadce0; }
+
+    /* ================= Slide controls (shopio-style) ================= */
+    .reveal .controls, .reveal .progress, html:not(.print-pdf) .reveal .slide-number { display: none !important; }
+    #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; z-index: 40; background: linear-gradient(90deg, var(--g-blue), var(--g-green), var(--g-yellow), var(--g-red)); transition: width .6s cubic-bezier(.16,1,.3,1); }
+    #ctrl { position: fixed; right: 18px; bottom: 16px; z-index: 40; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(30,30,30,.86); backdrop-filter: blur(8px); color: #fff; font: 13px var(--sans); transition: opacity .4s; }
+    #ctrl button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0; }
+    #ctrl button:hover { background: rgba(255,255,255,.25); }
+    #ctrl button.on { background: var(--g-blue); }
+    #ctrl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #ctrl .cnt { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; cursor: pointer; }
+    body.idle #ctrl { opacity: 0; }
+    body.idle { cursor: none; }
+    #menu, #exportMenu { position: fixed; right: 18px; bottom: 64px; z-index: 41; padding: 8px; border-radius: 14px; background: rgba(30,30,30,.96); backdrop-filter: blur(10px); box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); font-family: var(--sans); display: none; }
+    #menu { width: 380px; max-height: 70vh; overflow: auto; }
+    #menu.open, #exportMenu.open { display: block; }
+    #menu a { display: flex; gap: 10px; color: #cfd2d6; text-decoration: none; font-size: 13px; padding: 7px 10px; border-radius: 8px; }
+    #menu a:hover, #menu a.cur { background: rgba(255,255,255,.12); color: #fff; }
+    #menu a span { opacity: .5; width: 22px; text-align: right; flex: none; }
+    #exportMenu { min-width: 230px; padding: 6px; }
+    #exportMenu button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 12px; border: 0; border-radius: 9px; background: transparent; color: #fff; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+    #exportMenu button:hover, #exportMenu button:focus-visible { background: #3a3a3a; outline: none; }
+    #exportMenu kbd { font-family: var(--mono); font-size: 11px; color: #9aa0a6; border: 1px solid #444; border-radius: 5px; padding: 1px 6px; }
+    #exportMenu .sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 12px; line-height: 1.5; margin-top: 2px; color: #9aa0a6; }
+    #exportMenu button > span { line-height: 1.3; }
+    /* all-slides overview (scrollable grid of live thumbnails) */
+    #ov { position: fixed; inset: 0; z-index: 45; background: #1e1e1e; overflow: auto; padding: 28px 32px 40px; display: none; font-family: var(--sans); }
+    #ov.open { display: block; }
+    #ov .ovh { display: flex; justify-content: space-between; align-items: center; color: #fff; max-width: 1700px; margin: 0 auto 18px; font-size: 18px; font-weight: 500; }
+    #ov .ovh button { border: 0; background: rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+    #ov .ovh button:hover { background: rgba(255,255,255,.25); }
+    #ov .ovg { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px 18px; max-width: 1700px; margin: 0 auto; }
+    #ov .ovt { cursor: pointer; color: #cfd2d6; font-size: 13px; }
+    #ov .fr { position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: var(--paper); outline: 2px solid #3a3a3a; outline-offset: 3px; transition: outline-color .15s; }
+    #ov .ovt:hover .fr { outline-color: rgba(255,255,255,.5); }
+    #ov .ovt.cur .fr { outline-color: var(--g-yellow); }
+    #ov .cap { display: flex; gap: 8px; margin-top: 10px; line-height: 1.35; }
+    #ov .cap span { opacity: .5; flex: none; }
+    #ov .fr > .reveal { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; pointer-events: none; overflow: hidden; }
+    #ov .fr > .reveal > .slides { position: absolute; inset: 0; width: 1280px; height: 720px; margin: 0; transform: none; zoom: 1; pointer-events: none; }
+    #ov .fr > .reveal > .slides > section { display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; }
+    #ov .fr .fragment { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+    #ov .fr pre code.fragment { display: none !important; }
+    #ov .fr .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    html.print-pdf #progress, html.print-pdf #ctrl, html.print-pdf #menu, html.print-pdf #exportMenu { display: none !important; }
+    @media print { #progress, #ctrl, #menu, #exportMenu { display: none !important; } }
+    /* print view: show the full code block, not the stacked line-highlight step clones */
+    html.print-pdf .reveal pre code.fragment { display: none !important; }
+    html.print-pdf .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    /* Build challenge (rules + 15-min countdown) */
+    .ch-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 26px; }
+    .ch-grid .pc { display: flex; flex-direction: column; gap: 10px; min-height: 300px; }
+    .ch-grid .pc h3 { font: 700 26px/1.1 var(--sans); margin: 0 0 4px; }
+    .ch-grid ol { margin: 0; padding-left: 22px; } .ch-grid ol li { margin-bottom: 8px; }
+    .ch-crit { display: flex; justify-content: space-between; gap: 10px; border-bottom: 2px dashed #9aa0a6; padding-bottom: 8px; }
+    .ch-crit em { font: 400 16px/1.4 var(--mono); font-style: normal; white-space: nowrap; }
+    .ch-prize { font: 700 30px/1.15 var(--sans); }
+    .ch-time { position: absolute; right: 44px; top: 34px; font: 300 22px/1 var(--mono); padding: 12px 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-yellow); }
+    .ch-clock { font: 300 230px/1 var(--mono); letter-spacing: -.02em; font-variant-numeric: tabular-nums; margin: 18px 0 10px; }
+    .ch-bar { height: 22px; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; overflow: hidden; box-sizing: border-box; }
+    .ch-bar i { display: block; height: 100%; width: 100%; background: var(--g-green); transition: width .4s linear, background .4s; }
+    .ch-ctrl { display: flex; gap: 12px; margin-top: 26px; align-items: center; }
+    .ch-ctrl .btn.ghost { background: #fff; color: var(--ink); }
+    .ch-ctrl span { font: 400 17px/1.3 var(--mono); margin-left: 12px; }
+    .ch-warn .ch-clock { color: var(--g-red); }
+    .ch-warn .ch-bar i { background: var(--g-red); }
+    .ch-done .ch-clock { animation: chblink 1s steps(2) infinite; }
+    @keyframes chblink { 50% { opacity: .25; } }
+
+    /* ---------- Gemini Decisions deck ---------- */
+    .pc.stat { display: flex; flex-direction: column; gap: 8px; min-height: 160px; }
+    .pc.stat b { font: 700 54px/1 var(--sans); letter-spacing: -.02em; }
+    .pc.stat b small { font: 300 24px/1 var(--mono); margin-left: 6px; }
+    .pc.stat span { font-size: 19px; line-height: 1.3; }
+    .pc.qt { min-height: 300px; }
+    .pc.qt code, .pc.stat code { font: 400 18px/1 var(--mono); display: inline-block; padding: 6px 12px; border: 2px solid var(--ink); border-radius: 999px; background: #fff; margin-bottom: 16px; }
+    .pc code { font-family: var(--mono); font-size: .9em; }
+    .chips.mm .chip, .chips.eco .chip { font-size: 22px; padding: 9px 22px; }
+    .rl { border-collapse: collapse; width: 100%; font: 400 17px/1.3 var(--mono); }
+    .rl th, .rl td { border-bottom: 2px solid var(--ink); padding: 7px 8px; text-align: left; }
+    .rl th { font-family: var(--sans); font-weight: 700; }
+    .rl tr:last-child td { border-bottom: 0; }
+    .lat { display: grid; gap: 12px; margin-top: 14px; }
+    .lat div { display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 12px; font: 400 16px/1 var(--mono); }
+    .lat i { display: block; height: 26px; border: 2.5px solid var(--ink); border-radius: 999px; background: var(--g-blue); box-sizing: border-box; }
+    /* ---------- Agents CLI deck ---------- */
+    .lc { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 1088px; }
+    .lc .pc { padding: 14px 16px 16px; font-size: 16px; line-height: 1.3; position: relative; }
+    .lc .pc > b { position: absolute; right: 14px; top: 10px; font: 700 26px/1 var(--sans); opacity: .35; }
+    .lc .pc h3 { font-size: 21px; margin: 0 0 4px; }
+    .lc code, .cm code { font-size: .92em; }
+    .cm { display: grid; grid-template-columns: 170px 1fr; width: 1088px; border: 2.5px solid var(--ink); border-radius: 18px; overflow: hidden; font-size: 18px; }
+    .cm > * { padding: 11px 16px; border-top: 1.5px solid #dadce0; }
+    .cm > b:first-child, .cm > b:first-child + span { border-top: 0; }
+    .cm > b { background: var(--paper); font: 500 16px/1.3 var(--mono); }
+    .cm-metrics { grid-template-columns: 380px 1fr; }
+    .sk { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; width: 1088px; }
+    .sk .pc { padding: 14px 16px; font-size: 16px; line-height: 1.3; }
+    .sk .pc b { display: block; font: 700 19px/1.2 var(--mono); margin-bottom: 6px; }
+    .cm-metrics > b { font: 500 17px/1.3 var(--sans); }
+
+    /* ===================== Dark theme (DevFest 2026 dark template) ===================== */
+    :root { --dk-bg: #202124; --dk-card: #2a2b2f; --dk-line: #5f6368; --dk-text: #e8eaed; --dk-sub: #bdc1c6;
+      --r-background-color: var(--dk-bg); --r-main-color: var(--dk-text); --r-heading-color: #fff; --r-link-color: var(--h-blue); --r-link-color-hover: #8ab4f8; }
+    body, .reveal .slides section, .reveal .slides section.bg-blue, .reveal .slides section.bg-green,
+    .reveal .slides section.bg-yellow, .reveal .slides section.bg-red { background: var(--dk-bg); color: var(--dk-text); }
+    .nc > svg.nc-s { display: none; }
+    .reveal h1, .reveal h2, .reveal h3 { color: #fff; }
+    .reveal h1 { font-weight: 500; } .reveal h2 { font-weight: 400; }
+    .sub { color: var(--dk-sub); } .muted { color: #9aa0a6 !important; }
+    .eyebrow { color: var(--h-blue); }
+    .pc { background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 16px; color: var(--dk-text); }
+    .pc.blue { background: var(--dk-card); border-color: var(--h-blue); }
+    .pc.green { background: var(--dk-card); border-color: var(--h-green); }
+    .pc.yellow { background: var(--dk-card); border-color: var(--h-yellow); }
+    .pc.red { background: var(--dk-card); border-color: var(--h-red); }
+    .pc h3, .pc b { color: #fff; }
+    .tag { background: var(--h-yellow); color: #202124; border: 0; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; }
+    .tag.yellow { background: var(--h-blue); } .tag.red { background: var(--h-red); }
+    .pc code, .cm code, p code, li code, .lc code { background: #3c4043; color: var(--dk-text); padding: 1px 6px; border-radius: 6px; font-size: .9em; }
+    .cmd { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre code { color: var(--dk-text); }
+    .ico { stroke: var(--dk-text); }
+    .reveal ul.bl li::before { border-color: var(--dk-bg); }
+    .numbox { background: transparent; border: 2px solid var(--dk-line); color: #fff; }
+    .bg-blue .numbox { color: var(--h-blue); border-color: var(--h-blue); } .bg-green .numbox { color: var(--h-green); border-color: var(--h-green); }
+    .bg-yellow .numbox { color: var(--h-yellow); border-color: var(--h-yellow); } .bg-red .numbox { color: var(--h-red); border-color: var(--h-red); }
+    .dots i { border-color: var(--dk-bg); }
+    .reveal .slides section[class*="bg-"] .numbox { top: 92px !important; }
+    .reveal .slides section[class*="bg-"] svg.ico.abs { top: 260px !important; }
+    .reveal .slides section[class*="bg-"] .dots { top: 548px !important; }
+    .cm { border: 2px solid var(--dk-line); } .cm > * { border-top-color: #3c4043; } .cm > b { background: var(--dk-card); color: var(--dk-sub); }
+    .lc .pc > b { color: #fff; }
+    .badge { display: none; }
+    .ty-who p { color: var(--dk-sub); }
+    /* logos: GDG top-left, Build with Gemini top-right (as in the dark template) */
+    .corner-logos { display: none; }
+    .top-gdg { position: absolute; left: 44px; top: 22px; z-index: 3; display: flex; align-items: center; gap: 10px; font: 500 17px/1.15 var(--sans); color: var(--dk-text); pointer-events: none; }
+    .top-gdg img { height: 24px; width: auto; }
+    .top-gdg small { display: block; font: 400 12px/1.2 var(--sans); color: #9aa0a6; }
+    .reveal .top-bwg { position: absolute; right: 40px; top: 14px; height: 54px; width: auto; margin: 0; z-index: 3; pointer-events: none; }
+    /* cover */
+    .s-cover-dk .chev-rows { position: absolute; left: 50px; top: 92px; right: 0; display: grid; gap: 26px; overflow: hidden; }
+    .s-cover-dk .cr { display: flex; align-items: center; gap: 22px; white-space: nowrap; }
+    .s-cover-dk .ch { width: 46px; height: 78px; color: #fff; flex: none; }
+    .s-cover-dk .ch.cb { color: #1fa3a3; } .s-cover-dk .ch.cg { color: #1fa3a3; } .s-cover-dk .ch.cp { color: #1fa3a3; }
+    .s-cover-dk .w { font: 400 84px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover-dk .w.b { color: var(--h-blue); } .s-cover-dk .w.g { color: var(--h-green); } .s-cover-dk .w.p { color: var(--h-red); }
+    .s-cover-dk .cv-sub-dk { position: absolute; right: 56px; top: 456px; text-align: right; font: 400 28px/1.4 var(--sans); color: var(--dk-text); }
+    .s-cover-dk .cv-sub-dk b { display: block; font: 500 46px/1.2 var(--sans); color: #fff; margin-bottom: 6px; }
+    .s-cover-dk .cv-who-dk { position: absolute; left: 56px; bottom: 44px; display: flex; align-items: center; gap: 14px; }
+    .reveal .s-cover-dk .cv-who-dk img { width: 62px; height: 62px; border-radius: 50%; object-fit: cover; margin: 0; border: 2px solid var(--dk-line); }
+    .s-cover-dk .cv-who-dk span { font: 400 15px/1.35 var(--mono); color: var(--dk-sub); } .s-cover-dk .cv-who-dk b { display: block; font: 500 21px/1.2 var(--sans); color: #fff; }
+    /* agenda */
+    .s-agenda-dk .agd-title { position: absolute; left: 56px; top: 110px; font: 300 96px/1 var(--sans); color: #fff; }
+    .s-agenda-dk .agd-arrow { position: absolute; left: 20px; top: 300px; width: 330px; height: 330px; }
+    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 420px; top: 104px; width: 560px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .s-agenda-dk .agd-qr { position: absolute; left: 1004px; top: 104px; width: 236px; box-sizing: border-box; padding: 16px 16px 14px; border-radius: 16px; background: #fff; text-align: center; }
+    .reveal .s-agenda-dk .agd-qr img { display: block; width: 204px; height: 204px; margin: 0; }
+    .s-agenda-dk .agd-qr b { display: block; margin-top: 10px; font: 500 17px/1.25 var(--sans); color: #202124; }
+    .s-agenda-dk .agd-list li { display: flex; align-items: center; gap: 22px; padding: 18px 24px; background: var(--dk-card); border-radius: 10px; border-left: 6px solid var(--c); }
+    .s-agenda-dk .agd-list b { font: 500 34px/1 var(--sans); color: var(--c); width: 48px; }
+    .s-agenda-dk .agd-list strong { display: block; font: 500 30px/1.15 var(--sans); color: var(--c); }
+    .s-agenda-dk .agd-list span { display: block; font: 400 17px/1.3 var(--sans); color: var(--dk-sub); margin-top: 4px; }
+    /* coding-agent strip: agents-cli + Skills → Antigravity · Claude Code · Gemini CLI · Codex */
+    .ac-strip { position: relative; display: flex; align-items: center; gap: 18px; height: 64px; }
+    .reveal .ac-strip img { height: 58px; width: auto; position: relative; z-index: 1; }
+    .ac-strip .ac-name { font: 500 30px/1 var(--mono); color: #202124; background: #e8eaed; padding: 6px 12px; border-radius: 8px; position: relative; z-index: 1; }
+    .ac-strip .ac-plus { font: 700 30px/1 var(--sans); color: var(--h-green); position: relative; z-index: 1; margin-right: 14px; }
+    .ac-strip .ac-arrow { flex: 1; align-self: stretch; position: relative; display: flex; align-items: center; justify-content: space-evenly; padding-right: 60px; }
+    .ac-strip .ac-arrow::before { content: ""; position: absolute; left: 0; right: 26px; top: 50%; height: 18px; transform: translateY(-50%); background: #4a4b4f; }
+    .ac-strip .ac-arrow::after { content: ""; position: absolute; right: 0; top: 50%; transform: translateY(-50%); border: 26px solid transparent; border-left: 28px solid #4a4b4f; border-right: 0; }
+    .ac-strip .ac-arrow figure { margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; position: relative; z-index: 1; }
+    .ac-strip .ac-arrow figcaption { font: 400 12px/1 var(--mono); color: var(--dk-sub); }
+    /* Gemini Enterprise Agent Platform */
+    .gp { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 1088px; }
+    .gp .pc { --c: var(--h-blue); border-top: 6px solid var(--c); padding: 18px 20px; height: 370px; display: flex; flex-direction: column; gap: 14px; }
+    .gp .pc.green { --c: var(--h-green); } .gp .pc.yellow { --c: var(--h-yellow); } .gp .pc.red { --c: var(--h-red); }
+    .gp-h { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .gp-h i { flex: none; width: 40px; height: 40px; border-radius: 50%; background: var(--c); color: #202124; display: grid; place-items: center; font: 500 20px/1 var(--sans); font-style: normal; }
+    .gp-h b { display: block; font: 500 28px/1.05 var(--sans); color: var(--c) !important; }
+    .gp-h span { display: block; font: 400 15px/1.3 var(--sans); color: var(--dk-sub); margin-top: 3px; }
+    .gp-it { font-size: 17px; line-height: 1.3; display: flex; align-items: flex-start; gap: 10px; min-height: 40px; }
+    .gp-it::before { content: ""; flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c); margin-top: 6px; }
+    .gp-key { font: 500 16px/1.2 var(--sans); text-align: center; padding: 10px 12px; border: 2px solid var(--c); border-radius: 999px; color: #fff; background: color-mix(in srgb, var(--c) 18%, transparent); }
+    .gp-pills { display: flex; gap: 12px; }
+    .gp-pills span { font: 500 17px/1 var(--sans); padding: 9px 20px; border-radius: 999px; color: #fff; }
+    /* architecture: agents-cli covers the whole stack */
+    .arch { position: relative; width: 1088px; height: 412px; }
+    .arch > svg.arch-l { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+    .arch-l path { fill: none; stroke: #9aa0a6; stroke-width: 2; }
+    .arch-l marker path { fill: #e8eaed; stroke: none; }
+    .arch .bx { position: absolute; box-sizing: border-box; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; padding: 8px 12px; }
+    .arch .bx > h4 { margin: 0 0 6px; font: 500 17px/1.2 var(--sans); color: #fff; }
+    .arch .it { display: flex; align-items: center; gap: 10px; box-sizing: border-box; border: 1.5px solid #80868b; border-radius: 8px; padding: 6px 10px; font: 400 14px/1.25 var(--sans); color: var(--dk-text); background: #202124; }
+    .arch .it + .it { margin-top: 6px; }
+    .arch .it i { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c, var(--h-blue)); }
+    .arch .row { display: flex; gap: 6px; } .arch .row .it { flex: 1; margin: 0; }
+    .arch .user { position: absolute; left: 30px; top: 70px; width: 80px; text-align: center; font: 500 17px/1 var(--sans); color: #fff; }
+    .arch .user svg { display: block; width: 64px; height: 64px; margin: 8px auto 0; }
+    .s-agenda-dk .c1 { --c: var(--h-blue); } .s-agenda-dk .c2 { --c: var(--h-green); } .s-agenda-dk .c3 { --c: var(--h-yellow); } .s-agenda-dk .c4 { --c: var(--h-red); }
+  </style>
+  <style>
+    /* ---------- Hermes deck extras ---------- */
+    .hx-arch { position: relative; width: 1088px; height: 440px; }
+    .hx-arch .pc { position: absolute; padding: 14px 18px; }
+    .hx-arch .pc h3 { font-size: 22px; margin-bottom: 6px; }
+    .hx-arch .pc p { font-size: 16px; line-height: 1.4; }
+    .hx-user { left: 0; top: 40px; width: 230px; }
+    .hx-inst { left: 306px; top: 10px; width: 500px; height: 190px; }
+    .hx-sup { font: 400 15px/1.3 var(--mono); color: var(--dk-sub); margin: 4px 0 12px; }
+    .hx-sup b { color: var(--h-blue); font-weight: 500; }
+    .hx-row { display: flex; gap: 12px; }
+    .hx-box { flex: 1; border: 1.5px solid #80868b; border-radius: 10px; padding: 14px 10px; text-align: center; font: 500 17px/1.35 var(--sans); background: #202124; }
+    .hx-box.hy { border-color: var(--h-yellow); border-style: dashed; font-weight: 400; font-size: 15px; }
+    .hx-gcs { left: 886px; top: 10px; width: 202px; height: 190px; }
+    .hx-vx { left: 306px; top: 228px; width: 240px; }
+    .hx-sm { left: 566px; top: 228px; width: 240px; }
+    .hx-ln { position: absolute; fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .hx-cap { position: absolute; left: 820px; top: 110px; width: 260px; font: 400 14px/1.3 var(--mono); color: var(--dk-sub); }
+    .reveal pre code.hljs { color: var(--dk-text); }
+    .grid > * { min-width: 0; }
+    .reveal ol.hx-steps { list-style: none; margin: 0; padding: 0; width: 470px; flex: none; display: grid; gap: 8px; }
+    .hx-steps li { display: flex; align-items: center; gap: 14px; padding: 8px 14px; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; font-size: 16px; line-height: 1.35; }
+    .hx-steps li code { padding: 0 4px; }
+    .hx-steps li > b { flex: none; width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--h-yellow); color: var(--h-yellow); display: grid; place-items: center; font: 500 16px/1 var(--sans); }
+    .hx-flags { flex: 1; display: grid; gap: 12px; }
+    .hx-flags .pc { padding: 12px 16px; font-size: 16px; }
+    .hx-flags .pc b { display: block; font: 500 15px/1.3 var(--mono); margin-bottom: 4px; }
+    /* ---------- Hermes cover: round speaker photo ---------- */
+    .s-cover-dk.hx-cover .chev-rows { top: 104px; right: auto; width: 730px; gap: 16px; -webkit-mask-image: linear-gradient(90deg, #000 78%, transparent); mask-image: linear-gradient(90deg, #000 78%, transparent); }
+    .s-cover-dk.hx-cover .ch { width: 38px; height: 66px; }
+    .s-cover-dk.hx-cover .cr { gap: 18px; }
+    .s-cover-dk.hx-cover .w { font-size: 72px; }
+    .hx-cover .hx-title { position: absolute; left: 56px; top: 400px; width: 700px; }
+    .hx-cover .hx-title b { display: block; font: 500 46px/1.15 var(--sans); color: #fff; letter-spacing: -.01em; }
+    .hx-cover .hx-title span { display: block; font: 400 22px/1.4 var(--sans); color: var(--dk-sub); margin-top: 12px; }
+    .hx-cover .hx-chips { position: absolute; left: 56px; top: 600px; display: flex; gap: 10px; }
+    .hx-cover .hx-chips i { font: 400 15px/1 var(--mono); font-style: normal; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .hx-cover .hx-orbit { position: absolute; left: 800px; top: 76px; width: 420px; height: 420px; border-radius: 50%; border: 2px dashed #5f6368; box-sizing: border-box; }
+    .hx-cover .hx-orbit i { position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--dk-bg); }
+    .hx-cover .hx-ring { position: absolute; left: 836px; top: 112px; width: 348px; height: 348px; border-radius: 50%; padding: 9px; box-sizing: border-box; background: conic-gradient(from -45deg, var(--h-blue) 0 25%, var(--h-red) 0 50%, var(--h-yellow) 0 75%, var(--h-green) 0 100%); box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+    .hx-cover .hx-ring > div { width: 100%; height: 100%; border-radius: 50%; padding: 7px; box-sizing: border-box; background: var(--dk-bg); }
+    .reveal .hx-cover .hx-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; margin: 0; }
+    .hx-cover .hx-who { position: absolute; left: 790px; top: 520px; width: 440px; text-align: center; }
+    .hx-cover .hx-who b { display: block; font: 500 30px/1.2 var(--sans); color: #fff; }
+    .hx-cover .hx-who span { display: inline-block; margin-top: 10px; font: 400 15px/1 var(--mono); color: var(--dk-sub); padding: 8px 16px; border: 1.5px solid var(--dk-line); border-radius: 999px; }
+  </style>
+  <style>
+    /* ---------- Harness² deck extras ---------- */
+    .flow { display: flex; align-items: stretch; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 22px 16px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .flow .node b { display: block; font-size: 23px; margin-bottom: 8px; }
+    .flow .node p { font-size: 15.5px; line-height: 1.35; color: var(--dk-sub); }
+    .flow .arr { width: 40px; flex: none; align-self: center; fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .flow.tight { gap: 8px; } .flow.tight .arr { width: 26px; } .flow.tight .node { padding: 18px 10px; } .flow.tight .node b { font-size: 21px; }
+    .h2-eq { display: flex; align-items: center; gap: 18px; font: 400 40px/1 var(--sans); color: #fff; }
+    .h2-eq span { padding: 14px 26px; border-radius: 999px; border: 2px solid var(--c); color: var(--c); }
+    .h2-eq i { font-style: normal; color: var(--dk-sub); white-space: nowrap; font-size: 28px; }
+    .h2-eq i.op { font-size: 40px; }
+    .h2-comp .pc { --c: var(--h-blue); border-top: 6px solid var(--c); padding: 16px 18px; }
+    .h2-comp .pc.green { --c: var(--h-green); } .h2-comp .pc.yellow { --c: var(--h-yellow); } .h2-comp .pc.red { --c: var(--h-red); }
+    .h2-comp h3 { font-size: 21px; color: var(--c) !important; margin-bottom: 10px; }
+    .h2-comp .chips { gap: 6px; }
+    .h2-comp .chip { background: #202124; border: 1.5px solid #80868b; color: var(--dk-text); font: 400 14px/1.3 var(--mono); }
+    .h2-stat { display: flex; flex-direction: column; gap: 6px; padding: 16px 20px; }
+    .h2-stat b { font: 500 46px/1 var(--sans); color: var(--c, #fff) !important; letter-spacing: -.02em; }
+    .h2-stat span { font-size: 16px; line-height: 1.35; color: var(--dk-sub); }
+    .reveal table.h2-tbl { border-collapse: collapse; width: 100%; font: 400 17px/1.25 var(--mono); color: var(--dk-text); margin: 0; }
+    .reveal .h2-tbl th, .reveal .h2-tbl td { border: 0; border-bottom: 1.5px solid #3c4043; padding: 9px 12px; text-align: right; }
+    .reveal .h2-tbl th:first-child, .reveal .h2-tbl td:first-child { text-align: left; font-family: var(--sans); }
+    .reveal .h2-tbl th { font: 500 15px/1.2 var(--mono); color: var(--dk-sub); }
+    .reveal .h2-tbl tr.hi td { color: #fff; background: rgba(92,219,109,.14); font-weight: 500; }
+    .reveal .h2-tbl tr.hi2 td { color: #fff; background: rgba(92,219,109,.28); font-weight: 700; }
+    .reveal .h2-tbl tr:last-child td { border-bottom: 0; }
+    .h2-bars { display: grid; gap: 12px; }
+    .h2-bars > div { display: grid; grid-template-columns: 230px 1fr 130px; align-items: center; gap: 12px; font-size: 16px; }
+    .h2-bars i { display: block; height: 20px; border-radius: 999px; background: var(--c, var(--h-red)); }
+    .h2-bars em { font: 400 15px/1 var(--mono); font-style: normal; text-align: right; white-space: nowrap; }
+    .reveal ul.h2-tree { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 15px/1.35 var(--mono); }
+    .h2-tree li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 12px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
+    .h2-tree li span { color: var(--dk-sub); font-family: var(--sans); font-size: 14px; }
+  </style>
+  <style>
+    /* ---------- Secure ADK agents deck extras ---------- */
+    .zt-prompt { font: 400 17px/1.45 var(--mono); color: #fff; background: #202124; border: 1.5px solid #3c4043; border-left: 6px solid var(--c, var(--h-red)); border-radius: 10px; padding: 14px 18px; }
+    .zt-prompt small { display: block; font: 500 13px/1 var(--mono); color: var(--c, var(--h-red)); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 8px; }
+    .zt-v { display: inline-flex; align-items: center; gap: 8px; font: 500 16px/1 var(--mono); padding: 9px 14px; border-radius: 999px; border: 2px solid var(--c); color: var(--c); }
+    .zt-v.block { --c: var(--h-red); } .zt-v.allow { --c: var(--h-green); } .zt-v.warn { --c: var(--h-yellow); }
+    .zt-stack { display: grid; gap: 12px; }
+    .zt-stack .pc { padding: 12px 16px; font-size: 16px; line-height: 1.4; }
+    .zt-stack .pc b { color: #fff; }
+    .zt-stage { font: 500 13px/1 var(--mono); color: var(--dk-sub); letter-spacing: .05em; text-transform: uppercase; display: block; margin-bottom: 8px; }
+    .flow .node .zt-stage { margin-bottom: 10px; }
+    .zt-meter { position: relative; height: 54px; display: flex; gap: 4px; }
+    .zt-meter i { flex: 1; border-radius: 6px; background: rgba(92,219,109,.25); border: 1.5px solid var(--h-green); display: grid; place-items: center; font: 500 15px/1 var(--mono); color: #fff; font-style: normal; }
+    .zt-meter i.over { background: rgba(255,125,175,.25); border-color: var(--h-red); }
+    .zt-limit { position: absolute; top: -14px; bottom: -14px; width: 0; border-left: 3px dashed var(--h-yellow); }
+    .zt-limit span { position: absolute; top: -26px; left: -60px; width: 120px; text-align: center; font: 500 14px/1 var(--mono); color: var(--h-yellow); }
+    .zt-scale { display: flex; justify-content: space-between; font: 400 14px/1 var(--mono); color: var(--dk-sub); margin-top: 22px; }
+    .reveal table.zt-tbl { border-collapse: collapse; width: 100%; font-size: 16px; line-height: 1.3; color: var(--dk-text); margin: 0; table-layout: fixed; }
+    .reveal .zt-tbl th, .reveal .zt-tbl td { border: 0; border-bottom: 1.5px solid #3c4043; padding: 10px 12px; text-align: left; vertical-align: top; }
+    .reveal .zt-tbl th { font: 500 14px/1.2 var(--mono); color: var(--dk-sub); text-transform: uppercase; letter-spacing: .04em; }
+    .reveal .zt-tbl td:first-child { color: #fff; font-weight: 500; }
+    .reveal .zt-tbl td b { color: var(--h-green); font-weight: 500; }
+    .reveal .zt-tbl tr:last-child td { border-bottom: 0; }
+    .zt-map { position: relative; width: 1088px; height: 400px; }
+    .zt-wires { position: absolute; inset: 0; width: 1088px; height: 400px; overflow: visible; }
+    .zt-wires path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .zt-wires .w, .zt-wires .w-tip { stroke: var(--dk-text); }
+    .zt-wires .w-tel { stroke: var(--h-yellow); stroke-dasharray: 2 8; }
+    .zt-wires .w-tel-tip { stroke: var(--h-yellow); }
+    .zt-wires .w-pol, .zt-wires .w-pol-tip { stroke: var(--h-green); }
+    .zt-n { position: absolute; top: 0; width: 158px; height: 104px; padding: 14px 14px; display: flex; flex-direction: column; justify-content: center; }
+    .zt-n b { font-size: 19px; line-height: 1.2; color: #fff; }
+    .zt-n.build { border-style: dashed; }
+    .zt-b { position: absolute; top: 252px; width: 330px; height: 100px; padding: 14px 18px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+    .zt-b b { font-size: 19px; color: #fff; }
+    .zt-b span { font-size: 15px; line-height: 1.35; color: var(--dk-sub); }
+    .zt-wl { position: absolute; font: 500 14px/1 var(--mono); color: var(--h-yellow); background: var(--dk-card); padding: 4px 8px; white-space: nowrap; }
+    .zt-legend { position: absolute; left: 0; bottom: 0; display: flex; gap: 28px; font: 400 15px/1 var(--mono); color: var(--dk-sub); }
+    .zt-legend span { display: flex; align-items: center; gap: 10px; }
+    .zt-legend i { width: 30px; height: 18px; border-radius: 5px; border: 2px solid var(--dk-text); }
+    .zt-legend i.build { border-style: dashed; }
+    .zt-cap { font: 400 13px/1.3 var(--mono); color: var(--dk-sub); margin-top: 10px; }
+    .zt-lim .pc { padding: 18px 20px; }
+    .zt-lim .pc h3 { font-size: 21px; margin-bottom: 10px; }
+    .zt-lim .pc p { font-size: 17px; line-height: 1.45; color: var(--dk-text); }
+    .zt-lim .pc p.muted { font-size: 15px; margin-top: 10px; }
+  </style>
+  <style>
+    /* ---------- Agent Evaluation deck extras ---------- */
+    .ev-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; width: 1088px; }
+    .ev-steps .pc { padding: 16px 18px; min-height: 150px; }
+    .ev-steps .pc .n { display: inline-grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--c, var(--h-blue)); color: var(--c, var(--h-blue)); font: 500 16px/1 var(--sans); margin-bottom: 10px; }
+    .ev-steps .pc.green { --c: var(--h-green); } .ev-steps .pc.yellow { --c: var(--h-yellow); } .ev-steps .pc.red { --c: var(--h-red); }
+    .ev-steps .pc b.t { display: block; font-size: 21px; color: #fff; margin-bottom: 6px; }
+    .ev-steps .pc p { font-size: 16px; line-height: 1.4; color: var(--dk-sub); }
+    .ev-concepts { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 16px; width: 1088px; }
+    .ev-concepts .pc { padding: 14px 18px; }
+    .ev-concepts .pc b { display: block; font-size: 20px; color: #fff; margin-bottom: 6px; }
+    .ev-concepts .pc p { font-size: 16px; line-height: 1.4; color: var(--dk-sub); }
+    .ev-case { padding: 16px 18px; }
+    .ev-case .row { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 14px; padding: 10px 0; border-bottom: 1.5px solid #3c4043; font-size: 16px; line-height: 1.4; }
+    .ev-case .row:last-child { border-bottom: 0; }
+    .ev-case .row b { font: 500 15px/1.4 var(--mono); color: var(--h-yellow); }
+    .ev-case .row span { color: var(--dk-text); }
+    .ev-fly { position: relative; width: 520px; height: 400px; flex: none; }
+    .ev-fly svg.ring { position: absolute; inset: 0; width: 520px; height: 400px; overflow: visible; }
+    .ev-fly svg.ring path { fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .ev-fly .pc { position: absolute; width: 200px; height: 104px; padding: 12px 14px; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+    .ev-fly .pc b { font-size: 21px; color: #fff; }
+    .ev-fly .pc span { font: 400 14px/1.3 var(--mono); color: var(--dk-sub); margin-top: 6px; }
+    .ev-fly .mid { position: absolute; left: 160px; top: 168px; width: 200px; text-align: center; font: 500 15px/1.3 var(--mono); color: var(--h-yellow); }
+    .ev-score { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px; width: 1088px; }
+    .ev-score .pc { padding: 18px 20px; }
+    .ev-score h3 { font-size: 22px; margin-bottom: 10px; }
+    .ev-score p { font-size: 16px; line-height: 1.45; color: var(--dk-text); }
+    .ev-rub { display: grid; gap: 8px; margin-top: 14px; }
+    .ev-rub div { display: grid; grid-template-columns: minmax(0, 1fr) 64px; gap: 10px; align-items: center; font-size: 15px; line-height: 1.3; padding: 8px 12px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
+    .ev-rub em { font: 500 13px/1 var(--mono); font-style: normal; text-align: center; padding: 5px 0; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .ev-rub em.p { --c: var(--h-green); } .ev-rub em.f { --c: var(--h-red); }
+    .ev-big { font: 500 44px/1 var(--sans); color: var(--c, #fff); margin-top: 14px; }
+    .ev-big small { font: 400 15px/1.3 var(--mono); color: var(--dk-sub); margin-left: 10px; }
+    .ev-tax { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+    .ev-tax div { padding: 10px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .ev-tax div b { display: block; font: 500 15px/1.3 var(--mono); color: var(--h-yellow); margin-bottom: 4px; }
+    .ev-tax div span { display: block; font-size: 15px; line-height: 1.35; color: var(--dk-sub); }
+    .reveal table.zt-tbl td code { font-size: 13.5px; }
+    .ev-lg { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; background: #fff; flex: none; }
+    .reveal .slides .ev-lg img { width: 30px; height: 30px; object-fit: contain; }
+    .ev-lgs { display: flex; gap: 8px; margin-bottom: 14px; }
+    .ev-ico { display: block; width: 44px; height: 44px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 12px; }
+    .flow .node .ev-ico { margin: 0 auto 10px; width: 40px; height: 40px; }
+    .reveal .slides .hx-cover .hx-chips i img { width: 18px; height: 18px; vertical-align: -4px; margin-right: 7px; }
+    .ev-chat { display: grid; gap: 10px; width: 620px; flex: none; }
+    .ev-msg { max-width: 78%; padding: 10px 14px; border-radius: 14px; font-size: 16px; line-height: 1.4; color: #fff; }
+    .ev-msg small { display: block; font: 500 12px/1 var(--mono); color: var(--dk-sub); margin-bottom: 6px; text-transform: uppercase; letter-spacing: .05em; }
+    .ev-msg.u { justify-self: start; background: rgba(87,202,255,.12); border: 1.5px solid var(--h-blue); border-bottom-left-radius: 4px; }
+    .ev-msg.a { justify-self: end; background: rgba(92,219,109,.12); border: 1.5px solid var(--h-green); border-bottom-right-radius: 4px; }
+    .ev-call { justify-self: end; font: 400 14px/1 var(--mono); color: var(--h-yellow); border: 1.5px dashed var(--h-yellow); padding: 8px 12px; border-radius: 999px; }
+    .ev-plan { font: 400 15px/1.45 var(--mono); color: var(--dk-text); background: #202124; border: 1.5px dashed #80868b; border-radius: 10px; padding: 12px 14px; }
+    .ev-plan b { display: block; font: 500 12px/1 var(--mono); color: var(--dk-sub); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
+  </style>
+  <style>
+    /* ---------- HITL deck extras ---------- */
+    .hl-wait { justify-self: center; display: flex; align-items: center; gap: 10px; font: 400 14px/1.3 var(--mono); color: var(--h-yellow); padding: 4px 0; }
+    .hl-wait .ev-ico { width: 26px; height: 26px; margin: 0; }
+    .ev-msg.h { justify-self: end; background: rgba(255,203,50,.12); border: 1.5px solid var(--h-yellow); border-bottom-right-radius: 4px; }
+    .hl-mini { display: flex; align-items: center; gap: 10px; margin-top: 16px; font: 500 14px/1 var(--mono); }
+    .hl-mini .r { padding: 8px 12px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .hl-mini .r.a { --c: var(--h-blue); } .hl-mini .r.h { --c: var(--h-yellow); }
+    .hl-mini i { font-style: normal; color: var(--dk-sub); }
+    .reveal ul.hl-list { margin: 6px 0 0 20px; padding: 0; font-size: 17px; line-height: 1.45; color: var(--dk-text); }
+    .reveal ul.hl-list li { margin: 4px 0; }
+    .hv { display: grid; gap: 6px; align-content: start; }
+    .hv .bx { border: 1.5px solid var(--c, #80868b); border-radius: 10px; padding: 9px 12px; font-size: 16px; line-height: 1.3; background: #202124; color: #fff; text-align: center; }
+    .hv .bx b { color: var(--c, #fff); font-weight: 500; }
+    .hv .bx small { display: block; font: 400 13px/1.35 var(--mono); color: var(--dk-sub); margin-top: 4px; overflow-wrap: anywhere; }
+    .hv .bx.b { --c: var(--h-blue); } .hv .bx.g { --c: var(--h-green); } .hv .bx.y { --c: var(--h-yellow); } .hv .bx.r { --c: var(--h-red); }
+    .hv .dn { justify-self: center; width: 20px; height: 22px; fill: none; stroke: var(--dk-text); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .hv .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px; margin-top: 4px; }
+    .hv .lab { font: 500 13px/1 var(--mono); color: var(--c); text-align: center; margin-bottom: 6px; }
+    .hv-note { margin-top: 8px; padding: 10px 14px; border-radius: 10px; border: 1.5px dashed #80868b; font-size: 15px; line-height: 1.4; color: var(--dk-text); overflow-wrap: anywhere; }
+    .hv-note b { color: #fff; }
+    .hv-cap { font: 400 13px/1.35 var(--mono); color: var(--dk-sub); text-align: center; }
+    .hv-cap b { color: var(--h-yellow); font-weight: 500; }
+    .hv-dlg { background: #f8f9fa; color: #202124; border-radius: 14px; padding: 14px 16px; box-shadow: 0 10px 30px rgba(0,0,0,.45); }
+    .hv-dlg .t { display: flex; align-items: center; gap: 8px; font: 500 17px/1.3 var(--sans); color: #202124; margin-bottom: 8px; }
+    .hv-dlg .t svg { width: 22px; height: 22px; fill: none; stroke: #1a73e8; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hv-dlg p { font-size: 14.5px; line-height: 1.4; color: #3c4043; }
+    .hv-dlg p b { font: 500 14px/1.4 var(--mono); color: #202124; }
+    .hv-dlg .fld { display: flex; justify-content: space-between; align-items: center; border: 1.5px solid #1a73e8; border-radius: 8px; padding: 8px 10px; margin-top: 10px; font: 400 14px/1 var(--mono); color: #3c4043; }
+    .hv-dlg .fld b { font-weight: 500; color: #1a73e8; }
+    .hv-dlg .btns { display: flex; justify-content: flex-end; gap: 8px; margin-top: 12px; }
+    .hv-dlg .btns span { font: 500 14px/1 var(--sans); padding: 9px 14px; border-radius: 999px; border: 1.5px solid #dadce0; color: #1a73e8; }
+    .hv-dlg .btns span.p { background: #1a73e8; color: #fff; border-color: #1a73e8; }
+    .hv-pause { display: flex; align-items: center; justify-content: center; gap: 8px; font: 400 14px/1.3 var(--mono); color: var(--h-yellow); padding: 4px 0; }
+    .hv-pause svg { width: 22px; height: 22px; fill: none; stroke: var(--h-yellow); stroke-width: 2; stroke-linecap: round; }
+    .hv-vt { display: grid; padding-top: 4px; }
+    .hv-vt > div { position: relative; padding: 0 0 18px 32px; font-size: 16px; line-height: 1.4; color: var(--dk-text); overflow-wrap: anywhere; }
+    .hv-vt > div::before { content: ""; position: absolute; left: 0; top: 3px; width: 16px; height: 16px; border-radius: 50%; background: var(--c); }
+    .hv-vt > div::after { content: ""; position: absolute; left: 7px; top: 24px; bottom: 2px; border-left: 2px dashed #5f6368; }
+    .hv-vt > div:last-child::after { display: none; }
+    .hv-vt > div b { display: block; font: 500 14px/1.3 var(--mono); color: var(--c); margin-bottom: 4px; }
+    .hv-vt > div.hv-gap { color: var(--dk-sub); font-style: italic; }
+    .hl-ti { width: 20px; height: 20px; vertical-align: -4px; margin-right: 8px; fill: none; stroke: var(--c); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .hl-sw { display: flex; align-items: center; justify-content: center; gap: 10px; font: 500 15px/1 var(--mono); }
+    .hl-sw i { font-style: normal; color: var(--dk-sub); font-size: 18px; }
+    .hl-sw .p { padding: 10px 14px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .hl-sw .p.r { --c: var(--h-red); } .hl-sw .p.b { --c: var(--h-blue); } .hl-sw .p.y { --c: var(--h-yellow); }
+    .hl-sw .tg { display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 999px; background: rgba(92,219,109,.16); border: 2px solid var(--h-green); color: #fff; }
+    .hl-sw .tg em { width: 34px; height: 18px; border-radius: 999px; background: var(--h-green); position: relative; flex: none; }
+    .hl-sw .tg em::after { content: ""; position: absolute; right: 2px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #fff; }
+    .fp { position: relative; width: 1088px; height: 440px; }
+    .fp > * { position: absolute; box-sizing: border-box; }
+    .fp-z { border: 1.5px dashed var(--c); border-radius: 14px; background: color-mix(in srgb, var(--c) 7%, transparent); }
+    .fp-zh { position: absolute; left: 12px; top: 9px; display: flex; align-items: center; gap: 6px; font: 500 12px/1 var(--mono); letter-spacing: .05em; color: var(--c); }
+    .reveal .slides .fp-zh img { width: 16px; height: 16px; }
+    .fp-c { background: #202124; border: 1.5px solid #5f6368; border-radius: 10px; padding: 8px 12px; font: 500 15px/1.25 var(--sans); color: #fff; text-align: center; z-index: 2; }
+    .fp-c small { display: block; font: 400 12px/1.3 var(--mono); color: var(--dk-sub); margin-top: 3px; }
+    .fp-ch { left: 0; top: 64px; width: 92px; height: 300px; display: flex; flex-direction: column; border: 1.5px solid #5f6368; border-radius: 12px; background: #202124; z-index: 2; }
+    .fp-ch > div { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font: 500 14px/1 var(--sans); color: #fff; }
+    .fp-ch > div + div { border-top: 1px solid #3c4043; }
+    .fp-ch svg { width: 26px; height: 26px; fill: none; stroke: #8ab4f8; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+    .reveal .slides .fp-ch img { width: 26px; height: 26px; }
+    .fp-rt { border-color: #c58af9; padding: 14px 10px; }
+    .reveal .slides .fp-rt img { display: block; width: 34px; height: 34px; margin: 0 auto 8px; }
+    .fp-o { border: 2px solid #ffab70; background: rgba(255,171,112,.1); }
+    .fp-orc { border-color: #c58af9; display: flex; flex-direction: column; gap: 7px; padding: 10px 12px; }
+    .fp-cb { display: block; text-align: left; font: 500 11.5px/1.3 var(--mono); padding: 5px 8px; border-radius: 6px; border: 1.5px solid var(--c); color: var(--c); overflow-wrap: anywhere; }
+    .fp-cb em { display: block; font: 400 12px/1.3 var(--sans); font-style: normal; color: var(--dk-text); }
+    .fp-cb.r { --c: #ffab70; } .fp-cb.y { --c: var(--h-yellow); }
+    .fp-tags { display: flex; flex-direction: column; align-items: flex-start; gap: 5px; margin-top: 6px; }
+    .fp-tags i { font: 500 11.5px/1 var(--mono); font-style: normal; padding: 5px 7px; border-radius: 6px; border: 1.5px solid var(--c); color: var(--c); }
+    .fp-tags i.y { --c: var(--h-yellow); } .fp-tags i.o { --c: #ffab70; }
+    .fp-h { display: flex; align-items: center; gap: 10px; text-align: left; border: 2px solid var(--c); height: 82px; }
+    .fp-h svg { width: 30px; height: 30px; flex: none; fill: none; stroke: var(--c); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .fp-h b { font-size: 16px; color: var(--c); }
+    .fp-w { left: 0; top: 0; width: 1088px; height: 440px; overflow: visible; z-index: 3; pointer-events: none; }
+    .fp-w polyline { fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .fp-w .b { stroke: #8ab4f8; } .fp-w .g { stroke: #5cdb6d; } .fp-w .p { stroke: #c58af9; } .fp-w .y { stroke: #ffcb32; } .fp-w .o { stroke: #ffab70; }
+    .fp-w .ds { stroke-dasharray: 6 5; }
+    .fp-l { font: 500 12px/1 var(--mono); padding: 2px 6px; background: var(--dk-card); z-index: 4; white-space: nowrap; }
+    .fp-l.y { color: var(--h-yellow); } .fp-l.o { color: #ffab70; }
+    .fp-lg { left: 322px; top: 330px; display: grid; gap: 8px; font: 400 13px/1 var(--mono); color: var(--dk-sub); }
+    .fp-lg span { display: flex; align-items: center; gap: 8px; }
+    .fp-lg i { width: 22px; height: 0; border-top: 3px solid var(--c); }
+  </style>
+</head>
+<body>
+  <!-- line-icon sprite (DevFest template style: 3px ink outlines, pastel fills) -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-arrow" viewBox="0 0 200 220"><path d="M100 8 L188 112 H138 V212 H62 V112 H12 Z" fill="var(--p-yellow)" stroke="var(--ink)" stroke-width="5" stroke-linejoin="round"/></symbol>
+    <symbol id="i-scallop" viewBox="0 0 240 40"><path d="M4 36 A36 30 0 0 1 80 36 A36 30 0 0 1 160 36 A36 30 0 0 1 236 36" fill="none" stroke="var(--ink)" stroke-width="4" stroke-linecap="round"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 64 64"><circle cx="32" cy="32" r="28"/><ellipse cx="32" cy="32" rx="12" ry="28"/><path d="M4 32h56M9 18h46M9 46h46"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 120 90"><path d="M30 80 A24 24 0 0 1 28 32 A30 30 0 0 1 86 26 A26 26 0 0 1 94 80 Z"/></symbol>
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M2 2l20 20M8.5 16.4a5 5 0 0 1 7 0M5 12.9a10 10 0 0 1 5.2-2.8M19 12.9a10 10 0 0 0-2.3-1.7M2 8.8a15 15 0 0 1 4.2-2.7M22 8.8A15 15 0 0 0 10.7 5M12 20h.01"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><circle cx="8" cy="8" r="6"/><path d="M18.1 10.4A6 6 0 1 1 10.3 18M7 6h1v4M16.7 13.9l.7.7-2.8 2.8"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-next" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M19 9h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v3l-4-3h-3"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z"/></symbol>
+    <symbol id="i-empty" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M9 12h6"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M10 8l6 4-6 4Z"/></symbol>
+    <symbol id="i-trace" viewBox="0 0 24 24"><circle cx="5" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="5" cy="19" r="2"/><path d="M9 5h12M9 12h8M9 19h10"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M3.5 17a9 9 0 1 1 17 0"/><path d="M12 14l4-5"/><circle cx="12" cy="14" r="1.5"/></symbol>
+  </svg>
+
+  <!-- Slide controls (shopio-style): progress · ‹ n/N › · overview · fullscreen · notes · export -->
+  <div id="progress"></div>
+  <div id="ctrl">
+    <button id="bPrev" title="Previous (←)">‹</button>
+    <span class="cnt" id="cnt" title="Slide list">1 / 31</span>
+    <button id="bNext" title="Next (→)">›</button>
+    <button id="bOv" title="All slides (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+    <button id="bFs" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    <button id="bNotes" title="Speaker notes (N / S)"><svg viewBox="0 0 24 24"><path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg></button>
+    <button id="bPdf" title="Export PDF (E = this slide, Shift+E = all)" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg></button>
+  </div>
+  <div id="menu"></div>
+  <div id="ov"><div class="ovh"><span>All slides</span><button id="ovX" title="Close (Esc)">✕</button></div><div class="ovg"></div></div>
+  <div id="exportMenu" role="menu">
+    <button role="menuitem" data-export="all"><span>All slides<span class="sub">PDF of every slide</span></span><kbd>Shift+E</kbd></button>
+    <button role="menuitem" data-export="slide"><span>This slide<span class="sub" id="exportCur">PDF of the current slide</span></span><kbd>E</kbd></button>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Human-in-the-loop with ADK">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Pause</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Approve</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><span class="w p">Resume</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Human-in-the-loop<br>with ADK</b><span>Pause the agent, ask a human, resume safely</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-blue)"><img src="../images/shared/logos/python.svg" alt="">Python</i><i style="--c:var(--h-red)"><img src="../images/shared/logos/googlecloud.svg" alt="">Google Cloud</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • วันนี้คุยเรื่อง human-in-the-loop (HITL) ใน ADK คือการให้คนเข้ามาตัดสินใจในจังหวะที่สำคัญ ก่อนที่ agent จะทำสิ่งที่ย้อนกลับไม่ได้ • 3 คำบนปก: หยุด agent ไว้, ให้คนอนุมัติ, แล้วทำงานต่อ • เนื้อหาจากเอกสาร ADK (adk.dev) และโจทย์ตั้งต้นจากบทความของ Roshan Kumar บน Medium</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Why a human in the loop</strong><span>The $200 refund rule, and why prompts and IAM miss it</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Deterministic gates</strong><span>before_tool_callback blocks in code, every time</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Tool confirmation</strong><span>Pause for yes/no, or let a human edit the arguments</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Hand off to a human</strong><span>When the user is upset and wants a person</span></div></li>
+          <li class="c1"><b>05</b><div><strong>Long waits and resume</strong><span>Long-running tools, resumability, ADK 2.0 RequestInput</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-hitl-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">5 ช่วง: (1) ทำไมต้องมีคนอยู่ในลูป ด้วยตัวอย่างการคืนเงิน (2) ประตูแบบ deterministic ด้วย callback (3) tool confirmation ของ ADK ที่หยุดรอคนอนุมัติได้จริง (4) ส่งต่อให้คนเมื่อผู้ใช้ไม่อยากคุยกับ agent (5) งานที่รอนานเป็นชั่วโมง การ resume และ RequestInput ใน ADK 2.0 • สแกน QR เพื่อเปิดสไลด์</aside>
+      </section>
+
+      <!-- Section 01 -->
+      <section class="bg-blue" data-title="01 · Why a human in the loop">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-user"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Why a human<br>in the loop</h1>
+            <p class="sub" style="margin-top:28px">Some actions are too costly<br>to leave to the model alone</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • บาง action แพงเกินกว่าจะปล่อยให้โมเดลตัดสินใจคนเดียว เช่น จ่ายเงิน ลบข้อมูล ส่งอีเมลถึงลูกค้า</aside>
+      </section>
+
+      <!-- The refund rule -->
+      <section data-title="The $200 refund rule">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Running example · a bank support agent</div>
+            <h2 style="margin-bottom:22px">The agent can call <code style="font-size:40px">issue_refund</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div style="width:520px; flex:none" class="zt-stack">
+                <div class="pc green fragment" style="padding:16px 18px"><b style="font-size:20px">≤ $200</b><br>Refund runs automatically</div>
+                <div class="pc red fragment" style="padding:16px 18px"><b style="font-size:20px">&gt; $200</b><br>A supervisor must approve the <b>exact amount</b> before the API runs</div>
+              </div>
+              <div style="flex:1; min-width:0">
+                <div class="zt-meter fragment" style="margin-top:34px">
+                  <i>$50</i><i>$120</i><i>$200</i><i class="over">$350</i><i class="over">$900</i>
+                  <span class="zt-limit" style="left:60%"><span>$200</span></span>
+                </div>
+                <div class="zt-scale fragment"><span>auto</span><span>needs a human</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Source</b><span>Scenario from "Deterministic ADK Callbacks &amp; HITL on Google Cloud", Roshan Kumar.</span></div>
+        </div>
+        <aside class="notes">โจทย์จากบทความ: ธนาคารมี agent ดูแลลูกค้าที่มีสิทธิ์เรียก issue_refund(order_id, amount) จริง • (คลิก) นโยบาย: คืนเงินไม่เกิน $200 ทำได้อัตโนมัติ • (คลิก) เกิน $200 ต้องให้หัวหน้าอนุมัติ "ยอดที่แน่นอน" ก่อนเรียก API • (คลิก)(คลิก) เส้น $200 แบ่งว่าอะไรอัตโนมัติ อะไรต้องมีคน • (คลิก) ที่มา: บทความของ Roshan Kumar ตอนที่ 3 ของซีรีส์ Agentic Security บน Medium (บทความเป็น member-only สไลด์นี้ใช้เฉพาะส่วนที่เปิดอ่านได้)</aside>
+      </section>
+
+      <!-- Two failed fixes -->
+      <section data-title="Two fixes that fail">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">The obvious fixes</div>
+            <h2 style="margin-bottom:24px">Two fixes that fail in production</h2>
+            <div class="grid g2 zt-lim" style="width:1088px; gap:20px">
+              <div class="pc red fragment" style="height:250px"><svg class="ev-ico" style="--c:var(--h-red)"><use href="#i-chat"/></svg><h3>A rule in the system prompt</h3><p>"Never refund more than $200." A clever user talks the model out of it with a jailbreak.</p></div>
+              <div class="pc yellow fragment" style="height:250px"><svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-lock"/></svg><h3>A Cloud IAM condition</h3><p>IAM checks permissions on cloud resources. It cannot read the <code>amount</code> inside a tool call's JSON arguments.</p></div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Instead</b><span>Enforce the rule in code that runs on every tool call: ADK callbacks and tool confirmation.</span></div>
+        </div>
+        <aside class="notes">นักพัฒนามักลอง 2 วิธีแล้วพังทั้งคู่ • (คลิก) เขียนกฎใน system prompt ว่าห้ามคืนเงินเกิน $200 แต่ผู้ใช้ jailbreak ให้โมเดลข้ามกฎได้ • (คลิก) ใช้ IAM condition เช็ก amount ไม่ได้ เพราะ IAM ดูสิทธิ์ของ resource บน cloud ไม่ได้อ่าน argument ใน JSON ของ tool call • (คลิก) ทางออกคือบังคับกฎในโค้ดที่รันทุกครั้งที่มีการเรียก tool: callback และ tool confirmation ของ ADK • ประเด็นทั้งสองมาจากบทความของ Roshan Kumar</aside>
+      </section>
+
+      <!-- Options map -->
+      <section data-title="Six ways to involve a human">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">ADK building blocks</div>
+            <h2 style="margin-bottom:16px">From hard rule to human judgment</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <tr><th style="width:27%">Need</th><th style="width:37%">ADK feature</th><th>Human does</th><th style="width:15%">Since</th></tr>
+              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-red)"><use href="#i-lock"/></svg>A hard limit, no exceptions</td><td><code>before_tool_callback</code></td><td>Nothing. Code blocks it</td><td>Python 1.x</td></tr>
+              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-yellow)"><use href="#i-check"/></svg>Yes/no before a risky call</td><td><code>require_confirmation=True</code></td><td>Approve or reject</td><td>Python 1.14</td></tr>
+              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-green)"><use href="#i-doc"/></svg>Human edits the arguments</td><td><code>tool_context.request_confirmation</code></td><td>Approves with a payload</td><td>Python 1.14</td></tr>
+              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-yellow)"><use href="#i-clock"/></svg>Approval takes hours</td><td><code>LongRunningFunctionTool</code> + resume</td><td>Replies later, elsewhere</td><td>resume: 1.16</td></tr>
+              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-blue)"><use href="#i-chat"/></svg>User wants a person</td><td><code>before_model_callback</code> + escalate tool</td><td>Takes over the chat</td><td>Python 1.x</td></tr>
+              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-green)"><use href="#i-play"/></svg>Free-form input in a workflow</td><td><code>RequestInput</code> in a graph</td><td>Types an answer</td><td>ADK 2.0</td></tr>
+            </table>
+          </div>
+        </div>
+        <aside class="notes">แผนที่ของวันนี้: 6 วิธีให้คนเข้ามาในลูป เรียงจากกฎตายตัวไปถึงการใช้วิจารณญาณของคน • (คลิก) กฎที่ห้ามมีข้อยกเว้น ใช้ before_tool_callback บล็อกในโค้ด ไม่มีคนเกี่ยว • (คลิก) ถาม yes/no ก่อนเรียก tool ที่เสี่ยง ใช้ require_confirmation รองรับใน Python ตั้งแต่ 1.14 • (คลิก) ให้คนแก้ argument ได้ เช่น อนุมัติยอดที่ต่างจากที่ขอ ใช้ request_confirmation พร้อม payload • (คลิก) ถ้าการอนุมัติใช้เวลาเป็นชั่วโมงในระบบอื่น ใช้ LongRunningFunctionTool คู่กับ resume (Python 1.16) • (คลิก) ผู้ใช้อยากคุยกับคน: ใช้ before_model_callback กับ tool สำหรับส่งต่อ ให้พนักงานรับแชตต่อ • (คลิก) ใน ADK 2.0 แบบ graph มี RequestInput ให้ผู้ใช้พิมพ์ตอบระหว่าง workflow</aside>
+      </section>
+
+      <!-- Section 02 -->
+      <section class="bg-green" data-title="02 · Deterministic gates">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-lock"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Deterministic<br>gates</h1>
+            <p class="sub" style="margin-top:28px">Code that runs before every tool call,<br>whatever the model says</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • ประตูแบบ deterministic คือโค้ดที่รันก่อนทุก tool call ไม่ว่าโมเดลจะถูกหลอกให้คิดอะไรมา</aside>
+      </section>
+
+      <!-- Callback lifecycle -->
+      <section data-title="Where callbacks run">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">ADK lifecycle callbacks</div>
+            <h2 style="margin-bottom:26px">Two checkpoints around the model</h2>
+            <div class="flow tight" style="width:1088px; height:200px">
+              <div class="pc node fragment" data-fragment-index="1"><svg class="ev-ico" style="--c:#fff"><use href="#i-user"/></svg><b>User</b><p>Sends a request</p></div>
+              <svg class="arr fragment" data-fragment-index="2" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="2"><span class="zt-stage">before_model_<wbr>callback</span><b>Check prompt</b><p>Block or rewrite before the LLM runs</p></div>
+              <svg class="arr fragment" data-fragment-index="3" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc blue node fragment" data-fragment-index="3"><svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-gauge"/></svg><b>LLM</b><p>Plans a tool call with args</p></div>
+              <svg class="arr fragment" data-fragment-index="4" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc red node fragment" data-fragment-index="4"><span class="zt-stage">before_tool_<wbr>callback</span><b>Check args</b><p>Sees <code>amount</code>, can skip the tool</p></div>
+              <svg class="arr fragment" data-fragment-index="5" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc green node fragment" data-fragment-index="5"><svg class="ev-ico" style="--c:var(--h-green)"><use href="#i-tool"/></svg><b>Tool</b><p>Runs only if allowed</p></div>
+            </div>
+            <div class="pc fragment" data-fragment-index="6" style="width:1088px; margin-top:24px; padding:14px 20px; font-size:18px"><b style="color:var(--h-yellow)">Return a dict</b> from <code>before_tool_callback</code> and ADK skips the tool. Your dict becomes the tool result the LLM sees.</div>
+          </div>
+        </div>
+        <aside class="notes">callback ของ ADK เป็นจุดตรวจสองจุดรอบโมเดล • (คลิก 1) ผู้ใช้ส่งคำขอ • (คลิก 2) before_model_callback ตรวจ prompt ก่อนเข้า LLM บล็อกหรือแก้ได้ • (คลิก 3) LLM วางแผนเรียก tool พร้อม argument • (คลิก 4) before_tool_callback เห็น argument จริง เช่น amount และเลือกข้าม tool ได้ • (คลิก 5) tool รันเฉพาะเมื่อผ่าน • (คลิก 6) กติกาสำคัญ: ถ้า before_tool_callback คืน dict ADK จะไม่รัน tool และใช้ dict นั้นเป็นผลลัพธ์ส่งกลับให้ LLM ถ้าคืน None tool จะรันตามปกติ</aside>
+      </section>
+
+      <!-- Callback code -->
+      <section data-title="A refund guard in code">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">before_tool_callback · Python</div>
+            <h2 style="margin-bottom:22px">A refund guard in ten lines</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:680px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from typing import Any, Optional
+from google.adk.agents import Agent
+from google.adk.tools.base_tool import BaseTool
+from google.adk.tools.tool_context import ToolContext
+
+LIMIT = 200
+
+def refund_guard(tool: BaseTool, args: dict[str, Any],
+                 tool_context: ToolContext) -> Optional[dict]:
+    if tool.name != "issue_refund":
+        return None                      # other tools run
+    if args.get("amount", 0) > LIMIT:
+        return {"status": "blocked",
+                "reason": f"Over ${LIMIT}: needs a supervisor."}
+    return None                          # run the real tool
+
+root_agent = Agent(
+    ...,
+    tools=[issue_refund],
+    before_tool_callback=refund_guard,
+)
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv">
+                <div class="bx b fragment" data-fragment-index="1">LLM wants <b>issue_refund</b><small>with the amount the user asked for</small></div>
+                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="1"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
+                <div class="bx y fragment" data-fragment-index="1"><b>refund_guard</b><small>amount &gt; 200 ?</small></div>
+                <div class="split fragment" data-fragment-index="2">
+                  <div><div class="lab" style="--c:var(--h-green)">$120 · no</div><div class="bx g">Tool runs<small>return None</small></div></div>
+                  <div><div class="lab" style="--c:var(--h-red)">$350 · yes</div><div class="bx r">Tool skipped<small>{"status": "blocked"}</small></div></div>
+                </div>
+                <div class="hv-note fragment" data-fragment-index="3">A callback can only <b>block</b>. It cannot wait for a supervisor's yes.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่าง before_tool_callback เขียนเองเพื่ออธิบาย ไม่ได้คัดจากบทความ (บทความเป็น member-only) • เช็กว่าเป็น issue_refund ไหม ถ้าไม่ใช่คืน None ให้ tool อื่นรันปกติ • ถ้ายอดเกิน $200 คืน dict status blocked ADK จะข้าม tool และส่ง dict นี้ให้ LLM อธิบายต่อผู้ใช้ • (คลิก) รันทุกครั้ง jailbreak ข้ามไม่ได้ • (คลิก) อ่าน argument จริงซึ่ง IAM มองไม่เห็น • (คลิก) ข้อจำกัด: callback ทำได้แค่บล็อก รอให้หัวหน้ากดอนุมัติไม่ได้ ช่วงถัดไปจึงใช้ tool confirmation • เอกสาร ADK แนะนำให้ใช้ Plugin สำหรับ guardrail ระดับองค์กรที่ใช้กับหลาย agent</aside>
+      </section>
+
+      <!-- Section 03 -->
+      <section class="bg-yellow" data-title="03 · Tool confirmation">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-check"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Tool<br>confirmation</h1>
+            <p class="sub" style="margin-top:28px">Pause the tool call<br>until a human answers</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • tool confirmation: หยุด tool call ไว้จนกว่าคนจะตอบ รองรับใน ADK Python ตั้งแต่ v1.14.0</aside>
+      </section>
+
+      <!-- require_confirmation -->
+      <section data-title="require_confirmation">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Boolean confirmation · ADK Python v1.14.0+</div>
+            <h2 style="margin-bottom:22px">One flag: <code style="font-size:40px">require_confirmation</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:680px; flex:none; font-size:15px"><code class="language-python" data-trim>
+from google.adk.tools import FunctionTool
+from google.adk.tools.tool_context import ToolContext
+
+# Always ask
+FunctionTool(issue_refund, require_confirmation=True)
+
+# Ask only above the limit
+async def confirmation_threshold(
+    amount: int, tool_context: ToolContext
+) -> bool:
+  """Returns true if the amount is greater than 200."""
+  return amount > 200
+
+FunctionTool(issue_refund,
+             require_confirmation=confirmation_threshold)
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv">
+                <div class="hv-dlg fragment"><div class="t"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Confirm tool call?</div><p><b>issue_refund</b><br>order_id: 1042 · amount: 350</p><div class="btns"><span>Reject</span><span class="p">Confirm</span></div></div>
+                <div class="hv-cap fragment">Sketch of the confirmation dialog in adk web</div>
+                <div class="split fragment" style="margin-top:6px">
+                  <div class="bx b"><b>True</b><small>ask on every call</small></div>
+                  <div class="bx g"><b>a function</b><small>ask only when amount &gt; 200</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แบบง่ายสุด: ใส่ require_confirmation=True ตอนห่อ tool ด้วย FunctionTool ทุกครั้งที่เรียกจะหยุดรอ yes/no • (คลิก) หรือส่งฟังก์ชันเข้าไป ให้ตัดสินเป็นรายครั้ง ฟังก์ชันรับพารามิเตอร์ชื่อเดียวกับ tool • ในเอกสารตัวอย่างใช้ amount > 1000 กับ tool reimburse สไลด์นี้ปรับเป็น issue_refund และ $200 ให้ตรงกับโจทย์ • (คลิก) ทดสอบใน adk web จะมี dialog ขึ้นมาให้กดยืนยัน</aside>
+      </section>
+
+      <!-- Event flow -->
+      <section data-title="The confirmation round trip">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">What happens on the wire</div>
+            <h2 style="margin-bottom:26px">The confirmation round trip</h2>
+            <div class="flow tight" style="width:1088px; height:210px">
+              <div class="pc blue node fragment" data-fragment-index="1"><span class="zt-stage">1 · LLM</span><b>Calls the tool</b><p>issue_refund(<wbr>amount=350)</p></div>
+              <svg class="arr fragment" data-fragment-index="2" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="2"><span class="zt-stage">2 · ADK pauses</span><b>Emits a request</b><p>function call <code>adk_request_<wbr>confirmation</code></p></div>
+              <svg class="arr fragment" data-fragment-index="3" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc node fragment" data-fragment-index="3"><span class="zt-stage">3 · Human</span><b>Decides</b><p>In adk web, your app, or a chat card</p></div>
+              <svg class="arr fragment" data-fragment-index="4" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc green node fragment" data-fragment-index="4"><span class="zt-stage">4 · Client replies</span><b>Function response</b><p>same <code>id</code>, <code>confirmed</code>, <code>payload</code></p></div>
+              <svg class="arr fragment" data-fragment-index="5" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc red node fragment" data-fragment-index="5"><span class="zt-stage">5 · Tool</span><b>Runs or stops</b><p>Reads <code>tool_<wbr>confirmation</code></p></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="6"><b>Key</b><span>The reply's id must equal the function_call_id of the confirmation request.</span></div>
+        </div>
+        <aside class="notes">เบื้องหลังของการยืนยัน 1 รอบ • (คลิก 1) LLM เรียก tool เช่นคืนเงิน $350 • (คลิก 2) ADK หยุด tool แล้วส่ง function call ชื่อ adk_request_confirmation ออกไปหา client • (คลิก 3) คนตัดสินใจ ผ่าน adk web, แอปของเรา หรือการ์ดในแชต • (คลิก 4) client ตอบกลับเป็น function response ชื่อ adk_request_confirmation ใช้ id เดียวกับ request มี confirmed เป็น true/false และ payload • (คลิก 5) tool รันอีกรอบ อ่าน tool_context.tool_confirmation แล้วทำหรือไม่ทำ • (คลิก 6) จุดที่พลาดบ่อย: id ของคำตอบต้องตรงกับ function_call_id ของคำขอ</aside>
+      </section>
+
+      <!-- Advanced confirmation -->
+      <section data-title="Let the human change the amount">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Advanced confirmation · hint + payload</div>
+            <h2 style="margin-bottom:20px">Let the supervisor set the amount</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:700px; flex:none; font-size:13px"><code class="language-python" data-trim>
+def issue_refund(order_id: str, amount: float,
+                 tool_context: ToolContext) -> dict:
+  if amount <= 200:
+    return pay(order_id, amount)
+
+  tool_confirmation = tool_context.tool_confirmation
+  if not tool_confirmation:
+    tool_context.request_confirmation(
+        hint=(f"Approve a refund of ${amount} for {order_id}? "
+              "Set approved_amount, or 0 to reject."),
+        payload={"approved_amount": 0},
+    )
+    return {"status": "Supervisor approval is required."}
+
+  approved = min(tool_confirmation.payload["approved_amount"],
+                 amount)
+  if not tool_confirmation.confirmed or approved == 0:
+    return {"status": "Refund rejected."}
+  return pay(order_id, approved)
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv">
+                <div class="hv-dlg fragment" data-fragment-index="1"><div class="t"><svg viewBox="0 0 24 24"><use href="#i-user"/></svg>Supervisor approval</div><p>Approve a refund of $350 for 1042? Set approved_amount, or 0 to reject.</p><div class="fld"><span>approved_amount</span><b>300</b></div><div class="btns"><span>Reject</span><span class="p">Approve</span></div></div>
+                <div class="hv-cap fragment" data-fragment-index="2"><b>hint</b> = the question · <b>payload</b> = the form</div>
+                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="3"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
+                <div class="bx g fragment" data-fragment-index="3"><b>Tool runs again</b><small>min(300, 350) → pays $300</small></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แบบขั้นสูง: ให้หัวหน้ากำหนดยอดที่อนุมัติเองได้ • ดัดแปลงจากตัวอย่าง request_time_off ในเอกสาร ADK ที่ให้ผู้จัดการกรอก approved_days เปลี่ยนเป็นยอดคืนเงินให้ตรงโจทย์ ส่วน pay() เป็นฟังก์ชันสมมติ • (คลิก) เรียกครั้งแรกยังไม่มีการยืนยัน จึงเรียก request_confirmation แล้วคืนสถานะว่ารออนุมัติ • (คลิก) hint คือข้อความบอกคนว่าต้องตัดสินอะไร payload คือฟอร์มที่คนกรอก • (คลิก) ครั้งที่สองหลังคนตอบ อ่าน payload และใช้ min() กันไม่ให้อนุมัติเกินยอดที่ขอ ถ้าไม่ confirmed หรือได้ 0 ก็ปฏิเสธ</aside>
+      </section>
+
+      <!-- Reply over REST -->
+      <section data-title="Reply from your own app">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">ADK API server · /run_sse or /run</div>
+            <h2 style="margin-bottom:22px">Reply from your own app</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:660px; flex:none; font-size:14px"><code class="language-bash" data-trim>
+curl -X POST http://localhost:8000/run_sse \
+  -H "Content-Type: application/json" \
+  -d '{
+  "app_name": "human_tool_confirmation",
+  "user_id": "user", "session_id": "SESSION_ID",
+  "new_message": {"role": "user", "parts": [{
+    "function_response": {
+      "id": "FUNCTION_CALL_ID",
+      "name": "adk_request_confirmation",
+      "response": {"confirmed": true,
+                   "payload": {"approved_amount": 350}}
+    }}]}
+}'
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv">
+                <div class="bx fragment" data-fragment-index="1"><b>Your app</b><small>the supervisor clicks Approve</small></div>
+                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="2"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
+                <div class="bx y fragment" data-fragment-index="2"><b>POST /run_sse</b><small>function_response · id = FUNCTION_CALL_ID</small></div>
+                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="3"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
+                <div class="bx g fragment" data-fragment-index="3"><b>ADK agent</b><small>issue_refund resumes with confirmed + payload</small></div>
+                <div class="hv-cap fragment" data-fragment-index="4">Resumable app? Also send the original <b>invocation_id</b></div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Limit</b><span>Python: not supported with DatabaseSessionService or VertexAiSessionService.</span></div>
+        </div>
+        <aside class="notes">ถ้าไม่ได้ใช้ adk web ตอบจากแอปของเราเองผ่าน API server ได้ ส่งไปที่ /run_sse หรือ /run หรือเรียก runner ตรง ๆ • ตัวอย่าง curl นี้จัดรูปใหม่จากเอกสารให้สั้นลง • (คลิก) id ต้องเป็น function_call_id ของคำขอ • (คลิก) ใน response ใส่ confirmed และ payload ที่คนกรอก • (คลิก) ถ้าแอปเปิด resumability ต้องใส่ invocation_id เดิม ไม่อย่างนั้นจะเริ่ม invocation ใหม่ • (คลิก) ข้อจำกัดสำคัญใน Python: ฟีเจอร์นี้ยังไม่รองรับ DatabaseSessionService และ VertexAiSessionService ต้องทดสอบให้ดีก่อนขึ้น production</aside>
+      </section>
+
+      <!-- Section 04 · Handoff -->
+      <section class="bg-blue" data-title="04 · Hand off to a human">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-chat"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Hand off<br>to a human</h1>
+            <p class="sub" style="margin-top:28px">When the user is done<br>talking to the agent</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 4 • อีกแบบของ HITL: ไม่ใช่ agent ขอให้คนอนุมัติ แต่ผู้ใช้เองไม่อยากคุยกับ agent แล้ว เช่น โมโห หรือ agent ช่วยไม่ได้ ต้องส่งต่อให้คน</aside>
+      </section>
+
+      <!-- Two kinds of HITL -->
+      <section data-title="Two kinds of HITL">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Tool-level vs conversation-level</div>
+            <h2 style="margin-bottom:24px">Two kinds of human-in-the-loop</h2>
+            <div class="grid g2 h2-comp" style="width:1088px; gap:20px">
+              <div class="pc yellow fragment" style="padding:18px 20px">
+                <svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-tool"/></svg><h3>Tool-level</h3>
+                <p style="font-size:17px; line-height:1.45">The <b>agent</b> asks a person to approve one action. The user keeps talking to the agent.</p>
+                <div class="hl-mini">
+                  <span class="r a">Agent</span><i>→</i><span class="r h">Supervisor</span><i>→</i><span class="r a">Agent</span>
+                </div>
+                <div class="chips" style="margin-top:14px"><span class="chip">require_confirmation</span><span class="chip">LongRunningFunctionTool</span></div>
+              </div>
+              <div class="pc blue fragment" style="padding:18px 20px">
+                <svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-user"/></svg><h3>Conversation-level</h3>
+                <p style="font-size:17px; line-height:1.45">The <b>user</b> wants a person. The agent steps aside and a human takes over the chat.</p>
+                <div class="hl-mini">
+                  <span class="r a">Agent</span><i>→</i><span class="r h">Human agent</span><i>⋯</i><span class="r a">Agent?</span>
+                </div>
+                <div class="chips" style="margin-top:14px"><span class="chip">before_model_callback</span><span class="chip">escalate tool</span><span class="chip">session state</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Rule</b><span>When a user asks for a person, hand off. Do not argue or try one more answer.</span></div>
+        </div>
+        <aside class="notes">HITL มี 2 ระดับ (บทความของ Roshan Kumar ก็แยกแบบนี้: tool-level กับ conversation-level) • (คลิก) tool-level: agent เป็นคนขอให้คนอนุมัติ action เดียว เช่น คืนเงิน $350 แล้วผู้ใช้ก็คุยกับ agent ต่อ ที่เล่ามาทั้งหมดก่อนหน้าคือแบบนี้ • (คลิก) conversation-level: ผู้ใช้เองอยากคุยกับคน agent ต้องหลบ แล้วให้พนักงานรับแชตต่อ อาจส่งกลับให้ agent ทีหลังหรือไม่ก็ได้ • (คลิก) กฎข้อแรก: ผู้ใช้ขอคุยกับคนเมื่อไหร่ ส่งต่อทันที อย่าเถียง อย่าพยายามตอบอีกรอบ (เป็นคำแนะนำของผู้บรรยาย)</aside>
+      </section>
+
+      <!-- Handoff illustration -->
+      <section data-title="A handoff that feels good">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Illustration · an upset customer</div>
+            <h2 style="margin-bottom:20px">A handoff that does not make it worse</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div class="ev-chat">
+                <div class="ev-msg u fragment" data-fragment-index="1"><small>Customer</small>This is the third time! I want to talk to a real person.</div>
+                <div class="ev-msg a fragment" data-fragment-index="2"><small>Agent</small>I'm sorry. I'm connecting you to our team now. They will see this whole chat, so you won't need to repeat yourself.</div>
+                <div class="hl-wait fragment" data-fragment-index="3"><svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-user"/></svg><span>Ploy from Support joined · about 2 min</span></div>
+                <div class="ev-msg h fragment" data-fragment-index="4"><small>Ploy · human agent</small>Hi, I can see order 1042 and both refund attempts. Let me fix this for you.</div>
+              </div>
+              <div style="flex:1; min-width:0" class="fragment" data-fragment-index="2">
+                <div class="ev-plan" style="font-size:14px"><b>Handoff packet · sent to the human</b>
+                  reason: user asked for a person<br>
+                  mood: frustrated (3rd contact)<br>
+                  order: 1042 · refund $350<br>
+                  tried: 2 refund attempts, both blocked<br>
+                  summary: "Wants refund for broken item"
+                </div>
+                <div class="zt-stack" style="margin-top:14px">
+                  <div class="pc green" style="padding:10px 14px; font-size:15px">The human starts with <b>context</b>, not "How can I help?"</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพประกอบ (แต่งขึ้น) ของการส่งต่อที่ไม่ทำให้ลูกค้าโกรธกว่าเดิม • (คลิก 1) ลูกค้าติดต่อมาเป็นครั้งที่ 3 และขอคุยกับคนจริง • (คลิก 2) agent ขอโทษ บอกว่ากำลังส่งต่อ และบอกว่าพนักงานจะเห็นแชตทั้งหมด ไม่ต้องเล่าใหม่ พร้อมกันนั้นระบบส่ง "handoff packet" ให้พนักงาน: เหตุผล อารมณ์ของลูกค้า order ที่เกี่ยวข้อง สิ่งที่ลองไปแล้ว และสรุป • (คลิก 3) พนักงานเข้ามา บอกเวลารอโดยประมาณ • (คลิก 4) พนักงานเริ่มด้วยบริบททันที ไม่ใช่ถามใหม่ว่า "มีอะไรให้ช่วยคะ" ซึ่งเป็นสิ่งที่ทำให้ลูกค้าโกรธที่สุด</aside>
+      </section>
+
+      <!-- Detect -->
+      <section data-title="When to hand off">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Two detectors, one switch</div>
+            <h2 style="margin-bottom:24px">When to hand off</h2>
+            <div class="grid g2 h2-comp" style="width:1088px; gap:20px">
+              <div class="pc red fragment" style="padding:18px 20px">
+                <svg class="ev-ico" style="--c:var(--h-red)"><use href="#i-lock"/></svg><h3>Deterministic · in code</h3>
+                <ul class="hl-list">
+                  <li>User says "human", "real person", "คุยกับคน"</li>
+                  <li>Same problem fails <b>N</b> times</li>
+                  <li>Topic is always human-only, e.g. fraud</li>
+                </ul>
+                <div class="chips" style="margin-top:14px"><span class="chip">before_model_callback</span></div>
+              </div>
+              <div class="pc blue fragment" style="padding:18px 20px">
+                <svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-gauge"/></svg><h3>Model judgment · a tool</h3>
+                <ul class="hl-list">
+                  <li>User is clearly upset, even without keywords</li>
+                  <li>Agent cannot solve it with its tools</li>
+                  <li>Instruction says when to call <code>escalate_to_human</code></li>
+                </ul>
+                <div class="chips" style="margin-top:14px"><span class="chip">LongRunningFunctionTool</span></div>
+              </div>
+            </div>
+            <div class="hl-sw fragment" style="width:1088px; margin-top:18px"><span class="p r">keyword gate</span><i>→</i><span class="tg"><em></em>state["handoff"] = True</span><i>←</i><span class="p b">escalate tool</span><i>⇒</i><span class="p y">agent quiet · human replies</span></div>
+          </div>
+        </div>
+        <aside class="notes">ตรวจจับว่าเมื่อไหร่ต้องส่งต่อ ใช้ 2 ชั้น • (คลิก) ชั้นแรก deterministic ในโค้ด: คำว่า human, real person, คุยกับคน, ปัญหาเดิมล้มเหลวเกิน N ครั้ง หรือหัวข้อที่ต้องเป็นคนเท่านั้นเช่นการทุจริต ใช้ before_model_callback จับก่อนถึงโมเดล โมเดลถูกหลอกให้ไม่ส่งต่อไม่ได้ • (คลิก) ชั้นที่สองให้โมเดลตัดสิน: ผู้ใช้หงุดหงิดชัดเจนแม้ไม่ได้พูดคำเหล่านั้น หรือ agent แก้ไม่ได้ เขียนใน instruction ว่าเมื่อไหร่ให้เรียก tool escalate_to_human • (คลิก) ทั้งสองทางตั้ง flag เดียวกันใน session state ระหว่างที่ flag เปิด agent จะเงียบ • การแบ่งแบบนี้เป็นแนวทางที่ผู้บรรยายเสนอ ประกอบจาก API ที่มีใน ADK</aside>
+      </section>
+
+      <!-- Handoff gate code -->
+      <section data-title="The handoff gate">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">before_model_callback · Python</div>
+            <h2 style="margin-bottom:20px">The handoff gate</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:690px; flex:none; font-size:13px"><code class="language-python" data-trim>
+from typing import Optional
+from google.adk.agents.callback_context import CallbackContext
+from google.adk.models import LlmRequest, LlmResponse
+from google.genai import types
+
+HANDOFF_WORDS = ("human", "real person", "คุยกับคน")
+
+def handoff_gate(callback_context: CallbackContext,
+                 llm_request: LlmRequest) -> Optional[LlmResponse]:
+    state = callback_context.state
+    last = llm_request.contents[-1].parts[0].text or ""
+    if not state.get("handoff") and any(
+            w in last.lower() for w in HANDOFF_WORDS):
+        state["handoff"] = True
+        notify_support_queue(callback_context)   # your code
+
+    if state.get("handoff"):
+        msg = "A person from our team will reply here shortly."
+        return LlmResponse(content=types.Content(
+            role="model", parts=[types.Part(text=msg)]))
+    return None                                  # normal turn
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv">
+                <div class="bx b fragment" data-fragment-index="1">User message<small>"I want a real person!"</small></div>
+                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="1"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
+                <div class="bx y fragment" data-fragment-index="1"><b>handoff_gate</b><small>asks for a person, or handoff already on?</small></div>
+                <div class="split fragment" data-fragment-index="2">
+                  <div><div class="lab" style="--c:var(--h-red)">yes</div><div class="bx r">LLM skipped<small>set handoff · notify team · "A person will reply"</small></div></div>
+                  <div><div class="lab" style="--c:var(--h-green)">no</div><div class="bx g">LLM answers<small>return None</small></div></div>
+                </div>
+                <div class="hv-note fragment" data-fragment-index="3">Wire it up with <b>before_model_callback=handoff_gate</b></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">โค้ด gate เขียนขึ้นเพื่ออธิบาย ไม่ได้คัดจากเอกสาร • เช็กข้อความล่าสุดของผู้ใช้ ถ้ามีคำว่า human, real person หรือ คุยกับคน ตั้ง state handoff เป็น True และแจ้งคิวของทีม support (notify_support_queue เป็นโค้ดของเราเอง) • (คลิก) รันก่อน LLM โมเดลจึงพูดให้ผู้ใช้เปลี่ยนใจไม่ได้ • (คลิก) ถ้าคืน LlmResponse ADK จะไม่เรียกโมเดล ใช้ข้อความนี้ตอบแทน • (คลิก) state อยู่ใน session จึงมีผลทุก turn ถัดไป • (คลิก) ผูกกับ agent ด้วย before_model_callback • ในระบบจริง ระหว่าง handoff แอปควรส่งข้อความของลูกค้าไปหาพนักงานโดยตรง gate นี้เป็นตาข่ายกันพลาดอีกชั้น</aside>
+      </section>
+
+      <!-- Escalate tool code -->
+      <section data-title="Let the model escalate">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">A long-running tool the model can call</div>
+            <h2 style="margin-bottom:20px">Let the model escalate, with context</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:660px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from google.adk.tools import LongRunningFunctionTool
+from google.adk.tools.tool_context import ToolContext
+
+def escalate_to_human(reason: str, summary: str,
+                      tool_context: ToolContext) -> dict:
+    """Hand this conversation to a human support agent.
+    Call it when the user asks for a person, is upset,
+    or you cannot solve the problem with your tools."""
+    ticket_id = create_ticket(reason, summary)  # your code
+    tool_context.state["handoff"] = True
+    return {"status": "pending", "ticket_id": ticket_id}
+
+escalate = LongRunningFunctionTool(func=escalate_to_human)
+root_agent = Agent(..., tools=[issue_refund, escalate],
+                   before_model_callback=handoff_gate)
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv-vt">
+                <div class="fragment" style="--c:var(--h-blue)"><b>LLM decides</b>The user is upset, so it calls escalate_to_human</div>
+                <div class="fragment" style="--c:var(--h-yellow)"><b>Ticket · pending</b>Reason and summary written by the model</div>
+                <div class="fragment" style="--c:var(--h-red)"><b>Human takes over</b>handoff is on, the agent stays quiet</div>
+                <div class="fragment" style="--c:var(--h-green)"><b>Ticket closed</b>A function_response with the same id comes back</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ชั้นที่สอง: ให้โมเดลเรียก tool escalate_to_human เอง เขียนขึ้นเพื่ออธิบาย create_ticket เป็นโค้ดของเรา • (คลิก) ADK ใช้ docstring บอกโมเดลว่าควรเรียกเมื่อไหร่: ผู้ใช้ขอคุยกับคน หงุดหงิด หรือแก้ปัญหาไม่ได้ • (คลิก) โมเดลเขียน reason กับ summary ให้ พนักงานจึงไม่ต้องเริ่มจากศูนย์ และตั้ง state handoff ให้ gate ทำงานต่อ • (คลิก) เป็น long-running tool คืน pending ทันที พอพนักงานปิด ticket ส่ง function_response id เดิมกลับมา agent ก็รู้ผลและคุยต่อได้ถ้าจำเป็น</aside>
+      </section>
+
+      <!-- Architecture -->
+      <section data-title="Handoff architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Example architecture · not an ADK requirement</div>
+            <h2 style="margin-bottom:24px">Who owns the chat, and when</h2>
+            <div class="flow tight" style="width:1088px; height:200px">
+              <div class="pc blue node fragment" data-fragment-index="1"><span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/adk.png" alt="ADK"></span><b>ADK agent</b><p>Sets handoff, writes the summary</p></div>
+              <svg class="arr fragment" data-fragment-index="2" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="2"><span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/gcp-pubsub.png" alt="Pub/Sub"></span><b>Queue</b><p>Ticket with transcript and packet</p></div>
+              <svg class="arr fragment" data-fragment-index="3" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc green node fragment" data-fragment-index="3"><span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/salesforce.svg" alt="CRM"></span><b>Human console</b><p>CRM, help desk or team chat</p></div>
+              <svg class="arr fragment" data-fragment-index="4" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc red node fragment" data-fragment-index="4"><span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><b>Chat backend</b><p>Routes user messages to the human</p></div>
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="5" style="width:1088px; gap:20px; margin-top:24px">
+              <div class="pc" style="padding:14px 18px; font-size:17px"><b style="color:var(--h-green)">Hand back:</b> the human closes the ticket and the app turns <code>handoff</code> off</div>
+              <div class="pc" style="padding:14px 18px; font-size:17px"><b style="color:var(--h-yellow)">Or not:</b> some chats should stay with the human until the end</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่างสถาปัตยกรรม ไม่ใช่ข้อกำหนดของ ADK • (คลิก 1) agent ตั้ง flag handoff และเขียนสรุป • (คลิก 2) ส่ง ticket พร้อม transcript และ handoff packet เข้าคิว เช่น Pub/Sub • (คลิก 3) พนักงานรับงานจากระบบที่ใช้อยู่ เช่น CRM, help desk หรือแชตของทีม • (คลิก 4) backend ของแชตส่งข้อความลูกค้าไปหาพนักงานตรง ๆ ระหว่าง handoff • (คลิก 5) จบแล้วจะส่งกลับให้ agent ก็ได้ โดยปิด ticket แล้วตั้ง handoff เป็น False หรือบางเคสควรให้คนดูแลจนจบ • ถ้าใช้ระบบ contact center ที่มีอยู่แล้ว ให้ใช้ handoff ของระบบนั้นแทนคิวที่ทำเอง</aside>
+      </section>
+
+      <!-- Section 05 -->
+      <section class="bg-red" data-title="05 · Long waits and resume">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">05</div>
+        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-clock"/></svg>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Long waits<br>and resume</h1>
+            <p class="sub" style="margin-top:28px">When the human answers<br>hours later, somewhere else</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 5 • ในชีวิตจริงหัวหน้าอาจตอบในอีกหลายชั่วโมง ผ่านอีเมล แชต หรือระบบ ticket</aside>
+      </section>
+
+      <!-- Long-running tool -->
+      <section data-title="LongRunningFunctionTool">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Start it now, finish it later</div>
+            <h2 style="margin-bottom:22px">LongRunningFunctionTool</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:15px"><code class="language-python" data-trim>
+from google.adk.tools import LongRunningFunctionTool
+
+def ask_for_approval(purpose: str,
+                     amount: float) -> dict:
+    """Ask for approval for the reimbursement."""
+    # create a ticket, notify the approver
+    return {'status': 'pending',
+            'approver': 'Sean Zhou',
+            'ticket-id': 'approval-ticket-1'}
+
+long_running_tool = LongRunningFunctionTool(
+    func=ask_for_approval)
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv-vt">
+                <div class="fragment" style="--c:var(--h-blue)"><b>0 min · tool called</b>Returns {'status': 'pending'}. The run pauses</div>
+                <div class="fragment" style="--c:var(--h-yellow)"><b>client</b>Finds the call in long_running_tool_ids</div>
+                <div class="fragment hv-gap" style="--c:#80868b"><b>… hours …</b>The approver decides in another system</div>
+                <div class="fragment" style="--c:var(--h-green)"><b>later · reply</b>function_response with the same id via runner.run_async. The agent continues</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">LongRunningFunctionTool สำหรับงานที่ต้องรอนาน เช่น ขออนุมัติจากหัวหน้า • ตัวอย่างย่อจากเอกสาร ADK: ฟังก์ชันสร้าง ticket แจ้งผู้อนุมัติ แล้วคืนสถานะ pending • (คลิก) คืน pending ทันที แล้ว agent หยุดรอ • (คลิก) ฝั่ง client หา tool call นั้นจาก long_running_tool_ids ใน event • (คลิก) เมื่อได้คำตอบ ส่ง function_response ที่มี id เดียวกันผ่าน runner.run_async ส่งความคืบหน้ากลางทางได้ด้วย • (คลิก) tool นี้แค่จัดการการรอ ไม่ได้รันงานยาวเอง งานจริงควรอยู่อีกระบบ</aside>
+      </section>
+
+      <!-- Long-running flow picture -->
+      <section data-title="An approval that takes hours">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Illustration · one refund over $200</div>
+            <h2 style="margin-bottom:20px">An approval that takes hours</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div class="ev-chat">
+                <div class="ev-msg u fragment" data-fragment-index="1"><small>Customer</small>Please refund $350 for order 1042.</div>
+                <div class="ev-call fragment" data-fragment-index="2">ask_for_approval(amount=350) → pending</div>
+                <div class="ev-msg a fragment" data-fragment-index="2"><small>Agent</small>A supervisor needs to approve this. I will update you.</div>
+                <div class="hl-wait fragment" data-fragment-index="3"><svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-clock"/></svg><span>3 hours later · supervisor approves in the ticket system</span></div>
+                <div class="ev-call fragment" data-fragment-index="4">function_response(id, status="approved")</div>
+                <div class="ev-msg a fragment" data-fragment-index="5"><small>Agent</small>Approved. Your $350 refund is on its way.</div>
+              </div>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc fragment" data-fragment-index="3" style="display:flex; gap:14px; align-items:center"><span class="ev-lg"><img src="../images/shared/logos/gmail.svg" alt="Gmail"></span><span>Notify the approver by email or chat</span></div>
+                <div class="pc fragment" data-fragment-index="3" style="display:flex; gap:14px; align-items:center"><span class="ev-lg"><img src="../images/shared/logos/gcp-firestore.png" alt="Firestore"></span><span>Keep the pending ticket and call id in a database</span></div>
+                <div class="pc fragment" data-fragment-index="4" style="display:flex; gap:14px; align-items:center"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><span>A webhook service sends the reply back to the agent</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพประกอบ (แต่งขึ้น) ของการอนุมัติที่ใช้เวลานาน • (คลิก 1) ลูกค้าขอคืน $350 • (คลิก 2) agent เรียก ask_for_approval ได้ pending แล้วบอกลูกค้าว่ารออนุมัติ • (คลิก 3) สามชั่วโมงต่อมาหัวหน้าอนุมัติในระบบ ticket ระหว่างนั้นแจ้งผู้อนุมัติทางอีเมลหรือแชต และเก็บ ticket กับ call id ไว้ในฐานข้อมูล • (คลิก 4) บริการ webhook เช่นบน Cloud Run ส่ง function_response ที่ id ตรงกันกลับเข้า agent • (คลิก 5) agent ทำงานต่อและแจ้งลูกค้า • บริการ Google Cloud ด้านขวาเป็นตัวอย่างสถาปัตยกรรม ไม่ใช่ข้อกำหนดของ ADK</aside>
+      </section>
+
+      <!-- Resumability -->
+      <section data-title="Resumable apps">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">ADK Python v1.16.0+</div>
+            <h2 style="margin-bottom:22px">Pick up the same invocation</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; flex:none; font-size:15px"><code class="language-python" data-trim>
+app = App(
+    name='my_resumable_agent',
+    root_agent=root_agent,
+    resumability_config=ResumabilityConfig(
+        is_resumable=True,
+    ),
+)
+
+# later, resume where it stopped
+runner.run_async(user_id='u_123',
+                 session_id='s_abc',
+                 invocation_id='invocation-123')
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv-vt">
+                <div class="fragment" style="--c:var(--h-blue)"><b>invocation-123 runs</b>The agent calls tools, step by step</div>
+                <div class="fragment" style="--c:var(--h-yellow)"><b>stops</b>Waiting for a human, or the process restarted</div>
+                <div class="fragment" style="--c:var(--h-green)"><b>resume</b>run_async(..., invocation_id='invocation-123')</div>
+                <div class="fragment" style="--c:var(--h-red)"><b>⚠ tool may run again</b>Use order_id as an idempotency key, so it never pays twice</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">resumability ให้ทำงานต่อจาก invocation เดิมได้ ไม่ต้องเริ่มใหม่ • เปิดด้วย ResumabilityConfig(is_resumable=True) ใน App แล้ว resume ด้วย invocation_id เดิม • (คลิก) สำคัญมาก: ตอน resume tool อาจรันซ้ำ (at least once) การคืนเงินต้อง idempotent เช่น ใช้ order_id เป็น key กันจ่ายซ้ำ • (คลิก) อย่าแก้ workflow ระหว่างหยุดกับ resume • (คลิก) ยัง resume จาก web UI หรือ CLI ไม่ได้ และ custom agent ไม่ resumable โดย default • เอกสารไม่ได้ระบุ import path ของ App และ ResumabilityConfig ให้ดูจาก API reference</aside>
+      </section>
+
+      <!-- ADK 2.0 RequestInput -->
+      <section data-title="RequestInput in ADK 2.0">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">ADK 2.0 · graph workflows</div>
+            <h2 style="margin-bottom:22px">Ask for input inside a workflow</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:15px"><code class="language-python" data-trim>
+from google.adk import Workflow
+from google.adk.events import RequestInput
+
+# inside a graph node
+yield RequestInput(message="Enter a number:")
+
+# structured review
+yield RequestInput(message=message,
+                   payload=node_input,
+                   response_schema=UserFeedback)
+
+root_agent = Workflow(name="root_agent",
+                      edges=[('START', step1, step2)])
+              </code></pre>
+                            <div style="flex:1; min-width:0" class="hv">
+                <div class="bx fragment" data-fragment-index="1" style="justify-self:center; padding:7px 18px"><b>START</b></div>
+                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="1"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
+                <div class="bx b fragment" data-fragment-index="1"><b>step1</b><small>yield RequestInput(message="Enter a number:")</small></div>
+                <div class="hv-pause fragment" data-fragment-index="2"><svg viewBox="0 0 24 24"><use href="#i-clock"/></svg>Paused. The user types "7"</div>
+                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="3"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
+                <div class="bx g fragment" data-fragment-index="3"><b>step2</b><small>node_input = "7"</small></div>
+                <div class="hv-note fragment" data-fragment-index="4"><b>payload</b>: data to show · <b>response_schema</b>: the shape you expect</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ADK 2.0 มี graph workflow และ RequestInput (Python, TypeScript, Go v2.0.0) • บรรทัดโค้ดคัดจากเอกสาร ตัด step1, step2 ออก • (คลิก) node หยุดรอ คำตอบของผู้ใช้กลายเป็น input ของ node ถัดไป ค่า default คือไม่รัน node เดิมซ้ำ • (คลิก) payload คือข้อมูลให้ client แสดง เช่น ร่างที่ให้รีวิว response_schema คือรูปแบบคำตอบที่คาดหวัง แต่ไม่ได้แปลงคำตอบให้ คำตอบต้องตรงรูปแบบเอง • (คลิก) ใช้ตอนต้องการข้อความอิสระ ส่วน tool confirmation ยังเป็น yes/no ของ tool call • หมายเหตุ: เอกสารบอกว่า SequentialAgent, ParallelAgent, LoopAgent ถูก deprecate ใน Python/TypeScript และแนะนำ graph workflow แทน</aside>
+      </section>
+
+      <!-- Production checklist -->
+      <section data-title="Production checklist">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Before you ship</div>
+            <h2 style="margin-bottom:24px">HITL production checklist</h2>
+            <ol class="hx-steps" style="width:1088px">
+              <li class="fragment"><b>1</b><span>Put the <strong>hard limit in code</strong> (a callback), not only in the prompt</span></li>
+              <li class="fragment"><b>2</b><span>Ask a human only where it matters: a <strong>threshold function</strong>, not every call</span></li>
+              <li class="fragment"><b>3</b><span>Let the human set the <strong>exact value</strong> with a payload, then cap it with <strong>min()</strong></span></li>
+              <li class="fragment"><b>4</b><span>Make side-effect tools <strong>idempotent</strong>. Resume can run a tool more than once</span></li>
+              <li class="fragment"><b>5</b><span>Check your <strong>session service</strong> supports confirmation, and log who approved what</span></li>
+            </ol>
+          </div>
+        </div>
+        <aside class="notes">เช็กลิสต์ก่อนขึ้น production • (คลิก) 1 กฎที่ห้ามละเมิดต้องอยู่ในโค้ด ไม่ใช่แค่ใน prompt • (คลิก) 2 ถามคนเฉพาะจุดที่สำคัญ ใช้ฟังก์ชัน threshold ไม่อย่างนั้นคนจะกดอนุมัติแบบไม่อ่าน • (คลิก) 3 ให้คนกำหนดค่าที่แน่นอนผ่าน payload และครอบด้วย min() • (คลิก) 4 tool ที่มีผลข้างเคียงต้อง idempotent เพราะ resume อาจรันซ้ำ • (คลิก) 5 เช็กว่า session service ที่ใช้รองรับ confirmation และเก็บ log ว่าใครอนุมัติอะไร ข้อ 5 ส่วน log เป็นคำแนะนำของผู้บรรยาย ไม่ได้มาจากเอกสาร</aside>
+      </section>
+
+      <!-- Full picture: hybrid agent with both kinds of HITL -->
+      <section data-title="The full picture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Putting it together · adapted from a hybrid agent architecture</div>
+            <h2 style="margin-bottom:18px">Both kinds of HITL in one system</h2>
+            <div class="fp">
+              <!-- channels -->
+              <div class="fp-ch"><div><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>Web</div><div><svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg>App</div><div><img src="../images/shared/logos/line.svg" alt="">LINE</div></div>
+              <!-- chat backend -->
+              <div class="fp-z" style="left:112px; top:0; width:196px; height:428px; --c:#8ab4f8"><span class="fp-zh"><img src="../images/shared/logos/gcp-run.png" alt="">BACKEND · Cloud Run</span></div>
+              <div class="fp-c" style="left:124px; top:38px; width:172px">Auth<small>customer login</small></div>
+              <div class="fp-c" style="left:124px; top:100px; width:172px">Session &amp; context<small>cart, orders, state</small></div>
+              <div class="fp-c" style="left:124px; top:162px; width:172px">Streaming<small>replies word by word</small></div>
+              <div class="fp-c fp-o fragment" data-fragment-index="3" style="left:124px; top:300px; width:172px">handoff on?<small>send chat to the person, not the agent</small></div>
+              <!-- router -->
+              <div class="fp-c fp-rt" style="left:330px; top:150px; width:136px"><img src="../images/shared/logos/gemini.svg" alt="">Request router<small>intent + confidence</small></div>
+              <!-- fast path -->
+              <div class="fp-z" style="left:494px; top:0; width:594px; height:62px; --c:var(--h-green)"><span class="fp-zh">FAST PATH</span></div>
+              <div class="fp-c" style="left:600px; top:12px; width:476px; text-align:left">FAQ · known intents, fixed answers<small>store hours, delivery fees, return policy</small></div>
+              <!-- agentic path -->
+              <div class="fp-z" style="left:494px; top:76px; width:594px; height:216px; --c:#c58af9"><span class="fp-zh"><img src="../images/shared/logos/adk.png" alt="">AGENTIC PATH · ADK</span></div>
+              <div class="fp-c fp-orc" style="left:506px; top:108px; width:200px">Orchestrator agent
+                <span class="fp-cb r">before_model_callback<em>handoff gate</em></span>
+                <span class="fp-cb y">before_tool_callback<em>refund guard</em></span>
+              </div>
+              <div class="fp-c" style="left:728px; top:102px; width:348px; text-align:left">Search &amp; personalization</div>
+              <div class="fp-c" style="left:728px; top:146px; width:348px; text-align:left">Order assistance</div>
+              <div class="fp-c" style="left:728px; top:190px; width:348px; text-align:left">Service &amp; refund
+                <span class="fp-tags"><i class="y">issue_refund · confirm &gt; $200</i><i class="o">escalate_to_human</i></span>
+              </div>
+              <!-- HITL -->
+              <div class="fp-z" style="left:494px; top:306px; width:594px; height:122px; --c:var(--h-yellow)"><span class="fp-zh">HUMAN IN THE LOOP</span></div>
+              <div class="fp-c fp-h fragment" data-fragment-index="2" style="left:506px; top:332px; width:278px; --c:var(--h-yellow)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M7.5 12.5l3 3 6-6.5"/></svg><div><b>Supervisor</b><small>tool-level · approves the exact amount, then the tool runs</small></div></div>
+              <div class="fp-c fp-h fragment" data-fragment-index="3" style="left:800px; top:332px; width:276px; --c:#ffab70"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg><div><b>Live human agent</b><small>conversation-level · takes over the chat</small></div></div>
+              <!-- wires -->
+              <svg class="fp-w" viewBox="0 0 1088 440" aria-hidden="true">
+                <defs>
+                  <marker id="fpb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8ab4f8"/></marker>
+                  <marker id="fpg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5cdb6d"/></marker>
+                  <marker id="fpp" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#c58af9"/></marker>
+                  <marker id="fpy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ffcb32"/></marker>
+                  <marker id="fpo" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#ffab70"/></marker>
+                </defs>
+                <polyline class="b" points="92,214 110,214" marker-end="url(#fpb)"/>
+                <polyline class="b" points="308,214 328,214" marker-end="url(#fpb)"/>
+                <polyline class="g" points="466,214 480,214 480,40 596,40" marker-end="url(#fpg)"/>
+                <polyline class="p" points="480,214 480,190 504,190" marker-end="url(#fpp)"/>
+                <polyline class="p" points="706,190 716,190 716,121 726,121"/>
+                <polyline class="p" points="716,190 716,165 726,165" marker-end="url(#fpp)"/>
+                <polyline class="p" points="716,190 716,209 726,209" marker-end="url(#fpp)"/>
+                <g class="fragment" data-fragment-index="2">
+                  <polyline class="y" points="756,278 756,330" marker-end="url(#fpy)"/>
+                  <polyline class="y ds" points="772,330 772,280" marker-end="url(#fpy)"/>
+                </g>
+                <g class="fragment" data-fragment-index="3">
+                  <polyline class="o ds" points="1000,278 1000,330" marker-end="url(#fpo)"/>
+                  <polyline class="o ds" points="938,410 938,436 210,436 210,376" marker-end="url(#fpo)"/>
+                </g>
+              </svg>
+              <span class="fp-l y fragment" data-fragment-index="2" style="left:560px; top:292px">adk_request_confirmation ⇅</span>
+              <span class="fp-l o fragment" data-fragment-index="3" style="left:880px; top:292px">handoff + ticket</span>
+              <span class="fp-l o fragment" data-fragment-index="3" style="left:420px; top:428px">while handoff is on, the person replies in the same chat</span>
+              <div class="fp-lg fragment" data-fragment-index="1"><span><i style="--c:var(--h-yellow)"></i>tool-level</span><span><i style="--c:#ffab70"></i>conversation-level</span></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพรวมทั้งระบบ ดัดแปลงจากแผนภาพ hybrid agent architecture ของ deck Shopio ให้ถูกต้องตามเนื้อหาวันนี้ • ซ้ายไปขวา: ลูกค้าเข้ามาจาก Web, App, LINE ผ่าน chat backend บน Cloud Run (login, session, streaming) แล้ว request router ใช้ Gemini แยก intent: คำถามที่รู้คำตอบแน่นอนไป fast path ตอบแบบ fixed ส่วนที่เหลือไป agent ใน ADK • (คลิก 1) สีเหลืองคือ tool-level สีส้มคือ conversation-level • จุดที่ต่างจากแผนภาพเดิม: ตัวตัดสินว่าต้องส่งต่อให้คนอยู่ใน agent ไม่ใช่ใน router คือ before_model_callback (handoff gate) และ before_tool_callback (refund guard) • (คลิก 2) tool-level: ถ้า service agent จะคืนเงินเกิน $200 tool ใช้ require_confirmation ADK ส่ง adk_request_confirmation ไปให้หัวหน้า หัวหน้าตอบ confirmed และยอดที่อนุมัติกลับมา tool จึงรัน ลูกค้ายังคุยกับ agent อยู่ • (คลิก 3) conversation-level: ถ้าลูกค้าขอคุยกับคน handoff gate หรือ tool escalate_to_human ตั้ง state handoff และเปิด ticket พนักงานรับเรื่อง แล้ว chat backend ส่งข้อความของลูกค้าไปหาพนักงานในแชตเดิมตลอดช่วงที่ handoff เปิดอยู่ • สถาปัตยกรรมนี้เป็นตัวอย่าง ไม่ใช่ข้อกำหนดของ ADK</aside>
+      </section>
+
+      <!-- Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:24px">Humans where it counts</h2>
+            <div class="grid g4" style="width:1088px; gap:16px">
+              <div class="pc red fragment" style="height:260px"><svg class="ev-ico" style="--c:var(--h-red)"><use href="#i-lock"/></svg><h3>Gate</h3><p style="font-size:17px">before_tool_callback blocks what must never happen.</p></div>
+              <div class="pc yellow fragment" style="height:260px"><svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-check"/></svg><h3>Confirm</h3><p style="font-size:17px">require_confirmation pauses for a yes or no.</p></div>
+              <div class="pc green fragment" style="height:260px"><svg class="ev-ico" style="--c:var(--h-green)"><use href="#i-user"/></svg><h3>Decide</h3><p style="font-size:17px">request_confirmation lets the human set the value.</p></div>
+              <div class="pc blue fragment" style="height:260px"><svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-clock"/></svg><h3>Wait</h3><p style="font-size:17px">Long-running tools and resume handle hours-long approvals.</p></div>
+            </div>
+            <p class="sub fragment" style="font-size:20px; margin-top:24px">And when the user wants a person: <b>hand off</b> with context, right away.</p>
+            <p class="sub fragment" style="font-size:20px; margin-top:10px">Try it today: <code>FunctionTool(your_tool, require_confirmation=True)</code> in <code>adk web</code></p>
+          </div>
+        </div>
+        <aside class="notes">สรุป 4 คำ • (คลิก) Gate: callback บล็อกสิ่งที่ห้ามเกิดเด็ดขาด • (คลิก) Confirm: require_confirmation หยุดถาม yes/no • (คลิก) Decide: request_confirmation ให้คนกำหนดค่า • (คลิก) Wait: long-running tool กับ resume สำหรับการอนุมัติที่ใช้เวลานาน • (คลิก) และเมื่อผู้ใช้อยากคุยกับคน ส่งต่อทันทีพร้อมบริบท • (คลิก) ลองวันนี้: ใส่ require_confirmation=True ให้ tool ของตัวเองแล้วเปิด adk web</aside>
+      </section>
+
+      <!-- Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:26px">Read more and try it</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue"><h3>Tool confirmation</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools-custom/confirmation/" target="_blank">adk.dev/tools-custom/confirmation</a></div>
+              <div class="pc blue"><h3>Long-running tools</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools-custom/function-tools/" target="_blank">adk.dev/tools-custom/function-tools</a></div>
+              <div class="pc green"><h3>Callbacks · Resume</h3><a class="mono" style="font-size:14px" href="https://adk.dev/callbacks/" target="_blank">Callbacks</a> · <a class="mono" style="font-size:14px" href="https://adk.dev/runtime/resume/" target="_blank">Resume</a></div>
+              <div class="pc green"><h3>Human input in graphs</h3><a class="mono" style="font-size:14px" href="https://adk.dev/graphs/human-input/" target="_blank">adk.dev/graphs/human-input</a></div>
+              <div class="pc yellow"><h3>Sample</h3><a class="mono" style="font-size:14px" href="https://github.com/google/adk-python/tree/main/contributing/samples/human_tool_confirmation" target="_blank">adk-python/…/human_tool_confirmation</a></div>
+              <div class="pc red"><h3>Article</h3><a class="mono" style="font-size:14px" href="https://medium.com/agentic-ai-vantage/deterministic-adk-callbacks-human-in-the-loop-hitl-on-google-cloud-86765bddd07a" target="_blank">Deterministic ADK Callbacks &amp; HITL</a></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลิงก์ทั้งหมด: เอกสาร tool confirmation, long-running function tools, callbacks, resume, human input ใน graph ของ ADK 2.0, ตัวอย่าง human_tool_confirmation ใน repo adk-python และบทความของ Roshan Kumar • ให้เวลาถ่ายรูป หรือสแกน QR ในหน้า agenda</aside>
+      </section>
+
+      <!-- Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <svg class="ico abs" style="left:930px; top:240px; width:200px; height:200px; stroke-width:4"><use href="#i-star"/></svg>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณครับ/ค่ะ • เปิดถาม-ตอบ • ชวนลองใส่ require_confirmation ให้ tool ที่เสี่ยงใน agent ของตัวเอง</aside>
+      </section>
+
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <!-- DevFest template shapes: notched/scalloped cards + GDG lockup on every slide -->
+  <script>
+    (function () {
+      const NS = "http://www.w3.org/2000/svg", S = 3, o = S / 2;
+      function cardPath(W, H, el) {
+        const r = +(el.dataset.r || 34);
+        const [a, b] = (el.dataset.tl || "0x0").split("x").map(Number);
+        const [c, d] = (el.dataset.br || "0x0").split("x").map(Number);
+        const n = +(el.dataset.scallop || 0);
+        const L = o, T = o, R = W - o, B = H - o, P = [];
+        if (n) P.push(`M${L},${T}`); else if (a && b) P.push(`M${L + a + r},${T}`); else P.push(`M${L + r},${T}`);
+        P.push(`H${R - r}`, `A${r},${r} 0 0 1 ${R},${T + r}`);
+        if (c && d) P.push(`V${B - d - r}`, `A${r},${r} 0 0 1 ${R - r},${B - d}`, `H${R - c + r}`, `A${r},${r} 0 0 0 ${R - c},${B - d + r}`, `V${B - r}`, `A${r},${r} 0 0 1 ${R - c - r},${B}`);
+        else P.push(`V${B - r}`, `A${r},${r} 0 0 1 ${R - r},${B}`);
+        if (n) { // scalloped left edge (statement slides)
+          P.push(`H${L}`); const h = (B - T) / n;
+          for (let i = 0; i < n; i++) P.push(`A${h / 2},${h / 2} 0 0 1 ${L},${B - h * (i + 1)}`);
+        } else {
+          P.push(`H${L + r}`, `A${r},${r} 0 0 1 ${L},${B - r}`);
+          if (a && b) P.push(`V${T + b + r}`, `A${r},${r} 0 0 1 ${L + r},${T + b}`, `H${L + a - r}`, `A${r},${r} 0 0 0 ${L + a},${T + b - r}`, `V${T + r}`, `A${r},${r} 0 0 1 ${L + a + r},${T}`);
+          else P.push(`V${T + r}`, `A${r},${r} 0 0 1 ${L + r},${T}`);
+        }
+        return P.join(" ") + " Z";
+      }
+      document.querySelectorAll(".reveal .nc").forEach((el) => {
+        const cs = getComputedStyle(el), W = parseFloat(cs.width), H = parseFloat(cs.height);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "nc-s"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+        svg.setAttribute("width", W); svg.setAttribute("height", H);
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", cardPath(W, H, el));
+        p.setAttribute("fill", el.dataset.fill || "#fff"); p.setAttribute("stroke", "#1e1e1e"); p.setAttribute("stroke-width", S);
+        svg.appendChild(p); el.prepend(svg);
+      });
+      document.querySelectorAll(".reveal .slides section:not([data-corner=off])").forEach((s) => {
+        s.insertAdjacentHTML("beforeend", '<div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok</small></span></div><img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">');
+      });
+    })();
+  </script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      hashOneBasedIndex: true,  // URL #/7 = slide 7, same as the counter
+      fragmentInURL: false,     // keep the URL to just the slide number
+      controls: false,     // replaced by the shopio-style #ctrl bar
+      overview: false,     // replaced by the scrollable #ov grid
+      progress: false,
+      slideNumber: "c/t",
+      showSlideNumber: "print", // page numbers only in exported PDF
+      transition: "fade",
+      backgroundTransition: "fade",
+      width: 1280,
+      height: 720,
+      margin: 0,
+      center: false,       // slides are absolutely laid out 1280×720 canvases
+      plugins: [RevealHighlight, RevealNotes],
+      // export: one page per slide, all fragments shown
+      view: /[?&]print-pdf\b/.test(location.search) ? "print" : null,
+      pdfSeparateFragments: false,
+      pdfMaxPagesPerSlide: 1,
+    });
+  </script>
+
+  <!-- Export PDF: All slides / This slide -->
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const isPrint = params.has("print-pdf");
+
+      if (isPrint) {
+        // ---- print view (opened in a new tab by the menu) ----
+        const only = params.get("slide");
+        Reveal.on("pdf-ready", async () => {
+          if (only !== null) {
+            const target = Reveal.getSlides()[+only]?.closest(".pdf-page");
+            if (target) document.querySelectorAll(".reveal .slides .pdf-page").forEach((p) => { if (p !== target) p.remove(); });
+            document.title = `Human-in-the-loop with ADK – slide ${+only + 1}`;
+          } else {
+            document.title = "Human-in-the-loop with ADK – all slides";
+          }
+          if (!params.has("autoprint")) return;
+          await document.fonts.ready;
+          addEventListener("afterprint", () => window.close());
+          setTimeout(() => window.print(), 300);
+        });
+        return;
+      }
+
+      // ---- normal view: shopio-style control bar ----
+      const $ = (id) => document.getElementById(id);
+      const slides = Reveal.getSlides(), N = slides.length;
+      const idx = () => slides.indexOf(Reveal.getCurrentSlide());
+      const cnt = $("cnt"), prog = $("progress"), list = $("menu"), xMenu = $("exportMenu"), bPdf = $("bPdf"), bNotes = $("bNotes");
+      const titleOf = (s, i) => s.dataset.title || s.querySelector("h1,h2")?.textContent.trim() || `Slide ${i + 1}`;
+
+      // slide list (click the counter)
+      list.innerHTML = slides.map((s, i) => `<a href="#" data-i="${i}"><span>${i + 1}</span>${titleOf(s, i).replace(/</g, "&lt;")}</a>`).join("");
+      function sync() {
+        const i = idx();
+        cnt.textContent = `${i + 1} / ${N}`;
+        prog.style.width = (N > 1 ? (i / (N - 1)) * 100 : 100) + "%";
+        list.querySelectorAll("a").forEach((a, k) => a.classList.toggle("cur", k === i));
+      }
+      Reveal.on("ready", sync); Reveal.on("slidechanged", sync); sync();
+
+      const menus = [list, xMenu];
+      function openOnly(m) {
+        const willOpen = m && !m.classList.contains("open");
+        menus.forEach((x) => x.classList.remove("open"));
+        if (willOpen) { m.classList.add("open"); wake(); }
+        bPdf.setAttribute("aria-expanded", xMenu.classList.contains("open"));
+        if (list.classList.contains("open")) list.querySelector("a.cur")?.scrollIntoView({ block: "center" });
+        if (xMenu.classList.contains("open")) $("exportCur").textContent = `PDF of slide ${idx() + 1} / ${N}`;
+      }
+
+      $("bPrev").onclick = () => Reveal.prev();
+      $("bNext").onclick = () => Reveal.next();
+      cnt.onclick = (e) => { e.stopPropagation(); openOnly(list); };
+      list.onclick = (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); Reveal.slide(+a.dataset.i); openOnly(null); };
+      // all-slides overview: clone each slide into a scaled 1280×720 thumbnail
+      const ov = $("ov"), ovg = ov.querySelector(".ovg");
+      function buildOv() {
+        const cur = idx();
+        ovg.innerHTML = "";
+        slides.forEach((s, i) => {
+          const t = document.createElement("div");
+          t.className = "ovt" + (i === cur ? " cur" : ""); t.dataset.i = i;
+          const fr = document.createElement("div"); fr.className = "fr";
+          const rv = document.createElement("div"); rv.className = "reveal";
+          const sl = document.createElement("div"); sl.className = "slides";
+          const c = s.cloneNode(true);
+          c.removeAttribute("hidden"); c.removeAttribute("aria-hidden");
+          c.classList.remove("past", "future"); c.classList.add("present");
+          c.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+          c.querySelectorAll("video").forEach((v) => v.remove());
+          c.querySelectorAll("aside.notes").forEach((n) => n.remove());
+          sl.appendChild(c); rv.appendChild(sl); fr.appendChild(rv);
+          const cap = document.createElement("div"); cap.className = "cap";
+          cap.innerHTML = `<span>${i + 1}</span>`; cap.append(titleOf(s, i));
+          t.append(fr, cap); ovg.appendChild(t);
+          // reveal only vertically-centres slides near the current one; centre every clone here
+          c.style.top = "0px";
+          c.style.top = Math.max((720 - c.offsetHeight) / 2, 0) + "px";
+        });
+        sizeOv();
+      }
+      function sizeOv() { ovg.querySelectorAll(".fr").forEach((fr) => { fr.firstChild.style.transform = `scale(${fr.clientWidth / 1280})`; }); }
+      const ovOpen = () => ov.classList.contains("open");
+      function toggleOv(force) {
+        const open = force ?? !ovOpen();
+        openOnly(null);
+        ov.classList.toggle("open", open);
+        $("bOv").classList.toggle("on", open);
+        if (open) { buildOv(); ovg.querySelector(".cur")?.scrollIntoView({ block: "center" }); }
+        else ovg.innerHTML = "";
+      }
+      $("bOv").onclick = () => toggleOv();
+      $("ovX").onclick = () => toggleOv(false);
+      ovg.onclick = (e) => { const t = e.target.closest(".ovt"); if (!t) return; Reveal.slide(+t.dataset.i); toggleOv(false); };
+      addEventListener("resize", () => { if (ovOpen()) sizeOv(); });
+      const toggleFs = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+      $("bFs").onclick = toggleFs;
+
+      // speaker notes → reveal's presenter window (current + next slide, timer, notes)
+      const notes = () => Reveal.getPlugin("notes");
+      bNotes.onclick = () => notes()?.open();
+
+      // export
+      function exportPdf(mode) {
+        const q = new URLSearchParams({ "print-pdf": "", autoprint: "" });
+        if (mode === "slide") q.set("slide", idx());
+        const url = location.pathname + "?" + q.toString().replace(/=(&|$)/g, "$1");
+        if (!window.open(url, "_blank")) location.href = url; // popup blocked → same tab
+        openOnly(null);
+      }
+      bPdf.onclick = (e) => { e.stopPropagation(); openOnly(xMenu); };
+      xMenu.onclick = (e) => { const b = e.target.closest("[data-export]"); if (b) exportPdf(b.dataset.export); };
+
+      // close menus on outside click; click on the slide = next (like shopio)
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("#ctrl,#menu,#exportMenu,#ov")) return;
+        const wasOpen = menus.some((m) => m.classList.contains("open"));
+        openOnly(null);
+        if (wasOpen) return;
+        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,video,canvas,pre,.demo-wrap")) return;
+        if (String(getSelection?.() || "").length) return;
+        Reveal.next();
+      }, true); // capture: read isOverview() before reveal handles the overview click
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menus.some((m) => m.classList.contains("open"))) { openOnly(null); e.stopPropagation(); e.preventDefault(); return; }
+        if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+        if (e.key === "o" || e.key === "O") { e.preventDefault(); e.stopPropagation(); toggleOv(); return; }
+        if (ovOpen()) { // overview owns the keyboard: Esc closes, arrows/space scroll the grid instead of changing slides
+          e.stopPropagation();
+          if (e.key === "Escape") { e.preventDefault(); toggleOv(false); }
+          return;
+        }
+        if (e.key === "e" || e.key === "E") { e.preventDefault(); e.stopPropagation(); exportPdf(e.shiftKey ? "all" : "slide"); }
+        else if (e.key === "n" || e.key === "N") { e.preventDefault(); e.stopPropagation(); notes()?.open(); }
+      }, true);
+
+      // hide the bar when the mouse is idle
+      let idle;
+      const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => { if (!menus.some((m) => m.classList.contains("open"))) document.body.classList.add("idle"); }, 2500); };
+      addEventListener("mousemove", wake); wake();
+    })();
+  </script>
+</body>
+</html>

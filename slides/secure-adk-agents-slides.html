@@ -5,9 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Build Secure AI Agents with ADK</title>
   <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
-  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/gdg-favicon-32.png" />
-  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/gdg-favicon-192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/gdg-apple-touch-180.png" />
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
@@ -701,6 +702,54 @@
     .reveal .zt-tbl td:first-child { color: #fff; font-weight: 500; }
     .reveal .zt-tbl td b { color: var(--h-green); font-weight: 500; }
     .reveal .zt-tbl tr:last-child td { border-bottom: 0; }
+    /* Reference architecture (Agent Platform) */
+    .ap { display: flex; gap: 12px; width: 1088px; height: 470px; font-family: var(--sans); }
+    .ap .lbl { font: 700 11px/1 var(--mono); letter-spacing: .08em; color: var(--dk-sub); text-transform: uppercase; }
+    .ap .sn { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--h-yellow); color: #202124; font: 700 12px/1 var(--sans); flex: none; }
+    .ap .ic { width: 18px; height: 18px; object-fit: contain; flex: none; }
+    .ap-cli { width: 96px; flex: none; display: flex; flex-direction: column; justify-content: center; gap: 8px; }
+    .ap-cli div { background: var(--dk-card); border: 1.5px solid var(--dk-line); border-radius: 10px; padding: 8px 8px; font-size: 12.5px; line-height: 1.25; color: var(--dk-text); text-align: center; }
+    .ap-cli div b { display: block; color: #fff; font-size: 13.5px; }
+    .ap-cli img { width: 20px; height: 20px; display: block; margin: 0 auto 4px; }
+    .ap-gc { width: 660px; flex: none; border: 2px dashed var(--h-blue); border-radius: 16px; padding: 10px 12px 10px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; position: relative; }
+    .ap-cap { display: flex; align-items: center; gap: 8px; font: 500 14px/1 var(--sans); color: #fff; }
+    .ap-cap small { font: 400 12px/1 var(--mono); color: var(--dk-sub); margin-left: auto; }
+    .ap-r1 { display: flex; align-items: stretch; gap: 0; }
+    .ap-bx { background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 12px; padding: 8px 10px; box-sizing: border-box; font-size: 12.5px; line-height: 1.3; color: var(--dk-text); min-width: 0; }
+    .ap-bx .hd { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+    .ap-bx .hd b { color: #fff; font-size: 15px; line-height: 1.1; }
+    .ap-bx .st { font: 500 10.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .ap-bx ul { margin: 0; padding: 0; list-style: none; }
+    .ap-bx li { padding-left: 11px; position: relative; margin-top: 2px; }
+    .ap-bx li::before { content: ""; position: absolute; left: 0; top: 7px; width: 5px; height: 5px; border-radius: 50%; background: var(--dk-sub); }
+    .ap-bx.red { border-color: var(--h-red); } .ap-bx.red .st { color: var(--h-red); }
+    .ap-bx.blue { border-color: var(--h-blue); } .ap-bx.blue .st { color: var(--h-blue); }
+    .ap-bx.green { border-color: var(--h-green); } .ap-bx.green .st { color: var(--h-green); }
+    .ap-bx.yellow { border-color: var(--h-yellow); } .ap-bx.yellow .st { color: var(--h-yellow); }
+    .ap-ar { width: 26px; flex: none; display: grid; place-items: center; }
+    .ap-ar svg { width: 24px; height: 14px; stroke: var(--dk-sub); stroke-width: 2.2; fill: none; }
+    .ap-rt { width: 236px; flex: none; position: relative; }
+    .ap-rt .mini { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+    .ap-rt .mini span { font: 400 11px/1 var(--mono); padding: 4px 6px; border-radius: 6px; background: #3c4043; color: var(--dk-text); }
+    .ap-gw { width: 172px; flex: none; }
+    .ap-ret { font: 400 11.5px/1.2 var(--mono); color: var(--h-red); display: flex; align-items: center; gap: 6px; padding-left: 4px; }
+    .ap-r2 { display: flex; gap: 12px; align-items: stretch; }
+    .ap-reg { width: 172px; flex: none; }
+    .ap-tools { flex: 1; min-width: 0; }
+    .ap-tools .t { display: grid; grid-template-columns: 196px minmax(0,1fr); align-items: center; gap: 8px; padding: 4px 0; border-top: 1px solid #3c4043; }
+    .ap-tools .t:first-of-type { border-top: 0; }
+    .ap-tools code { font: 500 12px/1.2 var(--mono); color: #fff; background: none; padding: 0; }
+    .ap-tools .t span { display: flex; align-items: center; gap: 6px; font-size: 12px; }
+    .ap-gov { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 8px; }
+    .ap-gov div { background: var(--dk-card); border: 1.5px solid var(--h-green); border-radius: 10px; padding: 6px 8px; font-size: 11.5px; line-height: 1.25; color: var(--dk-sub); }
+    .ap-gov div b { display: flex; align-items: center; gap: 5px; color: #fff; font-size: 12.5px; margin-bottom: 2px; }
+    .ap-ft { display: flex; align-items: center; gap: 8px; font: 400 11.5px/1 var(--mono); color: var(--dk-sub); }
+    .ap-thr { flex: 1; min-width: 0; background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 16px; padding: 10px 14px; box-sizing: border-box; display: flex; flex-direction: column; gap: 5px; }
+    .ap-thr .h { font: 700 13px/1.2 var(--sans); color: #fff; margin-bottom: 2px; }
+    .ap-thr .w { border-left: 3px solid var(--h-blue); padding: 2px 0 2px 9px; }
+    .ap-thr .w.r { border-left-color: var(--h-red); } .ap-thr .w.g { border-left-color: var(--h-green); } .ap-thr .w.y { border-left-color: var(--h-yellow); }
+    .ap-thr .w b { display: block; color: #fff; font-size: 12.5px; line-height: 1.2; }
+    .ap-thr .w p { margin: 0; font-size: 11.5px; line-height: 1.25; color: var(--dk-sub); }
     .zt-map { position: relative; width: 1088px; height: 400px; }
     .zt-wires { position: absolute; inset: 0; width: 1088px; height: 400px; overflow: visible; }
     .zt-wires path { fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
@@ -1058,6 +1107,65 @@ root_agent = Agent(
           </div>
         </div>
         <aside class="notes">ภาพรวมทั้งระบบ • แถวบนคือเส้นทางคำขอซ้ายไปขวา: ผู้ใช้ → Model Armor ขาเข้า → agent ใน ADK → semantic policy → sandbox และการเขียนที่เซ็นด้วย KMS → Model Armor ขาออก • (คลิก 1) เส้นทึบคือชั้นของตอนที่ 2 (runtime) ส่วนกล่องเส้นประคือของตอนที่ 1 (build time) ซึ่งยังใช้อยู่ • (คลิก 2) ทุกขั้นส่ง telemetry ให้ Agent Anomaly Detection • (คลิก 3) เจอความผิดปกติ ส่ง finding ให้ closed-loop remediation • (คลิก 4) ได้ policy ใหม่กลับไปที่ semantic policy ทันที ไม่ต้อง deploy ใหม่ • จุดสำคัญ: เป็นลูปที่ปรับตัวได้ ไม่ใช่เส้นตรงที่ตายตัว • ดัดแปลงจากแผนภาพ defense-in-depth ใน repo ของ blog</aside>
+      </section>
+
+      <!-- Reference architecture -->
+      <section data-title="Reference architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px 0">
+            <div class="eyebrow">Gemini Enterprise Agent Platform · Govern</div>
+            <h2 style="margin-bottom:16px; font-size:38px">Every agent risk has a control</h2>
+            <div class="ap">
+              <div class="ap-cli">
+                <span class="lbl" style="text-align:center">Clients</span>
+                <div><img src="../images/shared/logos/googlechrome.svg" alt=""><b>Web app</b>Customer</div>
+                <div><img src="../images/shared/logos/gemini.svg" alt=""><b>Gemini Enterprise</b>Staff</div>
+                <div><img src="../images/shared/logos/a2a.svg" alt="" style="filter:invert(1)"><b>Other agents</b>A2A</div>
+              </div>
+              <div class="ap-gc">
+                <div class="ap-cap"><img class="ic" src="../images/shared/logos/googlecloud.svg" alt="">Agent Platform · support-agents (prod)<small>Perimeter: VPC-SC · Secret Manager · CMEK</small></div>
+                <div class="ap-r1">
+                  <div class="ap-bx red ap-gw fragment" data-fragment-index="1"><div class="st"><span class="sn">1</span>Ingress</div><div class="hd"><img class="ic" src="../images/shared/logos/gcp-iam.png" alt=""><b>Agent Gateway</b></div><ul><li>IAM: deny by default</li><li><b>Model Armor</b> screens the prompt</li></ul></div>
+                  <div class="fragment" data-fragment-index="2" style="display:flex"><div class="ap-ar"><svg viewBox="0 0 24 14"><path d="M1 7h20M15 2l6 5-6 5"/></svg></div>
+                  <div class="ap-bx blue ap-rt"><div class="st"><span class="sn">2</span>Agent Runtime</div><div class="hd"><img class="ic" src="../images/shared/logos/adk.png" alt=""><b>ADK agent</b></div><ul><li>Own <b>Agent Identity</b>, no static keys</li><li>Plans a tool call, e.g. <code>issue_refund</code></li></ul><div class="mini"><span>Sessions</span><span>Memory Bank</span></div></div></div>
+                  <div class="fragment" data-fragment-index="3" style="display:flex"><div class="ap-ar"><svg viewBox="0 0 24 14"><path d="M1 7h20M15 2l6 5-6 5"/></svg></div>
+                  <div class="ap-bx green ap-gw"><div class="st"><span class="sn">3</span>Egress</div><div class="hd"><img class="ic" src="../images/shared/logos/gcp-iam.png" alt=""><b>Agent Gateway</b></div><ul><li><b>Semantic policy</b>: ALLOW or DENY the call</li><li>Only registered tools</li></ul></div></div>
+                </div>
+                <div class="ap-ret fragment" data-fragment-index="5"><span class="sn">5</span>Reply goes back through Model Armor: card numbers and secrets redacted</div>
+                <div class="ap-r2 fragment" data-fragment-index="4">
+                  <div class="ap-bx yellow ap-reg"><div class="st">Catalog</div><div class="hd"><img class="ic" src="../images/shared/logos/gcp-vertex-ai.png" alt=""><b>Agent Registry</b></div><ul><li>Approved tools, MCP servers and agents</li><li>Gateway checks it</li></ul></div>
+                  <div class="ap-bx yellow ap-tools"><div class="st"><span class="sn">4</span>Tools · MCP or API</div>
+                    <div class="t"><code>verify_order</code><span><img class="ic" src="../images/shared/logos/gcp-sql.png" alt="">Read-only on the orders DB</span></div>
+                    <div class="t"><code>calculate_restocking_fee</code><span><img class="ic" src="../images/shared/logos/gcp-kubernetes-engine.png" alt="">gVisor sandbox, no egress</span></div>
+                    <div class="t"><code>issue_refund</code><span><img class="ic" src="../images/shared/logos/gcp-key-management-service.png" alt="">KMS-signed, DB guard verifies</span></div>
+                  </div>
+                </div>
+                <div class="fragment" data-fragment-index="6" style="display:flex; flex-direction:column; gap:6px">
+                  <span class="lbl" style="display:flex; align-items:center; gap:6px"><span class="sn">6</span>Govern &amp; optimize · telemetry from every step</span>
+                  <div class="ap-gov">
+                    <div><b><img class="ic" src="../images/shared/logos/gcp-security-command-center.png" alt="">Anomalies</b>Agent Anomaly Detection across sessions</div>
+                    <div><b><img class="ic" src="../images/shared/logos/gcp-iam.png" alt="">Remediation</b>New policy in plain language, no redeploy</div>
+                    <div><b><img class="ic" src="../images/shared/logos/gcp-logging.png" alt="">Observability</b>Traces, logs, Model Armor spans</div>
+                    <div><b><img class="ic" src="../images/shared/logos/gcp-vertex-ai.png" alt="">Eval + Simulation</b>Red-team gate every release</div>
+                  </div>
+                </div>
+              </div>
+              <div class="ap-thr fragment" data-fragment-index="7">
+                <div class="h">Agent threat → how we stop it</div>
+                <div class="w r"><b>Prompt injection + jailbreak</b><p>Model Armor on ingress</p></div>
+                <div class="w g"><b>Goal hijack, tool misuse</b><p>Semantic policy on every call</p></div>
+                <div class="w"><b>Over-privileged agent</b><p>Agent Identity + IAM deny by default</p></div>
+                <div class="w y"><b>Rogue tool or MCP server</b><p>Agent Registry + egress gateway</p></div>
+                <div class="w y"><b>Model-written code escapes</b><p>gVisor sandbox, no network</p></div>
+                <div class="w y"><b>Tampered refund</b><p>KMS signature checked at the DB</p></div>
+                <div class="w r"><b>PII and secret leak</b><p>Model Armor redaction + VPC-SC</p></div>
+                <div class="w g"><b>Slow multi-turn abuse</b><p>Anomaly Detection + remediation</p></div>
+                <div class="w g"><b>New attacks over time</b><p>Eval + Simulation before release</p></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">สถาปัตยกรรมอ้างอิงบน Gemini Enterprise Agent Platform ดัดแปลงจากแผนภาพ security ของ Shopio ให้ใช้ชื่อบริการปัจจุบัน • ซ้ายคือ client: web app ของลูกค้า, Gemini Enterprise ของพนักงาน และ agent อื่นที่คุยผ่าน A2A • ทั้งโปรเจกต์ใช้ IAM Unified Access Policies ที่บล็อกทุกอย่างจนกว่าจะมี policy อนุญาต และล้อมด้วย VPC Service Controls, Secret Manager, CMEK • (คลิก 1) ขาเข้า Agent Gateway ตรวจตัวตนผู้เรียก แล้วให้ Model Armor คัด prompt • (คลิก 2) agent ใน ADK รันบน Agent Runtime มี Agent Identity ของตัวเอง ไม่มี key ค้างในโค้ด ใช้ Sessions และ Memory Bank แล้ววางแผนเรียก tool • (คลิก 3) ขาออก Agent Gateway ใช้ semantic policy ตัดสินว่า call นี้ ALLOW หรือ DENY และยอมให้เรียกเฉพาะ tool ที่ลงทะเบียนไว้ • (คลิก 4) Agent Registry เก็บรายการ tool, MCP server และ agent ที่อนุมัติแล้ว tool ทั้งสามมีรั้วของตัวเอง: verify_order อ่านอย่างเดียว, calculate_restocking_fee รันใน gVisor ไม่มี network, issue_refund เซ็นด้วย Cloud KMS แล้ว database guard ตรวจ • (คลิก 5) คำตอบขาออกผ่าน Model Armor อีกรอบ ลบเลขบัตรและ secret • (คลิก 6) ทุกขั้นส่ง telemetry: Agent Anomaly Detection จับการโจมตีหลายรอบ, remediation เขียน policy ใหม่โดยไม่ต้อง deploy, observability เก็บ trace และ log, Evaluation กับ Simulation เป็นด่าน red-team ก่อนปล่อย release • (คลิก 7) ขวาคือตาราง threat → control: ทุกความเสี่ยงของ agent มีตัวคุมที่ชัดเจน</aside>
       </section>
 
       <!-- Act 1 -->

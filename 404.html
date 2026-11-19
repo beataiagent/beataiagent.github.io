@@ -4,10 +4,17 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Page not found</title>
-  <!-- GitHub Pages serves this file for any missing path: send everyone to the home page (index.html) -->
-  <script>location.replace("/");</script>
-  <meta http-equiv="refresh" content="0; url=/">
-  <link rel="icon" type="image/png" sizes="32x32" href="/images/shared/logos/gdg-favicon-32.png">
+  <!-- GitHub Pages serves this file for any missing path: send old doc URLs to their new section, everyone else to the home page -->
+  <script>
+    // doc/: the old one-page-per-module URLs now live as sections of one page per domain (doc/secN.html#<old-name>)
+    var m = location.pathname.match(/\/doc\/((?:mcq-)?sec(\d)[\w-]*)\.html$/);
+    location.replace(m ? "/doc/sec" + m[2] + ".html" + (location.hash || "#" + m[1]) : "/");
+  </script>
+  <noscript><meta http-equiv="refresh" content="0; url=/"></noscript>
+  <link rel="icon" type="image/svg+xml" href="/images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/shared/logos/b-favicon-180.png">
   <link href="/fonts/fonts.css" rel="stylesheet">
   <style>
     :root { --bg: #202124; --sub: #bdc1c6; --h-blue: #57caff; }

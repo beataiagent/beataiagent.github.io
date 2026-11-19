@@ -1,0 +1,500 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Learning Roadmap · GCP Agentic Architecture Cert Prep</title>
+<link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+<link href="../fonts/fonts.css" rel="stylesheet">
+<link href="assets/doc.css" rel="stylesheet">
+<script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<style>
+.rm-head { margin: 18px 0 8px; }
+.rm-head .kicker { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
+.rm-head h1 { font-size: clamp(2rem, 5vw, 2.7rem); margin: 8px 0 10px; }
+.rm-head p { max-width: 680px; margin: 0; }
+
+.rm-bar { position: sticky; top: 56px; z-index: 5; display: flex; flex-wrap: wrap; align-items: center; gap: 10px 18px; margin: 22px 0 8px; padding: 12px 16px; border-radius: 12px; background: var(--bg-nav); border: 1px solid var(--line); font-size: .85rem; }
+.rm-prog { display: flex; align-items: center; gap: 10px; flex: 1 1 260px; }
+.rm-prog .track { flex: 1; height: 8px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.rm-prog .fill { height: 100%; width: 0; background: var(--green); transition: width .3s; }
+.rm-prog b { color: var(--white); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.legend { display: flex; flex-wrap: wrap; gap: 6px 14px; color: var(--sub); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.legend i { width: 14px; height: 10px; border-radius: 3px; border: 1.5px solid var(--line-2); background: var(--bg-soft); }
+.legend i.m { background: var(--yellow); border-color: var(--yellow); }
+.legend i.d { border-style: dashed; border-color: #a142f4; }
+.legend i.q { border-color: var(--green); }
+.legend i.x { background: rgba(16,185,129,.25); border-color: var(--green); }
+.rm-reset { margin-left: auto; }
+
+/* ---------- the map ---------- */
+.rm { position: relative; padding: 24px 0 40px; }
+.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.wires .spine { stroke: var(--blue); stroke-width: 4; fill: none; }
+.wires .branch { stroke: var(--line-2); stroke-width: 2; stroke-dasharray: 2 6; stroke-linecap: round; fill: none; }
+.wires .branch.done { stroke: var(--green); stroke-dasharray: none; }
+
+.stage { position: relative; display: grid; grid-template-columns: minmax(0,1fr) minmax(200px, 250px) minmax(0,1fr); align-items: center; gap: 56px; margin: 0 0 64px; }
+.side { display: flex; flex-direction: column; gap: 8px; }
+.side.l { align-items: flex-end; }
+.side.r { align-items: flex-start; }
+.mid { display: flex; flex-direction: column; align-items: center; gap: 8px; }
+
+.node { position: relative; z-index: 1; display: flex; align-items: center; gap: 8px; width: min(100%, 290px); padding: 7px 10px 7px 8px; border-radius: 8px; background: var(--bg-soft); border: 1.5px solid var(--line-2); color: var(--white); font-size: .86rem; line-height: 1.3; transition: border-color .15s, background .15s, transform .15s; }
+.node:hover, .node.sel { border-color: var(--c, var(--accent)); transform: translateY(-1px); }
+.node.sel { box-shadow: 0 0 0 3px color-mix(in srgb, var(--c, var(--accent)) 35%, transparent); }
+.node .open { flex: 1; min-width: 0; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.node .open::after { content: ""; position: absolute; inset: 0; }
+.node .open:focus-visible { outline: none; }
+.node:has(.open:focus-visible) { outline: 2px solid var(--accent); outline-offset: 2px; }
+.node .num { font: 600 .74rem var(--mono); color: var(--sub); margin-right: 4px; }
+.node .tag { font: 600 .66rem var(--sans); letter-spacing: .05em; text-transform: uppercase; color: var(--sub); }
+.node .cc { flex: none; font: 600 .68rem var(--mono); color: var(--sub); padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); }
+.node .cc.full { color: var(--green); border-color: var(--green); }
+.node.deck { border-style: dashed; border-color: #a142f4; }
+.node.deck .tag { color: #c58af9; }
+.node.quiz { border-color: var(--green); }
+.node.quiz .tag { color: var(--green); }
+.node.opt { opacity: .85; }
+
+.chk { position: relative; z-index: 2; flex: none; display: grid; place-items: center; width: 22px; height: 22px; padding: 0; border-radius: 50%; border: 1.5px solid var(--line-2); background: transparent; color: transparent; font: 700 13px/1 var(--sans); cursor: pointer; }
+.chk:hover { border-color: var(--green); }
+.chk:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.node.done { background: rgba(16,185,129,.14); border-color: var(--green); border-style: solid; }
+.node.done .open .lbl { color: var(--sub); text-decoration: line-through; text-decoration-color: var(--green); }
+.node.done > .chk { background: var(--green); border-color: var(--green); color: #fff; }
+
+.node.main { width: 100%; justify-content: center; padding: 14px 16px; border: 2px solid var(--c); background: var(--c); color: #17181c; font-weight: 700; font-size: 1.02rem; text-align: center; border-radius: 10px; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+.node.main .open { display: flex; flex-direction: column; gap: 2px; text-align: center; }
+.node.main small { font: 600 .7rem var(--mono); letter-spacing: .06em; opacity: .75; }
+.node.main .chk { border-color: rgba(0,0,0,.45); }
+.node.main.done { background: var(--c); }
+.node.main.done .open .lbl { color: #17181c; }
+.weight { position: relative; z-index: 1; padding: 2px 8px; border-radius: 6px; background: var(--bg); font: 600 .74rem var(--mono); color: var(--sub); }
+.weight b { color: var(--c); }
+
+.cap { position: relative; z-index: 1; display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 999px; font-weight: 700; color: var(--white); background: var(--bg-nav); border: 2px solid var(--blue); text-decoration: none; }
+.cap-row { display: flex; justify-content: center; margin: 0 0 56px; }
+.cap-row.end { margin: 0; }
+.tip { margin-top: 8px; color: var(--sub); font-size: .85rem; text-align: center; }
+
+/* ---------- knowledge graph: a clicked box unfolds its concepts right on the map ---------- */
+.kg { grid-column: 1 / -1; position: relative; z-index: 2; padding: 18px 18px 22px; border-radius: 18px; border: 1.5px dashed color-mix(in srgb, var(--c) 55%, transparent); background: var(--bg); }
+.kg-wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+.kg-wires path { fill: none; stroke: var(--c); stroke-width: 2; stroke-linejoin: round; stroke-linecap: round; opacity: .8; }
+.kg-wires path.res { stroke-dasharray: 2 6; stroke-linecap: round; opacity: .9; stroke: var(--line-2); }
+.kg-wires path.done { stroke: var(--green); opacity: 1; }
+.kg-head { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 14px 18px; border-radius: 14px; border: 2px solid var(--c); background: color-mix(in srgb, var(--c) 10%, var(--bg)); }
+.kg-kicker { font: 700 .7rem var(--sans); letter-spacing: .08em; text-transform: uppercase; color: var(--c); }
+.kg-title { margin: 2px 0 6px; font-size: 1.25rem; font-weight: 700; color: var(--white); }
+.kg-head p, .kg-head ul { margin: 6px 0 0; font-size: .88rem; }
+.kg-head ul { padding-left: 18px; } .kg-head li { margin: 4px 0; }
+.kg-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 12px; }
+.kg-actions .sp { flex: 1; }
+.kg-x { position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; padding: 0; justify-content: center; }
+.kg-head { padding-right: 56px; }
+.kg-nodes { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; align-items: flex-start; gap: 16px; margin-top: 36px; }
+.kn { position: relative; width: 260px; border-radius: 12px; border: 1.5px solid var(--c); background: var(--bg-soft); color: var(--white); font-size: .86rem; transition: width .25s, box-shadow .2s; }
+.kn:hover { box-shadow: 0 0 0 3px color-mix(in srgb, var(--c) 25%, transparent); }
+.kn-h { display: flex; align-items: center; gap: 8px; padding: 9px 10px; }
+.kn-t { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.kn-t b { font-weight: 700; line-height: 1.3; }
+.kn-t small { font-size: .74rem; color: var(--sub); }
+.kn-t::after { content: "+"; position: absolute; top: 8px; right: 10px; font: 700 .9rem var(--mono); color: var(--c); }
+.kn.open .kn-t::after { content: "−"; }
+.kn-b { display: none; padding: 0 14px 12px; border-top: 1px dashed var(--line); font-size: .86rem; line-height: 1.5; color: var(--text); }
+.kn.open { width: min(100%, 420px); }
+.kn.open .kn-b, .kn.goal .kn-b { display: block; }
+.kn-b p { margin: 8px 0 0; }
+.kn-b em { display: block; font: 700 .66rem var(--sans); font-style: normal; letter-spacing: .06em; text-transform: uppercase; color: var(--c); }
+.kn.goal { width: min(100%, 360px); } .kn.goal .kn-b { border-top: 0; padding-top: 12px; }
+.kn.done { border-color: var(--green); background: color-mix(in srgb, var(--green) 10%, var(--bg-soft)); }
+.kn.done .kn-t b { text-decoration: line-through; text-decoration-color: var(--green); }
+.kn.done .chk { background: var(--green); border-color: var(--green); color: #fff; }
+button.kn.go { display: flex; align-items: center; gap: 10px; width: 240px; padding: 10px 12px; font: inherit; font-size: .86rem; text-align: left; cursor: pointer; }
+.kn.go .num { font: 600 .74rem var(--mono); color: var(--sub); }
+.kn.go .bar { margin-left: auto; flex: none; width: 46px; height: 5px; border-radius: 99px; background: var(--line); overflow: hidden; }
+.kn.go .bar i { display: block; height: 100%; background: var(--green); }
+.kn.go .dot { flex: none; width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid var(--line-2); }
+.kn.go .dot.on { background: var(--green); border-color: var(--green); }
+.kg-res { position: relative; z-index: 1; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 34px; }
+.kg-res a { display: inline-flex; align-items: center; gap: 8px; padding: 7px 12px; border-radius: 999px; border: 1.5px dashed var(--line-2); background: var(--bg); color: var(--white); font-size: .82rem; text-decoration: none; }
+.kg-res a:hover { border-color: var(--accent); border-style: solid; }
+.k { flex: none; font: 700 .62rem var(--sans); letter-spacing: .05em; text-transform: uppercase; padding: 2px 7px; border-radius: 99px; }
+.k.doc { background: rgba(66,133,244,.2); color: var(--accent); }
+.k.deck { background: rgba(161,66,244,.2); color: #c58af9; }
+.k.quiz { background: rgba(16,185,129,.2); color: var(--green); }
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--line-2); background: var(--bg-nav); color: var(--white); font: 700 .82rem var(--sans); text-decoration: none; cursor: pointer; }
+.btn.pri { background: var(--blue); border-color: var(--blue); color: #fff; }
+.btn.ok { background: var(--green); border-color: var(--green); color: #fff; }
+.btn.link { border: 0; background: none; color: var(--accent); padding: 7px 4px; }
+
+@media (max-width: 900px) {
+  .stage { grid-template-columns: minmax(0,1fr); gap: 8px; margin-bottom: 44px; }
+  .mid { order: -1; align-items: stretch; margin-bottom: 6px; }
+  .side, .side.l, .side.r { align-items: stretch; padding-left: 34px; }
+  .node { width: 100%; }
+  .cap-row { justify-content: flex-start; }
+  .weight { align-self: flex-start; margin-left: 26px; }
+  .kg { padding: 14px 12px 18px; margin: 4px 0 10px; }
+  .kn, button.kn.go, .kn.goal, .kn.open { width: 100%; }
+  .kg-nodes { gap: 10px; margin-top: 28px; padding-left: 22px; }
+  .kg-res { justify-content: flex-start; padding-left: 22px; }
+  .kg-step { display: none; }
+}
+</style>
+</head>
+<body data-slug="roadmap" class="hand">
+<header class="topbar">
+  <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <span class="sp"></span>
+  <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+</header>
+<div class="shell">
+<nav id="sidebar" aria-label="Modules"></nav>
+<div class="page" style="grid-template-columns:minmax(0,1fr)">
+<main>
+  <div class="rm-head">
+    <div class="kicker">Step-by-step journey</div>
+    <h1 id="_top">Agentic Architect Learning Roadmap</h1>
+    <p>Follow the blue line from top to bottom. Each coloured box is one exam domain, and the boxes beside it are its study modules, talk decks and practice questions. <b>Click any box</b> to see what it covers, its key concepts and where to study it. Tick the circles as you go. Your progress is saved in this browser.</p>
+  </div>
+
+  <div class="rm-bar">
+    <div class="rm-prog"><div class="track"><div class="fill" id="fill"></div></div><b id="count">0 / 0 done</b></div>
+    <div class="legend">
+      <span><i class="m"></i>Domain</span><span><i></i>Study module</span><span><i class="d"></i>Talk deck</span><span><i class="q"></i>Practice</span><span><i class="x"></i>Done</span>
+    </div>
+    <button class="tb-btn rm-reset" id="reset" type="button">Reset progress</button>
+  </div>
+
+  <div class="rm" id="rm">
+    <svg class="wires" id="wires" aria-hidden="true"></svg>
+    <div class="cap-row"><a class="cap" id="start" href="overview.html">▶ Start: Certification Blueprint</a></div>
+    <div id="stages"></div>
+    <div class="cap-row end"><a class="cap" id="finish" href="exam.html">🎓 Exam day: take the Mock Exam</a></div>
+    <p class="tip">Before the exam, take a timed mock exam, clear your mistake bank, and reread the five Master Takeaways.</p>
+  </div>
+</main>
+</div>
+</div>
+
+
+<script src="assets/doc.js"></script>
+<script src="assets/roadmap-data.js"></script>
+<script>
+(function () {
+  const DATA = window.ROADMAP_DATA || { domains: {}, modules: {} };
+  const S = "../slides/";
+  const DECKS = {
+    "agents-cli-slides": ["From Prompt to Production · Agents CLI", "Build, evaluate and deploy AI agents with Agents CLI."],
+    "harness2-slides": ["Harness²: Agents that Improve", "Recursive agent harnessing without retraining, from Google Research."],
+    "embeddinggemma2-rag-slides": ["Multimodal RAG with EmbeddingGemma 2", "Search text, images, audio and video in one vector space."],
+    "agent-evaluation-slides": ["Agent Evaluation", "Simulate users, grade every trace, fix what fails."],
+    "hermes-cloudrun-slides": ["Hermes Agent on Cloud Run", "A persistent, always-on AI agent on Cloud Run Instances."],
+    "secure-adk-agents-slides": ["Build Secure AI Agents with ADK", "Zero-trust agents that judge intent, not just syntax."],
+    "adk-hitl-slides": ["Human-in-the-loop with ADK", "Pause the agent, ask a human, resume safely."],
+    "gemini-decisions-slides": ["Gemini Decisions API", "Talk deck on the Gemini Decisions API."],
+    "mediapipe-slides": ["MediaPipe On-device ML", "On-device ML with MediaPipe, from DevFest Bangkok 2026."]
+  };
+  const D = id => ["deck:" + id, "", DECKS[id][0], "d"];
+  // [id, number, label, kind]; kind: m = study module, d = talk deck, q = practice, r = review
+  const STAGES = [
+    { k: "sec1", n: "Domain 1", t: "Agent Solutions", w: "14%", c: "#4285f4",
+      l: [["sec1-architecture", "1.1", "Automation vs. Single vs. Multi-Agent"], ["sec1-platform-selection", "1.2", "Agent Designer vs. Code-First ADK"], ["sec1-ces-omnichannel", "1.3", "CES: Flows, Playbooks & Omnichannel"]],
+      r: [["sec1-takeaway", "1.4", "Master Takeaway", "r"], ["sec1-qa", "1.5", "Q&A", "r"], ["mcq-sec1", "", "Practice Questions", "q"]] },
+    { k: "sec2", n: "Domain 2", t: "AI-Assisted Dev", w: "17%", c: "#34a853",
+      l: [["sec2-context-skills", "2.1", "Context, Custom Skills & Secrets"], ["sec2-mcp-subagents", "2.2", "MCP Tooling & Subagents"], ["sec2-cicd-sandboxing", "2.3", "CI/CD Automation & Sandboxing"]],
+      r: [D("agents-cli-slides"), D("harness2-slides"), ["sec2-takeaway", "2.4", "Master Takeaway", "r"], ["sec2-qa", "2.5", "Q&A", "r"], ["mcq-sec2", "", "Practice Questions", "q"]] },
+    { k: "sec3", n: "Domain 3", t: "Custom Agents", w: "33%", c: "#fbbc04",
+      l: [["sec3-single-agent", "3.1", "Single-Agent Design & ADK Params"], ["sec3-workflows", "3.2", "Multi-Agent Workflow Patterns"], ["sec3-mcp-tools", "3.3", "MCP Toolbox & Custom Tools"], ["sec3-rag-grounding", "3.4", "RAG Engine, Agent Search & Caching"], ["sec3-state-memory", "3.5", "State, Sessions & Memory Bank"], ["sec3-a2a-protocol", "3.6", "A2A Protocol & Agent Cards"]],
+      r: [D("embeddinggemma2-rag-slides"), ["sec3-takeaway", "3.7", "Master Takeaway", "r"], ["sec3-qa", "3.8", "Q&A", "r"], ["mcq-sec3", "", "Practice Questions", "q"]] },
+    { k: "sec4", n: "Domain 4", t: "Eval & Deploy", w: "22%", c: "#ea4335",
+      l: [["sec4-evaluation", "4.1", "Trajectory Eval & Rubric Syntax"], ["sec4-runtimes", "4.2", "Agent Runtime, Cloud Run & GKE"], ["sec4-cicd", "4.3", "Agent Starter Pack & CI/CD Gates"], ["sec4-observability", "4.4", "Tracing, Monitoring & Optimization"]],
+      r: [D("agent-evaluation-slides"), D("hermes-cloudrun-slides"), ["sec4-takeaway", "4.5", "Master Takeaway", "r"], ["sec4-qa", "4.6", "Q&A", "r"], ["mcq-sec4", "", "Practice Questions", "q"]] },
+    { k: "sec5", n: "Domain 5", t: "Security & Governance", w: "15%", c: "#a142f4",
+      l: [["sec5-perimeter", "5.1", "Follow the Prompt: Perimeter"], ["sec5-identity", "5.2", "Agent Identity & OAuth 2.0"], ["sec5-callbacks", "5.3", "ADK Callbacks & HITL"], ["sec5-registry", "5.4", "Agent Registry & Governance"]],
+      r: [D("secure-adk-agents-slides"), D("adk-hitl-slides"), ["sec5-takeaway", "5.5", "Master Takeaway", "r"], ["sec5-qa", "5.6", "Q&A", "r"], ["mcq-sec5", "", "Practice Questions", "q"]] },
+    { k: "beyond", n: "Optional", t: "Beyond the Exam", c: "#9aa0a6", opt: true,
+      l: [D("gemini-decisions-slides")], r: [D("mediapipe-slides")] }
+  ];
+  // which decks back up which module (shown under "Resources")
+  const RELATED = {
+    "sec2-mcp-subagents": ["agents-cli-slides"], "sec2-cicd-sandboxing": ["agents-cli-slides"], "sec2-context-skills": ["harness2-slides"],
+    "sec3-rag-grounding": ["embeddinggemma2-rag-slides"], "sec3-single-agent": ["agents-cli-slides"],
+    "sec4-evaluation": ["agent-evaluation-slides", "agents-cli-slides"], "sec4-runtimes": ["hermes-cloudrun-slides"], "sec4-cicd": ["agents-cli-slides"],
+    "sec5-perimeter": ["secure-adk-agents-slides"], "sec5-callbacks": ["adk-hitl-slides", "secure-adk-agents-slides"], "sec5-identity": ["secure-adk-agents-slides"]
+  };
+  const BLURB = {
+    r: { takeaway: "One-page recap of the domain: the top pitfalls, the summary grid and the “if you see X, pick Y” decision matrix. Read it right after the modules and again the night before the exam.",
+         qa: "Short questions and answers that check you can explain each module in your own words. Expand all and test yourself." },
+    q: "Exam-style multiple-choice simulator for this domain, about 10 questions per module. Filter by module, see why each answer is right, and use “Retry missed only” until you clear them."
+  };
+
+  const pageOf = id => "sec" + /sec(\d)/.exec(id)[1] + ".html";
+  const hrefOf = id => id.startsWith("deck:") ? S + id.slice(5) + ".html" : pageOf(id) + "#" + id;
+  const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+  const TAG = { d: "Talk deck", q: "Practice", r: "Review" };
+  const conceptsOf = id => (DATA.modules[id] || {}).concepts || [];
+
+  /* ---------- progress ---------- */
+  const KEY = "doc-roadmap";
+  let done = {};
+  try { done = JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) {}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify(done)); } catch (e) {} };
+  const toggle = k => { if (done[k]) delete done[k]; else done[k] = 1; save(); paint(); };
+  const ccount = id => conceptsOf(id).filter((_, i) => done[id + "~" + i]).length;
+
+  /* ---------- render the map ---------- */
+  const INDEX = {};
+  const sub = s => ([id, num, label, kind = "m"]) => {
+    INDEX[id] = { id, num, label, kind, stage: s };
+    const n = conceptsOf(id).length;
+    return '<div class="node ' + kind + (kind === "d" ? " deck" : kind === "q" ? " quiz" : "") + (s.opt ? " opt" : "") + '" data-id="' + id + '">' +
+      '<button class="chk" type="button" aria-label="Mark done: ' + esc(label) + '">✓</button>' +
+      '<button class="open" type="button"><span class="lbl">' + (num ? '<span class="num">' + num + '</span>' : "") + esc(label) + '</span>' +
+      (TAG[kind] ? ' <span class="tag">· ' + TAG[kind] + '</span>' : "") + '</button>' +
+      (n ? '<span class="cc" data-cc="' + id + '">0/' + n + '</span>' : "") + '</div>';
+  };
+  document.getElementById("stages").innerHTML = STAGES.map(s => {
+    INDEX[s.k] = { id: s.k, label: s.t, kind: "main", stage: s };
+    return '<section class="stage" style="--c:' + s.c + '">' +
+      '<div class="side l">' + s.l.map(sub(s)).join("") + '</div>' +
+      '<div class="mid"><div class="node main" data-id="' + s.k + '">' +
+        '<button class="chk" type="button" aria-label="Mark done: ' + esc(s.t) + '">✓</button>' +
+        '<button class="open" type="button"><small>' + s.n.toUpperCase() + '</small><span class="lbl">' + esc(s.t) + '</span></button></div>' +
+        (s.w ? '<span class="weight">Exam weight <b>' + s.w + '</b></span>' : "") + '</div>' +
+      '<div class="side r">' + s.r.map(sub(s)).join("") + '</div>' +
+    '</section>';
+  }).join("");
+
+  const rm = document.getElementById("rm"), svg = document.getElementById("wires");
+  const nodes = [...rm.querySelectorAll(".node")];
+
+  function paint() {
+    let n = 0;
+    nodes.forEach(el => { const on = !!done[el.dataset.id]; el.classList.toggle("done", on); el.querySelector(".chk").setAttribute("aria-pressed", on); if (on) n++; });
+    rm.querySelectorAll("[data-cc]").forEach(el => { const id = el.dataset.cc, t = conceptsOf(id).length, c = ccount(id); el.textContent = c + "/" + t; el.classList.toggle("full", c === t); el.title = c + " of " + t + " key concepts ticked"; });
+    document.getElementById("count").textContent = n + " / " + nodes.length + " done";
+    document.getElementById("fill").style.width = (100 * n / nodes.length) + "%";
+    draw();
+    if (cur) { renderDrawer(cur); drawKg(); }
+  }
+
+  function draw() {
+    const o = rm.getBoundingClientRect();
+    const box = el => { const r = el.getBoundingClientRect(); return { l: r.left - o.left, r: r.right - o.left, t: r.top - o.top, b: r.bottom - o.top, x: r.left - o.left + r.width / 2, y: r.top - o.top + r.height / 2 }; };
+    const narrow = matchMedia("(max-width: 900px)").matches;
+    const mains = [...rm.querySelectorAll(".node.main")].map(box);
+    const st = box(document.getElementById("start")), fin = box(document.getElementById("finish"));
+    const xs = narrow ? 14 : st.x;
+    let p = "";
+    if (narrow) p += '<path class="spine" d="M' + xs + ' ' + st.b + ' V' + fin.t + '"/>';
+    else {
+      const pts = [st, ...mains, fin];
+      for (let i = 1; i < pts.length; i++) {
+        const a = pts[i - 1], b = pts[i], my = (a.b + b.t) / 2;
+        p += '<path class="spine" d="M' + a.x + ' ' + a.b + ' C' + a.x + ' ' + my + ' ' + b.x + ' ' + my + ' ' + b.x + ' ' + b.t + '"/>';
+      }
+    }
+    rm.querySelectorAll(".stage").forEach(stage => {
+      const m = box(stage.querySelector(".node.main"));
+      stage.querySelectorAll(".side .node").forEach(el => {
+        const b = box(el), cls = "branch" + (el.classList.contains("done") ? " done" : "");
+        let d;
+        if (narrow) d = "M" + xs + " " + b.y + " H" + b.l;
+        else if (b.x < m.x) { const mx = (m.l + b.r) / 2; d = "M" + m.l + " " + m.y + " C" + mx + " " + m.y + " " + mx + " " + b.y + " " + b.r + " " + b.y; }
+        else { const mx = (m.r + b.l) / 2; d = "M" + m.r + " " + m.y + " C" + mx + " " + m.y + " " + mx + " " + b.y + " " + b.l + " " + b.y; }
+        p += '<path class="' + cls + '" d="' + d + '"/>';
+      });
+    });
+    if (cur && kg.isConnected) {
+      const n = box(nodeEl(cur)), k = box(kg), x = Math.min(Math.max(n.x, k.l + 24), k.r - 24);
+      p += '<path class="spine" style="stroke:' + INDEX[cur].stage.c + ';stroke-width:3" d="M' + n.x + ' ' + n.b + ' C' + n.x + ' ' + (n.b + k.t) / 2 + ' ' + x + ' ' + (n.b + k.t) / 2 + ' ' + x + ' ' + k.t + '"/>';
+    }
+    svg.innerHTML = p;
+    drawKg();
+  }
+
+  /* ---------- knowledge graph: the clicked box unfolds into its concepts, right on the map ---------- */
+  const kg = document.createElement("section");
+  kg.className = "kg"; kg.setAttribute("aria-live", "polite");
+  let cur = null, openK = new Set();
+  const still = matchMedia("(prefers-reduced-motion: reduce)"), mq = matchMedia("(max-width: 900px)");
+  const nodeEl = id => rm.querySelector('.node[data-id="' + CSS.escape(id) + '"]');
+  const leaf = (href, kind, label) => '<a href="' + href + '"><span class="k ' + kind + '">' + { doc: "Study", deck: "Deck", quiz: "Practice" }[kind] + '</span>' + esc(label) + '</a>';
+  const goNode = mid => {
+    const it = INDEX[mid], t = conceptsOf(mid).length, c = ccount(mid);
+    return '<button class="kn go" type="button" data-go="' + mid + '"><span class="dot' + (done[mid] ? " on" : "") + '"></span><span>' + (it.num ? '<span class="num">' + it.num + ' </span>' : "") + esc(it.label) + '</span>' +
+      (t ? '<span class="bar" title="' + c + '/' + t + ' concepts"><i style="width:' + (100 * c / t) + '%"></i></span>' : "") + '</button>';
+  };
+
+  function renderDrawer(id) {          // (paint() calls this to refresh ticks) builds the graph for one box
+    const it = INDEX[id], s = it.stage;
+    kg.style.setProperty("--c", s.c);
+    let kicker, title, intro = "", kids = [], leaves = [], primary = "";
+    if (it.kind === "main") {
+      kicker = s.n + (s.w ? " · exam weight " + s.w : ""); title = s.t;
+      if (s.opt) intro = '<p>Talk decks that go beyond the exam syllabus. Nice to have, not needed to pass.</p>';
+      (DATA.domains[s.k] || []).forEach(g => kids.push('<div class="kn goal"><div class="kn-b">' + g + '</div></div>'));
+      [...s.l, ...s.r].filter(x => s.opt || !x[0].startsWith("deck:")).forEach(x => kids.push(goNode(x[0])));
+      if (!s.opt) primary = '<a class="btn pri" href="' + s.k + '.html">Open Domain page →</a>';
+    } else if (it.kind === "d") {
+      const key = id.slice(5), [t, desc] = DECKS[key];
+      kicker = "Talk deck" + (s.opt ? " · optional" : " · " + s.n); title = t; intro = '<p>' + esc(desc) + '</p>';
+      Object.keys(RELATED).filter(m => RELATED[m].includes(key)).forEach(m => kids.push(goNode(m)));
+      primary = '<a class="btn pri" href="' + hrefOf(id) + '">Open deck →</a>';
+    } else {
+      const d = DATA.modules[id] || {}, cs = d.concepts || [];
+      kicker = s.n + " · " + s.t + (it.num ? " · Module " + it.num : ""); title = it.label;
+      if (it.kind === "q") intro = '<p>' + BLURB.q + '</p>';
+      if (it.kind === "r") intro = '<p>' + BLURB.r[id.endsWith("qa") ? "qa" : "takeaway"] + '</p>';
+      if (d.goals && d.goals.length) intro += '<ul>' + d.goals.map(x => '<li>' + x + '</li>').join("") + '</ul>';
+      cs.forEach((c, i) => {
+        const k = id + "~" + i, on = !!done[k], open = openK.has(k);
+        kids.push('<div class="kn' + (open ? " open" : "") + (on ? " done" : "") + '" data-k="' + k + '"><div class="kn-h">' +
+          '<button class="chk" type="button" data-ck="' + k + '" aria-pressed="' + on + '" aria-label="Mark concept done: ' + esc(c.n) + '">✓</button>' +
+          '<button class="kn-t" type="button" data-open="' + k + '" aria-expanded="' + open + '"><b>' + esc(c.n) + '</b>' + (c.tag ? '<small>' + esc(c.tag) + '</small>' : "") + '</button></div>' +
+          '<div class="kn-b">' + (c.what ? '<p><em>What it is</em>' + c.what + '</p>' : "") + (c.why ? '<p><em>Why you need it</em>' + c.why + '</p>' : "") + '</div></div>');
+      });
+      primary = '<a class="btn pri" href="' + hrefOf(id) + '">' + (it.kind === "q" ? "Start practice →" : "Open study module →") + '</a>';
+      (RELATED[id] || []).forEach(k => leaves.push(leaf(S + k + ".html", "deck", DECKS[k][0])));
+      if (it.kind !== "q" && INDEX["mcq-" + s.k]) leaves.push(leaf(hrefOf("mcq-" + s.k), "quiz", s.n + " practice questions"));
+      leaves.push(leaf("exam.html#section-" + s.k.slice(3), "quiz", "Mock exam · " + s.n));
+    }
+    const hasConcepts = it.kind !== "main" && it.kind !== "d" && conceptsOf(id).length;
+    kg.innerHTML = '<svg class="kg-wires" aria-hidden="true"></svg>' +
+      '<div class="kg-head"><div class="kg-kicker">' + esc(kicker) + '</div><div class="kg-title" id="kg-title">' + esc(title) + '</div>' + intro +
+      '<div class="kg-actions">' + primary +
+      '<button class="btn' + (done[id] ? " ok" : "") + '" type="button" data-done>' + (done[id] ? "✓ Done" : "Mark as done") + '</button>' +
+      (hasConcepts ? '<button class="btn link" type="button" data-fold>' + (openK.size ? "Collapse all" : "Expand all") + '</button>' : "") +
+      '<span class="sp"></span><button class="btn kg-step" type="button" data-step="-1" aria-label="Previous box">←</button><button class="btn kg-step" type="button" data-step="1" aria-label="Next box">→</button></div>' +
+      '<button class="btn kg-x" type="button" data-close aria-label="Fold the graph back">✕</button></div>' +
+      (kids.length ? '<div class="kg-nodes">' + kids.join("") + '</div>' : "") +
+      (leaves.length ? '<div class="kg-res">' + leaves.join("") + '</div>' : "");
+    kg.setAttribute("aria-labelledby", "kg-title");
+  }
+
+  function drawKg() {
+    // org-chart wiring: trunk down from the head, a bus above each row, a drop to every node
+    const svgK = kg.querySelector(".kg-wires"), head = kg.querySelector(".kg-head"); if (!svgK || !head) return;
+    const o = kg.getBoundingClientRect(), h = head.getBoundingClientRect();
+    const x0 = h.left + h.width / 2 - o.left, y0 = h.bottom - o.top, trunk = 12;
+    const items = [...kg.querySelectorAll(".kg-nodes > *, .kg-res a")].map(el => {
+      const r = el.getBoundingClientRect();
+      return { x: r.left + r.width / 2 - o.left, t: r.top - o.top, l: r.left - o.left, m: r.top + r.height / 2 - o.top, res: el.tagName === "A", done: el.classList.contains("done") };
+    });
+    const rows = [];
+    items.forEach(it => { const row = rows.find(r => Math.abs(r.t - it.t) < 8 && r.res === it.res); if (row) row.items.push(it); else rows.push({ t: it.t, res: it.res, items: [it] }); });
+    rows.sort((a, b) => a.t - b.t);
+    let p = "";
+    const line = (d, cls) => { p += '<path class="' + (cls || "") + '" d="' + d + '"/>'; };
+    if (mq.matches) {
+      // phone: one column, so a trunk down the left edge with a stub into each card
+      const last = items.length ? Math.max(...items.map(i => i.m)) : y0;
+      line("M" + x0 + " " + y0 + " V" + (y0 + 12) + " H" + trunk + " V" + last);
+      items.forEach(i => line("M" + trunk + " " + i.m + " H" + i.l, i.res ? "res" : i.done ? "done" : ""));
+    } else {
+      rows.forEach((row, k) => {
+        const bus = row.t - 14, xs = row.items.map(i => i.x), cls = row.res ? "res" : "";
+        if (k === 0) line("M" + x0 + " " + y0 + " V" + bus);
+        else line("M" + x0 + " " + y0 + " V" + (y0 + 10) + " H" + trunk + " V" + bus + " H" + Math.min(...xs), cls);
+        line("M" + Math.min(x0, ...xs) + " " + bus + " H" + Math.max(x0, ...xs), cls);
+        row.items.forEach(i => line("M" + i.x + " " + bus + " V" + i.t, i.res ? "res" : i.done ? "done" : ""));
+      });
+    }
+    svgK.innerHTML = p;
+  }
+  const follow = ms => { const end = performance.now() + ms; const f = () => { draw(); if (performance.now() < end) requestAnimationFrame(f); }; requestAnimationFrame(f); };
+  function place() {
+    if (!cur) return;
+    const n = nodeEl(cur);
+    if (mq.matches) n.after(kg); else n.closest(".stage").appendChild(kg);
+  }
+
+  function openDrawer(id) {
+    if (cur === id) { closeDrawer(); return; }
+    if (cur) kg.remove();
+    cur = id; openK = new Set();
+    nodes.forEach(n => n.classList.toggle("sel", n.dataset.id === id));
+    renderDrawer(id); place(); draw();
+    try { history.replaceState(null, "", "#" + id); } catch (e) {}
+    const n = nodeEl(id), nr = n.getBoundingClientRect();
+    if (!still.matches && kg.animate) {
+      kg.animate([{ opacity: 0, clipPath: "inset(0 0 100% 0 round 18px)" }, { opacity: 1, clipPath: "inset(0 0 0 0 round 18px)" }], { duration: 420, easing: "cubic-bezier(.2, .8, .2, 1)" });
+      // every concept flies out of the clicked box to its place in the graph
+      kg.querySelectorAll(".kg-head, .kn, .kg-res a").forEach((el, i) => {
+        const r = el.getBoundingClientRect();
+        el.animate([{ transform: "translate(" + (nr.left + nr.width / 2 - r.left - r.width / 2) + "px, " + (nr.top + nr.height / 2 - r.top - r.height / 2) + "px) scale(.2)", opacity: 0 }, { transform: "none", opacity: 1 }],
+          { duration: 560, delay: i * 40, easing: "cubic-bezier(.2, .8, .2, 1)", fill: "backwards" });
+      });
+      follow(1100);
+    }
+    scrollTo({ top: nr.top + scrollY - 130, behavior: still.matches ? "auto" : "smooth" });
+  }
+  function closeDrawer() {
+    if (!cur) return;
+    const id = cur; cur = null;
+    nodes.forEach(n => n.classList.remove("sel"));
+    try { history.replaceState(null, "", location.pathname); } catch (e) {}
+    const fin = () => { kg.remove(); draw(); };
+    if (!still.matches && kg.animate) {
+      const nr = nodeEl(id).getBoundingClientRect();
+      kg.querySelectorAll(".kg-head, .kn, .kg-res a").forEach(el => {
+        const r = el.getBoundingClientRect();
+        el.animate([{ transform: "none", opacity: 1 }, { transform: "translate(" + (nr.left + nr.width / 2 - r.left - r.width / 2) + "px, " + (nr.top + nr.height / 2 - r.top - r.height / 2) + "px) scale(.2)", opacity: 0 }], { duration: 260, easing: "ease-in", fill: "forwards" });
+      });
+      kg.animate([{ opacity: 1 }, { opacity: 0 }], { duration: 280, fill: "forwards" }).onfinish = fin;
+      follow(300);
+    } else fin();
+  }
+  const order = () => nodes.map(n => n.dataset.id);
+  const step = dir => { const o = order(), i = o.indexOf(cur); if (i >= 0) openDrawer(o[(i + dir + o.length) % o.length]); };
+
+  rm.addEventListener("click", e => {
+    if (e.target.closest(".kg")) return;
+    const node = e.target.closest(".node"); if (!node) return;
+    if (e.target.closest(".chk")) toggle(node.dataset.id); else openDrawer(node.dataset.id);
+  });
+  kg.addEventListener("click", e => {
+    const t = e.target.closest("[data-ck], [data-open], [data-go], [data-fold], [data-done], [data-close], [data-step]"); if (!t) return;
+    if (t.dataset.ck) { toggle(t.dataset.ck); return; }
+    if (t.dataset.open) {
+      const k = t.dataset.open, el = t.closest(".kn");
+      if (openK.has(k)) openK.delete(k); else openK.add(k);
+      el.classList.toggle("open", openK.has(k)); t.setAttribute("aria-expanded", openK.has(k));
+      kg.querySelector("[data-fold]") && (kg.querySelector("[data-fold]").textContent = openK.size ? "Collapse all" : "Expand all");
+      follow(350); return;
+    }
+    if (t.dataset.go) { openDrawer(t.dataset.go); return; }
+    if ("fold" in t.dataset) {
+      const all = [...kg.querySelectorAll(".kn[data-k]")].map(n => n.dataset.k);
+      openK = openK.size ? new Set() : new Set(all); renderDrawer(cur); follow(350); return;
+    }
+    if ("done" in t.dataset) { toggle(cur); return; }
+    if ("close" in t.dataset) { closeDrawer(); return; }
+    if (t.dataset.step) step(+t.dataset.step);
+  });
+  new ResizeObserver(() => drawKg()).observe(kg);
+  mq.addEventListener("change", () => { place(); draw(); });
+  addEventListener("keydown", e => {
+    if (!cur || e.target.closest("input, textarea")) return;
+    if (e.key === "Escape") closeDrawer();
+    else if (e.key === "ArrowRight") step(1);
+    else if (e.key === "ArrowLeft") step(-1);
+  });
+  document.getElementById("reset").addEventListener("click", () => { done = {}; save(); paint(); });
+  new ResizeObserver(draw).observe(rm);
+  if (document.fonts) document.fonts.ready.then(draw);
+  paint();
+  const h = decodeURIComponent(location.hash.slice(1));
+  if (INDEX[h]) requestAnimationFrame(() => openDrawer(h));
+})();
+</script>
+</body>
+</html>

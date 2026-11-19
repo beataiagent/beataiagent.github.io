@@ -157,3 +157,10 @@ a.svc-chip:hover { border-color: var(--accent); }
   .flow-arrow.both i::before { left: -5px; top: -2px; border: 6px solid transparent; border-bottom: 9px solid var(--accent); border-top: 0; }
 }
 .flow-cap { font-size: 0.7rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--sub); margin-bottom: 8px; }
+
+/* ---------- merged domain pages: one <section class="part"> per former page ---------- */
+section.part { margin-top: 56px; padding-top: 8px; border-top: 1px solid var(--line); }
+section.part:first-of-type { margin-top: 8px; border-top: 0; }
+section.part > h2 { font-size: clamp(1.4rem, 3vw, 1.8rem); margin: 28px 0 18px; }
+section.part h3 { font-size: 1.25rem; line-height: 1.3; margin: 36px 0 12px; scroll-margin-top: 72px; }
+h3 .auto-logos .lg { width: 24px; height: 24px; }
