@@ -1,39 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="Top-K chunks ranked by vector distance; the ones under the threshold feed Gemini for a grounded answer">
   <defs>
-    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
-      <feGaussianBlur stdDeviation="3.5" result="b"/>
-      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
-    </filter>
-    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
-      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
-    </linearGradient>
-    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.26"/>
-      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
-    </radialGradient>
-    <style>
-      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
-    </style>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3.5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#34363c"/><stop offset="1" stop-color="#1d1e22"/></linearGradient>
+    <linearGradient id="spark" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#9168c0"/><stop offset=".45" stop-color="#5684d1"/><stop offset="1" stop-color="#1ba1e3"/></linearGradient>
+    <path id="gem" d="M0 -20 C2 -6 6 -2 20 0 C6 2 2 6 0 20 C-2 6 -6 2 -20 0 C-6 -2 -2 -6 0 -20 Z"/>
+    <style>.m{font-family:"Roboto Mono",ui-monospace,monospace;letter-spacing:.06em}.t{font-family:"Google Sans","Product Sans",system-ui,sans-serif;font-weight:700}.s{font-family:"Google Sans","Product Sans",system-ui,sans-serif}</style>
+    <radialGradient id="amb" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff7daf" stop-opacity=".26"/><stop offset="1" stop-color="#ff7daf" stop-opacity="0"/></radialGradient>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 1 L10 5 L0 9 Z" fill="#ff7daf"/></marker>
   </defs>
   <rect width="256" height="256" fill="#202124"/>
-  <circle cx="128" cy="124" r="96" fill="url(#amb-r)"/>
-  <circle cx="128" cy="128" r="100" fill="none" stroke="#ff7daf" stroke-width="2" stroke-dasharray="6 6" opacity="0.45"/>
-
-  <!-- Top-K Bars -->
-  <rect x="52" y="68" width="152" height="24" rx="8" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
-  <rect x="60" y="75" width="98" height="10" rx="5" fill="#57caff" opacity="0.85"/>
-  <text x="194" y="84" text-anchor="end" class="m" font-size="10" fill="#57caff">0.18</text>
-
-  <rect x="52" y="100" width="152" height="24" rx="8" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
-  <rect x="60" y="107" width="76" height="10" rx="5" fill="#5cdb6d" opacity="0.85"/>
-  <text x="194" y="116" text-anchor="end" class="m" font-size="10" fill="#5cdb6d">0.31</text>
-
-  <!-- Gemini Output Card -->
-  <rect x="52" y="138" width="152" height="46" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.4" filter="url(#glow-s)"/>
-  <polygon points="74,151 77,158 84,161 77,164 74,171 71,164 64,161 71,158" fill="#ffd427"/>
-  <text x="94" y="158" class="m" font-size="11" fill="#ffffff" font-weight="600">Gemini</text>
-  <text x="94" y="173" class="m" font-size="9.5" fill="#ff7daf">Grounded Answer</text>
-
-  <text x="128" y="226" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">RETRIEVE &amp; GENERATE</text>
+  <circle cx="128" cy="116" r="104" fill="url(#amb)"/>
+  <circle cx="128" cy="116" r="92" fill="none" stroke="#ff7daf" stroke-width="1.6" stroke-dasharray="4 7" stroke-linecap="round" stroke-opacity=".5"/>
+  <!-- ranked results -->
+  <rect x="44" y="40" width="168" height="24" rx="8" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
+  <rect x="52" y="48" width="104" height="8" rx="4" fill="#57caff"/>
+  <rect x="44" y="70" width="168" height="24" rx="8" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <rect x="52" y="78" width="80" height="8" rx="4" fill="#5cdb6d"/>
+  <rect x="44" y="100" width="168" height="24" rx="8" fill="none" stroke="#5f6368" stroke-width="1.6" stroke-dasharray="4 4"/>
+  <rect x="52" y="108" width="36" height="8" rx="4" fill="#5f6368"/>
+  <g class="m" font-size="10" font-weight="600" text-anchor="end">
+    <text x="202" y="56" fill="#57caff">0.18</text>
+    <text x="202" y="86" fill="#5cdb6d">0.31</text>
+    <text x="202" y="116" fill="#80868b">0.62</text>
+  </g>
+  <path d="M128 128 V140" stroke="#ff7daf" stroke-width="2" marker-end="url(#ah)"/>
+  <!-- Gemini answer -->
+  <rect x="44" y="144" width="168" height="46" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2" filter="url(#glow)"/>
+  <use href="#gem" fill="url(#spark)" transform="translate(68 167) scale(.6)"/>
+  <text x="88" y="163" class="t" font-size="14" fill="#ffffff">Gemini</text>
+  <text x="88" y="180" class="s" font-size="11" fill="#ff7daf">grounded answer</text>
+  <text x="128" y="238" text-anchor="middle" class="m" font-size="11" font-weight="600" fill="#ff7daf">RETRIEVE &amp; GENERATE</text>
 </svg>

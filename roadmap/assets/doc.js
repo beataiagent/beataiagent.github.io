@@ -177,8 +177,9 @@
     return clone.textContent.trim();
   };
   const slug = document.body.dataset.slug;
-  const activeRmId = slug === "roadmap" ? (document.body.dataset.roadmap || "agentic-architect") : "";
-  const activeKey = slug === "roadmap" ? "rm:" + activeRmId : slug;
+  const ownRm = document.body.dataset.roadmap || "";
+  const activeRmId = ownRm || (slug === "roadmap" ? "agentic-architect" : "");
+  const activeKey = activeRmId ? "rm:" + activeRmId : slug;
   const pageOf = k => {
     const base = k.split("?")[0];
     const m = /^(?:mcq-)?sec(\d)/.exec(base);
@@ -197,7 +198,7 @@
   const sideLinks = {};
   if (side) {
     side.innerHTML = NAV.map(g => {
-      const open = g.items.some(i => pageOf(i[0]) === slug) || g.title === "Learning Roadmaps";
+      const open = (!ownRm && g.items.some(i => pageOf(i[0]) === slug)) || g.title === "Learning Roadmaps";
       return '<details' + (open ? " open" : "") + '><summary><img src="' + LOGO + g.icon + '" alt="">' + g.title + '</summary>' +
         g.items.map(i => '<a href="' + hrefOf(i[0]) + '" data-key="' + i[0] + '"' + (i[0] === activeKey ? ' class="cur" aria-current="page"' : "") + '>' + esc(i[1]) + '</a>').join("") +
         '</details>';

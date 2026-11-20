@@ -1,2 +1,4 @@
 .DS_Store
 images/mediapipe-slides/analysis_no_audio.mp4
+node_modules/
+animation/

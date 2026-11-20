@@ -31,8 +31,9 @@
   <!-- ===== Row 1: ingest (cols 0-4, x = 11 + i*136, w 114) ===== -->
   <!-- Source -->
   <rect x="11" y="62" width="114" height="112" rx="14" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.6"/>
-  <text x="68" y="90" text-anchor="middle" class="t" font-size="16">Source</text>
-  <g transform="translate(54 104)" fill="none" stroke="#bdc1c6" stroke-width="2" stroke-linejoin="round">
+  <text x="68" y="84" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">DOCS</text>
+  <text x="68" y="108" text-anchor="middle" class="t" font-size="16">Source</text>
+  <g transform="translate(56 120) scale(.85)" fill="none" stroke="#bdc1c6" stroke-width="2" stroke-linejoin="round">
     <path d="M0 0 H19 L28 9 V46 H0 Z"/><path d="M19 0 V9 H28"/>
     <path d="M6 22 H22 M6 29 H22 M6 36 H18" stroke-linecap="round"/>
   </g>
@@ -78,8 +79,9 @@
   <!-- ===== Row 2: query (y 244-356) ===== -->
   <!-- LLM API (in) -->
   <rect x="11" y="244" width="114" height="112" rx="14" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.6"/>
-  <text x="68" y="272" text-anchor="middle" class="t" font-size="16">LLM API</text>
-  <use href="#gem" transform="translate(68 314)"/>
+  <text x="68" y="266" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">QUERY IN</text>
+  <text x="68" y="290" text-anchor="middle" class="t" font-size="16">LLM API</text>
+  <use href="#gem" transform="translate(68 324) scale(.9)"/>
 
   <path d="M125 300 H415" stroke="#9aa0a6" stroke-width="2.2" marker-end="url(#ag)"/>
   <text x="270" y="290" text-anchor="middle" class="s" font-size="12.5" fill="#9aa0a6">user question</text>
@@ -109,7 +111,7 @@
   <rect x="691" y="244" width="114" height="112" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4"/>
   <text x="748" y="266" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">06</text>
   <text x="748" y="290" text-anchor="middle" class="t" font-size="16">Ranking</text>
-  <g transform="translate(732 310)" stroke="#bdc1c6" stroke-width="2.4" stroke-linecap="round" fill="none">
+  <g transform="translate(731 312)" stroke="#bdc1c6" stroke-width="2.4" stroke-linecap="round" fill="none">
     <path d="M0 0 H22 M0 9 H18 M0 18 H12"/><path d="M28 2 V22 M22 16 L28 22 L34 16"/>
   </g>
 
@@ -126,8 +128,9 @@
 
   <!-- LLM API (out) -->
   <rect x="963" y="244" width="114" height="112" rx="14" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.6"/>
-  <text x="1020" y="272" text-anchor="middle" class="t" font-size="16">LLM API</text>
-  <use href="#gem" transform="translate(1020 314)"/>
+  <text x="1020" y="266" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">CONTEXT</text>
+  <text x="1020" y="290" text-anchor="middle" class="t" font-size="16">LLM API</text>
+  <use href="#gem" transform="translate(1020 324) scale(.9)"/>
 
   <!-- ===== Bracket: Query retrieval ===== -->
   <line x1="419" y1="378" x2="941" y2="378" stroke="#5cdb6d" stroke-width="2" stroke-opacity="0.6"/>
