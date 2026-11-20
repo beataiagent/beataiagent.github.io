@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 290 104" width="290" height="104">
+  <defs>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #1e1e1e; font-weight: 700; }
+      .s { font-family: "Google Sans", system-ui, sans-serif; fill: #3c4043; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #1e1e1e; font-weight: 500; }
+      .ink { stroke: #1e1e1e; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect x="2" y="2" width="286" height="100" rx="16" fill="#fff" class="ink"/>
+  <rect x="18" y="22" width="96" height="36" rx="18" fill="#34a853" class="ink"/>
+  <circle cx="94" cy="40" r="13" fill="#fff" class="ink"/>
+  <text x="52" y="46" text-anchor="middle" class="t" font-size="15" fill="#fff">YES</text>
+  <text x="132" y="46" class="t" font-size="22">0.95</text>
+  <text x="200" y="45" class="m" font-size="12.5" fill="#5f6368">P(true)</text>
+  <rect x="18" y="70" width="254" height="14" rx="7" fill="#e8eaed" stroke="#1e1e1e" stroke-width="2"/>
+  <rect x="18" y="70" width="240" height="14" rx="7" fill="#4285f4" stroke="#1e1e1e" stroke-width="2"/>
+</svg>

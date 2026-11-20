@@ -852,6 +852,27 @@
     .eg-knobs em { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 50%; border: 2px solid currentColor; font: 500 17px/1 var(--sans); font-style: normal; margin-bottom: 12px; color: #fff; }
     .eg-knobs b { display: block; font-size: 20px; margin-bottom: 8px; }
     .eg-knobs span { font-size: 15.5px; line-height: 1.45; }
+
+    /* ---------- editorial SVG illustration frames ---------- */
+    .ed-art { border: 2px solid var(--dk-line); border-radius: 18px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; }
+    .ed-art.blue { border-color: var(--h-blue); } .ed-art.green { border-color: var(--h-green); }
+    .ed-art.yellow { border-color: var(--h-yellow); } .ed-art.red { border-color: var(--h-red); }
+    .ed-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ed-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .ed-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ed-res-row { display: flex; align-items: center; gap: 16px; }
+    .ed-res-row h3 { margin: 0 0 4px; font-size: 22px; }
+    .ed-lg { flex: none; width: 48px; height: 48px; border-radius: 12px; background: #17181b; border: 1.5px solid var(--dk-line); display: grid; place-items: center; padding: 7px; box-sizing: border-box; }
+    .reveal .ed-lg img { width: 100%; height: 100%; object-fit: contain; margin: 0; display: block; }
+    .ed-tight ul.bl li { margin-bottom: 8px; }
+    .eg-bars.ed-compact { gap: 9px; }
+    .eg-bars.ed-compact i { height: 34px; line-height: 30px; font-size: 13px; }
+    .eg-mrl.ed-mrl { width: 736px; gap: 11px; }
+    .eg-mrl.ed-mrl > div { grid-template-columns: 58px 256px 96px minmax(0,1fr); gap: 10px; }
+    .eg-mrl.ed-mrl b { font-size: 23px; }
+    .eg-mrl.ed-mrl i { height: 30px; background-size: 256px 100%; }
+    .eg-mrl.ed-mrl > div > span { font-size: 14.5px; line-height: 1.3; }
+    .eg-mrl.ed-mrl > div > span:nth-of-type(1) { font-size: 13.5px; }
   </style>
 </head>
 
@@ -938,7 +959,7 @@
       <!-- Section 01 -->
       <section class="bg-blue" data-title="01 · Why multimodal RAG?">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-blue)"><img src="../images/embeddinggemma2-rag-slides/div-01-why-multimodal.svg" alt="Text, image, audio, and video tiles converging into a unified search lens"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1049,7 +1070,7 @@
       <!-- Section 02 -->
       <section class="bg-green" data-title="02 · Meet EmbeddingGemma 2">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
-        <div class="eg-glogo abs" style="left:113px; top:248px"><img src="../images/mediapipe-slides/logos/gemma.png" alt="Gemma"></div>
+        <div class="ed-div-art" style="--c:var(--h-green)"><img src="../images/embeddinggemma2-rag-slides/div-02-embeddinggemma2.svg" alt="EmbeddingGemma 2 diamond core radiating four modality vectors in a 768-d sphere"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1169,19 +1190,22 @@
       <!-- Modular encoders -->
       <section data-title="Load only what you need">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:32px 56px">
             <div class="eyebrow">Modular · one checkpoint</div>
-            <h2 style="margin-bottom:12px">Load only the encoders you need</h2>
-            <p class="sub" style="font-size:19px; margin-bottom:26px">Same weights, same vector space, four sizes</p>
-            <div class="eg-bars">
+            <h2 style="margin-bottom:6px; font-size:42px">Load only the encoders you need</h2>
+            <p class="sub" style="font-size:17px; margin-bottom:12px">Same weights, same vector space, four sizes</p>
+            <div class="ed-art green" style="width:1088px; height:104px; margin-bottom:12px">
+              <img src="../images/embeddinggemma2-rag-slides/modular-encoders.svg" alt="Modular snap-on Text Base 270M plus optional Vision 170M and Audio 300M sharing one 768-d space">
+            </div>
+            <div class="eg-bars ed-compact">
               <div class="eg-barh"><b></b><div></div><em>params</em><span>LiteRT file</span></div>
               <div class="fragment"><b>Text only</b><div><i class="m-t" style="width:243px">Text 270M</i></div><em>270M</em><span class="sz">165 MB</span></div>
               <div class="fragment"><b>Text + vision</b><div><i class="m-t" style="width:243px">Text 270M</i><i class="m-i" style="width:153px">Vision 170M</i></div><em>440M</em><span class="sz">388 MB</span></div>
               <div class="fragment"><b>Text + audio</b><div><i class="m-t" style="width:243px">Text 270M</i><i class="m-a" style="width:270px">Audio 300M</i></div><em>570M</em><span class="sz">—</span></div>
               <div class="fragment"><b>Full model</b><div><i class="m-t" style="width:243px">Text 270M</i><i class="m-i" style="width:153px">Vision 170M</i><i class="m-a" style="width:270px">Audio 300M</i></div><em>740M</em><span class="sz">485 MB</span></div>
             </div>
-            <div class="eg-dl"><span><b>Python / sentence-transformers:</b> one <code>model.safetensors</code> file, <b>1.49 GB</b>, for every config. Fewer encoders = less memory, same download.</span><span class="muted">LiteRT: generic <code>.litertlm</code> builds on Hugging Face (litert-community). No text + audio build.</span></div>
-            <div class="pc green fragment" style="width:1088px; margin-top:16px; box-sizing:border-box">Start with a <b>text-only</b> index. Later reload with vision or audio and add photos or calls to the <b>same index</b>. Old vectors stay valid, no re-embedding.</div>
+            <div class="eg-dl" style="margin-top:8px; font-size:14.5px"><span><b>Python / sentence-transformers:</b> one <code>model.safetensors</code> file, <b>1.49 GB</b>, for every config. Fewer encoders = less memory, same download.</span><span class="muted" style="font-size:13px">LiteRT: generic <code>.litertlm</code> builds on Hugging Face (litert-community). No text + audio build.</span></div>
+            <div class="pc green fragment" style="width:1088px; margin-top:10px; padding:10px 16px; font-size:15.5px; box-sizing:border-box">Start with a <b>text-only</b> index. Later reload with vision or audio and add photos or calls to the <b>same index</b>. Old vectors stay valid, no re-embedding.</div>
           </div>
         </div>
         <aside class="notes">จุดเด่นมาก: checkpoint เดียว โหลดได้ 4 แบบ • ข้อความอย่างเดียว 270M • ข้อความ+รูป/วิดีโอ 440M • ข้อความ+เสียง 570M • ครบทุกอย่าง 740M • ทุกแบบอยู่ใน vector space เดียวกัน • (คลิกสุดท้าย) เริ่มจาก index ข้อความก่อน วันหลังค่อยโหลด vision หรือ audio แล้วเพิ่มรูปหรือเสียงลง index เดิมได้ ไม่ต้องคำนวณเวกเตอร์เก่าใหม่ • ตัวเลขพารามิเตอร์มาจาก blog ของ Google • ขนาดไฟล์ที่ต้องโหลด (จาก Hugging Face): ถ้าใช้ Python/sentence-transformers มีไฟล์เดียว model.safetensors 1.49 GB ทุกแบบต้องดาวน์โหลดไฟล์นี้ การเลือก encoder ช่วยลดหน่วยความจำตอนรัน ไม่ได้ลดขนาดดาวน์โหลด • บนมือถือใช้ LiteRT ที่มีไฟล์แยกจริง: text 270M = 165 MB, text+vision 440M = 388 MB, เต็ม 740M = 485 MB ยังไม่มีไฟล์ text+audio แยก (ไฟล์สำหรับชิปเฉพาะรุ่นใหญ่กว่านี้ ราว 0.2–0.9 GB)</aside>
@@ -1224,16 +1248,21 @@
       <!-- Matryoshka -->
       <section data-title="Matryoshka: smaller vectors">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Matryoshka Representation Learning (MRL)</div>
-            <h2 style="margin-bottom:12px">Cut the vector short, keep most of the quality</h2>
-            <p class="sub" style="font-size:19px; margin-bottom:24px">The most important information sits at the front of the vector</p>
-            <div class="eg-mrl">
-              <div class="eg-mrlh"><span>dims</span><span></span><span>1M vectors (bf16)</span><span>Quality vs full</span></div>
-              <div class="fragment"><b>768</b><i style="width:480px"></i><span>≈ 1.5 GB</span><span>Full. Best for multimodal &amp; visual docs</span></div>
-              <div class="fragment"><b>512</b><i style="width:320px"></i><span>≈ 1 GB</span><span>Also good when recall matters most</span></div>
-              <div class="fragment"><b>256</b><i style="width:160px"></i><span>≈ 0.5 GB</span><span>Most text quality · ~95% on image, video, speech</span></div>
-              <div class="fragment"><b>128</b><i style="width:80px"></i><span>≈ 250 MB</span><span>~90% text · ~75% media. Test on your data first.</span></div>
+            <h2 style="margin-bottom:8px">Cut the vector short, keep most of the quality</h2>
+            <p class="sub" style="font-size:18px; margin-bottom:18px">The most important information sits at the front of the vector</p>
+            <div style="display:flex; gap:22px; width:1088px; align-items:center">
+              <div class="eg-mrl ed-mrl">
+                <div class="eg-mrlh"><span>dims</span><span></span><span>1M (bf16)</span><span>Quality vs full</span></div>
+                <div class="fragment"><b>768</b><i style="width:252px"></i><span>≈ 1.5 GB</span><span>Full. Best for multimodal &amp; visual docs</span></div>
+                <div class="fragment"><b>512</b><i style="width:168px"></i><span>≈ 1 GB</span><span>Also good when recall matters most</span></div>
+                <div class="fragment"><b>256</b><i style="width:84px"></i><span>≈ 0.5 GB</span><span>Most text quality · ~95% on media</span></div>
+                <div class="fragment"><b>128</b><i style="width:42px"></i><span>≈ 250 MB</span><span>~90% text · ~75% media. Test first.</span></div>
+              </div>
+              <div class="ed-art red" style="width:330px; height:295px">
+                <img src="../images/embeddinggemma2-rag-slides/matryoshka-vectors.svg" alt="Concentric Matryoshka vector nesting from 768 down to 512, 256, and 128 dimensions with re-normalize reminder">
+              </div>
             </div>
           </div>
           <div class="ask fragment"><b>⚠ Rule</b><span>Queries and documents must use the same dimension. After truncating, normalize again.</span></div>
@@ -1269,7 +1298,7 @@
       <!-- Section 03 -->
       <section class="bg-yellow" data-title="03 · Use it in Python">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-yellow)"><img src="../images/embeddinggemma2-rag-slides/div-03-python.svg" alt="Python sentence-transformers model.encode emitting a normalized embedding vector"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1283,12 +1312,15 @@
       <!-- Install & load -->
       <section data-title="Install &amp; load">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:30px 56px">
             <div class="eyebrow">Step 1 · sentence-transformers v6.1.0+</div>
-            <h2 style="margin-bottom:20px">Install and load</h2>
-            <div class="cmd fragment" style="width:1088px; margin-bottom:18px; box-sizing:border-box">pip install -U "sentence-transformers[image,audio,video]" transformers</div>
-            <div class="grid g2" style="width:1088px; gap:20px">
-              <pre class="fragment" style="font-size:14px"><code class="language-python" data-trim>
+            <h2 style="margin-bottom:12px; font-size:42px">Install and load</h2>
+            <div class="ed-art blue" style="width:1088px; height:106px; margin-bottom:12px">
+              <img src="../images/embeddinggemma2-rag-slides/install-and-load.svg" alt="Install extras, choose full or partial encoder footprint at load time, and use bf16 or fp32 precision">
+            </div>
+            <div class="cmd fragment" style="width:1088px; margin-bottom:12px; padding:9px 14px; font-size:14px; box-sizing:border-box">pip install -U "sentence-transformers[image,audio,video]" transformers</div>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <pre class="fragment" style="font-size:13px"><code class="language-python" data-trim>
 from sentence_transformers import SentenceTransformer
 
 # Full model: all modalities (740M parameters)
@@ -1298,7 +1330,7 @@ model = SentenceTransformer(MODEL_ID)
 print(model.device, model.dtype)
 # cuda:0 torch.bfloat16
               </code></pre>
-              <pre class="fragment" style="font-size:14px"><code class="language-python" data-trim>
+              <pre class="fragment" style="font-size:13px"><code class="language-python" data-trim>
 # Text only (270M parameters)
 text_only_model = SentenceTransformer(
     MODEL_ID,
@@ -1322,11 +1354,11 @@ text_image_model = SentenceTransformer(
       <!-- Text search with prompts -->
       <section data-title="Text search with task prompts">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Step 2 · Asymmetric retrieval</div>
-            <h2 style="margin-bottom:20px">Text: tell the model the task</h2>
-            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
-              <pre style="width:600px; font-size:14px"><code class="language-python" data-trim>
+            <h2 style="margin-bottom:14px">Text: tell the model the task</h2>
+            <div style="display:flex; gap:20px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
 query = "What causes the northern lights?"
 document = ("The northern lights are caused by "
             "charged particles from the sun...")
@@ -1337,13 +1369,16 @@ doc_emb = model.encode(document, prompt_name="Document")
 
 print(model.similarity(query_emb, doc_emb))
               </code></pre>
-              <div style="flex:1; display:grid; gap:14px">
-                <div class="pc blue fragment"><b><code>SearchQuery</code></b><br>Short questions people type</div>
-                <div class="pc green fragment"><b><code>Document</code></b><br>The text chunks you store in the index</div>
-                <div class="pc yellow fragment"><b>Media: no prompt</b><br>Pass a dict like <code>{"image": path}</code></div>
+              <div style="flex:1; min-width:0; display:grid; gap:10px">
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:16px"><b><code>SearchQuery</code></b><br>Short questions people type</div>
+                <div class="pc green fragment" style="padding:10px 14px; font-size:16px"><b><code>Document</code></b><br>The text chunks you store in the index</div>
+                <div class="pc yellow fragment" style="padding:10px 14px; font-size:16px"><b>Media: no prompt</b><br>Pass a dict like <code>{"image": path}</code></div>
               </div>
             </div>
-            <p class="muted fragment" style="font-size:17px; margin-top:22px">Questions and answers look different. Prompts move both into the right place in the space, so they match.</p>
+            <div class="ed-art blue" style="width:1088px; height:146px; margin-top:14px">
+              <img src="../images/embeddinggemma2-rag-slides/text-task-prompts.svg" alt="SearchQuery and Document prompts aligning short queries and long text chunks in vector space while media needs no prompt">
+            </div>
+            <p class="muted fragment" style="font-size:15.5px; margin-top:10px">Questions and answers look different. Prompts move both into the right place in the space, so they match.</p>
           </div>
         </div>
         <aside class="notes">ข้อความต้องบอกงานผ่าน prompt_name • คำถามใช้ SearchQuery เอกสารที่เก็บใน index ใช้ Document • ส่วนรูป เสียง วิดีโอไม่ต้องใส่ prompt ส่งเป็น dict เช่น {"image": path} • เหตุผล: คำถามกับคำตอบหน้าตาไม่เหมือนกัน prompt ช่วยให้ทั้งคู่ไปอยู่ตำแหน่งที่จับคู่กันได้ • model.similarity คำนวณความคล้าย เวกเตอร์ถูก normalize แล้ว</aside>
@@ -1431,7 +1466,7 @@ print(model.similarity(query_emb, listing_emb))
       <!-- Section 04 -->
       <section class="bg-red" data-title="04 · Build the RAG pipeline">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-red)"><img src="../images/embeddinggemma2-rag-slides/div-04-rag-pipeline.svg" alt="3-stage RAG pipeline: Index vector store, Retrieve search lens, and Generate multimodal answer"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1476,11 +1511,11 @@ print(model.similarity(query_emb, listing_emb))
       <!-- Index code -->
       <section data-title="Build the index">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Pipeline · 1 of 3 · Offline</div>
-            <h2 style="margin-bottom:18px">Embed the corpus</h2>
+            <h2 style="margin-bottom:14px">Embed the corpus</h2>
             <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
-              <pre style="width:700px; font-size:13px"><code class="language-python" data-trim>
+              <pre style="width:700px; flex:none; font-size:12.5px"><code class="language-python" data-trim>
 from pathlib import Path
 import torch
 from sentence_transformers import SentenceTransformer
@@ -1503,11 +1538,14 @@ corpus = texts + media                      # the items themselves
 corpus_emb = torch.cat([text_emb, media_emb])  # same order
 torch.save({"emb": corpus_emb, "items": corpus}, "index.pt")
               </code></pre>
-              <div class="hx-flags">
-                <div class="pc blue fragment"><b>truncate_dim=512</b>Set once at load, used for every call</div>
-                <div class="pc green fragment"><b>Two encode calls</b>Text with a prompt, media without</div>
-                <div class="pc yellow fragment"><b>Keep the items</b>Store path, page or timestamp next to each vector</div>
-                <div class="pc red fragment"><b>Small demo</b>A tensor file. For real data, use a vector database.</div>
+              <div class="hx-flags" style="gap:8px; width:366px; flex:none">
+                <div class="ed-art green" style="width:366px; height:146px">
+                  <img src="../images/embeddinggemma2-rag-slides/build-the-index.svg" alt="Text chunks and media files normalized to 512-d vectors and saved into index.pt">
+                </div>
+                <div class="pc blue fragment" style="padding:8px 12px; font-size:13.5px"><b style="font-size:13.5px; margin-bottom:2px">truncate_dim=512</b>Set once at load, used for every call</div>
+                <div class="pc green fragment" style="padding:8px 12px; font-size:13.5px"><b style="font-size:13.5px; margin-bottom:2px">Two encode calls</b>Text with a prompt, media without</div>
+                <div class="pc yellow fragment" style="padding:8px 12px; font-size:13.5px"><b style="font-size:13.5px; margin-bottom:2px">Keep the items</b>Store path, page or timestamp next to each vector</div>
+                <div class="pc red fragment" style="padding:8px 12px; font-size:13.5px"><b style="font-size:13.5px; margin-bottom:2px">Small demo</b>A tensor file. For real data, use a vector database.</div>
               </div>
             </div>
           </div>
@@ -1552,11 +1590,11 @@ for h in hits:
       <!-- Generate code -->
       <section data-title="Generate the answer">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Pipeline · 3 of 3 · Online</div>
-            <h2 style="margin-bottom:18px">Give the retrieved media to a multimodal LLM</h2>
+            <h2 style="margin-bottom:14px">Give the retrieved media to a multimodal LLM</h2>
             <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
-              <pre style="width:720px; font-size:13px"><code class="language-python" data-trim>
+              <pre style="width:720px; flex:none; font-size:12.5px"><code class="language-python" data-trim>
 from google import genai
 from google.genai import types
 
@@ -1580,10 +1618,13 @@ resp = client.models.generate_content(
 )
 print(resp.text)
               </code></pre>
-              <div class="hx-flags">
-                <div class="pc yellow fragment"><b>Send the media itself</b>The LLM sees the page, hears the call, watches the clip</div>
-                <div class="pc blue fragment"><b>Ground it</b>"Only the context above" + ask for the source</div>
-                <div class="pc green fragment"><b>Fully local?</b>Swap in Gemma 4 E2B. Same retrieval code.</div>
+              <div class="hx-flags" style="gap:10px; width:346px; flex:none">
+                <div class="ed-art yellow" style="width:346px; height:168px">
+                  <img src="../images/embeddinggemma2-rag-slides/generate-the-answer.svg" alt="Raw image, video, and audio parts passed to Gemini or Gemma 4 to produce a cited reply">
+                </div>
+                <div class="pc yellow fragment" style="padding:10px 14px; font-size:14px"><b style="font-size:14px; margin-bottom:2px">Send the media itself</b>The LLM sees the page, hears the call, watches the clip</div>
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:14px"><b style="font-size:14px; margin-bottom:2px">Ground it</b>"Only the context above" + ask for the source</div>
+                <div class="pc green fragment" style="padding:10px 14px; font-size:14px"><b style="font-size:14px; margin-bottom:2px">Fully local?</b>Swap in Gemma 4 E2B. Same retrieval code.</div>
               </div>
             </div>
           </div>
@@ -1615,13 +1656,13 @@ print(resp.text)
       <!-- Plug into ADK -->
       <section data-title="Plug it into an ADK agent">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:36px 56px">
+          <div class="in" style="padding:34px 56px">
             <div class="eyebrow">Agent Development Kit (ADK) · same retrieval, now a tool</div>
-            <h2 style="margin-bottom:16px">Plug it into an ADK agent</h2>
+            <h2 style="margin-bottom:14px">Plug it into an ADK agent</h2>
             <div style="display:flex; gap:20px; width:1088px; align-items:flex-start">
               <div class="fragment" data-fragment-index="1" style="width:560px; flex:none">
                 <span class="tag">app/tools.py</span>
-                <pre style="font-size:12.5px; margin-top:10px"><code class="language-python" data-trim>
+                <pre style="font-size:12.5px; margin-top:8px"><code class="language-python" data-trim>
 import torch
 from sentence_transformers import SentenceTransformer, util
 
@@ -1644,10 +1685,10 @@ def search_knowledge(query: str, top_k: int = 5) -> dict:
         for h in hits]}
                 </code></pre>
               </div>
-              <div style="flex:1; min-width:0; display:grid; gap:12px">
+              <div style="flex:1; min-width:0; display:grid; gap:10px">
                 <div class="fragment" data-fragment-index="2">
                   <span class="tag yellow">app/agent.py</span>
-                  <pre style="font-size:12.5px; margin-top:10px"><code class="language-python" data-trim>
+                  <pre style="font-size:12.5px; margin-top:8px"><code class="language-python" data-trim>
 from google.adk.agents import Agent
 from .tools import search_knowledge
 
@@ -1661,10 +1702,10 @@ root_agent = Agent(
 )
                   </code></pre>
                 </div>
-                <div class="adk-flow fragment" data-fragment-index="3">
-                  <span class="m-t">You</span><em>→</em><span class="m-v">ADK agent<small>Gemini</small></span><em>⇄</em><span class="m-i">search_knowledge<small>tool</small></span><em>⇄</em><span class="m-a">EmbeddingGemma 2<small>index</small></span>
+                <div class="ed-art green fragment" data-fragment-index="3" style="width:508px; height:142px">
+                  <img src="../images/embeddinggemma2-rag-slides/plug-into-adk.svg" alt="User queries ADK support_agent which calls search_knowledge tool over EmbeddingGemma 2 index.pt">
                 </div>
-                <div class="cmd fragment" data-fragment-index="4" style="font-size:13px">agents-cli run "How do I descale the X200?"</div>
+                <div class="cmd fragment" data-fragment-index="4" style="font-size:13px; padding:9px 14px">agents-cli run "How do I descale the X200?"</div>
               </div>
             </div>
           </div>
@@ -1675,7 +1716,7 @@ root_agent = Agent(
       <!-- Section 05 -->
       <section class="bg-blue" data-title="05 · Tune &amp; ship">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">05</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-blue)"><img src="../images/embeddinggemma2-rag-slides/div-05-tune-ship.svg" alt="Retrieval tuning console with four glowing sliders raising recall@k"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1689,15 +1730,18 @@ root_agent = Agent(
       <!-- Design choices -->
       <section data-title="Design choices">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Design choices · my recommendations</div>
-            <h2 style="margin-bottom:22px">Five knobs to set</h2>
+            <h2 style="margin-bottom:14px">Five knobs to set</h2>
+            <div class="ed-art" style="width:1088px; height:136px; margin-bottom:14px">
+              <img src="../images/embeddinggemma2-rag-slides/design-choices-knobs.svg" alt="Five rotary retrieval tuning dials: Chunking, Dimensions, Visual Tokens, Vector Store, and Recall@k">
+            </div>
             <div class="eg-knobs">
-              <div class="pc blue fragment"><em>1</em><b>Chunking</b><span>One PDF page or slide = one image. Split long videos and calls into short clips (for example 30–60 s) so a hit points to a moment.</span></div>
-              <div class="pc green fragment"><em>2</em><b>Dimensions</b><span>Start at 768 or 512 for multimodal. Try 256 if storage hurts. Validate 128 first.</span></div>
-              <div class="pc yellow fragment"><em>3</em><b>Visual tokens</b><span>Raise <code>max_soft_tokens</code> for dense pages and charts, lower it for simple photos.</span></div>
-              <div class="pc red fragment"><em>4</em><b>Vector store</b><span>Any store for float vectors: FAISS, pgvector, AlloyDB, Vertex AI Vector Search. Keep metadata (page, timestamp).</span></div>
-              <div class="pc fragment"><em>5</em><b>Evaluate</b><span>Write 30–50 real questions with the right item. Measure recall@k before and after each change.</span></div>
+              <div class="pc blue fragment" style="height:auto; min-height:244px; padding:13px 14px"><em style="width:30px; height:30px; font-size:15px; margin-bottom:8px">1</em><b style="font-size:18px; margin-bottom:5px">Chunking</b><span style="font-size:14px; line-height:1.38">One PDF page or slide = one image. Split long videos and calls into short clips (30–60 s) so a hit points to a moment.</span></div>
+              <div class="pc green fragment" style="height:auto; min-height:244px; padding:13px 14px"><em style="width:30px; height:30px; font-size:15px; margin-bottom:8px">2</em><b style="font-size:18px; margin-bottom:5px">Dimensions</b><span style="font-size:14px; line-height:1.38">Start at 768 or 512 for multimodal. Try 256 if storage hurts. Validate 128 first.</span></div>
+              <div class="pc yellow fragment" style="height:auto; min-height:244px; padding:13px 14px"><em style="width:30px; height:30px; font-size:15px; margin-bottom:8px">3</em><b style="font-size:18px; margin-bottom:5px">Visual tokens</b><span style="font-size:14px; line-height:1.38">Raise <code>max_soft_tokens</code> for dense pages and charts, lower it for simple photos.</span></div>
+              <div class="pc red fragment" style="height:auto; min-height:244px; padding:13px 14px"><em style="width:30px; height:30px; font-size:15px; margin-bottom:8px">4</em><b style="font-size:18px; margin-bottom:5px">Vector store</b><span style="font-size:14px; line-height:1.38">Any store for float vectors: FAISS, pgvector, AlloyDB, Vertex AI Vector Search. Keep metadata (page, timestamp).</span></div>
+              <div class="pc fragment" style="height:auto; min-height:244px; padding:13px 14px"><em style="width:30px; height:30px; font-size:15px; margin-bottom:8px">5</em><b style="font-size:18px; margin-bottom:5px">Evaluate</b><span style="font-size:14px; line-height:1.38">Write 30–50 real questions with the right item. Measure recall@k before and after each change.</span></div>
             </div>
           </div>
         </div>
@@ -1707,16 +1751,21 @@ root_agent = Agent(
       <!-- Gotchas -->
       <section data-title="Gotchas">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Gotchas</div>
-            <h2 style="margin-bottom:24px">Five things that break retrieval</h2>
-            <ol class="hx-steps" style="width:1088px">
-              <li class="fragment"><b>1</b><span><b>float16</b> gives wrong vectors. Use bfloat16 or float32.</span></li>
-              <li class="fragment"><b>2</b><span>Forgot <code>prompt_name</code>: queries need <code>SearchQuery</code>, text documents need <code>Document</code>.</span></li>
-              <li class="fragment"><b>3</b><span>Query and documents at <b>different dimensions</b>. Truncate both the same way.</span></li>
-              <li class="fragment"><b>4</b><span>Truncated but not normalized. Pass <code>normalize_embeddings=True</code>.</span></li>
-              <li class="fragment"><b>5</b><span>One input over the <b>8,192-token</b> budget. Split long videos, calls and documents.</span></li>
-            </ol>
+            <h2 style="margin-bottom:18px">Five things that break retrieval</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <ol class="hx-steps" style="width:676px; flex:none; gap:10px">
+                <li class="fragment" style="padding:11px 14px"><b>1</b><span><b>float16</b> gives wrong vectors. Use bfloat16 or float32.</span></li>
+                <li class="fragment" style="padding:11px 14px"><b>2</b><span>Forgot <code>prompt_name</code>: queries need <code>SearchQuery</code>, text documents need <code>Document</code>.</span></li>
+                <li class="fragment" style="padding:11px 14px"><b>3</b><span>Query and documents at <b>different dimensions</b>. Truncate both the same way.</span></li>
+                <li class="fragment" style="padding:11px 14px"><b>4</b><span>Truncated but not normalized. Pass <code>normalize_embeddings=True</code>.</span></li>
+                <li class="fragment" style="padding:11px 14px"><b>5</b><span>One input over the <b>8,192-token</b> budget. Split long videos, calls and documents.</span></li>
+              </ol>
+              <div class="ed-art red" style="width:388px; height:380px">
+                <img src="../images/embeddinggemma2-rag-slides/gotchas-five-traps.svg" alt="Visual retrieval failure checklist: fp16 corruption, missing prompt_name, dimension mismatch, missing normalization, and 8192-token overflow">
+              </div>
+            </div>
           </div>
         </div>
         <aside class="notes">5 อย่างที่ทำให้ค้นผิด: (1) ใช้ float16 เวกเตอร์ผิด (2) ลืมใส่ prompt_name (3) query กับเอกสารมิติไม่เท่ากัน (4) ตัดมิติแล้วไม่ normalize (5) input ยาวเกิน 8,192 token ต้องแบ่ง</aside>
@@ -1725,13 +1774,16 @@ root_agent = Agent(
       <!-- vs Gemini Embedding 2 -->
       <section data-title="EmbeddingGemma 2 or Gemini Embedding 2?">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in ed-tight" style="padding:36px 56px">
             <div class="eyebrow">Which one?</div>
-            <h2 style="margin-bottom:24px">EmbeddingGemma 2 or Gemini Embedding 2?</h2>
-            <div class="grid g2" style="gap:24px; width:1088px">
-              <div class="pc green fragment">
+            <h2 style="margin-bottom:14px">EmbeddingGemma 2 or Gemini Embedding 2?</h2>
+            <div class="ed-art" style="width:1088px; height:142px; margin-bottom:14px">
+              <img src="../images/embeddinggemma2-rag-slides/embeddinggemma-vs-gemini.svg" alt="Local on-device EmbeddingGemma 2 vs managed cloud Gemini Embedding 2 in separate vector spaces">
+            </div>
+            <div class="grid g2" style="gap:22px; width:1088px">
+              <div class="pc green fragment" style="padding:15px 20px">
                 <span class="tag yellow">EmbeddingGemma 2</span>
-                <ul class="bl" style="font-size:19px; margin-top:16px">
+                <ul class="bl" style="font-size:17px; margin-top:10px">
                   <li><b>Open weights</b>, Apache 2.0</li>
                   <li>Runs on your laptop, server or phone</li>
                   <li>Data never leaves your machine</li>
@@ -1739,9 +1791,9 @@ root_agent = Agent(
                   <li>Text, image, audio, video</li>
                 </ul>
               </div>
-              <div class="pc blue fragment">
+              <div class="pc blue fragment" style="padding:15px 20px">
                 <span class="tag">Gemini Embedding 2</span>
-                <ul class="bl" style="font-size:19px; margin-top:16px">
+                <ul class="bl" style="font-size:17px; margin-top:10px">
                   <li><b>Hosted</b> on the Gemini API</li>
                   <li>No GPU to manage</li>
                   <li>Up to 3072 dims (768 / 1536 / 3072 recommended)</li>
@@ -1750,7 +1802,7 @@ root_agent = Agent(
                 </ul>
               </div>
             </div>
-            <p class="sub fragment" style="font-size:20px; margin-top:22px">Private, offline or on-device → EmbeddingGemma 2 · managed and largest vectors → Gemini Embedding 2</p>
+            <p class="sub fragment" style="font-size:18px; margin-top:12px">Private, offline or on-device → EmbeddingGemma 2 · managed and largest vectors → Gemini Embedding 2</p>
           </div>
         </div>
         <aside class="notes">เลือกตัวไหน: (คลิก 1) EmbeddingGemma 2 เป็น open weights รันเองได้ทุกที่ ข้อมูลไม่ออกจากเครื่อง 768 มิติ (คลิก 2) Gemini Embedding 2 เป็นบริการบน Gemini API ไม่ต้องดูแล GPU เวกเตอร์ได้ถึง 3072 มิติ รองรับ PDF โดยตรง context 8,192 token (คลิก 3) สรุป: ต้องการความเป็นส่วนตัว ออฟไลน์ หรือบนมือถือ ใช้ EmbeddingGemma 2 / ต้องการบริการที่จัดการให้และเวกเตอร์ใหญ่ ใช้ Gemini Embedding 2 • หมายเหตุ: Google ไม่ได้ทำตารางเทียบนี้ ผมสรุปจากหน้า docs ของแต่ละตัว และสองตัวนี้อยู่คนละ vector space ห้ามผสมเวกเตอร์กันใน index เดียว</aside>
@@ -1759,10 +1811,13 @@ root_agent = Agent(
       <!-- Recap -->
       <section data-title="Recap">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Recap</div>
-            <h2 style="margin-bottom:22px">Multimodal RAG in 10 lines</h2>
-            <pre style="width:1000px; font-size:15px"><code class="language-python" data-trim>
+            <h2 style="margin-bottom:14px">Multimodal RAG in 10 lines</h2>
+            <div class="ed-art" style="width:1088px; height:148px; margin-bottom:14px">
+              <img src="../images/embeddinggemma2-rag-slides/recap-rag-flow.svg" alt="4-step Multimodal RAG summary: Load 512-d model, Embed all media, Retrieve top-k, Generate grounded answer">
+            </div>
+            <pre style="width:1088px; font-size:14.5px"><code class="language-python" data-trim>
 model = SentenceTransformer("google/embeddinggemma-2", truncate_dim=512)
 
 text_emb  = model.encode(texts, prompt_name="Document", **opts)   # text chunks
@@ -1774,7 +1829,7 @@ hits  = util.semantic_search(q_emb, corpus_emb, top_k=5)[0]
 
 answer = llm(question, [corpus[h["corpus_id"]] for h in hits])    # Gemini or Gemma 4
             </code></pre>
-            <p class="sub" style="font-size:20px; margin-top:22px">One model · one space · one index · every modality</p>
+            <p class="sub" style="font-size:19px; margin-top:14px">One model · one space · one index · every modality</p>
           </div>
         </div>
         <aside class="notes">สรุปทั้งหมดในไม่กี่บรรทัด: โหลดโมเดล → embed ข้อความด้วย Document และสื่อโดยไม่มี prompt → รวมเป็น index เดียว → embed คำถามด้วย SearchQuery → ค้น top-k → ส่งให้ LLM ตอบ • llm() ในสไลด์นี้เป็นฟังก์ชันย่อของสไลด์ generate • จำ: โมเดลเดียว space เดียว index เดียว ทุกสื่อ</aside>
@@ -1787,10 +1842,10 @@ answer = llm(question, [corpus[h["corpus_id"]] for h in hits])    # Gemini or Ge
             <div class="eyebrow">Resources</div>
             <h2 style="margin-bottom:28px">Try it yourself</h2>
             <div class="grid g2" style="width:1088px; gap:18px">
-              <div class="pc blue"><h3>Developer guide</h3><a class="mono" style="font-size:15px" href="https://developers.googleblog.com/embeddinggemma-2-the-developer-guide/" target="_blank">developers.googleblog.com · EmbeddingGemma 2</a></div>
-              <div class="pc green"><h3>Multimodal notebook</h3><a class="mono" style="font-size:15px" href="https://ai.google.dev/gemma/docs/embeddinggemma/multimodal-embeddinggemma-with-sentence-transformers" target="_blank">ai.google.dev/gemma/docs/embeddinggemma</a></div>
-              <div class="pc yellow"><h3>Model on Hugging Face</h3><a class="mono" style="font-size:15px" href="https://huggingface.co/google/embeddinggemma-2" target="_blank">huggingface.co/google/embeddinggemma-2</a></div>
-              <div class="pc red"><h3>Gemini Embedding 2</h3><a class="mono" style="font-size:15px" href="https://ai.google.dev/gemini-api/docs/models/gemini-embedding-2" target="_blank">ai.google.dev · gemini-embedding-2</a></div>
+              <div class="pc blue ed-res-row"><span class="ed-lg"><img src="../images/mediapipe-slides/logos/gemma.png" alt="Gemma"></span><div><h3>Developer guide</h3><a class="mono" style="font-size:14.5px" href="https://developers.googleblog.com/embeddinggemma-2-the-developer-guide/" target="_blank">developers.googleblog.com · EmbeddingGemma 2</a></div></div>
+              <div class="pc green ed-res-row"><span class="ed-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span><div><h3>Multimodal notebook</h3><a class="mono" style="font-size:14.5px" href="https://ai.google.dev/gemma/docs/embeddinggemma/multimodal-embeddinggemma-with-sentence-transformers" target="_blank">ai.google.dev/gemma/docs/embeddinggemma</a></div></div>
+              <div class="pc yellow ed-res-row"><span class="ed-lg"><img src="../images/embeddinggemma2-rag-slides/res-huggingface.svg" alt="Hugging Face"></span><div><h3>Model on Hugging Face</h3><a class="mono" style="font-size:14.5px" href="https://huggingface.co/google/embeddinggemma-2" target="_blank">huggingface.co/google/embeddinggemma-2</a></div></div>
+              <div class="pc red ed-res-row"><span class="ed-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><div><h3>Gemini Embedding 2</h3><a class="mono" style="font-size:14.5px" href="https://ai.google.dev/gemini-api/docs/models/gemini-embedding-2" target="_blank">ai.google.dev · gemini-embedding-2</a></div></div>
             </div>
             <div class="cmd" style="margin-top:22px; width:640px">pip install -U "sentence-transformers[image,audio,video]"</div>
           </div>

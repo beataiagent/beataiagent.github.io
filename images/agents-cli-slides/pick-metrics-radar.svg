@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 340 384" width="340" height="384">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#363942" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-bgy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-full" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="35%" stop-color="#5cdb6d"/>
+      <stop offset="70%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#5f6368" opacity="0.28"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #e8eaed; font-weight: 500; }
+      .ms { font-family: "Roboto Mono", ui-monospace, monospace; fill: #9aa0a6; font-weight: 400; }
+    </style>
+  </defs>
+  <rect width="340" height="384" fill="#202124"/>
+  <rect width="340" height="384" fill="url(#dots)"/>
+
+  <circle cx="170" cy="176" r="130" fill="url(#amb-y)"/>
+  <text x="170" y="34" text-anchor="middle" class="m" font-size="12" fill="#ffd427">6-AXIS QUALITY RADAR</text>
+  <!-- Hexagon web rings centered at (170, 180) -->
+  <g transform="translate(170,180)" fill="none" stroke="#5f6368" stroke-width="1.3">
+    <polygon points="0,-96 83,-48 83,48 0,96 -83,48 -83,-48" opacity="0.6"/>
+    <polygon points="0,-64 55,-32 55,32 0,64 -55,32 -55,-32" opacity="0.5"/>
+    <polygon points="0,-32 28,-16 28,16 0,32 -28,16 -28,-16" opacity="0.4"/>
+    <line x1="0" y1="-96" x2="0" y2="96" opacity="0.4"/>
+    <line x1="-83" y1="-48" x2="83" y2="48" opacity="0.4"/>
+    <line x1="-83" y1="48" x2="83" y2="-48" opacity="0.4"/>
+    <!-- Filled score polygon -->
+    <polygon points="0,-84 72,-41 64,37 0,78 -68,39 -75,-43" fill="#ffd427" fill-opacity="0.22" stroke="#ffd427" stroke-width="2.6" filter="url(#glow-s)"/>
+    <circle cx="0" cy="-84" r="5" fill="#57caff"/>
+    <circle cx="72" cy="-41" r="5" fill="#5cdb6d"/>
+    <circle cx="64" cy="37" r="5" fill="#ffd427"/>
+    <circle cx="0" cy="78" r="5" fill="#57caff"/>
+    <circle cx="-68" cy="39" r="5" fill="#ff7daf"/>
+    <circle cx="-75" cy="-43" r="5" fill="#ff7daf"/>
+  </g>
+  <!-- Axis labels -->
+  <text x="170" y="72" text-anchor="middle" class="t" font-size="12.5" fill="#57caff">Task Success</text>
+  <text x="278" y="132" text-anchor="middle" class="t" font-size="12" fill="#5cdb6d">Trajectory</text>
+  <text x="278" y="236" text-anchor="middle" class="t" font-size="12" fill="#ffd427">Tool Use</text>
+  <text x="170" y="298" text-anchor="middle" class="t" font-size="12.5" fill="#57caff">Final Answer</text>
+  <text x="60" y="236" text-anchor="middle" class="t" font-size="12" fill="#ff7daf">Hallucination</text>
+  <text x="64" y="132" text-anchor="middle" class="t" font-size="12" fill="#ff7daf">Safety</text>
+  <!-- Custom metric badge -->
+  <rect x="24" y="318" width="292" height="48" rx="12" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="170" y="339" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">+ Custom Metrics</text>
+  <text x="170" y="356" text-anchor="middle" class="ms" font-size="11">LLMMetric (judge) · CodeExecutionMetric</text>
+
+</svg>

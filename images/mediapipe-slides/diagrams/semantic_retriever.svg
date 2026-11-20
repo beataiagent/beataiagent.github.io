@@ -28,7 +28,7 @@
   <line x1="428" y1="111" x2="450" y2="111" stroke="#1a73e8" stroke-width="2" marker-end="url(#arrowBlue)"/>
   <g filter="url(#cardShadow)">
     <rect x="456" y="52" width="184" height="118" rx="13" fill="#e8f0fe" stroke="#1a73e8" stroke-width="1.5"/>
-    <text x="472" y="82" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" font-weight="600" fill="#174ea6">EmbeddingGemma Engine</text>
+    <text x="472" y="82" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="13.5" font-weight="600" fill="#174ea6">EmbeddingGemma</text>
     <text x="472" y="110" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="11.8" fill="#3c4043">Shared local embedder</text>
     <text x="472" y="129" font-family="'Google Sans', 'Google Sans Text', Roboto, -apple-system, BlinkMacSystemFont, sans-serif" font-size="11.8" fill="#5f6368">+ InMemoryVectorStore</text>
   </g>

@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 145" width="1088" height="145">
+  <defs>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #1e1e1e; font-weight: 700; }
+      .s { font-family: "Google Sans", system-ui, sans-serif; fill: #3c4043; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #1e1e1e; font-weight: 500; }
+      .ink { stroke: #1e1e1e; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect x="2" y="4" width="1084" height="137" rx="22" fill="#f0f0f0" class="ink"/>
+  <!-- Shared input block -->
+  <rect x="20" y="22" width="286" height="100" rx="18" fill="#c3ecf6" class="ink"/>
+  <text x="163" y="54" text-anchor="middle" class="t" font-size="20">Shared Input</text>
+  <text x="163" y="78" text-anchor="middle" class="m" font-size="13">Image + Audio + PDF</text>
+  <rect x="76" y="90" width="174" height="24" rx="12" fill="#ffd427" stroke="#1e1e1e" stroke-width="2"/>
+  <text x="163" y="106" text-anchor="middle" class="m" font-size="12">BILLED ONCE · $0.10/1M</text>
+
+  <!-- Fan out curves -->
+  <path d="M308 72 C360 72 360 32 414 32" fill="none" class="ink"/>
+  <path d="M308 72 H414" fill="none" class="ink"/>
+  <path d="M308 72 C360 72 360 112 414 112" fill="none" class="ink"/>
+
+  <!-- Question pills -->
+  <rect x="416" y="16" width="276" height="32" rx="16" fill="#fff" class="ink"/>
+  <text x="436" y="37" class="m" font-size="13">Q1: has_spill? (+20 tok)</text>
+  <rect x="416" y="56" width="276" height="32" rx="16" fill="#fff" class="ink"/>
+  <text x="436" y="77" class="m" font-size="13">Q2: next_action? (+45 tok)</text>
+  <rect x="416" y="96" width="276" height="32" rx="16" fill="#fff" class="ink"/>
+  <text x="436" y="117" class="m" font-size="13">Q1000: policy_ok? (+25 tok)</text>
+
+  <!-- Arrow to Output $0 -->
+  <path d="M704 72 H758 M750 64 L758 72 L750 80" fill="none" class="ink"/>
+  <rect x="770" y="22" width="296" height="100" rx="18" fill="#ccf6c5" class="ink"/>
+  <text x="918" y="58" text-anchor="middle" class="t" font-size="24">$0 Output Tokens</text>
+  <text x="918" y="84" text-anchor="middle" class="s" font-size="15">No thinking-token surprise bills</text>
+  <text x="918" y="106" text-anchor="middle" class="m" font-size="13" fill="#1e1e1e">~5× cheaper than Flash-Lite</text>
+</svg>

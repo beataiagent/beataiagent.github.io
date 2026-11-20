@@ -3,32 +3,44 @@
   const LOGO = new URL("../../images/shared/logos/", document.currentScript.src).href;
 
   const NAV = [
-    { title: "Start here", icon: "googlecloud.svg", items: [
-      ["index", "Home"], ["roadmap", "Learning Roadmap"], ["overview", "Certification Blueprint"], ["exam", "Mock Exam · 118 questions"]] },
-    { title: "Sec 1: Agent Solutions", icon: "workflows.svg", items: [
-      ["sec1-exam-guide", "1.0 Domain 1 Roadmap"], ["sec1-architecture", "1.1 Automation vs. Single vs. Multi-Agent"],
-      ["sec1-platform-selection", "1.2 Agent Designer vs. Code-First ADK"], ["sec1-ces-omnichannel", "1.3 CES: Flows, Playbooks & Omnichannel"],
-      ["sec1-takeaway", "1.4 Section 1 Master Takeaway"], ["sec1-qa", "1.5 Section 1 Q&A"], ["mcq-sec1", "Section 1 Practice Questions"]] },
-    { title: "Sec 2: AI-Assisted Dev", icon: "gemini-cli.png", items: [
-      ["sec2-exam-guide", "2.0 Domain 2 Roadmap"], ["sec2-context-skills", "2.1 Context, Custom Skills & Secrets"],
-      ["sec2-mcp-subagents", "2.2 MCP Tooling & Subagent Refactoring"], ["sec2-cicd-sandboxing", "2.3 CI/CD Automation & Sandboxing"],
-      ["sec2-takeaway", "2.4 Section 2 Master Takeaway"], ["sec2-qa", "2.5 Section 2 Q&A"], ["mcq-sec2", "Section 2 Practice Questions"]] },
-    { title: "Sec 3: Custom Agents", icon: "adk.png", items: [
-      ["sec3-exam-guide", "3.0 Domain 3 Roadmap"], ["sec3-single-agent", "3.1 Single-Agent Design & ADK Params"],
-      ["sec3-workflows", "3.2 Multi-Agent Workflow Patterns"], ["sec3-mcp-tools", "3.3 MCP Toolbox & Custom Tools"],
-      ["sec3-rag-grounding", "3.4 RAG Engine, Agent Search & Caching"], ["sec3-state-memory", "3.5 State, Sessions & Memory Bank"],
-      ["sec3-a2a-protocol", "3.6 A2A Protocol & Agent Cards"], ["sec3-takeaway", "3.7 Section 3 Master Takeaway"],
-      ["sec3-qa", "3.8 Section 3 Q&A"], ["mcq-sec3", "Section 3 Practice Questions"]] },
-    { title: "Sec 4: Eval & Deploy", icon: "gcp-run.png", items: [
-      ["sec4-exam-guide", "4.0 Domain 4 Roadmap"], ["sec4-evaluation", "4.1 Trajectory Eval & Rubric Syntax"],
-      ["sec4-runtimes", "4.2 Runtimes: Agent Runtime, Cloud Run & GKE"], ["sec4-cicd", "4.3 Agent Starter Pack & CI/CD Gates"],
-      ["sec4-observability", "4.4 Tracing, Monitoring & Optimization"], ["sec4-takeaway", "4.5 Section 4 Master Takeaway"],
-      ["sec4-qa", "4.6 Section 4 Q&A"], ["mcq-sec4", "Section 4 Practice Questions"]] },
-    { title: "Sec 5: Security & Governance", icon: "gcp-iam.png", items: [
-      ["sec5-exam-guide", "5.0 Domain 5 Roadmap"], ["sec5-perimeter", "5.1 Follow the Prompt: Perimeter"],
-      ["sec5-identity", "5.2 Agent Identity & OAuth 2.0"], ["sec5-callbacks", "5.3 ADK Callbacks & HITL"],
-      ["sec5-registry", "5.4 Agent Registry & Governance"], ["sec5-takeaway", "5.5 Section 5 Master Takeaway"],
-      ["sec5-qa", "5.6 Section 5 Q&A"], ["mcq-sec5", "Section 5 Practice Questions"]] }
+    {
+      title: "Start here", icon: "googlecloud.svg", items: [
+        ["index", "Home"], ["roadmap", "Learning Roadmap"], ["overview", "Certification Blueprint"], ["exam", "Mock Exam · 118 questions"]]
+    },
+    {
+      title: "Sec 1: Agent Solutions", icon: "workflows.svg", items: [
+        ["sec1-exam-guide", "1.0 Domain 1 Roadmap"], ["sec1-architecture", "1.1 Automation vs. Single vs. Multi-Agent"],
+        ["sec1-platform-selection", "1.2 Agent Designer vs. Code-First ADK"], ["sec1-ces-omnichannel", "1.3 CES: Flows, Playbooks & Omnichannel"],
+        ["sec1-takeaway", "1.4 Section 1 Master Takeaway"], ["sec1-qa", "1.5 Section 1 Q&A"], ["mcq-sec1", "Section 1 Practice Questions"]]
+    },
+    {
+      title: "Sec 2: AI-Assisted Dev", icon: "gemini-cli.png", items: [
+        ["sec2-exam-guide", "2.0 Domain 2 Roadmap"], ["sec2-context-skills", "2.1 Context, Custom Skills & Secrets"],
+        ["sec2-mcp-subagents", "2.2 MCP Tooling & Subagent Refactoring"], ["sec2-cicd-sandboxing", "2.3 CI/CD Automation & Sandboxing"],
+        ["sec2-takeaway", "2.4 Section 2 Master Takeaway"], ["sec2-qa", "2.5 Section 2 Q&A"], ["mcq-sec2", "Section 2 Practice Questions"]]
+    },
+    {
+      title: "Sec 3: Custom Agents", icon: "adk.png", items: [
+        ["sec3-exam-guide", "3.0 Domain 3 Roadmap"], ["sec3-single-agent", "3.1 Single-Agent Design & ADK Params"],
+        ["sec3-workflows", "3.2 Multi-Agent Workflow Patterns"], ["sec3-mcp-tools", "3.3 MCP Toolbox & Custom Tools"],
+        ["sec3-rag-grounding", "3.4 RAG Engine, Agent Search & Caching"], ["sec3-state-memory", "3.5 State, Sessions & Memory Bank"],
+        ["sec3-a2a-protocol", "3.6 A2A Protocol & Agent Cards"], ["sec3-takeaway", "3.7 Section 3 Master Takeaway"],
+        ["sec3-qa", "3.8 Section 3 Q&A"], ["mcq-sec3", "Section 3 Practice Questions"]]
+    },
+    {
+      title: "Sec 4: Eval & Deploy", icon: "gcp-run.png", items: [
+        ["sec4-exam-guide", "4.0 Domain 4 Roadmap"], ["sec4-evaluation", "4.1 Trajectory Eval & Rubric Syntax"],
+        ["sec4-runtimes", "4.2 Runtimes: Agent Runtime, Cloud Run & GKE"], ["sec4-cicd", "4.3 Agent Starter Pack & CI/CD Gates"],
+        ["sec4-observability", "4.4 Tracing, Monitoring & Optimization"], ["sec4-takeaway", "4.5 Section 4 Master Takeaway"],
+        ["sec4-qa", "4.6 Section 4 Q&A"], ["mcq-sec4", "Section 4 Practice Questions"]]
+    },
+    {
+      title: "Sec 5: Security & Governance", icon: "gcp-iam.png", items: [
+        ["sec5-exam-guide", "5.0 Domain 5 Roadmap"], ["sec5-perimeter", "5.1 Follow the Prompt: Perimeter"],
+        ["sec5-identity", "5.2 Agent Identity & OAuth 2.0"], ["sec5-callbacks", "5.3 ADK Callbacks & HITL"],
+        ["sec5-registry", "5.4 Agent Registry & Governance"], ["sec5-takeaway", "5.5 Section 5 Master Takeaway"],
+        ["sec5-qa", "5.6 Section 5 Q&A"], ["mcq-sec5", "Section 5 Practice Questions"]]
+    }
   ];
 
   /* Services: name pattern → logo + official documentation.
@@ -140,41 +152,40 @@
   };
 
   /* theme */
-  try { const t = localStorage.getItem("doc-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) {}
+  try { const t = localStorage.getItem("doc-theme"); if (t) document.documentElement.dataset.theme = t; } catch (e) { }
   document.getElementById("theme-btn")?.addEventListener("click", () => {
     const r = document.documentElement, next = r.dataset.theme === "light" ? "dark" : "light";
     r.dataset.theme = next;
-    try { localStorage.setItem("doc-theme", next); } catch (e) {}
+    try { localStorage.setItem("doc-theme", next); } catch (e) { }
   });
 
   /* sidebar — each domain's modules live as sections of one page: secN.html#<old-slug> */
+  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const cleanText = el => {
+    const clone = el.cloneNode(true);
+    clone.querySelectorAll(".auto-logos").forEach(n => n.remove());
+    return clone.textContent.trim();
+  };
   const slug = document.body.dataset.slug;
   const pageOf = k => { const m = /^(?:mcq-)?sec(\d)/.exec(k); return m ? "sec" + m[1] : k; };
   const hrefOf = k => pageOf(k) === k ? k + ".html" : pageOf(k) + ".html#" + k;
+  const navLabels = {};
+  NAV.forEach(g => g.items.forEach(([k, label]) => { navLabels[k] = label; }));
+
   const side = document.getElementById("sidebar");
+  const sideLinks = {};
   if (side) {
     side.innerHTML = NAV.map(g => {
       const open = g.items.some(i => pageOf(i[0]) === slug) || g.title === "Start here";
       return '<details' + (open ? " open" : "") + '><summary><img src="' + LOGO + g.icon + '" alt="">' + g.title + '</summary>' +
-        g.items.map(i => '<a href="' + hrefOf(i[0]) + '" data-key="' + i[0] + '"' + (i[0] === slug ? ' class="cur" aria-current="page"' : "") + '>' + i[1].replace(/&/g, "&amp;") + '</a>').join("") +
+        g.items.map(i => '<a href="' + hrefOf(i[0]) + '" data-key="' + i[0] + '"' + (i[0] === slug ? ' class="cur" aria-current="page"' : "") + '>' + esc(i[1]) + '</a>').join("") +
         '</details>';
     }).join("");
+    side.querySelectorAll("a[data-key]").forEach(a => {
+      if (pageOf(a.dataset.key) === slug) sideLinks[a.dataset.key] = a;
+    });
     const cur = side.querySelector(".cur");
     if (cur) side.scrollTop = cur.offsetTop - side.clientHeight / 2;
-    /* merged domain pages: highlight the section in view */
-    const parts = [...document.querySelectorAll("section.part")];
-    if (parts.length) {
-      const links = {};
-      side.querySelectorAll("a[data-key]").forEach(a => { if (pageOf(a.dataset.key) === slug) links[a.dataset.key] = a; });
-      const mark = () => {
-        let id = parts[0].id.replace(/-part$/, "");
-        for (const p of parts) if (p.getBoundingClientRect().top < 140) id = p.id.replace(/-part$/, "");
-        Object.entries(links).forEach(([k, a]) => { const on = k === id; a.classList.toggle("cur", on); if (on) a.setAttribute("aria-current", "location"); else a.removeAttribute("aria-current"); });
-      };
-      let raf = 0;
-      addEventListener("scroll", () => { if (!raf) raf = requestAnimationFrame(() => { raf = 0; mark(); }); }, { passive: true });
-      mark();
-    }
   }
   document.getElementById("menu-btn")?.addEventListener("click", () => document.body.classList.toggle("nav-open"));
   side?.addEventListener("click", e => { if (e.target.closest("a")) document.body.classList.remove("nav-open"); });
@@ -182,11 +193,14 @@
   /* on this page */
   const main = document.querySelector("main");
   const toc = document.getElementById("toc");
-  const h2s = main ? [...main.querySelectorAll("h2[id]")] : [];
-  if (toc && h2s.length) {
-    toc.innerHTML = "<h4>On this page</h4>" + '<a href="#_top">Overview</a>' +
-      h2s.map(h => '<a href="#' + h.id + '">' + h.textContent.trim() + "</a>").join("");
-  } else if (toc) toc.remove();
+  const parts = main ? [...main.querySelectorAll("section.part")] : [];
+  if (!parts.length) {
+    const h2s = main ? [...main.querySelectorAll("h2[id]")] : [];
+    if (toc && h2s.length) {
+      toc.innerHTML = "<h4>On this page</h4>" + '<a href="#_top">Overview</a>' +
+        h2s.map(h => '<a href="#' + h.id + '">' + esc(h.textContent.trim()) + "</a>").join("");
+    } else if (toc) toc.remove();
+  }
 
   if (!main || slug === "index" || slug === "roadmap" || slug === "exam") return;
   const hand = document.body.classList.contains("hand");
@@ -206,56 +220,248 @@
   }
 
   /* 2. "Services in this module" strip under the title — each chip opens the official docs */
-  const text = [...main.querySelectorAll(".sl-markdown-content")].map(n => n.textContent).join(" ") || main.textContent;
-  const list = PRODUCTS.map(p => [p, (text.match(new RegExp(p.re.source, "g")) || []).length])
-    .filter(x => x[1] >= 2).sort((a, b) => b[1] - a[1]).map(x => x[0]);
   const h1 = main.querySelector("h1");
-  if (list.length && h1) {
-    const box = document.createElement("div");
-    box.className = "products";
-    box.innerHTML = '<div class="products-label">Services in this module · click for official docs</div><div class="lg-row">' +
-      list.slice(0, 14).map(chip).join("") + "</div>";
-    (h1.closest(".content-panel") || h1).after(box);
-  }
+  const productChipsFor = container => {
+    const md = [...container.querySelectorAll(".sl-markdown-content")];
+    const text = (md.length ? md.map(n => n.textContent).join(" ") : container.textContent) || "";
+    const counts = PRODUCTS.map(p => [p, (text.match(new RegExp(p.re.source, "g")) || []).length]);
+    let list = counts.filter(x => x[1] >= 2).sort((a, b) => b[1] - a[1]).map(x => x[0]);
+    if (!list.length) list = counts.filter(x => x[1] >= 1).sort((a, b) => b[1] - a[1]).map(x => x[0]);
+    return list.slice(0, 14);
+  };
+  let productsBox = null;
+  const renderProducts = container => {
+    if (!h1) return;
+    const list = productChipsFor(container);
+    if (!productsBox) {
+      productsBox = document.createElement("div");
+      productsBox.className = "products";
+      const anchor = main.querySelector(".part-tabs") || h1.closest(".content-panel") || h1;
+      anchor.after(productsBox);
+    }
+    if (!list.length) { productsBox.hidden = true; return; }
+    productsBox.hidden = false;
+    productsBox.innerHTML = '<div class="products-label">Services in this module · click for official docs</div><div class="lg-row">' +
+      list.map(chip).join("") + "</div>";
+  };
+  if (!parts.length) renderProducts(main);
 
   /* 3. link the first mention of each service in the body text to its official docs */
   const SKIP = "a, code, pre, button, h1, h2, h3, h4, script, style, svg, label, th, .products, .auto-logos, .chip, .def-path, .ar-node, .ar-flow, .starlight-aside__title, [role=button]";
-  const linked = new Set();
-  const roots = main.querySelectorAll(".sl-markdown-content").length ? main.querySelectorAll(".sl-markdown-content") : [main];
-  roots.forEach(root => {
-    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
-      acceptNode: n => (!n.nodeValue.trim() || n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
-    });
-    const nodes = [];
-    while (walker.nextNode()) nodes.push(walker.currentNode);
-    nodes.forEach(node => {
-      let cur = node;
-      while (cur) {
-        let best = null;
-        for (const p of PRODUCTS) {
-          if (linked.has(p.name)) continue;
-          const m = p.re.exec(cur.nodeValue);
-          if (m && (!best || m.index < best.m.index || (m.index === best.m.index && m[0].length > best.m[0].length))) best = { p, m };
+  const linkFirstMentions = scope => {
+    const linked = new Set();
+    const roots = scope.querySelectorAll(".sl-markdown-content").length ? scope.querySelectorAll(".sl-markdown-content") : [scope];
+    roots.forEach(root => {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+        acceptNode: n => (!n.nodeValue.trim() || n.parentElement.closest(SKIP)) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT
+      });
+      const nodes = [];
+      while (walker.nextNode()) nodes.push(walker.currentNode);
+      nodes.forEach(node => {
+        let cur = node;
+        while (cur) {
+          let best = null;
+          for (const p of PRODUCTS) {
+            if (linked.has(p.name)) continue;
+            const m = p.re.exec(cur.nodeValue);
+            if (m && (!best || m.index < best.m.index || (m.index === best.m.index && m[0].length > best.m[0].length))) best = { p, m };
+          }
+          if (!best) break;
+          linked.add(best.p.name);
+          const start = cur.splitText(best.m.index);
+          const rest = start.splitText(best.m[0].length);
+          const a = document.createElement("a");
+          a.className = "svc-link";
+          a.href = best.p.url; a.target = "_blank"; a.rel = "noopener noreferrer";
+          a.title = best.p.name + " — official docs";
+          start.replaceWith(a);
+          a.appendChild(start);
+          cur = rest;
         }
-        if (!best) break;
-        linked.add(best.p.name);
-        const start = cur.splitText(best.m.index);
-        const rest = start.splitText(best.m[0].length);
-        const a = document.createElement("a");
-        a.className = "svc-link";
-        a.href = best.p.url; a.target = "_blank"; a.rel = "noopener noreferrer";
-        a.title = best.p.name + " — official docs";
-        start.replaceWith(a);
-        a.appendChild(start);
-        cur = rest;
+      });
+    });
+  };
+  if (parts.length) parts.forEach(linkFirstMentions);
+  else linkFirstMentions(main);
+
+  /* 3b. paged domain sections: show one <section class="part"> at a time */
+  if (parts.length) {
+    document.body.classList.add("paged-parts");
+    const partKey = p => p.id.replace(/-part$/, "");
+    const partLabel = p => {
+      const k = partKey(p);
+      if (navLabels[k]) return navLabels[k];
+      const h2 = p.querySelector("h2");
+      return h2 ? cleanText(h2) : k;
+    };
+    const partByKey = new Map();
+    parts.forEach(p => {
+      const k = partKey(p);
+      partByKey.set(k, p);
+      partByKey.set(p.id, p);
+    });
+
+    /* subtopic switcher bar under h1 */
+    const tabLinks = {};
+    if (h1) {
+      const tabs = document.createElement("nav");
+      tabs.className = "part-tabs";
+      tabs.setAttribute("aria-label", "Subtopics in this section");
+      tabs.innerHTML = parts.map(p => {
+        const k = partKey(p);
+        return '<a href="#' + k + '" data-part="' + k + '">' + esc(partLabel(p)) + "</a>";
+      }).join("");
+      (h1.closest(".content-panel") || h1).after(tabs);
+      tabs.querySelectorAll("a[data-part]").forEach(a => { tabLinks[a.dataset.part] = a; });
+    }
+
+    /* capture original domain-level prev/next links before updating per subtopic */
+    const pager = main.querySelector(".pagination-links");
+    const snapLink = a => a ? { href: a.getAttribute("href"), title: a.querySelector(".link-title")?.textContent.trim() || a.textContent.trim() } : null;
+    const origPrev = snapLink(pager?.querySelector('a[rel="prev"]'));
+    const origNext = snapLink(pager?.querySelector('a[rel="next"]'));
+    const pagerHtml = (rel, dir, item) => item ? '<a href="' + item.href + '" rel="' + rel + '"><span>' + dir + '<br><span class="link-title">' + esc(item.title) + "</span></span></a>" : "";
+    const updatePager = idx => {
+      if (!pager) return;
+      const prev = idx > 0 ? { href: "#" + partKey(parts[idx - 1]), title: partLabel(parts[idx - 1]) } : origPrev;
+      const next = idx < parts.length - 1 ? { href: "#" + partKey(parts[idx + 1]), title: partLabel(parts[idx + 1]) } : origNext;
+      pager.innerHTML = pagerHtml("prev", "Previous", prev) + pagerHtml("next", "Next", next);
+    };
+
+    /* active part's right-side TOC (h3 headings) + lightweight scroll-spy */
+    let activeHeadings = [];
+    let tocLinks = {};
+    const markToc = () => {
+      if (!activeHeadings.length) return;
+      let curId = "_top";
+      for (const h of activeHeadings) if (h.getBoundingClientRect().top < 140) curId = h.id;
+      Object.entries(tocLinks).forEach(([id, a]) => a.classList.toggle("cur", id === curId));
+    };
+    const updateToc = part => {
+      if (!toc) return;
+      activeHeadings = [...part.querySelectorAll("h3[id]")];
+      tocLinks = {};
+      if (activeHeadings.length) {
+        toc.style.visibility = "";
+        toc.innerHTML = "<h4>On this page</h4>" + '<a href="#_top" data-toc="_top">Top</a>' +
+          activeHeadings.map(h => '<a href="#' + h.id + '" data-toc="' + h.id + '">' + esc(cleanText(h)) + "</a>").join("");
+        toc.querySelectorAll("a[data-toc]").forEach(a => { tocLinks[a.dataset.toc] = a; });
+        markToc();
+      } else {
+        toc.innerHTML = "";
+        toc.style.visibility = "hidden";
+      }
+    };
+    let tocRaf = 0;
+    addEventListener("scroll", () => { if (!tocRaf) tocRaf = requestAnimationFrame(() => { tocRaf = 0; markToc(); }); }, { passive: true });
+
+    const setHash = h => {
+      if (location.hash === h) return;
+      try { history.pushState(null, "", h); }
+      catch (e) { location.hash = h; }
+    };
+
+    let activePart = null;
+    const activatePart = (part, opts = {}) => {
+      if (!part) return;
+      const key = partKey(part);
+      const changed = part !== activePart;
+      activePart = part;
+      parts.forEach(p => p.classList.toggle("is-active", p === part));
+      Object.entries(sideLinks).forEach(([k, a]) => {
+        const on = k === key;
+        a.classList.toggle("cur", on);
+        if (on) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
+      Object.entries(tabLinks).forEach(([k, a]) => {
+        const on = k === key;
+        a.classList.toggle("cur", on);
+        if (on) a.setAttribute("aria-current", "page");
+        else a.removeAttribute("aria-current");
+      });
+      if (changed) {
+        updateToc(part);
+        renderProducts(part);
+        updatePager(parts.indexOf(part));
+      }
+      if (opts.updateHash) setHash("#" + key);
+      if (opts.scrollTarget) {
+        opts.scrollTarget.scrollIntoView({ behavior: opts.instant ? "instant" : "smooth", block: "start" });
+      } else if (opts.scrollTop) {
+        window.scrollTo({ top: 0, behavior: "instant" });
+      }
+      markToc();
+    };
+
+    const syncFromHash = initial => {
+      let raw = "";
+      try { raw = decodeURIComponent((location.hash || "").replace(/^#/, "")); } catch (e) { }
+      if (!raw) {
+        activatePart(parts[0], { scrollTop: !initial });
+        return;
+      }
+      if (raw === "_top") {
+        if (!activePart) activatePart(parts[0]);
+        window.scrollTo({ top: 0, behavior: initial ? "instant" : "smooth" });
+        return;
+      }
+      if (partByKey.has(raw)) {
+        activatePart(partByKey.get(raw), { scrollTop: true });
+        if (initial) requestAnimationFrame(() => window.scrollTo({ top: 0, behavior: "instant" }));
+        return;
+      }
+      const target = document.getElementById(raw);
+      const owner = target?.closest("section.part");
+      if (owner) {
+        activatePart(owner, { scrollTarget: target, instant: initial });
+      } else if (!activePart) {
+        activatePart(parts[0]);
+      }
+    };
+
+    document.addEventListener("click", e => {
+      if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target.closest("a[href]");
+      if (!a || a.target === "_blank") return;
+      let url;
+      try { url = new URL(a.href, location.href); } catch (err) { return; }
+      if (url.protocol !== location.protocol || url.host !== location.host || url.pathname !== location.pathname || url.search !== location.search) return;
+      if (!url.hash) return;
+      let id = "";
+      try { id = decodeURIComponent(url.hash.slice(1)); } catch (err) { return; }
+      if (id === "_top") {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+        return;
+      }
+      if (partByKey.has(id)) {
+        e.preventDefault();
+        activatePart(partByKey.get(id), { scrollTop: true, updateHash: true });
+        document.body.classList.remove("nav-open");
+        return;
+      }
+      const target = document.getElementById(id);
+      const owner = target?.closest("section.part");
+      if (owner) {
+        e.preventDefault();
+        const switched = owner !== activePart;
+        activatePart(owner, { scrollTarget: target, instant: switched });
+        setHash("#" + id);
+        document.body.classList.remove("nav-open");
       }
     });
-  });
+
+    addEventListener("hashchange", () => syncFromHash(false));
+    addEventListener("popstate", () => syncFromHash(false));
+    syncFromHash(true);
+    const activeSide = side?.querySelector("a.cur");
+    if (activeSide) side.scrollTop = activeSide.offsetTop - side.clientHeight / 2;
+  }
 
   /* 4. turn the text "architecture strips" ([A] --> [B] | [C] ...) into box-and-arrow diagrams */
   const ARROW = /◄──\(([^)]*)\)──►|──\(([^)]*)\)──►|--\(([^)]*)\)-->|◄──►|──►|──>|-->/y;
   const OPS = [" + ", " vs. ", " = ", " AND "];
-  const esc = s => s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
   // split at depth 0 of [] and (), using a tester that returns [length, payload] or null
   const splitTop = (s, test) => {

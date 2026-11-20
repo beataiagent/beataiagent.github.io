@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 154" width="600" height="154">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#ffffff" opacity="0.06"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; font-weight: 400; }
+      .mb { font-family: "Roboto Mono", ui-monospace, monospace; fill: #ffffff; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="600" height="154" fill="#202124"/>
+  <rect width="600" height="154" fill="url(#dots)"/>
+
+  <circle cx="150" cy="77" r="105" fill="url(#amb-g)"/>
+  <circle cx="450" cy="77" r="105" fill="url(#amb-y)"/>
+
+  <!-- GCS Bucket -->
+  <rect x="16" y="18" width="240" height="118" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="34" y="44" class="mb" font-size="12" fill="#5cdb6d">GCS BUCKET · SAME REGION</text>
+  <rect x="34" y="56" width="204" height="28" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+  <text x="136" y="75" text-anchor="middle" class="m" font-size="11.5" fill="#ffffff">gs://$BUCKET_NAME</text>
+  <text x="34" y="106" class="m" font-size="11" fill="#bdc1c6">mount → <tspan fill="#57caff">/opt/data</tspan></text>
+  <text x="34" y="124" class="m" font-size="10.5" fill="#ffd427">roles/storage.objectAdmin</text>
+
+  <!-- Arrow -->
+  <path d="M262 77 H306" stroke="#ffd427" stroke-width="2.8"/>
+  <polygon points="302,71 314,77 302,83" fill="#ffd427"/>
+
+  <!-- Config wiring -->
+  <rect x="318" y="18" width="266" height="118" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="336" y="44" class="mb" font-size="12" fill="#ffd427">CONFIG.YAML SETTINGS</text>
+  <rect x="336" y="54" width="230" height="22" rx="6" fill="#17181b" stroke="#57caff" stroke-width="1.2"/>
+  <text x="346" y="69" class="m" font-size="10.5" fill="#57caff">provider: vertex (no API key)</text>
+  <rect x="336" y="82" width="230" height="22" rx="6" fill="#17181b" stroke="#5cdb6d" stroke-width="1.2"/>
+  <text x="346" y="97" class="m" font-size="10.5" fill="#5cdb6d">dashboard: enabled = true</text>
+  <rect x="336" y="110" width="230" height="22" rx="6" fill="#17181b" stroke="#ff7daf" stroke-width="1.2"/>
+  <text x="346" y="125" class="m" font-size="10.5" fill="#ff7daf">journal_mode: delete (no WAL)</text>
+
+</svg>

@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 152" width="1088" height="152">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#363942" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-bgy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-full" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="35%" stop-color="#5cdb6d"/>
+      <stop offset="70%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#5f6368" opacity="0.28"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #e8eaed; font-weight: 500; }
+      .ms { font-family: "Roboto Mono", ui-monospace, monospace; fill: #9aa0a6; font-weight: 400; }
+    </style>
+  </defs>
+  <rect width="1088" height="152" fill="#202124"/>
+  <rect width="1088" height="152" fill="url(#dots)"/>
+
+  <circle cx="155" cy="76" r="120" fill="url(#amb-y)"/>
+  <circle cx="544" cy="76" r="140" fill="url(#amb-r)"/>
+  <circle cx="930" cy="76" r="130" fill="url(#amb-g)"/>
+  <!-- Left card: Laptop Demo -->
+  <rect x="24" y="20" width="262" height="112" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <rect x="44" y="38" width="66" height="48" rx="7" fill="#17181b" stroke="#ffd427" stroke-width="2"/>
+  <path d="M56 56 l8 6 -8 6 M68 68 h16" fill="none" stroke="#ffd427" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M36 90 h82 l-6 8 h-70 z" fill="#3c4043" stroke="#ffd427" stroke-width="1.5"/>
+  <text x="128" y="56" class="t" font-size="18" fill="#ffd427">Laptop Demo</text>
+  <text x="128" y="79" class="sub" font-size="13.5">1 prompt · 1 happy path</text>
+  <rect x="128" y="92" width="134" height="24" rx="12" fill="#202124" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="195" y="108" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">"Works for me!"</text>
+  <!-- Middle: Production Gap Bridge -->
+  <rect x="328" y="20" width="432" height="112" rx="16" fill="#17181b" stroke="#ff7daf" stroke-width="1.8" stroke-dasharray="6 5"/>
+  <text x="544" y="46" text-anchor="middle" class="m" font-size="12.5" fill="#ff7daf">THE PRODUCTION GAP · WHAT YOU STILL NEED</text>
+  <!-- 4 pillars across the gap -->
+  <rect x="346" y="60" width="94" height="54" rx="10" fill="url(#glass)" stroke="#ffd427" stroke-width="1.6"/>
+  <text x="393" y="84" text-anchor="middle" class="t" font-size="13.5">Evals</text>
+  <text x="393" y="102" text-anchor="middle" class="ms" font-size="10.5">regressions</text>
+  <rect x="448" y="60" width="94" height="54" rx="10" fill="url(#glass)" stroke="#57caff" stroke-width="1.6"/>
+  <text x="495" y="84" text-anchor="middle" class="t" font-size="13.5">CI/CD</text>
+  <text x="495" y="102" text-anchor="middle" class="ms" font-size="10.5">Terraform</text>
+  <rect x="550" y="60" width="94" height="54" rx="10" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="597" y="84" text-anchor="middle" class="t" font-size="13.5">Sessions</text>
+  <text x="597" y="102" text-anchor="middle" class="ms" font-size="10.5">&amp; memory</text>
+  <rect x="652" y="60" width="94" height="54" rx="10" fill="url(#glass)" stroke="#ff7daf" stroke-width="1.6"/>
+  <text x="699" y="84" text-anchor="middle" class="t" font-size="13.5">Traces</text>
+  <text x="699" y="102" text-anchor="middle" class="ms" font-size="10.5">&amp; logs</text>
+  <!-- Connecting arrows -->
+  <path d="M290 76 H322" stroke="#ffd427" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="317,70 327,76 317,82" fill="#ffd427"/>
+  <path d="M764 76 H796" stroke="#5cdb6d" stroke-width="3" stroke-linecap="round"/>
+  <polygon points="791,70 801,76 791,82" fill="#5cdb6d"/>
+  <!-- Right card: Production Cloud -->
+  <rect x="802" y="20" width="262" height="112" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+  <path d="M824 94 H886 A17 17 0 0 0 884 60 A23 23 0 0 0 840 54 A18 18 0 0 0 824 94 Z" fill="#17181b" stroke="#5cdb6d" stroke-width="2.2"/>
+  <path d="M848 77 l6 6 13 -14" fill="none" stroke="#5cdb6d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="908" y="56" class="t" font-size="18" fill="#5cdb6d">Production</text>
+  <text x="908" y="79" class="sub" font-size="12">Tested · safe · observable</text>
+  <rect x="908" y="92" width="136" height="24" rx="12" fill="#202124" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="976" y="108" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">Release-ready</text>
+
+</svg>

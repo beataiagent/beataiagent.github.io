@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 400" width="600" height="400">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #fff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+<rect width="600" height="400" fill="#202124"/>
+  <circle cx="240" cy="210" r="180" fill="url(#amb-b)"/>
+  <circle cx="475" cy="115" r="105" fill="url(#amb-r)"/>
+  <!-- RAM board base -->
+  <g transform="translate(55, 252)">
+    <rect x="0" y="0" width="370" height="92" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.5"/>
+    <!-- RAM pins -->
+    <rect x="28" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="54" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="80" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="106" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="132" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="158" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="184" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="210" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="236" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="262" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="288" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/><rect x="314" y="92" width="12" height="14" rx="2" fill="#ffd427" opacity="0.85"/>
+    <!-- RAM chips -->
+    <rect x="24" y="18" width="66" height="42" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.5" opacity="0.9"/><rect x="108" y="18" width="66" height="42" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.5" opacity="0.9"/><rect x="192" y="18" width="66" height="42" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.5" opacity="0.9"/><rect x="276" y="18" width="66" height="42" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.5" opacity="0.9"/>
+    <text x="185" y="79" text-anchor="middle" class="m" font-size="13" fill="#57caff">IN-MEMORY RAM · FAST &amp; VOLATILE</text>
+  </g>
+  <!-- Thread line connecting bubbles -->
+  <path d="M165 62 V246" stroke="#57caff" stroke-width="3" stroke-dasharray="6 6" opacity="0.8"/>
+  <!-- 4 linked chat bubbles -->
+  <g filter="url(#glow-s)">
+    <rect x="92" y="34" width="230" height="38" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+    <circle cx="114" cy="53" r="6" fill="#57caff"/>
+    <text x="130" y="58" class="sub" font-size="13.5" fill="#fff">Hotel near river in Bangkok?</text>
+
+    <rect x="132" y="84" width="236" height="38" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+    <circle cx="154" cy="103" r="6" fill="#5cdb6d"/>
+    <text x="170" y="108" class="sub" font-size="13.5" fill="#fff">Riverside Grand · Chao Phraya</text>
+
+    <rect x="92" y="134" width="210" height="38" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+    <circle cx="114" cy="153" r="6" fill="#57caff"/>
+    <text x="130" y="158" class="sub" font-size="13.5" fill="#fff">Check the price, please.</text>
+
+    <rect x="132" y="184" width="236" height="38" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+    <circle cx="154" cy="203" r="6" fill="#5cdb6d"/>
+    <text x="170" y="208" class="sub" font-size="13.5" fill="#fff">3,200 THB · breakfast incl.</text>
+  </g>
+  <!-- Restart warning card -->
+  <g transform="translate(415, 58)">
+    <rect x="0" y="0" width="148" height="148" rx="22" fill="url(#glass)" stroke="#ff7daf" stroke-width="2" stroke-dasharray="7 5"/>
+    <circle cx="74" cy="56" r="28" fill="rgba(255,125,175,0.14)" stroke="#ff7daf" stroke-width="2.5"/>
+    <path d="M74 38 V54 M62 45 A17 17 0 1 0 86 45" fill="none" stroke="#ff7daf" stroke-width="3.2" stroke-linecap="round"/>
+    <text x="74" y="106" text-anchor="middle" class="t" font-size="15" fill="#ff7daf">App Restart</text>
+    <text x="74" y="126" text-anchor="middle" class="m" font-size="12" fill="#bdc1c6">RAM cleared!</text>
+  </g>
+  <path d="M412 134 C394 134 394 275 422 275" fill="none" stroke="#ff7daf" stroke-width="2" stroke-dasharray="5 5" opacity="0.7"/>
+</svg>

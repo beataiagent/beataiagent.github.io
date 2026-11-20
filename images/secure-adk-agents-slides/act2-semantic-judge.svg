@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 624 142" width="624" height="142">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#353840" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="33%" stop-color="#5cdb6d"/>
+      <stop offset="66%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#57caff"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="624" height="142" fill="#202124"/>
+
+  <circle cx="312" cy="71" r="105" fill="url(#amb-g)"/>
+  <circle cx="535" cy="71" r="85" fill="url(#amb-r)"/>
+
+  <!-- Inputs on left -->
+  <rect x="12" y="16" width="174" height="46" rx="11" fill="url(#glass)" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="24" y="36" class="m" font-size="10" fill="#ffd427">PROPOSED TOOL CALL</text>
+  <text x="24" y="53" class="m" font-size="11.5" fill="#fff">issue_refund($120)</text>
+
+  <rect x="12" y="78" width="174" height="46" rx="11" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="24" y="98" class="m" font-size="10" fill="#5cdb6d">NATURAL-LANGUAGE RULE</text>
+  <text x="24" y="115" class="m" font-size="11.5" fill="#fff">software &gt; $30 → DENY</text>
+
+  <!-- Converging arrows -->
+  <path d="M186 39 C214 39 214 66 242 66" fill="none" stroke="#ffd427" stroke-width="2.4"/>
+  <path d="M186 101 C214 101 214 76 242 76" fill="none" stroke="#5cdb6d" stroke-width="2.4"/>
+  <polygon points="240,64 252,71 240,78" fill="#5cdb6d"/>
+
+  <!-- Center LLM Semantic Judge -->
+  <rect x="256" y="18" width="144" height="106" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.6" filter="url(#glow-s)"/>
+  <text x="328" y="42" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">LLM JUDGE</text>
+  <!-- Balance scale -->
+  <line x1="328" y1="54" x2="328" y2="90" stroke="#5cdb6d" stroke-width="2.4"/>
+  <line x1="306" y1="64" x2="350" y2="64" stroke="#fff" stroke-width="2.2"/>
+  <path d="M306 64 L300 78 H312 Z" fill="rgba(255,212,39,0.28)" stroke="#ffd427" stroke-width="1.6"/>
+  <path d="M350 64 L344 78 H356 Z" fill="rgba(255,125,175,0.28)" stroke="#ff7daf" stroke-width="1.6"/>
+  <text x="328" y="111" text-anchor="middle" class="sub" font-size="11.5">Reads intent</text>
+
+  <!-- Blocked arrow -->
+  <path d="M400 71 H454" stroke="#ff7daf" stroke-width="2.8" stroke-dasharray="5 4"/>
+  <rect x="412" y="56" width="56" height="30" rx="15" fill="#ff7daf" filter="url(#glow-s)"/>
+  <text x="440" y="75" text-anchor="middle" font-family="Roboto Mono,monospace" font-weight="700" font-size="11.5" fill="#202124">DENY</text>
+
+  <!-- Right: KMS Vault untouched -->
+  <rect x="486" y="22" width="126" height="98" rx="14" fill="url(#glass)" stroke="#5f6368" stroke-width="2" stroke-dasharray="5 4"/>
+  <g transform="translate(549,62) scale(0.85)">
+    <path d="M-10 -2 V-10 A10 10 0 0 1 10 -10 V-2" fill="none" stroke="#9aa0a6" stroke-width="3" stroke-linecap="round"/>
+    <rect x="-15" y="-2" width="30" height="22" rx="6" fill="#17181b" stroke="#9aa0a6" stroke-width="2.6"/>
+    <circle cx="0" cy="7" r="3.2" fill="#9aa0a6"/>
+    <line x1="0" y1="9" x2="0" y2="14" stroke="#9aa0a6" stroke-width="2.6" stroke-linecap="round"/>
+  </g>
+  <text x="549" y="106" text-anchor="middle" class="m" font-size="11" fill="#bdc1c6">KMS untouched</text>
+
+</svg>

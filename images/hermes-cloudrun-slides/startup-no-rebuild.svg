@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 172" width="1088" height="172">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#ffffff" opacity="0.06"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; font-weight: 400; }
+      .mb { font-family: "Roboto Mono", ui-monospace, monospace; fill: #ffffff; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1088" height="172" fill="#202124"/>
+  <rect width="1088" height="172" fill="url(#dots)"/>
+
+  <circle cx="240" cy="86" r="115" fill="url(#amb-y)"/>
+  <circle cx="820" cy="86" r="125" fill="url(#amb-g)"/>
+
+  <!-- 3 Local Files -->
+  <rect x="18" y="18" width="234" height="136" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="36" y="42" class="mb" font-size="11.5" fill="#ffd427">3 TINY FILES UPLOADED</text>
+  <rect x="36" y="54" width="198" height="26" rx="7" fill="#17181b" stroke="#ffd427" stroke-width="1.3"/>
+  <text x="135" y="71" text-anchor="middle" class="m" font-size="11.5">config.yaml</text>
+  <rect x="36" y="86" width="198" height="26" rx="7" fill="#17181b" stroke="#57caff" stroke-width="1.3"/>
+  <text x="135" y="103" text-anchor="middle" class="m" font-size="11.5">run_hermes.py</text>
+  <rect x="36" y="118" width="198" height="26" rx="7" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+  <text x="135" y="135" text-anchor="middle" class="m" font-size="11.5">start_hermes.sh</text>
+
+  <!-- Arrow -> Bucket -->
+  <path d="M256 86 H314" stroke="#ffd427" stroke-width="2.8"/>
+  <polygon points="310,80 322,86 310,92" fill="#ffd427"/>
+  <text x="286" y="74" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">cp</text>
+
+  <!-- GCS Bucket Root -->
+  <rect x="326" y="34" width="206" height="104" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="429" y="64" text-anchor="middle" class="t" font-size="16" fill="#57caff">GCS Bucket Root</text>
+  <text x="429" y="88" text-anchor="middle" class="m" font-size="11.5">gs://$BUCKET_NAME/</text>
+  <rect x="352" y="102" width="154" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.2"/>
+  <text x="429" y="118" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">mounted at /opt/data</text>
+
+  <!-- Arrow -> Official Image -->
+  <path d="M536 86 H594" stroke="#5cdb6d" stroke-width="2.8"/>
+  <polygon points="590,80 602,86 590,92" fill="#5cdb6d"/>
+  <text x="566" y="74" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">mount</text>
+
+  <!-- Official Unmodified Container -->
+  <rect x="606" y="18" width="464" height="136" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+  <text x="626" y="44" class="mb" font-size="12" fill="#5cdb6d">OFFICIAL IMAGE · ZERO CUSTOM DOCKERFILE</text>
+  <rect x="626" y="56" width="424" height="32" rx="8" fill="#17181b" stroke="#5f6368" stroke-width="1.4"/>
+  <text x="640" y="77" class="m" font-size="12" fill="#e8eaed">image: <tspan fill="#57caff">nousresearch/hermes-agent:latest</tspan></text>
+  <rect x="626" y="98" width="424" height="38" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="640" y="122" class="mb" font-size="12" fill="#5cdb6d">exec /bin/sh /opt/data/start_hermes.sh</text>
+
+</svg>

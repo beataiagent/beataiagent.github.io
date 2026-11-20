@@ -779,6 +779,8 @@
     .ev-call { justify-self: end; font: 400 14px/1 var(--mono); color: var(--h-yellow); border: 1.5px dashed var(--h-yellow); padding: 8px 12px; border-radius: 999px; }
     .ev-plan { font: 400 15px/1.45 var(--mono); color: var(--dk-text); background: #202124; border: 1.5px dashed #80868b; border-radius: 10px; padding: 12px 14px; }
     .ev-plan b { display: block; font: 500 12px/1 var(--mono); color: var(--dk-sub); letter-spacing: .05em; text-transform: uppercase; margin-bottom: 8px; }
+    .ev-art { border: 2px solid var(--dk-line); border-radius: 14px; overflow: hidden; background: #202124; box-sizing: border-box; }
+    .ev-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
   </style>
 </head>
 <body>
@@ -936,9 +938,9 @@
                 <div class="row fragment"><b>Context</b><span>Agent state at the start, e.g. the signed-in customer.</span></div>
               </div>
               <div style="flex:1; min-width:0" class="zt-stack">
-                <div class="pc blue fragment">The <b>starting prompt</b> is the first user message</div>
-                <div class="pc green fragment">The <b>conversation plan</b> tells the simulated user its goal and how to react</div>
-                <div class="pc yellow fragment">Together they make one repeatable multi-turn test</div>
+                <div class="ev-art" style="height:150px"><img src="../images/agent-evaluation-slides/ev-eval-case.svg" alt="Prompt, hidden conversation plan, and initial context combined into one eval case"></div>
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:15px">The <b>conversation plan</b> tells the simulated user its goal and how to react</div>
+                <div class="pc green fragment" style="padding:10px 14px; font-size:15px">Together they make one repeatable multi-turn test</div>
               </div>
             </div>
           </div>
@@ -1030,9 +1032,9 @@ eval_dataset = client.evals.generate_conversation_scenarios(
 )
               </code></pre>
               <div style="flex:1; min-width:0" class="zt-stack">
-                <div class="pc blue fragment"><b>AgentInfo</b> reads the agent's instructions and tool definitions</div>
-                <div class="pc green fragment"><b>count</b> and <b>generation_instruction</b> steer what to test</div>
-                <div class="pc yellow fragment">Each scenario has a starting prompt and a conversation plan</div>
+                <div class="ev-art" style="height:160px"><img src="../images/agent-evaluation-slides/ev-gen-scenarios.svg" alt="AgentInfo reads the ADK agent to generate synthetic test scenarios"></div>
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:15px"><b>AgentInfo</b> reads instructions &amp; tools; <b>count</b> and <b>generation_instruction</b> steer what to test</div>
+                <div class="pc yellow fragment" style="padding:10px 14px; font-size:15px">Each scenario gets a starting prompt &amp; conversation plan</div>
               </div>
             </div>
           </div>
@@ -1060,9 +1062,9 @@ traces = client.evals.run_inference(
 )
               </code></pre>
               <div style="flex:1; min-width:0" class="zt-stack">
-                <div class="pc blue fragment">A <b>simulated user</b> follows the conversation plan and answers the agent's questions</div>
-                <div class="pc green fragment"><b>max_turn</b> caps the conversation length. The console default is 5</div>
-                <div class="pc yellow fragment">Each run returns a <b>trace</b>. Deployed agents also show it in the Traces tab</div>
+                <div class="ev-art" style="height:170px"><img src="../images/agent-evaluation-slides/ev-user-sim.svg" alt="Simulated user converses with the ADK agent for up to 5 turns and outputs an immutable trace"></div>
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:15px">A <b>simulated user</b> follows the plan up to <b>max_turn</b> (default 5)</div>
+                <div class="pc yellow fragment" style="padding:10px 14px; font-size:15px">Each run returns an immutable <b>trace</b> (also visible in the Traces tab)</div>
               </div>
             </div>
           </div>
@@ -1122,9 +1124,9 @@ eval_result = client.evals.evaluate(
 eval_result.show()  # Colab or Jupyter
               </code></pre>
               <div style="flex:1; min-width:0" class="zt-stack">
-                <div class="pc blue fragment">Pick metrics by name, or as <code>types.RubricMetric</code></div>
-                <div class="pc green fragment"><b>show()</b> renders mean score, pass rate and standard deviation</div>
-                <div class="pc yellow fragment">Expand any case to read each rubric verdict and its rationale</div>
+                <div class="ev-art" style="height:165px"><img src="../images/agent-evaluation-slides/ev-score-trace.svg" alt="Traces scored by metrics into pass rates, mean scores, and rationales"></div>
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:15px">Pick metrics by name or <code>types.RubricMetric</code></div>
+                <div class="pc green fragment" style="padding:10px 14px; font-size:15px"><b>show()</b> renders mean, pass rate, std dev &amp; per-case rationales</div>
               </div>
             </div>
           </div>
@@ -1281,9 +1283,9 @@ tone_check_metric_path = client.evals.create_evaluation_metric(
 )
               </code></pre>
               <div style="flex:1; min-width:0" class="zt-stack">
-                <div class="pc blue fragment"><b>prompt_template</b> is the rubric the judge LLM follows</div>
-                <div class="pc green fragment"><b>result_parsing_function</b> is Python, passed as a string. It turns the judge's JSON reply into a score and an explanation</div>
-                <div class="pc yellow fragment"><b>create_evaluation_metric</b> saves it to the registry and returns its path</div>
+                <div class="ev-art" style="height:150px"><img src="../images/agent-evaluation-slides/ev-custom-llm.svg" alt="Rubric prompt template evaluated by a Judge LLM returning score and explanation"></div>
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:15px"><b>prompt_template</b> is the rubric; <b>result_parsing_function</b> extracts score &amp; explanation</div>
+                <div class="pc yellow fragment" style="padding:10px 14px; font-size:15px"><b>create_evaluation_metric</b> saves it to the registry</div>
               </div>
             </div>
           </div>
@@ -1319,10 +1321,9 @@ accuracy_metric_path = client.evals.create_evaluation_metric(
 )
               </code></pre>
               <div style="flex:1; min-width:0" class="zt-stack">
-                <div class="pc blue fragment"><b>evaluate(instance)</b> returns a float score</div>
-                <div class="pc green fragment">The conversation is in <b>instance['agent_eval_data']['turns']</b></div>
-                <div class="pc yellow fragment">Use it for checks with one right answer: output format, a tool's response</div>
-                <div class="pc red fragment">The docs leave the loop body as <b>...</b>. Write your own logic and return a number</div>
+                <div class="ev-art" style="height:146px"><img src="../images/agent-evaluation-slides/ev-custom-code.svg" alt="Turns dict checked deterministically by Python evaluate function returning a float score"></div>
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:15px"><b>evaluate(instance)</b> reads <code>agent_eval_data['turns']</code> and returns a float</div>
+                <div class="pc yellow fragment" style="padding:10px 14px; font-size:15px">Best for deterministic checks: output format or exact tool responses</div>
               </div>
             </div>
           </div>
@@ -1438,14 +1439,15 @@ result = client.optimizer.optimize(
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Recap</div>
-            <h2 style="margin-bottom:24px">Evaluate agents like software</h2>
+            <h2 style="margin-bottom:16px">Evaluate agents like software</h2>
+            <div class="ev-art" style="width:1088px; height:144px; margin-bottom:16px"><img src="../images/agent-evaluation-slides/ev-recap-banner.svg" alt="4-stage evaluation loop: Simulate, Score, Explain, Improve"></div>
             <div class="grid g4" style="width:1088px; gap:16px">
-              <div class="pc blue fragment" style="height:250px"><h3>Simulate</h3><p style="font-size:17px">Generate scenarios from the agent and let a simulated user talk to it.</p></div>
-              <div class="pc green fragment" style="height:250px"><h3>Score</h3><p style="font-size:17px">Rubric metrics grade the answer and the path, with reasons.</p></div>
-              <div class="pc yellow fragment" style="height:250px"><h3>Explain</h3><p style="font-size:17px">Loss clusters turn many failures into a few causes.</p></div>
-              <div class="pc red fragment" style="height:250px"><h3>Improve</h3><p style="font-size:17px">Optimize the prompt, re-run, and track quality in production.</p></div>
+              <div class="pc blue fragment" style="padding:14px 16px"><h3 style="font-size:20px">Simulate</h3><p style="font-size:15.5px">Generate scenarios from the agent and let a simulated user talk to it.</p></div>
+              <div class="pc green fragment" style="padding:14px 16px"><h3 style="font-size:20px">Score</h3><p style="font-size:15.5px">Rubric metrics grade the answer and the path, with reasons.</p></div>
+              <div class="pc yellow fragment" style="padding:14px 16px"><h3 style="font-size:20px">Explain</h3><p style="font-size:15.5px">Loss clusters turn many failures into a few causes.</p></div>
+              <div class="pc red fragment" style="padding:14px 16px"><h3 style="font-size:20px">Improve</h3><p style="font-size:15.5px">Optimize the prompt, re-run, and track quality in production.</p></div>
             </div>
-            <p class="sub fragment" style="font-size:21px; margin-top:30px">Start with <code>generate_conversation_scenarios</code> on your ADK agent today</p>
+            <p class="sub fragment" style="font-size:19px; margin-top:20px">Start with <code>generate_conversation_scenarios</code> on your ADK agent today</p>
           </div>
         </div>
         <aside class="notes">สรุป 4 คำ • (คลิก) Simulate: สร้าง scenario จาก agent แล้วให้ผู้ใช้จำลองคุยด้วย • (คลิก) Score: metric แบบ rubric ให้คะแนนทั้งคำตอบและเส้นทาง พร้อมเหตุผล • (คลิก) Explain: loss cluster ย่อความล้มเหลวจำนวนมากเหลือไม่กี่สาเหตุ • (คลิก) Improve: optimize prompt รันซ้ำ แล้วติดตามคุณภาพใน production • (คลิก) เริ่มได้วันนี้ด้วย generate_conversation_scenarios กับ agent ADK ของตัวเอง</aside>

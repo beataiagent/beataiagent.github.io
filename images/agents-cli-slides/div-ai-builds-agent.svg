@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#363942" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-bgy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-full" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="35%" stop-color="#5cdb6d"/>
+      <stop offset="70%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#5f6368" opacity="0.28"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #e8eaed; font-weight: 500; }
+      .ms { font-family: "Roboto Mono", ui-monospace, monospace; fill: #9aa0a6; font-weight: 400; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <rect width="256" height="256" fill="url(#dots)"/>
+
+  <circle cx="128" cy="128" r="106" fill="url(#amb-b)"/>
+  <!-- Outer sparkle halo -->
+  <path d="M128 18 L134 38 L154 44 L134 50 L128 70 L122 50 L102 44 L122 38 Z" fill="#ffd427" filter="url(#glow-s)"/>
+  <!-- Coding agent beam down to new ADK agent -->
+  <path d="M128 74 V104" stroke="#ffd427" stroke-width="3" stroke-dasharray="4 4"/>
+  <!-- Blueprint frame -->
+  <rect x="46" y="100" width="164" height="128" rx="20" fill="url(#glass-hi)" stroke="#57caff" stroke-width="2.4" filter="url(#glow-s)"/>
+    <g transform="translate(128,162) scale(0.85)">
+    <line x1="0" y1="-34" x2="0" y2="-45" stroke="#57caff" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="0" cy="-49" r="4.5" fill="#57caff" filter="url(#glow-s)"/>
+    <rect x="-28" y="-34" width="56" height="42" rx="16" fill="url(#glass-hi)" stroke="#57caff" stroke-width="2.4"/>
+    <rect x="-19" y="-25" width="38" height="24" rx="10" fill="#17181b"/>
+    <circle cx="-8.5" cy="-13" r="4.2" fill="#57caff" filter="url(#glow-s)"/>
+    <circle cx="8.5" cy="-13" r="4.2" fill="#57caff" filter="url(#glow-s)"/>
+    <path d="M-6 -5 Q0 -1 6 -5" fill="none" stroke="#57caff" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M-19 11 H19 C22 11 20 34 0 38 C-20 34 -22 11 -19 11 Z" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+    <circle cx="0" cy="23" r="5" fill="#57caff" opacity="0.9"/>
+  </g>
+  <!-- Floating skill tags -->
+  <rect x="14" y="64" width="62" height="22" rx="11" fill="#202124" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="45" y="79" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">skills</text>
+  <rect x="180" y="64" width="62" height="22" rx="11" fill="#202124" stroke="#ff7daf" stroke-width="1.6"/>
+  <text x="211" y="79" text-anchor="middle" class="m" font-size="10" fill="#ff7daf">1 prompt</text>
+
+</svg>

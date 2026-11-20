@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 166" width="1088" height="166">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#353840" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="33%" stop-color="#5cdb6d"/>
+      <stop offset="66%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#57caff"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="166" fill="#202124"/>
+
+  <circle cx="148" cy="72" r="95" fill="url(#amb-r)"/>
+  <circle cx="412" cy="72" r="95" fill="url(#amb-g)"/>
+  <circle cx="676" cy="72" r="95" fill="url(#amb-y)"/>
+  <circle cx="940" cy="72" r="95" fill="url(#amb-b)"/>
+
+  <!-- Connecting neon bridge -->
+  <path d="M148 72 H940" stroke="url(#grad-4)" stroke-width="4" stroke-dasharray="10 6" opacity="0.85"/>
+
+  <!-- Node 1: Screen (Red Shield) -->
+  <circle cx="148" cy="72" r="48" fill="url(#glass)" stroke="#ff7daf" stroke-width="3" filter="url(#glow-s)"/>
+  <path d="M148 49 L166.9 58.7 V73.2 C166.9 85.3 155.7 91.2 148 94.8 C140.3 91.2 129.1 85.3 129.1 73.2 V58.7 Z" fill="rgba(255,125,175,0.2)" stroke="#ff7daf" stroke-width="2.6"/>
+  <path d="M141 71 L146 76 L156 65" fill="none" stroke="#ff7daf" stroke-width="2.6" stroke-linecap="round"/>
+  <rect x="96" y="132" width="104" height="24" rx="12" fill="#17181b" stroke="#ff7daf" stroke-width="1.6"/>
+  <text x="148" y="148" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">01 · SCREEN</text>
+
+  <!-- Node 2: Judge (Green Balance) -->
+  <circle cx="412" cy="72" r="48" fill="url(#glass)" stroke="#5cdb6d" stroke-width="3" filter="url(#glow-s)"/>
+  <line x1="412" y1="52" x2="412" y2="92" stroke="#5cdb6d" stroke-width="2.6" stroke-linecap="round"/>
+  <line x1="398" y1="92" x2="426" y2="92" stroke="#5cdb6d" stroke-width="2.6" stroke-linecap="round"/>
+  <line x1="390" y1="63" x2="434" y2="63" stroke="#fff" stroke-width="2.4"/>
+  <path d="M390 63 L383 78 H397 Z" fill="rgba(92,219,109,0.28)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <path d="M434 63 L427 78 H441 Z" fill="rgba(92,219,109,0.28)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <rect x="360" y="132" width="104" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="412" y="148" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">02 · JUDGE</text>
+
+  <!-- Node 3: Sign (Yellow KMS Key) -->
+  <circle cx="676" cy="72" r="48" fill="url(#glass)" stroke="#ffd427" stroke-width="3" filter="url(#glow-s)"/>
+  <g transform="translate(676,72) scale(1.0)">
+    <circle cx="-12" cy="0" r="10" fill="rgba(255,212,39,0.16)" stroke="#ffd427" stroke-width="3" filter="url(#glow-s)"/>
+    <circle cx="-12" cy="0" r="3.5" fill="#ffd427"/>
+    <path d="M-2 0 H24 M14 0 V8 M21 0 V10" stroke="#ffd427" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <rect x="624" y="132" width="104" height="24" rx="12" fill="#17181b" stroke="#ffd427" stroke-width="1.6"/>
+  <text x="676" y="148" text-anchor="middle" class="m" font-size="11" fill="#ffd427">03 · SIGN</text>
+
+  <!-- Node 4: Watch (Blue Radar + Loop) -->
+  <circle cx="940" cy="72" r="48" fill="url(#glass)" stroke="#57caff" stroke-width="3" filter="url(#glow-s)"/>
+  <circle cx="940" cy="72" r="24" fill="none" stroke="#57caff" stroke-width="2" stroke-dasharray="5 4"/>
+  <path d="M940 72 L957 55 A24 24 0 0 1 964 72 Z" fill="#57caff" opacity="0.35"/>
+  <circle cx="940" cy="72" r="4.5" fill="#57caff"/>
+  <rect x="888" y="132" width="104" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.6"/>
+  <text x="940" y="148" text-anchor="middle" class="m" font-size="11" fill="#57caff">04 · WATCH</text>
+
+  <!-- Pills between nodes -->
+  <rect x="234" y="57" width="92" height="30" rx="15" fill="#202124" stroke="#ff7daf" stroke-width="1.8"/>
+  <text x="280" y="76" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">Armor</text>
+  <rect x="498" y="57" width="92" height="30" rx="15" fill="#202124" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="544" y="76" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">Policy</text>
+  <rect x="762" y="57" width="92" height="30" rx="15" fill="#202124" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="808" y="76" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">KMS</text>
+
+</svg>

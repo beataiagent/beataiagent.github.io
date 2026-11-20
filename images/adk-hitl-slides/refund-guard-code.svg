@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 414 356" width="414" height="356">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="35%" stop-color="#ffd427"/>
+      <stop offset="70%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <marker id="arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#e8eaed"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="414" height="356" fill="#202124"/>
+
+  <circle cx="207" cy="148" r="115" fill="url(#amb-y)"/>
+  <circle cx="105" cy="290" r="85" fill="url(#amb-g)"/>
+  <circle cx="310" cy="290" r="85" fill="url(#amb-r)"/>
+
+  <!-- Top: Robot + LLM wants issue_refund -->
+  <rect x="28" y="14" width="358" height="74" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+    <g transform="translate(78,52) scale(0.54)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#57caff" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="5.5" fill="#57caff" filter="url(#glow-s)"/>
+    <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#57caff" stroke-width="2.8"/>
+    <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+    <circle cx="-11" cy="-18" r="5" fill="#57caff" filter="url(#glow-s)"/><circle cx="11" cy="-18" r="5" fill="#57caff" filter="url(#glow-s)"/><path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#57caff" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M-24 14 H24 C28 14 26 42 0 46 C-26 42 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#57caff" stroke-width="2.2"/>
+    <circle cx="0" cy="28" r="6" fill="#57caff" opacity="0.9"/>
+  </g>
+  <text x="122" y="44" class="t" font-size="16">LLM calls <tspan fill="#57caff">issue_refund</tspan></text>
+  <text x="122" y="68" class="m" font-size="12.5" fill="#bdc1c6">args = {"amount": ...}</text>
+
+  <line x1="207" y1="88" x2="207" y2="120" stroke="#ffd427" stroke-width="3" marker-end="url(#arr-y)"/>
+
+  <!-- Center: refund_guard Code Shield -->
+  <rect x="52" y="128" width="310" height="76" rx="18" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2.5" filter="url(#glow-s)"/>
+    <g transform="translate(98,166) scale(0.72)">
+    <path d="M0 -34 L28 -22 V2 C28 20 14 31 0 37 C-14 31 -28 20 -28 2 V-22 Z" fill="url(#glass)" stroke="#ffd427" stroke-width="2.8" filter="url(#glow-s)"/>
+    <path d="M0 -27 L21 -17 V1 C21 15 10 24 0 29 C-10 24 -21 15 -21 1 V-17 Z" fill="#ffd427" fill-opacity="0.12"/>
+    <text x="0" y="6" text-anchor="middle" class="m" font-size="16" fill="#ffd427">{}</text>
+  </g>
+  <text x="142" y="158" class="t" font-size="17" fill="#ffd427">refund_guard</text>
+  <text x="142" y="182" class="m" font-size="13.5" fill="#fff">amount &gt; 200 ?</text>
+
+  <!-- Fork arrows -->
+  <path d="M142 204 L106 244" stroke="#5cdb6d" stroke-width="2.8" marker-end="url(#arr-g)"/>
+  <path d="M272 204 L308 244" stroke="#ff7daf" stroke-width="2.8" marker-end="url(#arr-r)"/>
+
+  <rect x="44" y="210" width="76" height="22" rx="11" fill="#202124" stroke="#5cdb6d" stroke-width="1.5"/>
+  <text x="82" y="225" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">$120 · no</text>
+
+  <rect x="292" y="210" width="84" height="22" rx="11" fill="#202124" stroke="#ff7daf" stroke-width="1.5"/>
+  <text x="334" y="225" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">$350 · yes</text>
+
+  <!-- Left Green: Tool Runs -->
+  <rect x="18" y="252" width="178" height="88" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <text x="107" y="280" text-anchor="middle" class="t" font-size="16" fill="#5cdb6d">✓ Tool runs</text>
+  <rect x="36" y="294" width="142" height="28" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+  <text x="107" y="313" text-anchor="middle" class="m" font-size="12" fill="#e8eaed">return None</text>
+
+  <!-- Right Red: Tool Skipped -->
+  <rect x="218" y="252" width="178" height="88" rx="16" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+  <text x="307" y="280" text-anchor="middle" class="t" font-size="16" fill="#ff7daf">✕ Tool skipped</text>
+  <rect x="232" y="294" width="150" height="28" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.3"/>
+  <text x="307" y="313" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">{"status":"blocked"}</text>
+
+</svg>

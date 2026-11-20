@@ -618,6 +618,21 @@
     .arch .user { position: absolute; left: 30px; top: 70px; width: 80px; text-align: center; font: 500 17px/1 var(--sans); color: #fff; }
     .arch .user svg { display: block; width: 64px; height: 64px; margin: 8px auto 0; }
     .s-agenda-dk .c1 { --c: var(--h-blue); } .s-agenda-dk .c2 { --c: var(--h-green); } .s-agenda-dk .c3 { --c: var(--h-yellow); } .s-agenda-dk .c4 { --c: var(--h-red); }
+
+    /* ---------- editorial SVG illustration frames ---------- */
+    .grid > * { min-width: 0; }
+    .ed-art { border: 2px solid var(--dk-line); border-radius: 18px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; }
+    .ed-art.blue { border-color: var(--h-blue); } .ed-art.green { border-color: var(--h-green); }
+    .ed-art.yellow { border-color: var(--h-yellow); } .ed-art.red { border-color: var(--h-red); }
+    .ed-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ed-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .ed-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ed-res-row { display: flex; align-items: center; gap: 16px; }
+    .ed-res-row h3 { margin: 0 0 4px; font-size: 22px; }
+    .ed-lg { flex: none; width: 48px; height: 48px; border-radius: 12px; background: #17181b; border: 1.5px solid var(--dk-line); display: grid; place-items: center; padding: 7px; box-sizing: border-box; }
+    .reveal .ed-lg img { width: 100%; height: 100%; object-fit: contain; margin: 0; display: block; }
+    .ed-tight ul.bl li { margin-bottom: 8px; }
+    .cm.ed-cm > * { padding: 9px 14px; }
   </style>
 </head>
 <body>
@@ -691,7 +706,7 @@
       <!-- Section 01 -->
       <section class="bg-yellow" data-title="01 · The prototype gap">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-yellow)"><img src="../images/agents-cli-slides/div-01-gap.svg" alt="Chasm between laptop prompt prototype and production cloud"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -705,23 +720,26 @@
       <!-- Gap -->
       <section data-title="Prompt vs production">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in ed-tight" style="padding:36px 56px">
             <div class="eyebrow">The problem</div>
-            <h2 style="margin-bottom:12px">A demo agent is easy. A production agent is not.</h2>
-            <p class="sub" style="font-size:20px; margin-bottom:28px">Most of the work happens after the first prompt works</p>
-            <div class="grid g2" style="gap:28px; width:1000px">
-              <div class="pc fragment" style="height:270px">
+            <h2 style="margin-bottom:8px; font-size:42px">A demo agent is easy. A production agent is not.</h2>
+            <p class="sub" style="font-size:18px; margin-bottom:14px">Most of the work happens after the first prompt works</p>
+            <div class="ed-art" style="width:1088px; height:152px; margin-bottom:16px">
+              <img src="../images/agents-cli-slides/prompt-vs-prod-gap.svg" alt="Visual chasm between Laptop Demo and Production Cloud bridged by Evals, CI/CD, Sessions, and Traces">
+            </div>
+            <div class="grid g2" style="gap:22px; width:1088px">
+              <div class="pc fragment" style="padding:16px 20px">
                 <span class="tag">Prompt prototype</span>
-                <ul class="bl" style="font-size:21px; margin-top:20px">
+                <ul class="bl" style="font-size:18.5px; margin-top:12px">
                   <li>Works for the prompts you tried</li>
                   <li>Runs on your laptop</li>
                   <li>No idea if a change made it worse</li>
                   <li>No logs when something goes wrong</li>
                 </ul>
               </div>
-              <div class="pc green fragment" style="height:270px">
+              <div class="pc green fragment" style="padding:16px 20px">
                 <span class="tag yellow">Production agent</span>
-                <ul class="bl" style="font-size:21px; margin-top:20px">
+                <ul class="bl" style="font-size:18.5px; margin-top:12px">
                   <li><b>Evals</b> that catch regressions</li>
                   <li><b>Infra &amp; CI/CD</b> to ship safely</li>
                   <li><b>Sessions &amp; memory</b> that persist</li>
@@ -737,7 +755,7 @@
       <!-- Section 02 -->
       <section class="bg-blue" data-title="02 · Meet Agents CLI">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-blue)"><img src="../images/agents-cli-slides/div-02-cli.svg" alt="Agents CLI terminal window orbited by 7 Agent Skills"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -957,19 +975,22 @@
       <!-- Two ways to use it -->
       <section data-title="Two ways to use it">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in ed-tight" style="padding:36px 56px">
             <div class="eyebrow">How Agents CLI works</div>
-            <h2 style="margin-bottom:30px">Two ways to use it</h2>
-            <div class="grid g2" style="gap:28px; width:1000px">
-              <div class="pc blue fragment" style="height:300px">
+            <h2 style="margin-bottom:14px">Two ways to use it</h2>
+            <div class="ed-art" style="width:1088px; height:156px; margin-bottom:16px">
+              <img src="../images/agents-cli-slides/two-ways-to-use.svg" alt="Way 1 direct terminal CLI control vs Way 2 AI coding agent using 7 Agent Skills">
+            </div>
+            <div class="grid g2" style="gap:22px; width:1088px">
+              <div class="pc blue fragment" style="padding:18px 22px">
                 <span class="tag">1 · You run the commands</span>
-                <div class="cmd" style="margin-top:20px; font-size:16px">uvx google-agents-cli setup</div>
-                <div class="cmd" style="margin-top:10px; font-size:16px">agents-cli --help</div>
-                <p style="font-size:19px; margin-top:14px">Full control of every step from your terminal</p>
+                <div class="cmd" style="margin-top:14px; font-size:15px; padding:10px 14px">uvx google-agents-cli setup</div>
+                <div class="cmd" style="margin-top:8px; font-size:15px; padding:10px 14px">agents-cli --help</div>
+                <p style="font-size:17px; margin-top:12px">Full control of every step from your terminal</p>
               </div>
-              <div class="pc green fragment" style="height:300px">
+              <div class="pc green fragment" style="padding:18px 22px">
                 <span class="tag yellow">2 · Your AI coding agent runs them</span>
-                <ul class="bl" style="font-size:19px; margin-top:20px">
+                <ul class="bl" style="font-size:17.5px; margin-top:14px">
                   <li>Install the <b>Agent Skills</b> into Claude Code, Antigravity, Cursor or Codex</li>
                   <li>Describe the agent in plain language</li>
                   <li>The AI picks the right skill and command for each step</li>
@@ -984,19 +1005,22 @@
       <!-- 7 skills -->
       <section data-title="7 Agent Skills">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Agent Skills · cover the whole lifecycle</div>
-            <h2 style="margin-bottom:24px">7 skills your coding agent gets</h2>
-            <div class="sk">
-              <div class="pc fragment"><b>workflow</b>The playbook: phases, model choice, code quality</div>
-              <div class="pc blue fragment"><b>adk-code</b>ADK docs for Python: agents, tools, multi-agent, callbacks, state</div>
-              <div class="pc blue fragment"><b>scaffold</b>New project structure, config and sample code</div>
-              <div class="pc yellow fragment"><b>eval</b>Datasets, metrics, LLM-as-a-judge, compare</div>
-              <div class="pc green fragment"><b>deploy</b>Agent Runtime, Cloud Run, GKE · CI/CD · secrets</div>
-              <div class="pc green fragment"><b>publish</b>Register the agent in Gemini Enterprise</div>
-              <div class="pc red fragment"><b>observability</b>Cloud Trace, logging, analytics for debugging</div>
+            <h2 style="margin-bottom:14px">7 skills your coding agent gets</h2>
+            <div class="ed-art" style="width:1088px; height:132px; margin-bottom:14px">
+              <img src="../images/agents-cli-slides/seven-skills-map.svg" alt="Workflow orchestrator connected to 6 lifecycle skills: adk-code, scaffold, eval, deploy, publish, and observability">
             </div>
-            <p class="muted" style="font-size:15px; margin-top:14px">Each skill is named <code>google-agents-cli-&lt;name&gt;</code> · check them in Claude Code with <code>/skills</code></p>
+            <div class="sk" style="gap:12px">
+              <div class="pc fragment" style="padding:11px 14px; font-size:14.5px"><b style="font-size:17px; margin-bottom:4px">workflow</b>The playbook: phases, model choice, code quality</div>
+              <div class="pc blue fragment" style="padding:11px 14px; font-size:14.5px"><b style="font-size:17px; margin-bottom:4px">adk-code</b>ADK docs for Python: agents, tools, multi-agent, callbacks, state</div>
+              <div class="pc blue fragment" style="padding:11px 14px; font-size:14.5px"><b style="font-size:17px; margin-bottom:4px">scaffold</b>New project structure, config and sample code</div>
+              <div class="pc yellow fragment" style="padding:11px 14px; font-size:14.5px"><b style="font-size:17px; margin-bottom:4px">eval</b>Datasets, metrics, LLM-as-a-judge, compare</div>
+              <div class="pc green fragment" style="padding:11px 14px; font-size:14.5px"><b style="font-size:17px; margin-bottom:4px">deploy</b>Agent Runtime, Cloud Run, GKE · CI/CD · secrets</div>
+              <div class="pc green fragment" style="padding:11px 14px; font-size:14.5px"><b style="font-size:17px; margin-bottom:4px">publish</b>Register the agent in Gemini Enterprise</div>
+              <div class="pc red fragment" style="padding:11px 14px; font-size:14.5px"><b style="font-size:17px; margin-bottom:4px">observability</b>Cloud Trace, logging, analytics for debugging</div>
+            </div>
+            <p class="muted" style="font-size:14.5px; margin-top:10px">Each skill is named <code>google-agents-cli-&lt;name&gt;</code> · check them in Claude Code with <code>/skills</code></p>
           </div>
         </div>
         <aside class="notes">Agents CLI มี 7 skills ครอบคลุม ADLC: workflow คู่มือการพัฒนาตั้งแต่ต้นจนจบ รวมการเลือกโมเดลและคุณภาพโค้ด / adk-code รวมเอกสาร ADK สำหรับ Python ทั้ง agent, tool, multi-agent, callback, state / scaffold สร้างโครงโปรเจกต์ / eval สร้าง dataset วัดด้วย metric ใช้ LLM-as-a-judge / deploy ขึ้น Agent Runtime, Cloud Run หรือ GKE พร้อม CI/CD และ secrets / publish ลงทะเบียนกับ Gemini Enterprise / observability ติดตามผ่าน Cloud Trace และ logging • ใน Claude Code เช็กว่าติดตั้งครบด้วยคำสั่ง /skills</aside>
@@ -1005,20 +1029,23 @@
       <!-- Lifecycle -->
       <section data-title="The agent lifecycle">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">The workflow</div>
-            <h2 style="margin-bottom:30px">From prompt to production in 8 steps</h2>
-            <div class="lc">
-              <div class="pc fragment"><b>0</b><h3>Understand</h3>Agree the spec first</div>
-              <div class="pc fragment"><b>1</b><h3>Samples</h3>Study a matching sample</div>
-              <div class="pc blue fragment"><b>2</b><h3>Scaffold</h3><code>scaffold create</code></div>
-              <div class="pc blue fragment"><b>3</b><h3>Build</h3><code>run</code> · <code>playground</code></div>
-              <div class="pc yellow fragment"><b>4</b><h3>Evaluate</h3><code>eval run</code></div>
-              <div class="pc green fragment"><b>5</b><h3>Deploy</h3><code>deploy</code></div>
-              <div class="pc green fragment"><b>6</b><h3>Publish</h3><code>publish gemini-enterprise</code></div>
-              <div class="pc red fragment"><b>7</b><h3>Observe</h3>Traces · logs · analytics</div>
+            <h2 style="margin-bottom:14px">From prompt to production in 8 steps</h2>
+            <div class="ed-art" style="width:1088px; height:136px; margin-bottom:14px">
+              <img src="../images/agents-cli-slides/agent-lifecycle-loop.svg" alt="8-step agent lifecycle loop highlighting 5-10+ evaluate iterations and production trace feedback">
             </div>
-            <p class="muted fragment" style="font-size:17px; margin-top:22px"><b>Evaluate is the most important step</b>: expect 5–10+ iterations before a case passes</p>
+            <div class="lc" style="gap:12px">
+              <div class="pc fragment" style="padding:11px 14px; font-size:15px"><b>0</b><h3 style="font-size:19px">Understand</h3>Agree the spec first</div>
+              <div class="pc fragment" style="padding:11px 14px; font-size:15px"><b>1</b><h3 style="font-size:19px">Samples</h3>Study a matching sample</div>
+              <div class="pc blue fragment" style="padding:11px 14px; font-size:15px"><b>2</b><h3 style="font-size:19px">Scaffold</h3><code>scaffold create</code></div>
+              <div class="pc blue fragment" style="padding:11px 14px; font-size:15px"><b>3</b><h3 style="font-size:19px">Build</h3><code>run</code> · <code>playground</code></div>
+              <div class="pc yellow fragment" style="padding:11px 14px; font-size:15px"><b>4</b><h3 style="font-size:19px">Evaluate</h3><code>eval run</code></div>
+              <div class="pc green fragment" style="padding:11px 14px; font-size:15px"><b>5</b><h3 style="font-size:19px">Deploy</h3><code>deploy</code></div>
+              <div class="pc green fragment" style="padding:11px 14px; font-size:15px"><b>6</b><h3 style="font-size:19px">Publish</h3><code>publish gemini-enterprise</code></div>
+              <div class="pc red fragment" style="padding:11px 14px; font-size:15px"><b>7</b><h3 style="font-size:19px">Observe</h3>Traces · logs · analytics</div>
+            </div>
+            <p class="muted fragment" style="font-size:16px; margin-top:12px"><b>Evaluate is the most important step</b>: expect 5–10+ iterations before a case passes</p>
           </div>
         </div>
         <aside class="notes">ขั้นตอนตาม Agents CLI 8 ขั้น: (0) ทำความเข้าใจ ตกลง spec ก่อนเขียนโค้ด (1) ดู sample ที่ใกล้เคียง (2) scaffold โปรเจกต์ (3) build และทดสอบเร็ว ๆ ด้วย run หรือ playground (4) evaluate ขั้นสำคัญที่สุด (5) deploy (6) publish ไป Gemini Enterprise ถ้าต้องการ (7) observe ใน production • ขั้น eval ปกติต้องวนแก้ 5–10 รอบขึ้นไป เป็นเรื่องปกติ</aside>
@@ -1027,19 +1054,26 @@
       <!-- Command map -->
       <section data-title="Commands at a glance">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Cheat sheet</div>
-            <h2 style="margin-bottom:24px">Commands at a glance</h2>
-            <div class="cm">
-              <b>Setup</b><span><code>setup</code> · <code>update</code></span>
-              <b>Scaffold</b><span><code>scaffold create &lt;name&gt;</code> · <code>scaffold enhance .</code> · <code>scaffold upgrade</code></span>
-              <b>Develop</b><span><code>run "prompt"</code> · <code>playground</code> · <code>lint</code> · <code>install</code></span>
-              <b>Evaluate</b><span><code>eval run</code> · <code>eval generate</code> · <code>eval grade</code> · <code>eval compare</code> · <code>eval analyze</code> · <code>eval optimize</code></span>
-              <b>Deploy</b><span><code>deploy</code> · <code>infra cicd</code> · <code>infra single-project</code></span>
-              <b>Publish</b><span><code>publish gemini-enterprise</code></span>
-              <b>Info</b><span><code>info</code> · <code>login --status</code></span>
+            <h2 style="margin-bottom:18px">Commands at a glance</h2>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <div style="width:756px; flex:none">
+                <div class="cm ed-cm" style="width:756px; grid-template-columns:126px minmax(0,1fr); font-size:15.5px">
+                  <b>Setup</b><span><code>setup</code> · <code>update</code></span>
+                  <b>Scaffold</b><span><code>scaffold create &lt;name&gt;</code> · <code>scaffold enhance .</code> · <code>scaffold upgrade</code></span>
+                  <b>Develop</b><span><code>run "prompt"</code> · <code>playground</code> · <code>lint</code> · <code>install</code></span>
+                  <b>Evaluate</b><span><code>eval run</code> · <code>eval generate</code> · <code>eval grade</code> · <code>eval compare</code> · <code>eval analyze</code> · <code>eval optimize</code></span>
+                  <b>Deploy</b><span><code>deploy</code> · <code>infra cicd</code> · <code>infra single-project</code></span>
+                  <b>Publish</b><span><code>publish gemini-enterprise</code></span>
+                  <b>Info</b><span><code>info</code> · <code>login --status</code></span>
+                </div>
+                <p class="muted" style="font-size:14.5px; margin-top:12px">Every command: <code>agents-cli &lt;command&gt; --help</code> for the current flags</p>
+              </div>
+              <div class="ed-art blue" style="width:310px; height:390px">
+                <img src="../images/agents-cli-slides/commands-at-a-glance.svg" alt="Agents CLI 5-stage command rail from install and auth through ship and inspect">
+              </div>
             </div>
-            <p class="muted" style="font-size:15px; margin-top:16px">Every command: <code>agents-cli &lt;command&gt; --help</code> for the current flags</p>
           </div>
         </div>
         <aside class="notes">สรุปคำสั่งหลักตามแต่ละขั้น ให้ผู้ฟังถ่ายรูปเก็บไว้ได้ • ทุกคำสั่งดู flag ล่าสุดด้วย --help เพราะ flag อาจเปลี่ยนตามเวอร์ชัน</aside>
@@ -1048,10 +1082,11 @@
       <!-- CLI walkthrough -->
       <section data-title="Hands-on from the terminal">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Way 1 · from the command line</div>
-            <h2 style="margin-bottom:20px; font-size:40px">Your first agent in five commands</h2>
-            <pre style="width:1000px; font-size:17px"><code class="language-bash" data-trim>
+            <h2 style="margin-bottom:18px; font-size:40px">Your first agent in five commands</h2>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <pre style="width:676px; flex:none; font-size:14px"><code class="language-bash" data-trim>
 # 1 · install the CLI and skills
 uvx google-agents-cli setup
 
@@ -1061,11 +1096,17 @@ gcloud config set project PROJECT_ID
 agents-cli login -i
 
 # 3 · create a project ready for Agent Runtime
-agents-cli create my-first-agent -y --deployment-target agent_runtime
+agents-cli create my-first-agent -y \
+  --deployment-target agent_runtime
 
-# 4 · install dependencies and chat with it in the web playground
-cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
-            </code></pre>
+# 4 · install dependencies and chat in the web playground
+cd my-first-agent &amp;&amp; agents-cli install \
+  &amp;&amp; agents-cli playground
+              </code></pre>
+              <div class="ed-art blue" style="width:390px; height:356px">
+                <img src="../images/agents-cli-slides/terminal-five-steps.svg" alt="4-step terminal flow ending in the live ADK Web Playground">
+              </div>
+            </div>
           </div>
         </div>
         <aside class="notes">ลองจาก terminal (ตามบทความ Medium ของเรา): (1) ติดตั้ง CLI และ skills (2) login กับ Google Cloud ด้วย gcloud ตั้ง project แล้ว agents-cli login -i ให้ CLI รู้ว่าใช้ project ไหน (3) agents-cli create สร้างโปรเจกต์พร้อมค่าสำหรับ Agent Runtime ทั้งโครงไฟล์ deployment และ config (4) agents-cli install ติดตั้ง dependency แล้ว agents-cli playground เปิดหน้าเว็บ ADK คุยกับ agent ได้ทันที • ต่อไป eval run วัดผล แล้ว infra single-project และ deploy ขึ้น Agent Runtime</aside>
@@ -1074,7 +1115,7 @@ cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
       <!-- Section 03 -->
       <section class="bg-green" data-title="03 · Build &amp; evaluate">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-green)"><img src="../images/agents-cli-slides/div-03-build-eval.svg" alt="ADK blueprint card surrounded by a glowing green evaluation flywheel"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1088,18 +1129,21 @@ cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
       <!-- Scaffold -->
       <section data-title="Scaffold a project">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in ed-tight" style="padding:36px 56px">
             <div class="eyebrow">Step 2 · Scaffold</div>
-            <h2 style="margin-bottom:24px">Start with a scaffold, prototype first</h2>
-            <div style="display:flex; gap:28px; align-items:flex-start">
-              <div style="width:640px; flex:none; display:grid; gap:14px">
-                <div class="cmd">agents-cli scaffold create my-agent --agent adk --prototype</div>
-                <p class="muted" style="font-size:16px; margin:0 0 6px">Later, when the agent works, add deployment:</p>
-                <div class="cmd">agents-cli scaffold enhance . --deployment-target agent_runtime</div>
+            <h2 style="margin-bottom:16px">Start with a scaffold, prototype first</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div style="width:640px; flex:none; display:grid; gap:10px">
+                <div class="cmd" style="padding:10px 14px; font-size:14.5px">agents-cli scaffold create my-agent --agent adk --prototype</div>
+                <p class="muted" style="font-size:15px; margin:0">Later, when the agent works, add deployment:</p>
+                <div class="cmd" style="padding:10px 14px; font-size:14.5px">agents-cli scaffold enhance . --deployment-target agent_runtime</div>
+                <div class="ed-art green" style="width:640px; height:120px; margin-top:2px">
+                  <img src="../images/agents-cli-slides/scaffold-prototype-enhance.svg" alt="Two-phase workflow: fast local prototype enhanced later with Terraform IaC and CI/CD">
+                </div>
               </div>
-              <div class="pc blue" style="flex:1">
-                <h3>You get</h3>
-                <ul class="bl" style="font-size:18px">
+              <div class="pc blue" style="flex:1; padding:16px 20px">
+                <h3 style="margin-bottom:10px">You get</h3>
+                <ul class="bl" style="font-size:17px">
                   <li>ADK agent code (A2A built in)</li>
                   <li><code>tests/eval/</code> dataset + config</li>
                   <li>Terraform &amp; CI/CD when you add a target</li>
@@ -1107,7 +1151,7 @@ cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
                 </ul>
               </div>
             </div>
-            <p class="pc yellow fragment" style="margin-top:26px; width:1000px; font-size:19px"><b>Why scaffold?</b> Setting up by hand misses the eval boilerplate, CI/CD config and project conventions.</p>
+            <p class="pc yellow fragment" style="margin-top:14px; width:1088px; padding:12px 18px; font-size:17px"><b>Why scaffold?</b> Setting up by hand misses the eval boilerplate, CI/CD config and project conventions.</p>
           </div>
           <div class="ask fragment"><b>✦ Ask your agent</b><span>"Scaffold a new ADK agent called my-agent in prototype mode. Skip deployment for now."</span></div>
         </div>
@@ -1117,11 +1161,11 @@ cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
       <!-- Scaffold: project structure -->
       <section data-title="What scaffold creates">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Step 2 · Scaffold · project structure</div>
-            <h2 style="margin-bottom:18px">What <code style="font-size:.8em">scaffold create</code> gives you</h2>
+            <h2 style="margin-bottom:14px">What <code style="font-size:.8em">scaffold create</code> gives you</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <div class="pc ftree">
+              <div class="pc ftree" style="width:610px; font-size:13.5px; line-height:1.5; padding:14px 18px">
 <div class="d">my-agent/</div>
 <div><i>├── </i><span class="d">app/</span></div>
 <div><i>│   ├── </i><span class="f-you">agent.py</span><em>root_agent: instruction, tools, model</em></div>
@@ -1140,12 +1184,15 @@ cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
 <div><i>├── </i><span class="f-enh">deployment/terraform/</span><em>after enhance</em></div>
 <div><i>└── </i><span class="f-enh">.github/workflows/</span><em>after enhance (CI/CD)</em></div>
               </div>
-              <div class="ftree-key">
-                <div class="pc blue fragment"><b class="f-you">Edit these</b><span><code>agent.py</code>, <code>tools.py</code>, <code>.env</code>: your agent's behavior</span></div>
-                <div class="pc fragment"><b class="f-gen">Generated, don't hand-edit</b><span>Serving, sessions, A2A, container, manifest the CLI reads</span></div>
-                <div class="pc green fragment"><b class="f-eval">Evals from day one</b><span>Dataset + config, ready for <code>agents-cli eval run</code></span></div>
-                <div class="pc red fragment"><b class="f-guide">Guidance file</b><span>Tells your coding agent the project rules</span></div>
-                <div class="pc yellow fragment"><b class="f-enh">Added later</b><span><code>scaffold enhance</code> adds Terraform and CI/CD</span></div>
+              <div class="ftree-key" style="gap:7px">
+                <div class="ed-art blue" style="width:454px; height:124px">
+                  <img src="../images/agents-cli-slides/scaffold-project-tree.svg" alt="4 color-coded project layers: agent code, evals, AI guidance file, and enhanced Terraform CI/CD">
+                </div>
+                <div class="pc blue fragment" style="padding:7px 12px"><b class="f-you" style="font-size:14.5px; margin-bottom:1px">Edit these</b><span style="font-size:13px"><code>agent.py</code>, <code>tools.py</code>, <code>.env</code>: your agent's behavior</span></div>
+                <div class="pc fragment" style="padding:7px 12px"><b class="f-gen" style="font-size:14.5px; margin-bottom:1px">Generated, don't hand-edit</b><span style="font-size:13px">Serving, sessions, A2A, container, manifest the CLI reads</span></div>
+                <div class="pc green fragment" style="padding:7px 12px"><b class="f-eval" style="font-size:14.5px; margin-bottom:1px">Evals from day one</b><span style="font-size:13px">Dataset + config, ready for <code>agents-cli eval run</code></span></div>
+                <div class="pc red fragment" style="padding:7px 12px"><b class="f-guide" style="font-size:14.5px; margin-bottom:1px">Guidance file</b><span style="font-size:13px">Tells your coding agent the project rules</span></div>
+                <div class="pc yellow fragment" style="padding:7px 12px"><b class="f-enh" style="font-size:14.5px; margin-bottom:1px">Added later</b><span style="font-size:13px"><code>scaffold enhance</code> adds Terraform and CI/CD</span></div>
               </div>
             </div>
           </div>
@@ -1156,11 +1203,11 @@ cd my-first-agent &amp;&amp; agents-cli install &amp;&amp; agents-cli playground
       <!-- Build with ADK -->
       <section data-title="Build with ADK">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 56px">
+          <div class="in ed-tight" style="padding:36px 56px">
             <div class="eyebrow">Step 3 · Build · Python · ADK</div>
-            <h2 style="margin-bottom:20px; font-size:40px">An agent is instructions + tools</h2>
-            <div style="display:flex; gap:24px; align-items:flex-start">
-              <pre style="width:660px; flex:none; font-size:15px"><code class="language-python" data-trim>
+            <h2 style="margin-bottom:16px; font-size:40px">An agent is instructions + tools</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:660px; flex:none; font-size:14px"><code class="language-python" data-trim>
 from google.adk.agents import Agent
 
 def get_weather(city: str) -> dict:
@@ -1174,10 +1221,13 @@ root_agent = Agent(
     tools=[get_weather],
 )
               </code></pre>
-              <div style="display:grid; gap:14px; flex:1">
-                <div class="cmd">agents-cli run "Weather in Bangkok?"</div>
-                <div class="cmd">agents-cli playground</div>
-                <ul class="bl" style="font-size:18px">
+              <div style="display:grid; gap:10px; flex:1; min-width:0">
+                <div class="ed-art green" style="width:404px; height:138px">
+                  <img src="../images/agents-cli-slides/build-with-adk.svg" alt="Prompt entering ADK Agent which calls get_weather tool and returns structured answer">
+                </div>
+                <div class="cmd" style="padding:9px 14px; font-size:14px">agents-cli run "Weather in Bangkok?"</div>
+                <div class="cmd" style="padding:9px 14px; font-size:14px">agents-cli playground</div>
+                <ul class="bl" style="font-size:15.5px">
                   <li><code>run</code>: one-shot smoke test (<code>-v</code> shows JSON events)</li>
                   <li><code>playground</code>: web UI to chat with your agent</li>
                   <li>The docstring tells the model when to use the tool</li>
@@ -1193,15 +1243,18 @@ root_agent = Agent(
       <!-- run vs pytest vs eval -->
       <section data-title="Smoke test, unit test, eval">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Know the difference</div>
-            <h2 style="margin-bottom:30px">Three ways to test, three different jobs</h2>
-            <div class="grid g3" style="width:1088px; gap:22px">
-              <div class="pc fragment"><h3><code>agents-cli run</code></h3>Quick <b>smoke test</b> while you code. One prompt, one answer.</div>
-              <div class="pc blue fragment"><h3><code>uv run pytest</code></h3>Tests <b>code correctness</b>: imports, types, API contracts.</div>
-              <div class="pc green fragment"><h3><code>agents-cli eval</code></h3>Tests <b>agent behaviour</b>: answer quality, tool use, safety.</div>
+            <h2 style="margin-bottom:14px">Three ways to test, three different jobs</h2>
+            <div class="ed-art" style="width:1088px; height:166px; margin-bottom:16px">
+              <img src="../images/agents-cli-slides/testing-pyramid.svg" alt="3-tier testing pyramid comparing Smoke test run, Pytest unit checks, and LLM-judge Evals">
             </div>
-            <p class="pc red fragment" style="margin-top:30px; width:1000px; font-size:19px"><b>Don't</b> write pytest that checks what the LLM says. Outputs are non-deterministic: use eval with an LLM judge instead.</p>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc fragment" style="padding:14px 18px; font-size:17px"><h3><code>agents-cli run</code></h3>Quick <b>smoke test</b> while you code. One prompt, one answer.</div>
+              <div class="pc blue fragment" style="padding:14px 18px; font-size:17px"><h3><code>uv run pytest</code></h3>Tests <b>code correctness</b>: imports, types, API contracts.</div>
+              <div class="pc green fragment" style="padding:14px 18px; font-size:17px"><h3><code>agents-cli eval</code></h3>Tests <b>agent behaviour</b>: answer quality, tool use, safety.</div>
+            </div>
+            <p class="pc red fragment" style="margin-top:16px; width:1088px; padding:14px 18px; font-size:17px"><b>Don't</b> write pytest that checks what the LLM says. Outputs are non-deterministic: use eval with an LLM judge instead.</p>
           </div>
         </div>
         <aside class="notes">แยกให้ชัด 3 แบบ: (คลิก 1) run ใช้ลองเร็ว ๆ ระหว่างเขียน (คลิก 2) pytest ทดสอบความถูกต้องของโค้ด เช่น import, type (คลิก 3) eval ทดสอบพฤติกรรม agent คุณภาพคำตอบ การใช้ tool ความปลอดภัย • (คลิก 4) อย่าเขียน pytest เช็กว่า LLM ตอบคำนี้หรือไม่ เพราะผลไม่แน่นอน ใช้ eval ที่มี LLM เป็นกรรมการแทน</aside>
@@ -1238,19 +1291,26 @@ root_agent = Agent(
       <!-- Metrics -->
       <section data-title="Pick the right metrics">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Step 4 · Evaluate · built-in metrics</div>
-            <h2 style="margin-bottom:22px">Pick metrics by what you want to know</h2>
-            <div class="cm cm-metrics">
-              <b>Did it reach the user's goal?</b><span><code>multi_turn_task_success</code></span>
-              <b>Was the path logical and efficient?</b><span><code>multi_turn_trajectory_quality</code></span>
-              <b>Were the tools used well?</b><span><code>multi_turn_tool_use_quality</code></span>
-              <b>Is the final answer good?</b><span><code>final_response_quality</code></span>
-              <b>Any made-up claims?</b><span><code>hallucination</code></span>
-              <b>Safe?</b><span><code>safety</code></span>
-              <b>Something only you can check</b><span>custom <code>LLMMetric</code> (judge) or <code>CodeExecutionMetric</code> (Python)</span>
+            <h2 style="margin-bottom:18px">Pick metrics by what you want to know</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div style="width:724px; flex:none">
+                <div class="cm cm-metrics ed-cm" style="width:724px; grid-template-columns:270px minmax(0,1fr); font-size:15px">
+                  <b>Did it reach the user's goal?</b><span><code>multi_turn_task_success</code></span>
+                  <b>Was the path logical and efficient?</b><span><code>multi_turn_trajectory_quality</code></span>
+                  <b>Were the tools used well?</b><span><code>multi_turn_tool_use_quality</code></span>
+                  <b>Is the final answer good?</b><span><code>final_response_quality</code></span>
+                  <b>Any made-up claims?</b><span><code>hallucination</code></span>
+                  <b>Safe?</b><span><code>safety</code></span>
+                  <b>Something only you can check</b><span>custom <code>LLMMetric</code> or <code>CodeExecutionMetric</code></span>
+                </div>
+                <p class="muted" style="font-size:14.5px; margin-top:12px"><code>agents-cli eval metric list</code> shows all built-ins</p>
+              </div>
+              <div class="ed-art yellow" style="width:340px; height:384px">
+                <img src="../images/agents-cli-slides/pick-metrics-radar.svg" alt="6-axis agent quality radar covering task success, trajectory, tool use, final answer, hallucination, and safety">
+              </div>
             </div>
-            <p class="muted" style="font-size:15px; margin-top:14px"><code>agents-cli eval metric list</code> shows all built-ins</p>
           </div>
         </div>
         <aside class="notes">เลือก metric ตามคำถามที่อยากรู้: agent ทำงานสำเร็จไหม (task success) ทางเดินสมเหตุสมผลไหม (trajectory) ใช้ tool ดีไหม คำตอบสุดท้ายดีไหม (ไม่ต้องมีคำตอบอ้างอิง) มีเรื่องที่แต่งขึ้นไหม (hallucination เหมาะกับ RAG) ปลอดภัยไหม • ถ้าไม่มี metric ไหนตรง เขียนเองได้ทั้งแบบให้ LLM ตัดสิน หรือโค้ด Python ที่ผลแน่นอน</aside>
@@ -1259,16 +1319,23 @@ root_agent = Agent(
       <!-- Fix -->
       <section data-title="When a score fails">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Step 4 · Evaluate · eval-fix loop</div>
-            <h2 style="margin-bottom:24px">When a score fails, fix the agent</h2>
-            <div class="grid g2" style="width:1088px; gap:18px">
-              <div class="pc fragment"><b>Task success low</b><br>Fix orchestration, missing or wrong tool calls</div>
-              <div class="pc fragment"><b>Tool use low</b><br>Fix tool descriptions and parameter docstrings</div>
-              <div class="pc fragment"><b>Hallucination low</b><br>Keep answers grounded in tool output</div>
-              <div class="pc fragment"><b>Safety low</b><br>Add guardrails to the instructions</div>
+            <h2 style="margin-bottom:16px">When a score fails, fix the agent</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div style="width:734px; flex:none; display:grid; gap:14px">
+                <div class="grid g2" style="width:734px; gap:14px">
+                  <div class="pc fragment" style="padding:13px 16px; font-size:16.5px"><b>Task success low</b><br>Fix orchestration, missing or wrong tool calls</div>
+                  <div class="pc fragment" style="padding:13px 16px; font-size:16.5px"><b>Tool use low</b><br>Fix tool descriptions and parameter docstrings</div>
+                  <div class="pc fragment" style="padding:13px 16px; font-size:16.5px"><b>Hallucination low</b><br>Keep answers grounded in tool output</div>
+                  <div class="pc fragment" style="padding:13px 16px; font-size:16.5px"><b>Safety low</b><br>Add guardrails to the instructions</div>
+                </div>
+                <p class="pc red fragment" style="padding:13px 16px; font-size:16.5px"><b>Never</b> lower the threshold to make it pass, and don't delete a flaky case: it's telling you something.</p>
+              </div>
+              <div class="ed-art red" style="width:330px; height:350px">
+                <img src="../images/agents-cli-slides/when-score-fails.svg" alt="Diagnostic eval-fix loop: low score report, inspect judge rationale, fix agent and re-eval to pass">
+              </div>
             </div>
-            <p class="pc red fragment" style="margin-top:24px; width:1000px; font-size:19px"><b>Never</b> lower the threshold to make it pass, and don't delete a flaky case: it's telling you something.</p>
           </div>
           <div class="ask fragment"><b>✦ Ask your agent</b><span>"Tool use scored low. Read the grade results, fix the tool docstrings, rerun the evals and compare with the last run."</span></div>
         </div>
@@ -1278,7 +1345,7 @@ root_agent = Agent(
       <!-- Way 2: let AI build the agent -->
       <section class="bg-blue" data-title="Let AI build your AI agent">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">✦</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-blue)"><img src="../images/agents-cli-slides/div-ai-builds-agent.svg" alt="AI coding agent using skills and one prompt to assemble a blueprint ADK agent"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1292,30 +1359,33 @@ root_agent = Agent(
       <!-- Set up skills in Antigravity -->
       <section data-title="Set up skills in Antigravity">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:34px 56px">
             <div class="eyebrow">Way 2 · set up skills in Antigravity (AGY)</div>
-            <h2 style="margin-bottom:26px">Give Antigravity the Agents CLI skills</h2>
-            <div class="grid g3 ag-steps" style="width:1088px; gap:20px">
-              <div class="pc blue fragment">
-                <span class="num">1</span>
-                <h3 style="margin:0">Install</h3>
-                <div class="cmd">uvx google-agents-cli setup</div>
-                <p>Detects Antigravity and installs the 7 skills globally</p>
+            <h2 style="margin-bottom:14px">Give Antigravity the Agents CLI skills</h2>
+            <div class="ed-art" style="width:1088px; height:142px; margin-bottom:14px">
+              <img src="../images/agents-cli-slides/antigravity-skills-setup.svg" alt="uvx google-agents-cli setup storing 7 skills in ~/.agents/skills and symlinking to Antigravity IDE and CLI">
+            </div>
+            <div class="grid g3 ag-steps" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" style="padding:14px 16px; gap:8px">
+                <span class="num" style="width:32px; height:32px; font-size:16px">1</span>
+                <h3 style="margin:0; font-size:21px">Install</h3>
+                <div class="cmd" style="padding:9px 12px; font-size:13.5px">uvx google-agents-cli setup</div>
+                <p style="font-size:15px">Detects Antigravity and installs the 7 skills globally</p>
               </div>
-              <div class="pc green fragment">
-                <span class="num">2</span>
-                <h3 style="margin:0">Check</h3>
-                <div class="cmd">ls ~/.gemini/config/skills</div>
-                <p>You should see the <code>google-agents-cli-*</code> folders. Then restart Antigravity.</p>
+              <div class="pc green fragment" style="padding:14px 16px; gap:8px">
+                <span class="num" style="width:32px; height:32px; font-size:16px">2</span>
+                <h3 style="margin:0; font-size:21px">Check</h3>
+                <div class="cmd" style="padding:9px 12px; font-size:13.5px">ls ~/.gemini/config/skills</div>
+                <p style="font-size:15px">You should see the <code>google-agents-cli-*</code> folders. Then restart Antigravity.</p>
               </div>
-              <div class="pc yellow fragment">
-                <span class="num">3</span>
-                <h3 style="margin:0">Ask</h3>
-                <div class="cmd">"Which Agents CLI skills can you use?"</div>
-                <p>Open the Agent panel and confirm it lists them</p>
+              <div class="pc yellow fragment" style="padding:14px 16px; gap:8px">
+                <span class="num" style="width:32px; height:32px; font-size:16px">3</span>
+                <h3 style="margin:0; font-size:21px">Ask</h3>
+                <div class="cmd" style="padding:9px 12px; font-size:13.5px">"Which Agents CLI skills can you use?"</div>
+                <p style="font-size:15px">Open the Agent panel and confirm it lists them</p>
               </div>
             </div>
-            <p class="muted fragment" style="font-size:15px; margin-top:22px; line-height:1.5">Skills are stored in <code>~/.agents/skills</code> and linked into <code>~/.gemini/config/skills</code> (IDE) and <code>~/.gemini/antigravity-cli/skills</code> (CLI)<br>Project only: <code>agents-cli setup --workspace</code> · Update: <code>uv tool upgrade google-agents-cli</code>, then run <code>setup</code> again</p>
+            <p class="muted fragment" style="font-size:14px; margin-top:12px; line-height:1.45">Skills are stored in <code>~/.agents/skills</code> and linked into <code>~/.gemini/config/skills</code> (IDE) and <code>~/.gemini/antigravity-cli/skills</code> (CLI)<br>Project only: <code>agents-cli setup --workspace</code> · Update: <code>uv tool upgrade google-agents-cli</code>, then run <code>setup</code> again</p>
           </div>
         </div>
         <aside class="notes">ตั้งค่า skills ใน Antigravity (AGY): (คลิก 1) รัน uvx google-agents-cli setup คำสั่งนี้ติดตั้ง CLI และตรวจเจอ coding agent ที่มีในเครื่อง รวมถึง Antigravity แล้วติดตั้ง 7 skills ให้แบบ global (คลิก 2) เช็กว่า link แล้วด้วย ls ~/.gemini/config/skills ต้องเห็นโฟลเดอร์ google-agents-cli-* แล้วปิดเปิด Antigravity ใหม่ (คลิก 3) เปิด Agent panel ถามว่ามี Agents CLI skills อะไรบ้าง • skills ตัวจริงเก็บที่ ~/.agents/skills แล้ว setup จะ link เข้า ~/.gemini/config/skills สำหรับ IDE และ ~/.gemini/antigravity-cli/skills สำหรับ CLI • ถ้าอยากติดตั้งเฉพาะโปรเจกต์ใช้ --workspace • อัปเดตด้วย uv tool upgrade google-agents-cli แล้วรัน setup อีกรอบ</aside>
@@ -1323,16 +1393,21 @@ root_agent = Agent(
 
       <section data-title="One prompt, one agent">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Way 2 · Claude Code + Agents CLI skills</div>
-            <h2 style="margin-bottom:18px; font-size:40px">Describe the agent, not the commands</h2>
-            <div style="display:flex; gap:24px; align-items:flex-start">
-              <div style="width:250px; flex:none; display:grid; gap:12px">
-                <div class="cmd">claude</div>
-                <div class="cmd">/skills</div>
-                <p class="muted" style="font-size:15px; margin:0">Open Claude Code, check the Agents CLI skills are installed, then send the prompt</p>
+            <h2 style="margin-bottom:16px; font-size:40px">Describe the agent, not the commands</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div style="width:310px; flex:none; display:grid; gap:10px">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px">
+                  <div class="cmd" style="padding:9px 12px; font-size:14px; text-align:center">claude</div>
+                  <div class="cmd" style="padding:9px 12px; font-size:14px; text-align:center">/skills</div>
+                </div>
+                <p class="muted" style="font-size:14.5px; margin:0; line-height:1.35">Open Claude Code, check the Agents CLI skills are installed, then send the prompt</p>
+                <div class="ed-art yellow" style="width:310px; height:220px">
+                  <img src="../images/agents-cli-slides/one-prompt-one-agent.svg" alt="One natural language prompt expanding into ADK code, evaluation datasets, and cloud deployment config">
+                </div>
               </div>
-              <pre style="flex:1; font-size:15.5px"><code class="language-markdown" data-trim>
+              <pre style="flex:1; min-width:0; font-size:14.5px"><code class="language-markdown" data-trim>
 Create a weight loss assistant using Agents CLI
 
 The agent should:
@@ -1373,7 +1448,7 @@ The agent should:
       <!-- Section 04 -->
       <section class="bg-red" data-title="04 · Deploy, publish &amp; observe">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="ed-div-art" style="--c:var(--h-red)"><img src="../images/agents-cli-slides/div-04-deploy-observe.svg" alt="Rocket deploying agent into Google Cloud with live telemetry trace wave"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1387,15 +1462,18 @@ The agent should:
       <!-- Targets -->
       <section data-title="Choose a deployment target">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in ed-tight" style="padding:34px 56px">
             <div class="eyebrow">Step 5 · Deploy · all three are container-based</div>
-            <h2 style="margin-bottom:24px">Choose a deployment target</h2>
-            <div class="grid g3" style="width:1088px; gap:20px">
-              <div class="pc green fragment"><h3>Agent Runtime</h3><code>agent_runtime</code><ul class="bl" style="font-size:17px; margin-top:12px"><li>Managed, built for agents</li><li>Sessions handled for you</li><li>Lowest ops, not billed when idle</li></ul></div>
-              <div class="pc blue fragment"><h3>Cloud Run</h3><code>cloud_run</code><ul class="bl" style="font-size:17px; margin-top:12px"><li>Full networking control</li><li>Pub/Sub &amp; Eventarc triggers</li><li>Cloud SQL or managed sessions</li></ul></div>
-              <div class="pc yellow fragment"><h3>GKE</h3><code>gke</code><ul class="bl" style="font-size:17px; margin-top:12px"><li>Full Kubernetes control</li><li>Autopilot cluster</li><li>Needs Kubernetes skills</li></ul></div>
+            <h2 style="margin-bottom:14px">Choose a deployment target</h2>
+            <div class="ed-art" style="width:1088px; height:116px; margin-bottom:14px">
+              <img src="../images/agents-cli-slides/deployment-targets.svg" alt="Deployment control spectrum comparing Agent Runtime, Cloud Run, and GKE Autopilot">
             </div>
-            <p class="muted fragment" style="font-size:16px; margin-top:16px">"Agent Engine" is now <b>Agent Runtime</b> · agents that need OAuth user consent → Agent Runtime with Gemini Enterprise</p>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc green fragment" style="padding:13px 16px"><h3 style="font-size:22px; margin-bottom:4px">Agent Runtime</h3><code>agent_runtime</code><ul class="bl" style="font-size:15.5px; margin-top:10px"><li>Managed, built for agents</li><li>Sessions handled for you</li><li>Lowest ops, not billed when idle</li></ul></div>
+              <div class="pc blue fragment" style="padding:13px 16px"><h3 style="font-size:22px; margin-bottom:4px">Cloud Run</h3><code>cloud_run</code><ul class="bl" style="font-size:15.5px; margin-top:10px"><li>Full networking control</li><li>Pub/Sub &amp; Eventarc triggers</li><li>Cloud SQL or managed sessions</li></ul></div>
+              <div class="pc yellow fragment" style="padding:13px 16px"><h3 style="font-size:22px; margin-bottom:4px">GKE</h3><code>gke</code><ul class="bl" style="font-size:15.5px; margin-top:10px"><li>Full Kubernetes control</li><li>Autopilot cluster</li><li>Needs Kubernetes skills</li></ul></div>
+            </div>
+            <p class="muted fragment" style="font-size:14.5px; margin-top:10px">"Agent Engine" is now <b>Agent Runtime</b> · agents that need OAuth user consent → Agent Runtime with Gemini Enterprise</p>
           </div>
           <div class="ask fragment"><b>✦ Ask your agent</b><span>"Compare Agent Runtime, Cloud Run and GKE for this agent and recommend one."</span></div>
         </div>
@@ -1428,14 +1506,19 @@ The agent should:
       <!-- Publish & observe -->
       <section data-title="Publish &amp; observe">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Steps 6–7 · Publish &amp; observe</div>
-            <h2 style="margin-bottom:24px">Put it in front of users, then watch it</h2>
-            <div style="display:flex; gap:24px; align-items:flex-start">
-              <div class="pc blue fragment" style="width:420px; flex:none">
-                <h3>Publish (optional)</h3>
-                <div class="cmd" style="font-size:15px">agents-cli publish gemini-enterprise</div>
-                <p style="font-size:17px; margin-top:12px">Register the agent in <b>Gemini Enterprise</b> so people in your company can use it. Every scaffolded agent speaks <b>A2A</b>.</p>
+            <h2 style="margin-bottom:18px">Put it in front of users, then watch it</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div style="width:420px; flex:none; display:grid; gap:12px">
+                <div class="pc blue fragment" style="padding:16px 18px">
+                  <h3 style="margin-bottom:8px">Publish (optional)</h3>
+                  <div class="cmd" style="font-size:14.5px; padding:10px 14px">agents-cli publish gemini-enterprise</div>
+                  <p style="font-size:16px; margin-top:10px">Register the agent in <b>Gemini Enterprise</b> so people in your company can use it. Every scaffolded agent speaks <b>A2A</b>.</p>
+                </div>
+                <div class="ed-art blue" style="width:420px; height:142px">
+                  <img src="../images/agents-cli-slides/publish-and-observe.svg" alt="A2A agent emitting telemetry rays to Cloud Trace, Prompt-response logs, BigQuery analytics, and OpenTelemetry">
+                </div>
               </div>
               <div class="grid g2" style="flex:1; gap:14px">
                 <div class="pc green fragment"><b>Cloud Trace</b><br>Always on · latency &amp; errors per step</div>
@@ -1453,10 +1536,13 @@ The agent should:
       <!-- Recap -->
       <section data-title="Prompt to production, recap">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Recap</div>
-            <h2 style="margin-bottom:24px">From prompt to production</h2>
-            <pre style="width:900px; font-size:17px"><code class="language-bash" data-trim>
+            <h2 style="margin-bottom:14px">From prompt to production</h2>
+            <div class="ed-art" style="width:1088px; height:148px; margin-bottom:14px">
+              <img src="../images/agents-cli-slides/recap-journey.svg" alt="7-station journey from CLI setup and scaffold through eval loop, enhance, human-approved deploy, and publish">
+            </div>
+            <pre style="width:1088px; font-size:15px"><code class="language-bash" data-trim>
 uvx google-agents-cli setup                          # install CLI + skills
 agents-cli scaffold create my-agent --agent adk --prototype
 agents-cli run "Weather in Bangkok?"                 # smoke test
@@ -1465,7 +1551,7 @@ agents-cli scaffold enhance . --deployment-target agent_runtime
 agents-cli deploy                                    # after human approval
 agents-cli publish gemini-enterprise                 # optional
             </code></pre>
-            <p class="sub" style="font-size:20px; margin-top:20px">Scaffold first · evaluate always · deploy with approval</p>
+            <p class="sub" style="font-size:19px; margin-top:14px">Scaffold first · evaluate always · deploy with approval</p>
           </div>
         </div>
         <aside class="notes">สรุปทั้งเส้นทางใน 7 คำสั่ง: ติดตั้ง → scaffold แบบ prototype → ลองเร็ว ๆ ด้วย run → eval วนแก้จนผ่าน → เพิ่ม deployment target → deploy หลังได้รับอนุมัติ → publish ถ้าต้องการ • จำ 3 ข้อ: scaffold ก่อนเขียนโค้ด, eval ทุกครั้ง, deploy เมื่อคนอนุมัติ</aside>
@@ -1478,10 +1564,10 @@ agents-cli publish gemini-enterprise                 # optional
             <div class="eyebrow">Resources</div>
             <h2 style="margin-bottom:28px">Get started today</h2>
             <div class="grid g2" style="width:1088px; gap:18px">
-              <div class="pc blue"><h3>Quickstart</h3><a class="mono" style="font-size:16px" href="https://google.github.io/agents-cli/guide/quickstart-tutorial/" target="_blank">google.github.io/agents-cli</a></div>
-              <div class="pc yellow"><h3>Announcement</h3><a class="mono" style="font-size:16px" href="https://developers.googleblog.com/agents-cli-in-agent-platform-create-to-production-in-one-cli/" target="_blank">developers.googleblog.com · Agents CLI</a></div>
-              <div class="pc green"><h3>Coding with AI (ADK)</h3><a class="mono" style="font-size:16px" href="https://adk.dev/tutorials/coding-with-ai/#agents-cli" target="_blank">adk.dev/tutorials/coding-with-ai</a></div>
-              <div class="pc red"><h3>Step by step (Thai)</h3><a class="mono" style="font-size:16px" href="https://medium.com/@punsiriboonyakiat/b58003223fd1" target="_blank">Medium · ใช้ AI ช่วยสร้าง AI Agent ด้วย Agents CLI</a></div>
+              <div class="pc blue ed-res-row"><span class="ed-lg"><img src="../images/agents-cli-slides/logos/agents-cli.png" alt="Agents CLI"></span><div><h3>Quickstart</h3><a class="mono" style="font-size:15px" href="https://google.github.io/agents-cli/guide/quickstart-tutorial/" target="_blank">google.github.io/agents-cli</a></div></div>
+              <div class="pc yellow ed-res-row"><span class="ed-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span><div><h3>Announcement</h3><a class="mono" style="font-size:15px" href="https://developers.googleblog.com/agents-cli-in-agent-platform-create-to-production-in-one-cli/" target="_blank">developers.googleblog.com · Agents CLI</a></div></div>
+              <div class="pc green ed-res-row"><span class="ed-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Coding with AI (ADK)</h3><a class="mono" style="font-size:15px" href="https://adk.dev/tutorials/coding-with-ai/#agents-cli" target="_blank">adk.dev/tutorials/coding-with-ai</a></div></div>
+              <div class="pc red ed-res-row"><span class="ed-lg"><img src="../images/agents-cli-slides/res-thai-blog.svg" alt="Step by step guide"></span><div><h3>Step by step (Thai)</h3><a class="mono" style="font-size:15px" href="https://medium.com/@punsiriboonyakiat/b58003223fd1" target="_blank">Medium · ใช้ AI ช่วยสร้าง AI Agent ด้วย Agents CLI</a></div></div>
             </div>
             <div class="cmd" style="margin-top:22px; width:520px">uvx google-agents-cli setup</div>
           </div>

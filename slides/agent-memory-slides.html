@@ -1,0 +1,1421 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent Memory — ADK and Memory Bank</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+
+  <style>
+    /* ================= DevFest 2026 theme tokens (from the official template) ================= */
+    :root {
+      --ink: #1e1e1e;            /* Black 02 */
+      --paper: #f0f0f0;          /* Off-White */
+      --white: #fff;
+      --g-blue: #4285f4; --g-green: #34a853; --g-red: #ea4335; --g-yellow: #fbbc04;      /* Google 500 */
+      --h-blue: #57caff; --h-green: #5cdb6d; --h-red: #ff7daf; --h-yellow: #ffd427;      /* Halftone */
+      --p-blue: #c3ecf6; --p-green: #ccf6c5; --p-red: #f8d8d8; --p-yellow: #ffe7a5;      /* Pastel */
+      --muted: #5f6368;
+      --stroke: 3px;
+      --sans: "Google Sans", "Product Sans", system-ui, sans-serif;
+      --mono: "Roboto Mono", ui-monospace, monospace;
+
+      --r-background-color: var(--paper);
+      --r-main-font: var(--sans);
+      --r-heading-font: var(--sans);
+      --r-code-font: var(--mono);
+      --r-main-color: var(--ink);
+      --r-heading-color: var(--ink);
+      --r-heading-text-transform: none;
+      --r-heading-font-weight: 700;
+      --r-heading-letter-spacing: -0.01em;
+      --r-link-color: #1a73e8;
+      --r-link-color-hover: #174ea6;
+      --r-main-font-size: 28px;
+    }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body { background: var(--paper); }
+    .reveal { color: var(--ink); }
+    .reveal strong, .reveal b { font-weight: 700; }
+
+    /* every slide is a fixed 1280×720 canvas, laid out absolutely like the Slides template */
+    .reveal .slides section { width: 1280px; height: 720px; padding: 0; box-sizing: border-box; text-align: left; background: var(--paper); line-height: 1.3; }
+    .reveal .slides section.bg-blue { background: var(--p-blue); }
+    .reveal .slides section.bg-green { background: var(--p-green); }
+    .reveal .slides section.bg-yellow { background: var(--p-yellow); }
+    .reveal .slides section.bg-red { background: var(--p-red); }
+    .reveal h1, .reveal h2, .reveal h3 { margin: 0; text-transform: none; color: var(--ink); line-height: 1.12; }
+    .reveal h1 { font-size: 84px; font-weight: 700; letter-spacing: -.015em; }
+    .reveal h2 { font-size: 46px; font-weight: 700; }
+    .reveal h3 { font-size: 26px; font-weight: 700; }
+    .reveal p { margin: 0; }
+    .reveal .slides img { margin: 0; max-width: none; max-height: none; }
+    .reveal a { text-decoration: none; }
+    .abs { position: absolute; }
+    .mono { font-family: var(--mono); font-weight: 300; }
+    .sub { font-family: var(--mono); font-weight: 300; font-size: 22px; line-height: 1.35; color: var(--ink); }
+    .muted { color: var(--muted); }
+
+    /* ---------- notched card ---------- */
+    .nc { position: absolute; }
+    .nc > svg.nc-s { position: absolute; inset: 0; overflow: visible; z-index: 0; pointer-events: none; }
+    .nc > .in { position: relative; z-index: 1; height: 100%; box-sizing: border-box; padding: 40px 52px; }
+
+    /* ---------- DevFest badge ---------- */
+    .badge { position: absolute; display: flex; align-items: center; gap: 4px; --bk: var(--g-yellow); }
+    .badge .bk { font: 700 92px/1 var(--sans); color: var(--bk); -webkit-text-stroke: 3px var(--ink); paint-order: stroke fill; transform: translateY(-4px); }
+    .badge .bw { display: flex; flex-direction: column; align-items: center; }
+    .badge b { font: 700 50px/1 var(--sans); letter-spacing: -.01em; }
+    .badge i { font-style: normal; font: 400 15px/1 var(--sans); margin-top: 7px; padding: 6px 0; width: 100%; text-align: center; border: 2.5px solid var(--ink); border-radius: 999px; background: #fff; }
+
+    /* ---------- line icons ---------- */
+    .ico { display: block; fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .dots { position: absolute; display: flex; gap: 14px; }
+    .dots i { width: 38px; height: 38px; border-radius: 50%; border: 3px solid var(--ink); background: var(--dc, var(--g-blue)); box-sizing: border-box; }
+    .numbox { position: absolute; border: var(--stroke) solid var(--ink); border-radius: 28px; background: #fff; font: 300 64px/1 var(--mono); display: flex; align-items: center; padding: 0 28px; box-sizing: border-box; }
+
+    /* ---------- content atoms ---------- */
+    .pc { border: 2.5px solid var(--ink); border-radius: 24px; padding: 22px 24px; background: #fff; box-sizing: border-box; font-size: 20px; line-height: 1.38; }
+    .pc.blue { background: var(--p-blue); } .pc.green { background: var(--p-green); } .pc.yellow { background: var(--p-yellow); } .pc.red { background: var(--p-red); }
+    .pc h3 { margin-bottom: 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+    .chip { padding: 5px 13px; border-radius: 999px; border: 2px solid var(--ink); background: #fff; font-size: 15px; line-height: 1.3; }
+    .tag { display: inline-block; padding: 7px 20px; border-radius: 999px; border: 2.5px solid var(--ink); background: #fff; font: 500 18px/1.2 var(--sans); }
+    .eyebrow { font: 400 17px/1 var(--mono); letter-spacing: .02em; color: var(--ink); margin-bottom: 12px; }
+    .grid { display: grid; gap: 20px; }
+    .grid > * { min-width: 0; }
+    .g2 { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+    .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+
+    /* code */
+    .reveal pre { width: auto; margin: 0; box-shadow: none; font-size: 15px; line-height: 1.42; border: 2.5px solid var(--ink); border-radius: 22px; background: var(--paper); overflow: hidden; }
+    .reveal pre code { max-height: none; padding: 16px 22px; background: transparent; font-family: var(--mono); font-weight: 400; }
+    .reveal .hljs { background: transparent; color: #1e1e1e; }
+    .cmd { font: 400 15px/1.4 var(--mono); padding: 12px 16px; border-radius: 16px; border: 2.5px solid var(--ink); background: var(--ink); color: #fff; }
+    .ask { position: absolute; left: 56px; right: 56px; bottom: 30px; display: flex; align-items: center; gap: 16px; padding: 12px 18px; border: 2px dashed var(--h-yellow); border-radius: 16px; background: #2a2b2f; }
+    .ask b { flex: none; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; border-radius: 999px; background: var(--h-yellow); color: #202124; white-space: nowrap; }
+    .ask span { font: 400 16px/1.4 var(--mono); color: #e8eaed; }
+
+    /* thank-you */
+    .ty-who { display: flex; align-items: center; gap: 20px; margin-top: 44px; }
+    .ty-who img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 22%; border: 3px solid var(--ink); background: #fff; flex: none; }
+    .ty-who .sub { margin: 0; }
+
+    /* ================= Slide controls (shopio-style) ================= */
+    .reveal .controls, .reveal .progress, html:not(.print-pdf) .reveal .slide-number { display: none !important; }
+    #progress { position: fixed; top: 0; left: 0; height: 4px; width: 0; z-index: 40; background: linear-gradient(90deg, var(--g-blue), var(--g-green), var(--g-yellow), var(--g-red)); transition: width .6s cubic-bezier(.16,1,.3,1); }
+    #ctrl { position: fixed; right: 18px; bottom: 16px; z-index: 40; display: flex; align-items: center; gap: 6px; padding: 6px; border-radius: 999px; background: rgba(30,30,30,.86); backdrop-filter: blur(8px); color: #fff; font: 13px var(--sans); transition: opacity .4s; }
+    #ctrl button { width: 34px; height: 34px; border-radius: 50%; border: 0; background: rgba(255,255,255,.1); color: #fff; cursor: pointer; display: grid; place-items: center; font-size: 18px; line-height: 1; padding: 0; }
+    #ctrl button:hover { background: rgba(255,255,255,.25); }
+    #ctrl button.on { background: var(--g-blue); }
+    #ctrl svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    #ctrl .cnt { min-width: 64px; text-align: center; font-variant-numeric: tabular-nums; cursor: pointer; }
+    body.idle #ctrl { opacity: 0; }
+    body.idle { cursor: none; }
+    #menu, #exportMenu { position: fixed; right: 18px; bottom: 64px; z-index: 41; padding: 8px; border-radius: 14px; background: rgba(30,30,30,.96); backdrop-filter: blur(10px); box-shadow: 0 20px 50px -20px rgba(0,0,0,.6); font-family: var(--sans); display: none; }
+    #menu { width: 380px; max-height: 70vh; overflow: auto; }
+    #menu.open, #exportMenu.open { display: block; }
+    #menu a { display: flex; gap: 10px; color: #cfd2d6; text-decoration: none; font-size: 13px; padding: 7px 10px; border-radius: 8px; }
+    #menu a:hover, #menu a.cur { background: rgba(255,255,255,.12); color: #fff; }
+    #menu a span { opacity: .5; width: 22px; text-align: right; flex: none; }
+    #exportMenu { min-width: 230px; padding: 6px; }
+    #exportMenu button { display: flex; width: 100%; justify-content: space-between; align-items: center; gap: 16px; padding: 10px 12px; border: 0; border-radius: 9px; background: transparent; color: #fff; font: inherit; font-size: 14px; text-align: left; cursor: pointer; }
+    #exportMenu button:hover, #exportMenu button:focus-visible { background: #3a3a3a; outline: none; }
+    #exportMenu kbd { font-family: var(--mono); font-size: 11px; color: #9aa0a6; border: 1px solid #444; border-radius: 5px; padding: 1px 6px; }
+    #exportMenu .sub { display: block; font-family: var(--sans); font-weight: 400; font-size: 12px; line-height: 1.5; margin-top: 2px; color: #9aa0a6; }
+    #exportMenu button > span { line-height: 1.3; }
+    /* overview */
+    #ov { position: fixed; inset: 0; z-index: 45; background: #1e1e1e; overflow: auto; padding: 28px 32px 40px; display: none; font-family: var(--sans); }
+    #ov.open { display: block; }
+    #ov .ovh { display: flex; justify-content: space-between; align-items: center; color: #fff; max-width: 1700px; margin: 0 auto 18px; font-size: 18px; font-weight: 500; }
+    #ov .ovh button { border: 0; background: rgba(255,255,255,.12); color: #fff; width: 36px; height: 36px; border-radius: 50%; font-size: 18px; cursor: pointer; }
+    #ov .ovh button:hover { background: rgba(255,255,255,.25); }
+    #ov .ovg { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px 18px; max-width: 1700px; margin: 0 auto; }
+    #ov .ovt { cursor: pointer; color: #cfd2d6; font-size: 13px; }
+    #ov .fr { position: relative; aspect-ratio: 16 / 9; border-radius: 8px; overflow: hidden; background: var(--paper); outline: 2px solid #3a3a3a; outline-offset: 3px; transition: outline-color .15s; }
+    #ov .ovt:hover .fr { outline-color: rgba(255,255,255,.5); }
+    #ov .ovt.cur .fr { outline-color: var(--g-yellow); }
+    #ov .cap { display: flex; gap: 8px; margin-top: 10px; line-height: 1.35; }
+    #ov .cap span { opacity: .5; flex: none; }
+    #ov .fr > .reveal { position: absolute; left: 0; top: 0; width: 1280px; height: 720px; transform-origin: 0 0; pointer-events: none; overflow: hidden; }
+    #ov .fr > .reveal > .slides { position: absolute; inset: 0; width: 1280px; height: 720px; margin: 0; transform: none; zoom: 1; pointer-events: none; }
+    #ov .fr > .reveal > .slides > section { display: block !important; opacity: 1 !important; visibility: visible !important; transform: none !important; transition: none !important; }
+    #ov .fr .fragment { opacity: 1 !important; visibility: visible !important; transform: none !important; }
+    #ov .fr pre code.fragment { display: none !important; }
+    #ov .fr .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+    html.print-pdf #progress, html.print-pdf #ctrl, html.print-pdf #menu, html.print-pdf #exportMenu { display: none !important; }
+    @media print { #progress, #ctrl, #menu, #exportMenu { display: none !important; } }
+    html.print-pdf .reveal pre code.fragment { display: none !important; }
+    html.print-pdf .reveal .hljs.has-highlights tr:not(.highlight-line) { opacity: 1 !important; }
+
+    /* ===================== Dark theme (DevFest 2026 dark template) ===================== */
+    :root { --dk-bg: #202124; --dk-card: #2a2b2f; --dk-line: #5f6368; --dk-text: #e8eaed; --dk-sub: #bdc1c6;
+      --r-background-color: var(--dk-bg); --r-main-color: var(--dk-text); --r-heading-color: #fff; --r-link-color: var(--h-blue); --r-link-color-hover: #8ab4f8; }
+    body, .reveal .slides section, .reveal .slides section.bg-blue, .reveal .slides section.bg-green,
+    .reveal .slides section.bg-yellow, .reveal .slides section.bg-red { background: var(--dk-bg); color: var(--dk-text); }
+    .nc > svg.nc-s { display: none; }
+    .reveal h1, .reveal h2, .reveal h3 { color: #fff; }
+    .reveal h1 { font-weight: 500; } .reveal h2 { font-weight: 400; }
+    .sub { color: var(--dk-sub); } .muted { color: #9aa0a6 !important; }
+    .eyebrow { color: var(--h-blue); }
+    .pc { background: var(--dk-card); border: 2px solid var(--dk-line); border-radius: 16px; color: var(--dk-text); }
+    .pc.blue { background: var(--dk-card); border-color: var(--h-blue); }
+    .pc.green { background: var(--dk-card); border-color: var(--h-green); }
+    .pc.yellow { background: var(--dk-card); border-color: var(--h-yellow); }
+    .pc.red { background: var(--dk-card); border-color: var(--h-red); }
+    .pc h3, .pc b { color: #fff; }
+    .tag { background: var(--h-yellow); color: #202124; border: 0; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; padding: 7px 13px; }
+    .tag.blue { background: var(--h-blue); } .tag.green { background: var(--h-green); } .tag.red { background: var(--h-red); }
+    .pc code, p code, li code, td code { background: #3c4043; color: var(--dk-text); padding: 1px 6px; border-radius: 6px; font-size: .9em; }
+    .cmd { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre { background: #17181b; border: 2px solid var(--dk-line); color: var(--dk-text); }
+    .reveal pre code { color: var(--dk-text); }
+    .reveal pre code.hljs { color: var(--dk-text); }
+    .ico { stroke: var(--dk-text); }
+    .numbox { background: transparent; border: 2px solid var(--dk-line); color: #fff; }
+    .bg-blue .numbox { color: var(--h-blue); border-color: var(--h-blue); } .bg-green .numbox { color: var(--h-green); border-color: var(--h-green); }
+    .bg-yellow .numbox { color: var(--h-yellow); border-color: var(--h-yellow); } .bg-red .numbox { color: var(--h-red); border-color: var(--h-red); }
+    .dots i { border-color: var(--dk-bg); }
+    .reveal .slides section[class*="bg-"] .numbox { top: 92px !important; }
+    .reveal .slides section[class*="bg-"] svg.ico.abs { top: 260px !important; }
+    .reveal .slides section[class*="bg-"] .dots { top: 548px !important; }
+    .badge { display: none; }
+    .ty-who p { color: var(--dk-sub); }
+    /* logos: GDG top-left, Build with Gemini top-right */
+    .top-gdg { position: absolute; left: 44px; top: 22px; z-index: 3; display: flex; align-items: center; gap: 10px; font: 500 17px/1.15 var(--sans); color: var(--dk-text); pointer-events: none; }
+    .top-gdg img { height: 24px; width: auto; }
+    .top-gdg small { display: block; font: 400 12px/1.2 var(--sans); color: #9aa0a6; }
+    .reveal .top-bwg { position: absolute; right: 40px; top: 14px; height: 54px; width: auto; margin: 0; z-index: 3; pointer-events: none; }
+
+    /* cover */
+    .s-cover-dk .chev-rows { position: absolute; left: 50px; top: 104px; width: 730px; display: grid; gap: 16px; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, #000 78%, transparent); mask-image: linear-gradient(90deg, #000 78%, transparent); }
+    .s-cover-dk .cr { display: flex; align-items: center; gap: 18px; white-space: nowrap; }
+    .s-cover-dk .ch { width: 38px; height: 66px; color: #fff; flex: none; }
+    .s-cover-dk .ch.cb, .s-cover-dk .ch.cg, .s-cover-dk .ch.cp { color: #1fa3a3; }
+    .s-cover-dk .w { font: 400 72px/1 var(--sans); letter-spacing: -.01em; }
+    .s-cover-dk .w.b { color: var(--h-blue); } .s-cover-dk .w.g { color: var(--h-green); } .s-cover-dk .w.p { color: var(--h-red); }
+    .hx-cover .hx-title { position: absolute; left: 56px; top: 400px; width: 700px; }
+    .hx-cover .hx-title b { display: block; font: 500 46px/1.15 var(--sans); color: #fff; letter-spacing: -.01em; }
+    .hx-cover .hx-title span { display: block; font: 400 22px/1.4 var(--sans); color: var(--dk-sub); margin-top: 12px; }
+    .hx-cover .hx-chips { position: absolute; left: 56px; top: 600px; display: flex; gap: 10px; }
+    .hx-cover .hx-chips i { font: 400 15px/1 var(--mono); font-style: normal; padding: 9px 14px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); }
+    .reveal .slides .hx-cover .hx-chips i img { width: 18px; height: 18px; vertical-align: -4px; margin-right: 7px; }
+    .hx-cover .hx-orbit { position: absolute; left: 800px; top: 76px; width: 420px; height: 420px; border-radius: 50%; border: 2px dashed #5f6368; box-sizing: border-box; }
+    .hx-cover .hx-orbit i { position: absolute; width: 22px; height: 22px; border-radius: 50%; border: 3px solid var(--dk-bg); }
+    .hx-cover .hx-ring { position: absolute; left: 836px; top: 112px; width: 348px; height: 348px; border-radius: 50%; padding: 9px; box-sizing: border-box; background: conic-gradient(from -45deg, var(--h-blue) 0 25%, var(--h-red) 0 50%, var(--h-yellow) 0 75%, var(--h-green) 0 100%); box-shadow: 0 18px 50px rgba(0,0,0,.45); }
+    .hx-cover .hx-ring > div { width: 100%; height: 100%; border-radius: 50%; padding: 7px; box-sizing: border-box; background: var(--dk-bg); }
+    .reveal .hx-cover .hx-ring img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; display: block; margin: 0; }
+    .hx-cover .hx-who { position: absolute; left: 790px; top: 520px; width: 440px; text-align: center; }
+    .hx-cover .hx-who b { display: block; font: 500 30px/1.2 var(--sans); color: #fff; }
+    .hx-cover .hx-who span { display: inline-block; margin-top: 10px; font: 400 15px/1 var(--mono); color: var(--dk-sub); padding: 8px 16px; border: 1.5px solid var(--dk-line); border-radius: 999px; }
+
+    /* agenda */
+    .s-agenda-dk .agd-title { position: absolute; left: 56px; top: 110px; font: 300 96px/1 var(--sans); color: #fff; }
+    .s-agenda-dk .agd-arrow { position: absolute; left: 20px; top: 300px; width: 330px; height: 330px; }
+    .reveal .s-agenda-dk ol.agd-list { position: absolute; left: 420px; top: 104px; width: 560px; margin: 0; padding: 0; list-style: none; display: grid; gap: 16px; }
+    .s-agenda-dk .agd-qr { position: absolute; left: 1004px; top: 104px; width: 236px; box-sizing: border-box; padding: 16px 16px 14px; border-radius: 16px; background: #fff; text-align: center; }
+    .reveal .s-agenda-dk .agd-qr img { display: block; width: 204px; height: 204px; margin: 0; }
+    .s-agenda-dk .agd-qr b { display: block; margin-top: 10px; font: 500 17px/1.25 var(--sans); color: #202124; }
+    .s-agenda-dk .agd-list li { display: flex; align-items: center; gap: 22px; padding: 18px 24px; background: var(--dk-card); border-radius: 10px; border-left: 6px solid var(--c); }
+    .s-agenda-dk .agd-list b { font: 500 34px/1 var(--sans); color: var(--c); width: 48px; }
+    .s-agenda-dk .agd-list strong { display: block; font: 500 30px/1.15 var(--sans); color: var(--c); }
+    .s-agenda-dk .agd-list span { display: block; font: 400 17px/1.3 var(--sans); color: var(--dk-sub); margin-top: 4px; }
+    .s-agenda-dk .c1 { --c: var(--h-blue); } .s-agenda-dk .c2 { --c: var(--h-green); } .s-agenda-dk .c3 { --c: var(--h-yellow); } .s-agenda-dk .c4 { --c: var(--h-red); }
+
+    /* shared deck atoms */
+    .flow { display: flex; align-items: stretch; gap: 14px; }
+    .flow .node { flex: 1; text-align: center; padding: 20px 14px; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .flow .node b { display: block; font-size: 21px; margin-bottom: 8px; }
+    .flow .node p { font-size: 15px; line-height: 1.38; color: var(--dk-sub); }
+    .flow .arr { width: 36px; flex: none; align-self: center; fill: none; stroke: var(--dk-text); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .flow.tight { gap: 8px; } .flow.tight .arr { width: 24px; } .flow.tight .node { padding: 16px 10px; } .flow.tight .node b { font-size: 19px; }
+    .zt-stack { display: grid; gap: 12px; }
+    .zt-stack .pc { padding: 14px 18px; font-size: 16px; line-height: 1.4; }
+    .zt-stack .pc b { color: #fff; }
+    .reveal table.zt-tbl { border-collapse: collapse; width: 100%; font-size: 16px; line-height: 1.35; color: var(--dk-text); margin: 0; table-layout: fixed; }
+    .reveal .zt-tbl th, .reveal .zt-tbl td { border: 0; border-bottom: 1.5px solid #3c4043; padding: 10px 12px; text-align: left; vertical-align: top; }
+    .reveal .zt-tbl th { font: 500 13.5px/1.2 var(--mono); color: var(--dk-sub); text-transform: uppercase; letter-spacing: .04em; }
+    .reveal .zt-tbl td:first-child { color: #fff; font-weight: 500; }
+    .reveal .zt-tbl tr:last-child td { border-bottom: 0; }
+    .reveal table.zt-tbl td code { font-size: 14px; }
+    .ev-ico { display: block; width: 38px; height: 38px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+    .flow .node .ev-ico { margin: 0 auto 10px; }
+    .ev-lg { display: inline-grid; place-items: center; width: 42px; height: 42px; border-radius: 10px; background: #fff; flex: none; }
+    .reveal .slides .ev-lg img { width: 26px; height: 26px; object-fit: contain; }
+    .h2-comp .pc { --c: var(--h-blue); border-top: 6px solid var(--c); padding: 16px 18px; }
+    .h2-comp .pc.green { --c: var(--h-green); } .h2-comp .pc.yellow { --c: var(--h-yellow); } .h2-comp .pc.red { --c: var(--h-red); }
+    .h2-comp h3 { font-size: 21px; color: var(--c) !important; margin-bottom: 8px; }
+    .h2-comp .chips { gap: 6px; }
+    .h2-comp .chip { background: #202124; border: 1.5px solid #80868b; color: var(--dk-text); font: 400 13.5px/1.3 var(--mono); }
+
+    /* Gemini Enterprise Agent Platform 4 pillars */
+    .gp { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; width: 1088px; }
+    .gp .pc { --c: var(--h-blue); border-top: 6px solid var(--c); padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+    .gp .pc.green { --c: var(--h-green); } .gp .pc.yellow { --c: var(--h-yellow); } .gp .pc.red { --c: var(--h-red); }
+    .gp .pc.dim { opacity: .62; }
+    .gp-h { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
+    .gp-h i { flex: none; width: 34px; height: 34px; border-radius: 50%; background: var(--c); color: #202124; display: grid; place-items: center; font: 700 18px/1 var(--sans); font-style: normal; }
+    .gp-h b { display: block; font: 500 24px/1.05 var(--sans); color: var(--c) !important; }
+    .gp-h span { display: block; font: 400 14px/1.25 var(--sans); color: var(--dk-sub); margin-top: 2px; }
+    .gp-it { font-size: 16px; line-height: 1.3; display: flex; align-items: flex-start; gap: 8px; }
+    .gp-it::before { content: ""; flex: none; width: 8px; height: 8px; border-radius: 50%; background: var(--c); margin-top: 6px; }
+    .gp-it.hi { color: #fff; font-weight: 500; }
+
+    /* ---------- Agent Memory deck extras ---------- */
+    .mm-chat { display: grid; gap: 10px; }
+    .mm-msg { max-width: 86%; padding: 10px 14px; border-radius: 14px; font-size: 16px; line-height: 1.38; color: #fff; }
+    .mm-msg small { display: block; font: 500 11.5px/1 var(--mono); color: var(--dk-sub); margin-bottom: 5px; text-transform: uppercase; letter-spacing: .05em; }
+    .mm-msg.u { justify-self: start; background: rgba(87,202,255,.12); border: 1.5px solid var(--h-blue); border-bottom-left-radius: 4px; }
+    .mm-msg.a { justify-self: end; background: rgba(92,219,109,.12); border: 1.5px solid var(--h-green); border-bottom-right-radius: 4px; }
+    .mm-msg.bad { justify-self: end; background: rgba(255,125,175,.14); border: 1.5px solid var(--h-red); border-bottom-right-radius: 4px; }
+
+    /* context window visual */
+    .mm-cw-out { display: grid; gap: 8px; margin-bottom: 10px; }
+    .mm-cw-drop { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; border-radius: 10px; border: 1.5px dashed var(--h-red); background: rgba(255,125,175,.09); font: 400 15px/1.3 var(--mono); color: #ffb3cf; }
+    .mm-cw-drop em { font-style: normal; font-size: 12px; color: var(--h-red); }
+    .mm-cw-box { border: 2px solid var(--h-blue); border-radius: 14px; padding: 14px 16px; background: #17181b; }
+    .mm-cw-box .lbl { font: 700 12px/1 var(--mono); letter-spacing: .07em; color: var(--h-blue); text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .mm-cw-lines { display: grid; gap: 6px; font: 400 14.5px/1.35 var(--mono); color: var(--dk-text); }
+    .mm-cw-lines span b { color: var(--h-yellow); font-weight: 500; }
+    .mm-cw-lines span.ag b { color: var(--h-green); }
+
+    /* checklist */
+    .reveal ul.mm-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .mm-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 17px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .mm-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .mm-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .mm-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* 5-level memory progression */
+    .mm-lvls { display: grid; gap: 14px; width: 1088px; }
+    .mm-lvl-row1 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .mm-lvl-row2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 14px; }
+    .mm-lvl { padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+    .mm-lvl .lv { font: 700 12.5px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--c); }
+    .mm-lvl b { font-size: 22px; color: #fff; }
+    .mm-lvl p { font-size: 16px; line-height: 1.38; color: var(--dk-sub); }
+
+    /* short-term vs long-term timeline */
+    .mm-tl { display: grid; grid-template-columns: 175px repeat(3, minmax(0, 1fr)); gap: 12px; width: 1088px; align-items: stretch; }
+    .mm-tl-hd { padding: 14px 16px; display: flex; flex-direction: column; justify-content: center; gap: 4px; }
+    .mm-tl-hd small { font: 700 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--c); }
+    .mm-tl-hd b { font-size: 20px; color: #fff; }
+    .mm-tl-hd span { font-size: 14px; color: var(--dk-sub); }
+    .mm-tl-cell { padding: 13px 15px; display: flex; flex-direction: column; gap: 7px; font-size: 15px; line-height: 1.35; }
+    .mm-tl-cell small { font: 700 12px/1 var(--mono); color: var(--dk-sub); letter-spacing: .05em; }
+    .mm-tl-cell .q { color: #fff; font-weight: 500; font-size: 16px; }
+    .mm-tl-cell .pill { display: inline-block; align-self: flex-start; font: 400 13px/1.2 var(--mono); padding: 4px 10px; border-radius: 999px; background: #202124; border: 1.5px solid var(--c, #5f6368); color: var(--c, var(--dk-text)); }
+
+    /* comparison kv rows */
+    .mm-kv { display: grid; gap: 8px; margin-top: 12px; }
+    .mm-kv > div { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 10px; font-size: 15.5px; line-height: 1.35; padding: 7px 10px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
+    .mm-kv > div > b { font: 500 12.5px/1.4 var(--mono); color: var(--c, var(--h-blue)); text-transform: uppercase; }
+    .mm-kv > div > span { color: var(--dk-text); }
+
+    /* under-the-hood architecture map */
+    .mm-map { position: relative; width: 1088px; height: 392px; }
+    .mm-wires { position: absolute; inset: 0; width: 1088px; height: 392px; overflow: visible; pointer-events: none; }
+    .mm-wires path { fill: none; stroke-width: 2.8; stroke-linecap: round; stroke-linejoin: round; }
+    .mm-wires .w { stroke: var(--dk-text); }
+    .mm-wires .w-b { stroke: var(--h-blue); }
+    .mm-wires .w-y { stroke: var(--h-yellow); }
+    .mm-wires .w-g { stroke: var(--h-green); }
+    .mm-n { position: absolute; padding: 12px 14px; display: flex; flex-direction: column; justify-content: center; gap: 4px; text-align: center; }
+    .mm-n b { font-size: 19px; color: #fff; line-height: 1.2; }
+    .mm-n span { font: 400 13.5px/1.3 var(--mono); color: var(--dk-sub); }
+    .mm-wl { position: absolute; font: 500 12.5px/1 var(--mono); padding: 4px 8px; border-radius: 6px; background: var(--dk-bg); white-space: nowrap; }
+
+    /* scope isolation vaults */
+    .mm-vault { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; }
+    .mm-vault .facts { display: grid; gap: 8px; }
+    .mm-vault .facts span { font: 400 15px/1.35 var(--mono); padding: 8px 12px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; color: var(--dk-text); }
+    .mm-wall { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; padding: 0 4px; }
+    .mm-wall i { width: 0; flex: 1; border-left: 3px dashed var(--h-red); }
+    .mm-wall span { font: 700 12px/1.2 var(--mono); color: var(--h-red); text-transform: uppercase; text-align: center; padding: 6px 10px; border: 1.5px solid var(--h-red); border-radius: 999px; background: rgba(255,125,175,.12); white-space: nowrap; }
+
+    /* number step badge in flow */
+    .mm-step-n { font: 700 14px/1 var(--mono); color: var(--c, var(--h-blue)); margin-bottom: 6px; display: block; }
+
+    /* visual illustration frames */
+    .mm-art { border: 2px solid var(--dk-line); border-radius: 18px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; }
+    .mm-art.blue { border-color: var(--h-blue); } .mm-art.green { border-color: var(--h-green); }
+    .mm-art.yellow { border-color: var(--h-yellow); } .mm-art.red { border-color: var(--h-red); }
+    .mm-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mm-art.contain img { object-fit: contain; }
+    .mm-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .mm-div-art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .mm-res-row { display: flex; align-items: center; gap: 14px; }
+    .mm-res-row h3 { margin: 0 0 4px; font-size: 21px; }
+    .mm-lvl-list { display: grid; gap: 9px; }
+    .mm-lvl-item { display: flex; align-items: center; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--dk-card); border: 2px solid var(--c, var(--dk-line)); }
+    .mm-lvl-item > em { flex: none; width: 38px; height: 30px; border-radius: 8px; background: var(--c); color: #202124; font: 700 14px/1 var(--mono); font-style: normal; display: grid; place-items: center; }
+    .mm-lvl-item div b { display: block; font-size: 17px; color: #fff; line-height: 1.2; }
+    .mm-lvl-item div span { display: block; font-size: 14px; color: var(--dk-sub); margin-top: 2px; line-height: 1.3; }
+    .mm-pills { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+    .mm-pills span { font: 500 14px/1.2 var(--mono); padding: 7px 12px; border-radius: 999px; background: #202124; border: 1.5px solid var(--c, var(--dk-line)); color: var(--c, #fff); }
+    .mm-pills i { font-style: normal; color: var(--dk-sub); font-size: 16px; }
+  </style>
+</head>
+<body>
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M19 9h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v3l-4-3h-3"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4a3.5 3.5 0 0 0-3.3 4.7A3.5 3.5 0 0 0 5 15a3.5 3.5 0 0 0 4.5 5V4Z"/><path d="M14.5 4a3.5 3.5 0 0 1 3.3 4.7A3.5 3.5 0 0 1 19 15a3.5 3.5 0 0 1-4.5 5V4Z"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2Z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+  </svg>
+
+  <!-- Slide controls (shopio-style) -->
+  <div id="progress"></div>
+  <div id="ctrl">
+    <button id="bPrev" title="Previous (←)">‹</button>
+    <span class="cnt" id="cnt" title="Slide list">1 / 31</span>
+    <button id="bNext" title="Next (→)">›</button>
+    <button id="bOv" title="All slides (O)"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></button>
+    <button id="bFs" title="Fullscreen (F)"><svg viewBox="0 0 24 24"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M3 16v3a2 2 0 0 0 2 2h3M16 21h3a2 2 0 0 0 2-2v-3"/></svg></button>
+    <button id="bNotes" title="Speaker notes (N / S)"><svg viewBox="0 0 24 24"><path d="M15.5 3H5a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h14a2 2 0 0 0 2-2V8.5L15.5 3Z"/><path d="M15 3v4a2 2 0 0 0 2 2h4"/></svg></button>
+    <button id="bPdf" title="Export PDF (E = this slide, Shift+E = all)" aria-haspopup="menu" aria-expanded="false"><svg viewBox="0 0 24 24"><path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/><path d="M12 18v-6"/><path d="m9 15 3 3 3-3"/></svg></button>
+  </div>
+  <div id="menu"></div>
+  <div id="ov"><div class="ovh"><span>All slides</span><button id="ovX" title="Close (Esc)">✕</button></div><div class="ovg"></div></div>
+  <div id="exportMenu" role="menu">
+    <button role="menuitem" data-export="all"><span>All slides<span class="sub">PDF of every slide</span></span><kbd>Shift+E</kbd></button>
+    <button role="menuitem" data-export="slide"><span>This slide<span class="sub" id="exportCur">PDF of the current slide</span></span><kbd>E</kbd></button>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Agent Memory">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Connect</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Remember</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Personalize</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Building AI Agents<br>with ADK and Memory Bank</b><span>From blank-slate chatbots to agents that remember every user</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="">Memory Bank</i><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-red)"><img src="../images/shared/logos/gemini.svg" alt="">Gemini</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • วันนี้คุยเรื่อง Agent Memory: Connect, Remember, Personalize — สร้าง AI Agent ที่จำผู้ใช้ได้จริงด้วย ADK และ Memory Bank บน Gemini Enterprise Agent Platform • จากแชตบอตที่เริ่มใหม่จากศูนย์ทุกครั้ง สู่ผู้ช่วยที่เข้าใจบริบทของแต่ละคน</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>The Goldfish Problem</strong><span>Agents, ADK, and why they forget</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Understanding Agent Memory</strong><span>Short-term vs long-term, sessions, state</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Memory Bank</strong><span>Extract, consolidate, recall by meaning</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Hands-on with ADK</strong><span>Setup, profiles, topics and architecture</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/agent-memory-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">4 ช่วงครับ: (1) ทำไม AI Agent ที่ฉลาดและมี tool ถึงยังลืมทุกอย่างเมื่อเปิดแชตใหม่ (2) เข้าใจ Agent Memory 5 ระดับ ตั้งแต่ Session, State จนถึง Persistence (3) Memory Bank: สกัด รวมข้อเท็จจริง และค้นคืนตามความหมาย (4) ลงมือต่อกับ ADK ทั้ง Topics, Profiles และสถาปัตยกรรมเบื้องหลัง • สแกน QR ด้านขวาเพื่อเปิดสไลด์ดูตามได้ครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · The Goldfish Problem">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="mm-div-art" style="--c:var(--h-blue)"><img src="../images/agent-memory-slides/goldfish-problem.jpg" alt=""></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">The Goldfish<br>Problem</h1>
+            <p class="sub" style="margin-top:28px">Agents, ADK, and why<br>they forget</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • ปูพื้นฐานสั้น ๆ ว่า AI Agent คืออะไร ทำงานยังไงใน 1 รอบ และทำไมพอเปิดแชตใหม่มันถึงลืมทุกอย่างเหมือนปลาทอง</aside>
+      </section>
+
+      <!-- 4. Warm-up: Anatomy of an AI Agent -->
+      <section data-title="Anatomy of a hotel agent">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Warm-up · what is an AI agent?</div>
+            <h2 style="margin-bottom:14px">Anatomy of a hotel agent</h2>
+            <div class="mm-art contain" style="width:1088px; height:242px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/hotel-agent-anatomy.jpg" alt="AI hotel robot brain connected through tool arms to external hotel and payment systems">
+            </div>
+            <div class="grid g3" style="width:1088px; gap:16px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:12px 16px">
+                <h3 style="color:var(--h-blue); font-size:19px; margin-bottom:4px">The Brain · Agent</h3>
+                <p style="font-size:14.5px; line-height:1.35; color:var(--dk-sub)">Gemini reasons with a <b>Goal</b> and <b>Instructions</b>.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:12px 16px">
+                <h3 style="color:var(--h-green); font-size:19px; margin-bottom:4px">The Hands · Tools</h3>
+                <p style="font-size:14.5px; line-height:1.35; color:var(--dk-sub)"><code>search_hotels</code>, <code>get_price</code>, <code>book_room</code> &amp; MCP.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3" style="padding:12px 16px">
+                <h3 style="color:var(--h-yellow); font-size:19px; margin-bottom:4px">Real Systems</h3>
+                <p style="font-size:14.5px; line-height:1.35; color:var(--dk-sub)">Hotel site, Bookings DB and Payment API.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Agent</b><span>Does not just generate text — it perceives, reasons, and calls tools to act.</span></div>
+        </div>
+        <aside class="notes">อุ่นเครื่องสั้น ๆ ก่อนเข้าเรื่อง memory • ดูภาพด้านบนจากซ้ายไปขวา: (คลิก 1) สมองคือโมเดล Gemini พร้อม Goal และ Instruction ว่าต้องทำตัวยังไง • (คลิก 2) มือคือ Tools ทั้งฟังก์ชัน, API และ MCP server เช่น search_hotels, book_room • (คลิก 3) Tools เหล่านี้ไปคุยกับระบบจริง เช่น เว็บโรงแรม ฐานข้อมูลการจอง และระบบจ่ายเงิน • (คลิก 4) นิยามสั้น ๆ: Agent ไม่ใช่แค่สร้างข้อความ แต่รับรู้ คิด และลงมือทำผ่าน tool</aside>
+      </section>
+
+      <!-- 5. One turn: agent and tools at work -->
+      <section data-title="One turn at work">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Warm-up · single turn</div>
+            <h2 style="margin-bottom:14px">One turn: agent and tools at work</h2>
+            <div class="mm-art contain" style="width:1088px; height:242px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/one-turn-loop.jpg" alt="4-step visual loop: user asks for Tokyo, robot picks tool, Places API returns temples, itinerary delivered">
+            </div>
+            <div class="grid g4" style="width:1088px; gap:12px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:11px 14px"><b style="color:var(--h-blue); font-size:15px">01 · User request</b><p style="font-size:14px; color:var(--dk-sub); margin-top:4px">"Find historic sites in Tokyo."</p></div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:11px 14px"><b style="color:var(--h-green); font-size:15px">02 · Agent decides</b><p style="font-size:14px; color:var(--dk-sub); margin-top:4px">Calls <code>search_places</code></p></div>
+              <div class="pc yellow fragment" data-fragment-index="3" style="padding:11px 14px"><b style="color:var(--h-yellow); font-size:15px">03 · Tool runs</b><p style="font-size:14px; color:var(--dk-sub); margin-top:4px">Queries Places API</p></div>
+              <div class="pc red fragment" data-fragment-index="4" style="padding:11px 14px"><b style="color:var(--h-red); font-size:15px">04 · Response</b><p style="font-size:14px; color:var(--dk-sub); margin-top:4px">"Imperial Palace, Senso-ji…"</p></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>The catch</b><span>Smart, with tools… but open a new chat and it forgets everything about you.</span></div>
+        </div>
+        <aside class="notes">ใน 1 รอบการทำงานตามภาพด้านบน • (คลิก 1) ผู้ใช้ขอหาที่เที่ยวประวัติศาสตร์ในโตเกียว • (คลิก 2) Agent คิดว่าต้องใช้ข้อมูลสถานที่ จึงเรียก search_places • (คลิก 3) Tool ไปคิวรี Places API แล้วคืนรายการกลับมา • (คลิก 4) Agent สรุปเป็นแผนเที่ยวตอบผู้ใช้ • (คลิก 5) ฉลาดและใช้ tool เก่งมาก แต่พอเปิดแชตใหม่ มันจำอะไรเกี่ยวกับเราไม่ได้เลย นี่คือปัญหาที่จะแก้กันวันนี้</aside>
+      </section>
+
+      <!-- 6. The Goldfish Problem -->
+      <section data-title="The Goldfish Problem">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the problem</div>
+            <h2 style="margin-bottom:20px">Without memory, every chat is a blank slate</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:stretch">
+              <div class="mm-art blue" style="width:500px; height:360px">
+                <img src="../images/agent-memory-slides/goldfish-problem.jpg" alt="AI traveler robot puzzled beside a goldfish bowl with fading Tokyo trip icons">
+              </div>
+              <div style="flex:1; min-width:0; display:grid; gap:14px">
+                <div class="pc blue fragment" data-fragment-index="1" style="padding:14px 18px">
+                  <span class="tag blue" style="margin-bottom:10px">Session 1 · Today</span>
+                  <div class="mm-chat" style="gap:8px">
+                    <div class="mm-msg u" style="font-size:15px; padding:8px 12px">Plan a 2-day Tokyo trip. Historic sites &amp; sushi.</div>
+                    <div class="mm-msg a" style="font-size:15px; padding:8px 12px">Imperial Palace, then a sushi dinner in Ginza.</div>
+                  </div>
+                </div>
+                <div class="pc red fragment" data-fragment-index="2" style="padding:14px 18px">
+                  <span class="tag red" style="margin-bottom:10px">Session 2 · New chat</span>
+                  <div class="mm-chat" style="gap:8px">
+                    <div class="mm-msg u" style="font-size:15px; padding:8px 12px">Perfect! Can you send me the itinerary?</div>
+                    <div class="mm-msg bad" style="font-size:15px; padding:8px 12px">Hi! How can I help you plan a trip today?</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Today's focus</b><span>Agent Memory — remember who the user is across turns and across sessions.</span></div>
+        </div>
+        <aside class="notes">นี่คือ The Goldfish Problem • ดูภาพด้านซ้าย: หุ่นยนต์นักเดินทางที่จำอะไรไม่ได้เหมือนปลาทอง ฟองความคิดเรื่องโตเกียว วัด ซูชิ ลอยหายไปหมด • (คลิก 1) แชตแรกคุยกันดีมาก บอกว่าอยากไปโตเกียว 2 วัน ชอบที่ประวัติศาสตร์กับซูชิ Agent จัดให้เสร็จสรรพ • (คลิก 2) พอเปิดแชตใหม่ขอให้ส่ง itinerary มันตอบเหมือนไม่เคยเจอกันมาก่อน • (คลิก 3) วันนี้เราจึงโฟกัสที่ Agent Memory เพื่อให้จำผู้ใช้ได้จริง</aside>
+      </section>
+
+      <!-- 7. Why agents forget -->
+      <section data-title="Why agents forget">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the context window limit</div>
+            <h2 style="margin-bottom:20px">Why agents forget</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:center">
+              <div class="mm-art blue" style="width:560px; height:380px">
+                <img src="../images/agent-memory-slides/context-window.jpg" alt="Finite context window pushing older dog and hotel preference cards out the top">
+              </div>
+              <div style="flex:1; min-width:0" class="zt-stack">
+                <div class="pc red fragment" data-fragment-index="1"><b>Pushed out ↑</b><br>Early preferences (<em>non-smoking, high floor, traveling with a dog</em>) drop off the top of long chats.</div>
+                <div class="pc blue fragment" data-fragment-index="2"><b>Fixed context window</b><br>The model only sees the recent turns that still fit inside the frame right now.</div>
+                <div class="pc green fragment" data-fragment-index="3"><b>Long-term memory</b><br>Brings back only the relevant facts into the prompt when they matter.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ทำไมแค่ short-term memory ถึงไม่พอ • ดูภาพด้านซ้าย: กรอบสีฟ้าคือ Context Window ที่มีขนาดจำกัด พอมีข้อความใหม่สีเขียวดันเข้ามาข้างล่าง ข้อความเก่าสีชมพูด้านบนอย่าง "พาน้องหมาไปด้วย" หรือ "ห้องไม่สูบบุหรี่" ก็จะหลุดกรอบไป • (คลิก 1) แชตยาวดันข้อเท็จจริงเก่าหลุดออกไป • (คลิก 2) โมเดลเห็นเฉพาะสิ่งที่ยังอยู่ในกรอบตอนนี้ • (คลิก 3) Long-term memory แก้โดยดึงกลับมาเฉพาะข้อเท็จจริงที่เกี่ยวข้องกับคำถามปัจจุบัน</aside>
+      </section>
+
+      <!-- 8. Where memory lives (Agent Platform + ADK) -->
+      <section data-title="Where memory lives">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Gemini Enterprise Agent Platform · 4 pillars</div>
+            <h2 style="margin-bottom:22px">Where ADK and Memory Bank fit</h2>
+            <div class="gp">
+              <div class="pc blue fragment" data-fragment-index="1" style="box-shadow:0 0 24px rgba(87,202,255,.16)">
+                <div class="gp-h"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><b>Build</b><span>Create agents</span></div></div>
+                <div class="gp-it hi">Agent Development Kit</div>
+                <div class="gp-it">Agent Studio (low-code)</div>
+                <div class="gp-it">Agent Garden templates</div>
+                <div class="gp-it">Multimodal streaming</div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="1" style="box-shadow:0 0 24px rgba(92,219,109,.16)">
+                <div class="gp-h"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Memory Bank"></span><div><b>Scale</b><span>Run them reliably</span></div></div>
+                <div class="gp-it hi">Memory Bank</div>
+                <div class="gp-it hi">Agent Sessions</div>
+                <div class="gp-it">Agent Runtime</div>
+                <div class="gp-it">Orchestration (A2A)</div>
+              </div>
+              <div class="pc yellow dim fragment" data-fragment-index="2">
+                <div class="gp-h"><span class="ev-lg"><img src="../images/shared/logos/gcp-armor.png" alt="Govern"></span><div><b>Govern</b><span>Keep them safe</span></div></div>
+                <div class="gp-it">Agent Identity</div>
+                <div class="gp-it">Agent Registry</div>
+                <div class="gp-it">Gateway + Model Armor</div>
+                <div class="gp-it">Threat detection</div>
+              </div>
+              <div class="pc red dim fragment" data-fragment-index="2">
+                <div class="gp-h"><span class="ev-lg"><img src="../images/shared/logos/gcp-monitoring.png" alt="Optimize"></span><div><b>Optimize</b><span>Make them better</span></div></div>
+                <div class="gp-it">Agent Simulation</div>
+                <div class="gp-it">Agent Evaluation</div>
+                <div class="gp-it">Agent Observability</div>
+                <div class="gp-it">Agent Optimizer</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Today</b><span>Build with ADK (pillar 1) · Remember with Sessions &amp; Memory Bank (pillar 2).</span></div>
+        </div>
+        <aside class="notes">ภาพรวมว่าของวันนี้ไปอยู่ตรงไหนใน Gemini Enterprise Agent Platform ซึ่งแบ่งเป็น 4 เสาหลัก • (คลิก 1) เสา 1 Build มี ADK สำหรับสร้าง Agent และเสา 2 Scale มี Agent Sessions และ Memory Bank • (คลิก 2) ส่วนเสา 3 Govern (ความปลอดภัย) และเสา 4 Optimize (การประเมินและปรับปรุง) อยู่ใน deck อื่นของซีรีส์นี้ • (คลิก 3) วันนี้เราโฟกัสเต็ม ๆ ที่ ADK + Sessions + Memory Bank</aside>
+      </section>
+
+      <!-- 9. Section 02 -->
+      <section class="bg-green" data-title="02 · Understanding Agent Memory">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="mm-div-art" style="--c:var(--h-green)"><img src="../images/agent-memory-slides/memory-levels.jpg" alt=""></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Understanding<br>Agent Memory</h1>
+            <p class="sub" style="margin-top:28px">Five levels from one chat<br>to multimodal long-term recall</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • มาดูความจำของ Agent ทีละระดับ ตั้งแต่ short-term ในแชตเดียว ไปจนถึง persistent และ long-term memory</aside>
+      </section>
+
+      <!-- 10. Five levels of Agent Memory -->
+      <section data-title="Five levels of agent memory">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">From chatbot to personal assistant</div>
+            <h2 style="margin-bottom:20px">Five levels of agent memory</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:center">
+              <div class="mm-art" style="width:570px; height:380px">
+                <img src="../images/agent-memory-slides/memory-levels.jpg" alt="Five ascending glowing platforms representing five levels of agent memory">
+              </div>
+              <div class="mm-lvl-list" style="flex:1; min-width:0">
+                <div class="mm-lvl-item fragment" style="--c:var(--h-blue)"><em>L1</em><div><b>Session &amp; State</b><span>Hold conversation &amp; scratchpad in one chat</span></div></div>
+                <div class="mm-lvl-item fragment" style="--c:var(--h-blue)"><em>L2</em><div><b>Multi-Agent State</b><span>Share notes between specialist agents</span></div></div>
+                <div class="mm-lvl-item fragment" style="--c:var(--h-green)"><em>L3</em><div><b>Persistent Sessions</b><span>Survive restarts with DB or Agent Engine</span></div></div>
+                <div class="mm-lvl-item fragment" style="--c:var(--h-yellow)"><em>L4</em><div><b>Long-term Memory</b><span>Recall facts across chats via Memory Bank</span></div></div>
+                <div class="mm-lvl-item fragment" style="--c:var(--h-red)"><em>L5</em><div><b>Multimodal Memory</b><span>Remember photos, audio and video clips</span></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เส้นทางจากแชตบอตธรรมดาสู่ผู้ช่วยส่วนตัวมี 5 ระดับตามบันไดด้านซ้าย • (คลิก) L1: Session &amp; State จำบทสนทนาในแชตเดียว • (คลิก) L2: Multi-Agent State ให้ agent หลายตัวส่งโน้ตหากัน • (คลิก) L3: Persistent Sessions เก็บลงฐานข้อมูล รีสตาร์ตไม่หาย • (คลิก) L4: Long-term Memory ด้วย Memory Bank จำข้ามแชตได้ • (คลิก) L5: Multimodal Memory จำรูปภาพ เสียง และวิดีโอได้ด้วย</aside>
+      </section>
+
+      <!-- 11. Level 1: What is a Session? -->
+      <section data-title="Level 1 · What is a Session?">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Level 1 · short-term memory</div>
+            <h2 style="margin-bottom:20px">What is a Session?</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:center">
+              <div class="mm-art contain blue" style="width:560px; height:376px">
+                <img src="../images/agent-memory-slides/session-ram.svg" alt="Linked chat messages running on fast volatile RAM chip with app restart warning">
+              </div>
+              <div style="flex:1; min-width:0" class="pc">
+                <h3 style="font-size:20px; margin-bottom:14px"><code>InMemorySessionService</code> <span class="muted" style="font-size:14px">(default)</span></h3>
+                <ul class="mm-chk">
+                  <li class="ok fragment" data-fragment-index="1"><i>✓</i><span>Reads every earlier message in this thread</span></li>
+                  <li class="ok fragment" data-fragment-index="1"><i>✓</i><span>Same session: follow-ups work naturally</span></li>
+                  <li class="ok fragment" data-fragment-index="1"><i>✓</i><span>Stored in RAM: fast for local dev</span></li>
+                  <li class="warn fragment" data-fragment-index="2"><i>!</i><span>New session: forgets everything</span></li>
+                  <li class="warn fragment" data-fragment-index="2"><i>!</i><span>App restarts: all sessions are wiped</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เริ่มจากหน่วยเล็กสุดคือ Session — ดูภาพด้านซ้าย: แชต 1 ห้องคือข้อความที่ร้อยต่อกันบนชิป RAM • (คลิก 1) ตัว default ใน ADK คือ InMemorySessionService เก็บใน RAM เร็วมาก และอ่านข้อความก่อนหน้าใน session เดียวกันได้ครบ ถามต่อว่า "เช็กราคาให้หน่อย" ก็เข้าใจทันที • (คลิก 2) ข้อจำกัดคือเปิด session ใหม่ก็ลืมหมด และพอรีสตาร์ตแอป (ปุ่มสีชมพู) RAM ก็ถูกล้างเกลี้ยง</aside>
+      </section>
+
+      <!-- 12. Inside a Session: Events & State -->
+      <section data-title="Inside a Session">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Inside a session · two structures</div>
+            <h2 style="margin-bottom:14px">Events record everything; state keeps key facts</h2>
+            <div class="mm-art contain" style="width:1088px; height:236px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/events-vs-state.jpg" alt="Scrolling chat transcript with lobby photo on the left vs compact glowing state clipboard on the right">
+            </div>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" style="padding:12px 18px">
+                <h3 style="color:var(--h-blue); font-size:19px; margin-bottom:4px">Events · full transcript</h3>
+                <p style="font-size:15px; line-height:1.38; color:var(--dk-text)">Every message, tool call, reply and photo (e.g. <code>[hotel lobby photo]</code>) in order.</p>
+              </div>
+              <div class="pc green fragment" style="padding:12px 18px">
+                <h3 style="color:var(--h-green); font-size:19px; margin-bottom:4px">State · key-value scratchpad</h3>
+                <p style="font-size:15px; line-height:1.38; color:var(--dk-text)"><code>destination=Bangkok</code> · <code>pet=small dog</code> · <code>smoking=non-smoking</code> · <code>shortlist=Riverside</code></p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Tip</b><span>Always write via <code>context.state[...]</code> or <code>output_key</code> so ADK persists the state delta.</span></div>
+        </div>
+        <aside class="notes">ข้างใน Session มีของ 2 อย่างตามภาพด้านบน • (คลิก) ฝั่งซ้าย Events คือ transcript เต็มทุกข้อความ ทุกคำตอบ รวมถึงรูปที่ผู้ใช้อัปโหลด • (คลิก) ฝั่งขวา State คือกระดาษทดแบบ key-value เก็บข้อเท็จจริงสำคัญ เช่น destination, pet, smoking, shortlist เพื่อไม่ต้องไล่อ่านแชตทั้งหน้าใหม่ทุกรอบ • (คลิก) ทิปสำคัญ: เวลาแก้ state ให้เขียนผ่าน context.state[...] หรือ output_key เพื่อให้ ADK บันทึกเป็น EventActions state_delta</aside>
+      </section>
+
+      <!-- 13. Level 2: Multi-Agent State -->
+      <section data-title="Level 2 · Multi-Agent State">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Level 2 · multi-agent collaboration</div>
+            <h2 style="margin-bottom:16px">Agents share notes through state</h2>
+            <div class="mm-art contain" style="width:1088px; height:228px; margin-bottom:16px">
+              <img src="../images/agent-memory-slides/multi-agent-state.svg" alt="Agent A Hotel Finder writes hotel_choice to shared Session State clipboard read automatically by Agent B Booking">
+            </div>
+            <pre class="fragment" style="width:1088px; font-size:14px"><code class="language-python" data-trim>
+# Agent A saves its answer into session state
+hotel_finder = LlmAgent(
+    name="hotel_finder", instruction="Output only the hotel name.",
+    output_key="hotel_choice",
+)
+# Agent B reads it: ADK fills {hotel_choice} from state automatically
+booking_agent = LlmAgent(
+    name="booking_agent", instruction="Book a room at {hotel_choice}.",
+)
+            </code></pre>
+          </div>
+        </div>
+        <aside class="notes">Level 2: State ไม่ได้มีไว้ให้ Agent ตัวเดียว • ดูภาพด้านบน: Agent A (Hotel Finder) เขียนผลลัพธ์ผ่าน output_key ลงบนคลิปบอร์ดกลาง SESSION STATE ชื่อ hotel_choice = "Riverside Grand" จากนั้น Agent B (Booking) แค่ใส่ {hotel_choice} ใน instruction ตัว ADK จะแทนค่าจาก state ให้เอง • (คลิก) ดูโค้ดด้านล่าง: ไม่ต้องเขียน glue code ส่งตัวแปรระหว่าง Agent เลย</aside>
+      </section>
+
+      <!-- 14. Level 3: Persistence & State Scopes -->
+      <section data-title="Level 3 · Persistence & Scopes">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Level 3 · durability &amp; state prefixes</div>
+            <h2 style="margin-bottom:18px">Session services and state scopes</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:center">
+              <div class="mm-art contain" style="width:500px; height:360px">
+                <img src="../images/agent-memory-slides/state-scopes.svg" alt="Four nested state scope rings (temp, session, user, app) resting on a persistent session store">
+              </div>
+              <div style="flex:1; min-width:0; display:grid; gap:14px">
+                <div class="pc" style="padding:12px 14px">
+                  <table class="zt-tbl" style="font-size:14.5px">
+                    <tr><th style="width:52%; padding:8px">SessionService</th><th style="width:26%; padding:8px">Storage</th><th style="width:22%; padding:8px">Restart?</th></tr>
+                    <tr><td style="padding:8px"><code>InMemorySessionService</code></td><td style="padding:8px">RAM</td><td style="padding:8px; color:var(--h-red)">No</td></tr>
+                    <tr><td style="padding:8px"><code>DatabaseSessionService</code></td><td style="padding:8px">SQLite/PG</td><td style="padding:8px; color:var(--h-green)">Yes</td></tr>
+                    <tr><td style="padding:8px"><code>VertexAiSessionService</code></td><td style="padding:8px">Agent Engine</td><td style="padding:8px; color:var(--h-green)">Yes</td></tr>
+                  </table>
+                </div>
+                <div class="pc green fragment" style="padding:12px 16px; font-size:15px; line-height:1.45">
+                  <b style="color:var(--h-green)">One-line upgrade:</b> swap the <code>SessionService</code> in your Runner — keep the agent code untouched. Prefixes (<code>temp:</code>, <code>user:</code>, <code>app:</code>) scope how long keys survive.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Level 3: ดูภาพวงซ้อนด้านซ้าย — ขอบเขตของ key ใน state ขยายจากเล็กไปใหญ่: temp: แค่ 1 รอบ → ไม่มี prefix แค่ 1 แชต → user: ข้ามทุกแชตของ user เดียวกัน → app: ใช้ร่วมกันทั้งแอป โดยทั้งหมดอยู่บนฐานข้อมูลที่รอดจากการรีสตาร์ต • ด้านขวาเทียบ 3 SessionService: InMemory, DatabaseSessionService และ VertexAiSessionService • (คลิก) แค่เปลี่ยน 1 บรรทัดใน Runner ไม่ต้องแก้โค้ด Agent</aside>
+      </section>
+
+      <!-- 15. Short-term resets. Long-term grows. -->
+      <section data-title="Short-term vs Long-term">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Short-term vs long-term</div>
+            <h2 style="margin-bottom:16px">Short-term resets. Long-term grows.</h2>
+            <div class="mm-art contain" style="width:1088px; height:346px">
+              <img src="../images/agent-memory-slides/short-vs-long-timeline.svg" alt="Two-lane Monday-Wednesday-Friday timeline showing short-term state wiping while Memory Bank accumulates facts">
+            </div>
+          </div>
+          <div class="ask fragment"><b>Key idea</b><span>Memories pile up across sessions, even after the old chats themselves are gone.</span></div>
+        </div>
+        <aside class="notes">ภาพนี้คือหัวใจสำคัญที่สุด • แถวบนคือ Short-term: วันจันทร์บอกมังสวิรัติ จบแชตก็ถูกล้าง วันพุธบอกชอบวัด จบแชตก็ถูกล้าง • แถวล่างคือ Long-term Memory Bank: เก็บสะสมจากวันจันทร์ + วันพุธรวมกัน พอวันศุกร์ขอวางแผนเที่ยวเกียวโต ก็ยิงลูกศรสีเขียวดึงทั้งสองข้อเท็จจริงขึ้นไปจัดทริปวัด + ร้านอาหารมังสวิรัติให้ทันที • (คลิก) แม้แชตเก่าจะปิดไปแล้ว ความรู้เกี่ยวกับผู้ใช้ก็ยังอยู่และเติบโตขึ้นเรื่อย ๆ</aside>
+      </section>
+
+      <!-- 16. Section 03 -->
+      <section class="bg-yellow" data-title="03 · Memory Bank">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="mm-div-art" style="--c:var(--h-yellow)"><img src="../images/agent-memory-slides/memory-extraction.jpg" alt=""></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Memory<br>Bank</h1>
+            <p class="sub" style="margin-top:28px">Extract, consolidate,<br>and recall by meaning</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • เจาะลึก Memory Bank: ต่างจาก SessionService ยังไง, semantic search, วิธีนำเข้าความจำ, user isolation, custom topics และ structured profiles</aside>
+      </section>
+
+      <!-- 17. SessionService vs MemoryService -->
+      <section data-title="SessionService vs MemoryService">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Short-term vs long-term · mental model</div>
+            <h2 style="margin-bottom:16px">SessionService vs MemoryService</h2>
+            <div class="mm-art contain" style="width:1088px; height:296px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/desk-vs-memory.jpg" alt="Isometric desk with sticky notes vs crystalline long-term Memory Bank vault">
+            </div>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" style="padding:12px 18px">
+                <h3 style="color:var(--h-blue); font-size:19px; margin-bottom:5px">SessionService · Sticky note on your desk</h3>
+                <p style="font-size:15px; line-height:1.38; color:var(--dk-text)">One chat thread · lasts until the chat ends · stores full events &amp; scratchpad state (e.g. <code>destination = "Tokyo"</code>).</p>
+              </div>
+              <div class="pc yellow fragment" style="padding:12px 18px">
+                <h3 style="color:var(--h-yellow); font-size:19px; margin-bottom:5px">MemoryService · Organized Memory Bank</h3>
+                <p style="font-size:15px; line-height:1.38; color:var(--dk-text)">Every past chat · lasts until deleted or TTL expires · stores extracted facts (e.g. <code>"User is vegetarian"</code>).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เทียบให้เห็นภาพชัด ๆ • (คลิก) ฝั่งซ้าย SessionService เหมือนโต๊ะทำงานที่มีโพสต์อิทชั่วคราว ใช้กับแชตตรงหน้า จบแชตก็เก็บโต๊ะ • (คลิก) ฝั่งขวา MemoryService เหมือนตู้ผลึกเก็บความรู้ระยะยาว ค้นย้อนหลังได้ทุกแชต เก็บเป็นข้อเท็จจริงที่สกัดแล้วจนกว่าจะลบหรือหมด TTL</aside>
+      </section>
+
+      <!-- 18. MemoryService: keyword vs meaning -->
+      <section data-title="Keyword vs semantic search">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Long-term memory · search by meaning</div>
+            <h2 style="margin-bottom:18px">MemoryService: keyword vs meaning</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:stretch">
+              <div class="mm-art green" style="width:500px; height:365px">
+                <img src="../images/agent-memory-slides/semantic-search.jpg" alt="Semantic vector space linking a plant-based bowl query orb to a vegetarian leaf memory orb">
+              </div>
+              <div style="flex:1; min-width:0; display:flex; flex-direction:column; gap:14px">
+                <div class="pc" style="padding:12px 14px">
+                  <table class="zt-tbl" style="font-size:14.5px">
+                    <tr><th style="width:58%; padding:8px">Service</th><th style="width:18%; padding:8px">Store</th><th style="width:24%; padding:8px">Search</th></tr>
+                    <tr><td style="padding:8px"><code>InMemoryMemoryService</code></td><td style="padding:8px">RAM</td><td style="padding:8px">Keyword</td></tr>
+                    <tr><td style="padding:8px"><code>VertexAiMemoryBankService</code></td><td style="padding:8px">Cloud</td><td style="padding:8px; color:var(--h-green); font-weight:500">Semantic</td></tr>
+                  </table>
+                </div>
+                <div class="pc green fragment" style="padding:14px 16px">
+                  <div class="mm-kv" style="margin:0 0 10px; --c:var(--h-blue)">
+                    <div><b>Query</b><span>"plant-based dinner spots"</span></div>
+                    <div><b>Memory</b><span>"User is vegetarian"</span></div>
+                  </div>
+                  <ul class="mm-chk" style="gap:8px">
+                    <li class="ok" style="font-size:15px; padding:7px 10px"><i>✓</i><span><strong>Semantic:</strong> matches by meaning</span></li>
+                    <li class="warn" style="font-size:15px; padding:7px 10px"><i>!</i><span><strong>Keyword:</strong> missed — zero shared words</span></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ดูภาพด้านซ้าย: ในพื้นที่ความหมาย (semantic space) คำถามสีฟ้าเรื่อง "plant-based dinner spots" เชื่อมเส้นสีเขียวไปหาความจำ "User is vegetarian" ได้ทันที แม้ไม่มีคำซ้ำกันเลย ส่วนคีย์เวิร์ดสีชมพูด้านล่างจะหลุดไม่เจอ • ด้านขวาเทียบ 2 service: InMemory (RAM, คีย์เวิร์ด) กับ VertexAiMemoryBankService (Cloud, semantic)</aside>
+      </section>
+
+      <!-- 19. Two ways to ingest memories -->
+      <section data-title="Two ways to ingest memories">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Writing memories</div>
+            <h2 style="margin-bottom:16px">Two ways to ingest memories</h2>
+            <div class="mm-art contain" style="width:1088px; height:296px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/memory-extraction.jpg" alt="Chat, photo, audio, and video flowing through a Gemini prism into distilled Memory Bank cards">
+            </div>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" style="padding:12px 18px">
+                <h3 style="color:var(--h-blue); font-size:19px; margin-bottom:5px">1 · Write one fact directly</h3>
+                <p style="font-size:15px; line-height:1.38; color:var(--dk-text)">Call <code>CreateMemory</code> / <code>generate</code> when your app already knows a fact (e.g. a booking form). No transcript needed.</p>
+              </div>
+              <div class="pc green fragment" style="padding:12px 18px">
+                <h3 style="color:var(--h-green); font-size:19px; margin-bottom:5px">2 · Archive a whole chat</h3>
+                <p style="font-size:15px; line-height:1.38; color:var(--dk-text)">Call <code>add_session_to_memory</code> to extract &amp; consolidate durable facts from messages, photos, audio and video.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ดูภาพด้านบน: ทั้งข้อความ รูปโรงแรม เสียง และวิดีโอ ไหลผ่านปริซึม LLM เพื่อกลั่นเป็นข้อเท็จจริงสั้น ๆ เก็บเข้า Memory Bank • ทำได้ 2 ทาง: (คลิก) ทางที่ 1 เขียนข้อเท็จจริงตรง ๆ ด้วย CreateMemory เวลาแอปเรามีข้อมูลอยู่แล้วจากฟอร์ม • (คลิก) ทางที่ 2 ส่งทั้ง Session เข้าไปด้วย add_session_to_memory ให้ระบบสกัดและรวมข้อเท็จจริงให้เอง</aside>
+      </section>
+
+      <!-- 20. Scope: every memory belongs to one user -->
+      <section data-title="User isolation & scope">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Scope · strict isolation</div>
+            <h2 style="margin-bottom:16px">Every memory belongs to one user</h2>
+            <div class="mm-art contain" style="width:1088px; height:306px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/user-isolation.jpg" alt="Two separate user memory vaults isolated by a central lock barrier">
+            </div>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" style="padding:12px 18px; font-size:15px; line-height:1.38">
+                <b style="color:var(--h-blue)">Scoped to <code>app_name + user_id</code>:</b> ADK fills scope automatically from the Runner and Session. User A never leaks to User B.
+              </div>
+              <div class="pc yellow fragment" style="padding:12px 18px; font-size:15px; line-height:1.38">
+                <b style="color:var(--h-yellow)">Async generation:</b> Extraction and consolidation run in the background, so agent replies stay fast.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพนี้ชัดมาก: ผู้ใช้แต่ละคนมีตู้ความจำของตัวเองแยกขาดจากกันด้วยกำแพง app_name + user_id • ผู้ใช้ซ้ายเก็บเรื่องวัดและมังสวิรัติ ผู้ใช้ขวาเก็บเรื่องน้องหมากับห้องพัก ไม่มีทางปนกัน • (คลิก) ADK ใส่ scope ให้เองจาก Runner และ Session • (คลิก) การสกัดความจำรันแบบ asynchronous เบื้องหลัง ผู้ใช้ไม่ต้องรอตอบช้า</aside>
+      </section>
+
+      <!-- 21. Custom memory topics -->
+      <section data-title="Custom memory topics">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Memory topics · steer extraction</div>
+            <h2 style="margin-bottom:14px">Custom topics: remember what matters</h2>
+            <div class="mm-art contain" style="width:1088px; height:198px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/custom-topics.svg" alt="Conversation bubbles routed through an extraction funnel into travel_preferences and trip_context buckets">
+            </div>
+            <pre class="fragment" style="width:1088px; font-size:13.5px"><code class="language-python" data-trim>
+custom_topics = [
+    MemoryTopic(custom_memory_topic=CustomMemoryTopic(
+        label="travel_preferences", description="Diet, interests, pace.")),
+    MemoryTopic(custom_memory_topic=CustomMemoryTopic(
+        label="trip_context", description="Current trip: city, hotel.")),
+]
+            </code></pre>
+          </div>
+        </div>
+        <aside class="notes">บางครั้งเราไม่อยากให้จำทุกอย่างมั่วไปหมด อยากให้โฟกัสเฉพาะเรื่องที่แอปเราสนใจ • ดูภาพด้านบน: จากแชต 3 ประโยค กรวยสกัดความจำแยกเข้า 2 หัวข้ออัตโนมัติ: travel_preferences เก็บอาหารกับสไตล์เที่ยว ส่วน trip_context เก็บโรงแรมทริปปัจจุบัน • (คลิก) เขียนนิยาม CustomMemoryTopic ระบุ label และ description ตอนสร้างหรือ deploy Memory Bank ได้เลย</aside>
+      </section>
+
+      <!-- 22. Structured memory profiles: Schema -->
+      <section data-title="Memory profiles · Schema">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Structured memory profiles · step 1</div>
+            <h2 style="margin-bottom:14px">Define fields in Pydantic, register at creation</h2>
+            <div class="mm-art contain" style="width:1088px; height:128px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/profile-schema.svg" alt="3-step visual: Pydantic schema fields registered as JSON schema producing a structured user profile">
+            </div>
+            <div class="grid g2" style="width:1088px; gap:18px; align-items:start">
+              <pre style="font-size:13px"><code class="language-python" data-trim>
+from pydantic import BaseModel, Field
+
+class TravelProfile(BaseModel):
+    home_city: str = Field(description="Home city.")
+    dietary: str = Field(description="Diet, e.g. veg.")
+    interests: str = Field(description="Interests.")
+              </code></pre>
+              <pre class="fragment" style="font-size:13px"><code class="language-python" data-trim>
+schema_config = {
+    "id": "user-profile",
+    "memory_schema": TravelProfile.model_json_schema(),
+}
+memory_bank = client.memory_banks.create(
+    managed_semantic_memory_config={
+        "structured_memory_configs": [
+            {"schema_configs": [schema_config]}]})
+              </code></pre>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Options</b><span>Register multiple schemas by <code>id</code>, or add <code>disable_natural_language_memories</code> for profiles only.</span></div>
+        </div>
+        <aside class="notes">ถ้าอยากได้ความจำแบบมีโครงสร้างชัดเจน (Structured Profile) ดูแถบภาพด้านบน 3 ขั้น: Pydantic Schema → Register JSON Schema → ได้ Structured Profile ที่อัปเดตอัตโนมัติ • โค้ดซ้ายคือนิยามฟิลด์ด้วย Pydantic • (คลิก) โค้ดขวาคือลงทะเบียนตอนสร้าง Memory Bank • (คลิก) ลงทะเบียนหลาย schema ในแบงก์เดียวได้โดยแยกด้วย id</aside>
+      </section>
+
+      <!-- 23. Profiles: generate and read -->
+      <section data-title="Memory profiles · Generate & read">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Structured memory profiles · step 2</div>
+            <h2 style="margin-bottom:18px">Generate from events, read the whole profile</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+client.memory_banks.memories.generate(
+    name=memory_bank.name,
+    scope={"user_id": "123"},
+    direct_contents_source={"events": [{
+        "content": {"parts": [{
+            "text": "I'm vegetarian, based in Bangkok"
+        }]}
+    }]},
+)
+
+result = client.memory_banks.memories.retrieve_profiles(
+    name=memory_bank.name,
+    scope={"user_id": "123"},
+)
+for profile in result.profiles.values():
+    print(profile)
+              </code></pre>
+              <div style="flex:1; min-width:0; display:grid; gap:12px">
+                <div class="mm-art contain yellow" style="width:100%; height:174px">
+                  <img src="../images/agent-memory-slides/profile-revisions.svg" alt="Stacked revision cards showing field-level profile updates over time">
+                </div>
+                <div class="pc blue fragment" style="padding:11px 16px; font-size:14.5px; line-height:1.38"><b>One per scope:</b> single source of truth per schema &amp; user.</div>
+                <div class="pc green fragment" style="padding:11px 16px; font-size:14.5px; line-height:1.38"><b>Field-level + history:</b> updates consolidate per field; list past versions via <code>memories.revisions.list</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">วิธีอัปเดตและอ่าน profile • ส่ง event เข้า memories.generate แล้วเรียก retrieve_profiles เพื่อดึงทั้ง profile ของ user กลับมาในครั้งเดียว • ดูภาพการ์ดซ้อนด้านขวา: แต่ละรอบที่มีข้อมูลใหม่ ระบบจะ consolidate เฉพาะฟิลด์ที่เปลี่ยน และเก็บประวัติ revision ไว้ด้านหลังทั้งหมด • (คลิก) หนึ่ง profile ต่อหนึ่ง schema ต่อหนึ่ง user เป็น source of truth • (คลิก) ดูประวัติย้อนหลังได้ด้วย memories.revisions.list</aside>
+      </section>
+
+      <!-- 24. Section 04 -->
+      <section class="bg-red" data-title="04 · Hands-on with ADK">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="mm-div-art" style="--c:var(--h-red)"><img src="../images/agent-memory-slides/automatic-recall.jpg" alt=""></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Hands-on<br>with ADK</h1>
+            <p class="sub" style="margin-top:28px">Create Memory Bank,<br>wire the agent and run</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 4 • มาดูโค้ดลงมือทำจริงกับ ADK ตั้งแต่สร้าง Memory Bank, ผูก PreloadMemoryTool, ไปจนถึงสถาปัตยกรรมเบื้องหลังทั้งหมด</aside>
+      </section>
+
+      <!-- 25. Create Memory Bank -->
+      <section data-title="Create Memory Bank">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 1 · provision the backend</div>
+            <h2 style="margin-bottom:18px">Create a Memory Bank in five lines</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div style="width:630px; flex:none; display:grid; gap:14px">
+                <div class="cmd" style="font-size:13.5px">pip install google-adk "google-cloud-aiplatform[agent_engines]"<br>gcloud auth application-default login</div>
+                <pre style="font-size:13.5px"><code class="language-python" data-trim>
+import vertexai
+
+client = vertexai.Client(
+    project="your-project-id",
+    location="us-central1",
+)
+# An empty Agent Engine instance hosts Memory Bank
+agent_engine = client.agent_engines.create()
+AGENT_ENGINE_ID = agent_engine.api_resource.name.split("/")[-1]
+                </code></pre>
+              </div>
+              <div style="flex:1; min-width:0; display:grid; gap:12px">
+                <div class="mm-art contain blue" style="width:100%; height:172px">
+                  <img src="../images/agent-memory-slides/create-memory-bank.svg" alt="Python create call provisioning a managed Agent Engine instance hosting Memory Bank">
+                </div>
+                <div class="pc green fragment" style="padding:11px 16px; font-size:14.5px; line-height:1.38"><b>Managed backend:</b> zero vector DB ops; pass custom topics in config at creation.</div>
+                <div class="pc yellow fragment" style="padding:11px 16px; font-size:14.5px; line-height:1.38"><b>Plug into ADK:</b> pass <code>AGENT_ENGINE_ID</code> to <code>VertexAiMemoryBankService</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ขั้นที่ 1 สร้าง backend ของ Memory Bank • ติดตั้ง google-adk กับ google-cloud-aiplatform[agent_engines] แล้ว login ADC • รัน client.agent_engines.create() เพื่อเปิด Agent Engine instance เปล่ามาโฮสต์ Memory Bank ตามภาพด้านขวา • (คลิก) ไม่ต้องดูแล vector database เอง ใส่ custom topics ตอน create ได้เลย • (คลิก) นำ AGENT_ENGINE_ID ไปส่งให้ VertexAiMemoryBankService ใน ADK</aside>
+      </section>
+
+      <!-- 26. Hands-on in ADK -->
+      <section data-title="Wire ADK to Memory Bank">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Step 2 · connect your agent</div>
+            <h2 style="margin-bottom:18px">Two hooks in ADK: recall and save</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents import Agent
+from google.adk.tools.preload_memory_tool import (
+    PreloadMemoryTool,
+)
+
+root_agent = Agent(
+    model="gemini-3.8-flash",
+    name="travel_agent",
+    instruction=(
+        "Plan trips. Use what you know "
+        "about the user."
+    ),
+    tools=[PreloadMemoryTool()],
+)
+
+# When a chat finishes, send it to Memory Bank
+await memory_service.add_session_to_memory(session)
+              </code></pre>
+              <div style="flex:1; min-width:0; display:grid; gap:12px">
+                <div class="mm-art contain green" style="width:100%; height:176px">
+                  <img src="../images/agent-memory-slides/adk-two-hooks.svg" alt="ADK robot with two memory hooks: PreloadMemoryTool pulling memories in before reply and add_session saving out after chat">
+                </div>
+                <div class="pc blue fragment" style="padding:11px 16px; font-size:14.5px; line-height:1.38"><b><code>PreloadMemoryTool</code>:</b> auto-injects relevant memories before replying (or use <code>load_memory</code> on demand).</div>
+                <div class="pc green fragment" style="padding:11px 16px; font-size:14.5px; line-height:1.38"><b><code>add_session_to_memory</code>:</b> archives the finished chat for async extraction.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ขั้นที่ 2 เชื่อมเข้ากับ ADK Agent ใช้แค่ 2 จุดตามภาพด้านขวา • (คลิก) ขาเข้าก่อนตอบ: ใส่ PreloadMemoryTool() ใน tools เพื่อดึงความจำเข้า prompt อัตโนมัติ (หรือใช้ load_memory ถ้าอยากให้โมเดลเลือกเรียกเอง) • (คลิก) ขาออกหลังจบแชต: เรียก add_session_to_memory(session) เพื่อส่งเข้า Memory Bank สกัดเบื้องหลัง</aside>
+      </section>
+
+      <!-- 27. Recall happens automatically -->
+      <section data-title="Automatic recall flow">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Reading memories · PreloadMemoryTool</div>
+            <h2 style="margin-bottom:16px">Recall happens automatically</h2>
+            <div class="mm-art contain" style="width:1088px; height:296px; margin-bottom:14px">
+              <img src="../images/agent-memory-slides/automatic-recall.jpg" alt="User sends a prompt, Memory Bank beams temple and leaf orbs to the AI robot, which outputs a personalized itinerary">
+            </div>
+            <div style="display:flex; gap:18px; width:1088px; align-items:stretch">
+              <div class="pc fragment" data-fragment-index="1" style="flex:1; padding:12px 18px; display:flex; flex-direction:column; justify-content:center; gap:8px">
+                <div class="mm-pills">
+                  <span style="--c:var(--h-blue)">1. Prompt</span><i>→</i>
+                  <span style="--c:var(--h-yellow)">2. Search</span><i>→</i>
+                  <span style="--c:var(--h-green)">3. Inject &amp; reply</span>
+                </div>
+                <p style="font-size:15px; color:var(--dk-sub)">Preload runs before replying — no manual retrieval logic needed.</p>
+              </div>
+              <pre class="fragment" data-fragment-index="2" style="width:520px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+agent = LlmAgent(
+    name="travel_agent",
+    tools=[PreloadMemoryTool(), search_tool],
+)
+              </code></pre>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ดูภาพด้านบน: พอผู้ใช้ส่งข้อความเข้ามา PreloadMemoryTool ดึงความจำจาก Memory Bank (รูปวัด + มังสวิรัติ) ลงมาฉีดเข้า prompt ของหุ่นยนต์โดยอัตโนมัติ แล้วตอบออกมาเป็นแผนเที่ยวเฉพาะบุคคลทันที • (คลิก 1) ครบ 3 จังหวะ: Prompt → Search → Inject &amp; reply • (คลิก 2) ในโค้ดแค่ใส่ PreloadMemoryTool() คู่กับ tool อื่น ๆ ไม่ต้องเขียนโค้ดดึงความจำเอง</aside>
+      </section>
+
+      <!-- 28. Under the hood & Architecture -->
+      <section data-title="Under the hood architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Under the hood · end-to-end architecture</div>
+            <h2 style="margin-bottom:18px">Sessions, Memory Bank and the agent</h2>
+            <div class="mm-map">
+              <svg class="mm-wires" viewBox="0 0 1088 392" aria-hidden="true">
+                <!-- User <-> Runner -->
+                <path class="w" d="M180 62 H250"/><path class="w" d="M242 56 L252 62 L242 68"/>
+                <!-- Runner <-> Agent -->
+                <path class="w" d="M476 62 H546"/><path class="w" d="M538 56 L548 62 L538 68"/>
+                <!-- Agent <-> Gemini -->
+                <path class="w" d="M812 62 H882"/><path class="w" d="M874 56 L884 62 L874 68"/>
+                <!-- Runner <-> Sessions (AppendEvent / ListEvents) -->
+                <path class="w-b" d="M364 116 V246"/><path class="w-b" d="M358 238 L364 248 L370 238"/><path class="w-b" d="M358 124 L364 114 L370 124"/>
+                <!-- Sessions -> Memory Bank (GenerateMemories) -->
+                <path class="w-y" d="M476 306 H650"/><path class="w-y" d="M642 300 L652 306 L642 312"/>
+                <!-- Agent <-> Memory Bank (RetrieveMemories / CreateMemory) -->
+                <path class="w-g" d="M748 116 V246"/><path class="w-g" d="M742 238 L748 248 L754 238"/><path class="w-g" d="M742 124 L748 114 L754 124"/>
+              </svg>
+
+              <div class="pc mm-n" style="left:0; top:14px; width:180px; height:98px">
+                <b>User</b><span>Tokyo trip planner</span>
+              </div>
+              <div class="pc blue mm-n" style="left:254px; top:14px; width:222px; height:98px">
+                <div style="display:flex; align-items:center; justify-content:center; gap:8px"><img src="../images/shared/logos/adk.png" alt="" style="width:22px; height:22px; object-fit:contain"><b>Runner / ADK</b></div><span>app_name + user_id</span>
+              </div>
+              <div class="pc green mm-n" style="left:550px; top:14px; width:262px; height:98px">
+                <div style="display:flex; align-items:center; justify-content:center; gap:8px"><img src="../images/shared/logos/adk.png" alt="" style="width:22px; height:22px; object-fit:contain"><b>Agent</b></div><span>PreloadMemoryTool</span>
+              </div>
+              <div class="pc red mm-n" style="left:886px; top:14px; width:202px; height:98px">
+                <div style="display:flex; align-items:center; justify-content:center; gap:8px"><img src="../images/shared/logos/gemini.svg" alt="" style="width:22px; height:22px; object-fit:contain"><b>Gemini</b></div><span>Reasoning model</span>
+              </div>
+
+              <div class="pc blue mm-n" style="left:184px; top:250px; width:288px; height:112px">
+                <div style="display:flex; align-items:center; justify-content:center; gap:8px"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="" style="width:24px; height:24px; object-fit:contain"><b>Sessions · Engine</b></div><span>SessionService</span>
+              </div>
+              <div class="pc yellow mm-n" style="left:654px; top:250px; width:340px; height:112px">
+                <div style="display:flex; align-items:center; justify-content:center; gap:8px"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="" style="width:24px; height:24px; object-fit:contain"><b>Memory Bank · Engine</b></div><span>VertexAiMemoryBankService</span>
+              </div>
+
+              <span class="mm-wl" style="left:224px; top:166px; color:var(--h-blue)">AppendEvent · ListEvents</span>
+              <span class="mm-wl" style="left:494px; top:272px; color:var(--h-yellow)">GenerateMemories</span>
+              <span class="mm-wl" style="left:764px; top:166px; color:var(--h-green)">RetrieveMemories · CreateMemory</span>
+            </div>
+          </div>
+          <div class="ask"><b>Why both?</b><span>Sessions keep the chat flowing. Memory Bank recalls past facts without stuffing whole histories into the prompt.</span></div>
+        </div>
+        <aside class="notes">ภาพรวมสถาปัตยกรรมตั้งแต่ต้นจนจบ • แถวบน: ผู้ใช้ส่งข้อความผ่าน Runner / ADK Web ที่ถือ app_name + user_id ส่งต่อไปที่ Agent ที่มี PreloadMemoryTool และให้ Gemini ช่วยคิด • แถวล่างบน Agent Engine: Runner บันทึกและอ่านบทสนทนาผ่าน Sessions (AppendEvent / ListEvents) • เมื่อจบแชต Sessions ส่งเข้า Memory Bank ด้วย GenerateMemories • ส่วน Agent อ่านความจำผ่าน RetrieveMemories หรือบันทึกตรงด้วย CreateMemory • สรุป: Sessions ทำให้แชตปัจจุบันลื่นไหล ส่วน Memory Bank ดึงความรู้ในอดีตกลับมาโดยไม่ทำให้ context window บวม</aside>
+      </section>
+
+      <!-- 29. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:16px">Connect, Remember, Personalize</h2>
+            <div class="mm-art contain" style="width:1088px; height:164px; margin-bottom:16px">
+              <img src="../images/agent-memory-slides/recap-trilogy.svg" alt="Visual trilogy uniting MCP connectivity, ADK orchestration, and Memory Bank personalization">
+            </div>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" style="padding:14px 18px">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px">
+                  <span class="ev-lg"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>
+                  <h3 style="margin:0; font-size:20px">1 · Connect</h3>
+                </div>
+                <p style="font-size:15.5px; line-height:1.4">Standardize tool, API &amp; external system access with <b>MCP</b>.</p>
+              </div>
+              <div class="pc green fragment" style="padding:14px 18px">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px">
+                  <span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                  <h3 style="margin:0; font-size:20px">2 · Orchestrate</h3>
+                </div>
+                <p style="font-size:15.5px; line-height:1.4">Run reasoning loops, sessions &amp; multi-agent state with <b>ADK</b>.</p>
+              </div>
+              <div class="pc red fragment" style="padding:14px 18px">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:8px">
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Memory Bank"></span>
+                  <h3 style="margin:0; font-size:20px">3 · Personalize</h3>
+                </div>
+                <p style="font-size:15.5px; line-height:1.4">Build a persistent semantic memory layer with <b>Memory Bank</b>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Add <code>PreloadMemoryTool()</code> and <code>VertexAiMemoryBankService</code> to your ADK agent.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำ • (คลิก) Connect: ใช้ MCP เป็นมาตรฐานเชื่อมต่อ tool และระบบภายนอก • (คลิก) Orchestrate: ใช้ ADK จัดการ reasoning loop, sessions และ state ระหว่าง agent • (คลิก) Personalize: ใช้ Memory Bank สร้างชั้นความจำระยะยาวที่เรียนรู้ผู้ใช้ข้ามทุกแชต • (คลิก) เริ่มได้ทันทีแค่เพิ่ม PreloadMemoryTool และ VertexAiMemoryBankService เข้าไปใน ADK agent ของคุณ</aside>
+      </section>
+
+      <!-- 30. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:24px">Read more and try it</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue mm-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK Memory</h3><a class="mono" style="font-size:14px" href="https://adk.dev/sessions/memory/" target="_blank">adk.dev/sessions/memory</a></div></div>
+              <div class="pc blue mm-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK Sessions &amp; State</h3><a class="mono" style="font-size:14px" href="https://adk.dev/sessions/state/" target="_blank">adk.dev/sessions/state</a></div></div>
+              <div class="pc green mm-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><div><h3>Memory Bank Overview</h3><a class="mono" style="font-size:14px" href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/overview" target="_blank">Agent Engine · Memory Bank docs</a></div></div>
+              <div class="pc green mm-res-row"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span><div><h3>Memory Profiles</h3><a class="mono" style="font-size:14px" href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/memory-bank/generate-memories" target="_blank">Generate &amp; structure memories</a></div></div>
+              <div class="pc yellow mm-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage"></span><div><h3>ADK Artifacts</h3><a class="mono" style="font-size:14px" href="https://adk.dev/artifacts/" target="_blank">adk.dev/artifacts</a></div></div>
+              <div class="pc red mm-res-row"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span><div><h3>ADK Home</h3><a class="mono" style="font-size:14px" href="https://adk.dev/" target="_blank">adk.dev</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลิงก์เอกสารสำหรับอ่านต่อ: ADK Memory, ADK Sessions &amp; State, หน้า Memory Bank Overview และ Memory Profiles บน Google Cloud, รวมถึง ADK Artifacts สำหรับไฟล์ไบนารีขนาดใหญ่ • ถ่ายรูปหรือสแกน QR หน้า Agenda ได้เลยครับ</aside>
+      </section>
+
+      <!-- 31. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <svg class="ico abs" style="left:930px; top:240px; width:200px; height:200px; stroke-width:4"><use href="#i-star"/></svg>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณครับ/ค่ะ • เปิดช่วง Q &amp; A • ชวนลองเพิ่ม PreloadMemoryTool และ Memory Bank ให้ Agent ของตัวเองดูครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <!-- DevFest template shapes: notched/scalloped cards + GDG lockup on every slide -->
+  <script>
+    (function () {
+      const NS = "http://www.w3.org/2000/svg", S = 3, o = S / 2;
+      function cardPath(W, H, el) {
+        const r = +(el.dataset.r || 34);
+        const [a, b] = (el.dataset.tl || "0x0").split("x").map(Number);
+        const [c, d] = (el.dataset.br || "0x0").split("x").map(Number);
+        const n = +(el.dataset.scallop || 0);
+        const L = o, T = o, R = W - o, B = H - o, P = [];
+        if (n) P.push(`M${L},${T}`); else if (a && b) P.push(`M${L + a + r},${T}`); else P.push(`M${L + r},${T}`);
+        P.push(`H${R - r}`, `A${r},${r} 0 0 1 ${R},${T + r}`);
+        if (c && d) P.push(`V${B - d - r}`, `A${r},${r} 0 0 1 ${R - r},${B - d}`, `H${R - c + r}`, `A${r},${r} 0 0 0 ${R - c},${B - d + r}`, `V${B - r}`, `A${r},${r} 0 0 1 ${R - c - r},${B}`);
+        else P.push(`V${B - r}`, `A${r},${r} 0 0 1 ${R - r},${B}`);
+        if (n) {
+          P.push(`H${L}`); const h = (B - T) / n;
+          for (let i = 0; i < n; i++) P.push(`A${h / 2},${h / 2} 0 0 1 ${L},${B - h * (i + 1)}`);
+        } else {
+          P.push(`H${L + r}`, `A${r},${r} 0 0 1 ${L},${B - r}`);
+          if (a && b) P.push(`V${T + b + r}`, `A${r},${r} 0 0 1 ${L + r},${T + b}`, `H${L + a - r}`, `A${r},${r} 0 0 0 ${L + a},${T + b - r}`, `V${T + r}`, `A${r},${r} 0 0 1 ${L + a + r},${T}`);
+          else P.push(`V${T + r}`, `A${r},${r} 0 0 1 ${L + r},${T}`);
+        }
+        return P.join(" ") + " Z";
+      }
+      document.querySelectorAll(".reveal .nc").forEach((el) => {
+        const cs = getComputedStyle(el), W = parseFloat(cs.width), H = parseFloat(cs.height);
+        const svg = document.createElementNS(NS, "svg");
+        svg.setAttribute("class", "nc-s"); svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+        svg.setAttribute("width", W); svg.setAttribute("height", H);
+        const p = document.createElementNS(NS, "path");
+        p.setAttribute("d", cardPath(W, H, el));
+        p.setAttribute("fill", el.dataset.fill || "#fff"); p.setAttribute("stroke", "#1e1e1e"); p.setAttribute("stroke-width", S);
+        svg.appendChild(p); el.prepend(svg);
+      });
+      document.querySelectorAll(".reveal .slides section:not([data-corner=off])").forEach((s) => {
+        s.insertAdjacentHTML("beforeend", '<div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok</small></span></div><img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">');
+      });
+    })();
+  </script>
+  <script>
+    Reveal.initialize({
+      hash: true,
+      hashOneBasedIndex: true,
+      fragmentInURL: false,
+      controls: false,
+      overview: false,
+      progress: false,
+      slideNumber: "c/t",
+      showSlideNumber: "print",
+      transition: "fade",
+      backgroundTransition: "fade",
+      width: 1280,
+      height: 720,
+      margin: 0,
+      center: false,
+      plugins: [RevealHighlight, RevealNotes],
+      view: /[?&]print-pdf\b/.test(location.search) ? "print" : null,
+      pdfSeparateFragments: false,
+      pdfMaxPagesPerSlide: 1,
+    });
+  </script>
+
+  <!-- Export PDF: All slides / This slide -->
+  <script>
+    (function () {
+      const params = new URLSearchParams(location.search);
+      const isPrint = params.has("print-pdf");
+
+      if (isPrint) {
+        const only = params.get("slide");
+        Reveal.on("pdf-ready", async () => {
+          if (only !== null) {
+            const target = Reveal.getSlides()[+only]?.closest(".pdf-page");
+            if (target) document.querySelectorAll(".reveal .slides .pdf-page").forEach((p) => { if (p !== target) p.remove(); });
+            document.title = `Agent Memory – slide ${+only + 1}`;
+          } else {
+            document.title = "Agent Memory – all slides";
+          }
+          if (!params.has("autoprint")) return;
+          await document.fonts.ready;
+          addEventListener("afterprint", () => window.close());
+          setTimeout(() => window.print(), 300);
+        });
+        return;
+      }
+
+      const $ = (id) => document.getElementById(id);
+      const slides = Reveal.getSlides(), N = slides.length;
+      const idx = () => slides.indexOf(Reveal.getCurrentSlide());
+      const cnt = $("cnt"), prog = $("progress"), list = $("menu"), xMenu = $("exportMenu"), bPdf = $("bPdf"), bNotes = $("bNotes");
+      const titleOf = (s, i) => s.dataset.title || s.querySelector("h1,h2")?.textContent.trim() || `Slide ${i + 1}`;
+
+      list.innerHTML = slides.map((s, i) => `<a href="#" data-i="${i}"><span>${i + 1}</span>${titleOf(s, i).replace(/</g, "&lt;")}</a>`).join("");
+      function sync() {
+        const i = idx();
+        cnt.textContent = `${i + 1} / ${N}`;
+        prog.style.width = (N > 1 ? (i / (N - 1)) * 100 : 100) + "%";
+        list.querySelectorAll("a").forEach((a, k) => a.classList.toggle("cur", k === i));
+      }
+      Reveal.on("ready", sync); Reveal.on("slidechanged", sync); sync();
+
+      const menus = [list, xMenu];
+      function openOnly(m) {
+        const willOpen = m && !m.classList.contains("open");
+        menus.forEach((x) => x.classList.remove("open"));
+        if (willOpen) { m.classList.add("open"); wake(); }
+        bPdf.setAttribute("aria-expanded", xMenu.classList.contains("open"));
+        if (list.classList.contains("open")) list.querySelector("a.cur")?.scrollIntoView({ block: "center" });
+        if (xMenu.classList.contains("open")) $("exportCur").textContent = `PDF of slide ${idx() + 1} / ${N}`;
+      }
+
+      $("bPrev").onclick = () => Reveal.prev();
+      $("bNext").onclick = () => Reveal.next();
+      cnt.onclick = (e) => { e.stopPropagation(); openOnly(list); };
+      list.onclick = (e) => { const a = e.target.closest("a"); if (!a) return; e.preventDefault(); Reveal.slide(+a.dataset.i); openOnly(null); };
+
+      const ov = $("ov"), ovg = ov.querySelector(".ovg");
+      function buildOv() {
+        const cur = idx();
+        ovg.innerHTML = "";
+        slides.forEach((s, i) => {
+          const t = document.createElement("div");
+          t.className = "ovt" + (i === cur ? " cur" : ""); t.dataset.i = i;
+          const fr = document.createElement("div"); fr.className = "fr";
+          const rv = document.createElement("div"); rv.className = "reveal";
+          const sl = document.createElement("div"); sl.className = "slides";
+          const c = s.cloneNode(true);
+          c.removeAttribute("hidden"); c.removeAttribute("aria-hidden");
+          c.classList.remove("past", "future"); c.classList.add("present");
+          c.querySelectorAll("[id]").forEach((el) => el.removeAttribute("id"));
+          c.querySelectorAll("video").forEach((v) => v.remove());
+          c.querySelectorAll("aside.notes").forEach((n) => n.remove());
+          sl.appendChild(c); rv.appendChild(sl); fr.appendChild(rv);
+          const cap = document.createElement("div"); cap.className = "cap";
+          cap.innerHTML = `<span>${i + 1}</span>`; cap.append(titleOf(s, i));
+          t.append(fr, cap); ovg.appendChild(t);
+          c.style.top = "0px";
+          c.style.top = Math.max((720 - c.offsetHeight) / 2, 0) + "px";
+        });
+        sizeOv();
+      }
+      function sizeOv() { ovg.querySelectorAll(".fr").forEach((fr) => { fr.firstChild.style.transform = `scale(${fr.clientWidth / 1280})`; }); }
+      const ovOpen = () => ov.classList.contains("open");
+      function toggleOv(force) {
+        const open = force ?? !ovOpen();
+        openOnly(null);
+        ov.classList.toggle("open", open);
+        $("bOv").classList.toggle("on", open);
+        if (open) { buildOv(); ovg.querySelector(".cur")?.scrollIntoView({ block: "center" }); }
+        else ovg.innerHTML = "";
+      }
+      $("bOv").onclick = () => toggleOv();
+      $("ovX").onclick = () => toggleOv(false);
+      ovg.onclick = (e) => { const t = e.target.closest(".ovt"); if (!t) return; Reveal.slide(+t.dataset.i); toggleOv(false); };
+      addEventListener("resize", () => { if (ovOpen()) sizeOv(); });
+      const toggleFs = () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen?.();
+      $("bFs").onclick = toggleFs;
+
+      const notes = () => Reveal.getPlugin("notes");
+      bNotes.onclick = () => notes()?.open();
+
+      function exportPdf(mode) {
+        const q = new URLSearchParams({ "print-pdf": "", autoprint: "" });
+        if (mode === "slide") q.set("slide", idx());
+        const url = location.pathname + "?" + q.toString().replace(/=(&|$)/g, "$1");
+        if (!window.open(url, "_blank")) location.href = url;
+        openOnly(null);
+      }
+      bPdf.onclick = (e) => { e.stopPropagation(); openOnly(xMenu); };
+      xMenu.onclick = (e) => { const b = e.target.closest("[data-export]"); if (b) exportPdf(b.dataset.export); };
+
+      document.addEventListener("click", (e) => {
+        if (e.target.closest("#ctrl,#menu,#exportMenu,#ov")) return;
+        const wasOpen = menus.some((m) => m.classList.contains("open"));
+        openOnly(null);
+        if (wasOpen) return;
+        if (!e.target.closest(".reveal .slides") || e.target.closest("a,button,input,video,canvas,pre,.demo-wrap")) return;
+        if (String(getSelection?.() || "").length) return;
+        Reveal.next();
+      }, true);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && menus.some((m) => m.classList.contains("open"))) { openOnly(null); e.stopPropagation(); e.preventDefault(); return; }
+        if (e.metaKey || e.ctrlKey || e.altKey || /INPUT|TEXTAREA|SELECT/.test(e.target.tagName)) return;
+        if (e.key === "o" || e.key === "O") { e.preventDefault(); e.stopPropagation(); toggleOv(); return; }
+        if (ovOpen()) {
+          e.stopPropagation();
+          if (e.key === "Escape") { e.preventDefault(); toggleOv(false); }
+          return;
+        }
+        if (e.key === "e" || e.key === "E") { e.preventDefault(); e.stopPropagation(); exportPdf(e.shiftKey ? "all" : "slide"); }
+        else if (e.key === "n" || e.key === "N") { e.preventDefault(); e.stopPropagation(); notes()?.open(); }
+      }, true);
+
+      let idle;
+      const wake = () => { document.body.classList.remove("idle"); clearTimeout(idle); idle = setTimeout(() => { if (!menus.some((m) => m.classList.contains("open"))) document.body.classList.add("idle"); }, 2500); };
+      addEventListener("mousemove", wake); wake();
+    })();
+  </script>
+</body>
+</html>

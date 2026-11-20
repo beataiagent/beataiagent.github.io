@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 530 122" width="530" height="122">
+  <defs>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #1e1e1e; font-weight: 700; }
+      .s { font-family: "Google Sans", system-ui, sans-serif; fill: #3c4043; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #1e1e1e; font-weight: 500; }
+      .ink { stroke: #1e1e1e; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect x="2" y="2" width="526" height="118" rx="18" fill="#fff" class="ink"/>
+  <text x="18" y="28" class="m" font-size="12.5">CONTEXT BUDGET · 262,144 TOKENS TOTAL</text>
+  <rect x="18" y="40" width="320" height="36" rx="10" fill="#c3ecf6" class="ink"/>
+  <text x="178" y="63" text-anchor="middle" class="t" font-size="15">Shared Multimodal Input</text>
+  <rect x="344" y="40" width="168" height="36" rx="10" fill="#ffe7a5" class="ink"/>
+  <text x="428" y="63" text-anchor="middle" class="t" font-size="15">1–1,000 Qs</text>
+  <text x="18" y="102" class="m" font-size="12" fill="#5f6368">Inline base64 ≤ 100 MB (PDF 50 MB) · URL ≤ 15 MB</text>
+</svg>

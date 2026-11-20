@@ -647,6 +647,22 @@
     .hx-cover .hx-who { position: absolute; left: 790px; top: 520px; width: 440px; text-align: center; }
     .hx-cover .hx-who b { display: block; font: 500 30px/1.2 var(--sans); color: #fff; }
     .hx-cover .hx-who span { display: inline-block; margin-top: 10px; font: 400 15px/1 var(--mono); color: var(--dk-sub); padding: 8px 16px; border: 1.5px solid var(--dk-line); border-radius: 999px; }
+    .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .mm-art { border: 2px solid var(--dk-line); border-radius: 18px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; }
+    .mm-art.blue { border-color: var(--h-blue); } .mm-art.green { border-color: var(--h-green); }
+    .mm-art.yellow { border-color: var(--h-yellow); } .mm-art.red { border-color: var(--h-red); }
+    .mm-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .mm-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .mm-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ev-lg { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; background: #fff; flex: none; }
+    .reveal .slides .ev-lg img { width: 28px; height: 28px; object-fit: contain; display: block; }
+    .mm-res-row { display: flex; align-items: center; gap: 16px; }
+    .mm-res-row h3 { margin: 0 0 4px; font-size: 21px; }
+    .mm-pills { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+    .mm-pills span { font: 500 14px/1.2 var(--mono); padding: 7px 14px; border-radius: 999px; background: #17181b; border: 1.5px solid var(--c, var(--dk-line)); color: var(--c, #fff); }
+    .mm-pills i { font-style: normal; color: var(--dk-sub); font-size: 16px; }
   </style>
 </head>
 <body>
@@ -723,7 +739,7 @@
       <!-- Section 01 -->
       <section class="bg-blue" data-title="01 · Why Cloud Run Instances?">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="mm-div-art" style="--c:var(--h-blue)"><img src="../images/hermes-cloudrun-slides/div-01-instances.svg" alt="Always-on Cloud Run Instance container with 7-day heartbeat"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -740,15 +756,18 @@
           <div class="in" style="padding:44px 56px">
             <img class="hx-logo" src="../images/hermes-cloudrun-slides/hermes-agent-icon.svg" alt="Hermes Agent logo">
             <div class="eyebrow">Open source · by Nous Research</div>
-            <h2 style="margin-bottom:12px">Meet Hermes Agent</h2>
-            <p class="sub" style="font-size:20px; margin-bottom:26px">A <b>stateful</b> AI agent: it keeps chats, skills and a workspace between sessions</p>
-            <div class="grid g4" style="width:1088px; gap:16px">
-              <div class="pc blue fragment"><h3>Gateway</h3><p style="font-size:17px">The AI backend. Talks to the model and runs tools.</p><p style="font-size:14px; margin-top:10px"><code>gateway run</code></p></div>
-              <div class="pc green fragment"><h3>Web Dashboard</h3><p style="font-size:17px">The UI you chat in, behind basic auth.</p><p style="font-size:14px; margin-top:10px"><code>dashboard</code></p></div>
-              <div class="pc yellow fragment"><h3>Skills</h3><p style="font-size:17px">Scanned on boot. Hermes also does work in the background.</p></div>
-              <div class="pc red fragment"><h3>State</h3><p style="font-size:17px">Chat history in SQLite (<code>state.db</code>), plus <code>config.yaml</code> and <code>.env</code>.</p></div>
+            <h2 style="margin-bottom:8px">Meet Hermes Agent</h2>
+            <p class="sub" style="font-size:18px; margin-bottom:14px">A <b>stateful</b> AI agent: it keeps chats, skills and a workspace between sessions</p>
+            <div class="mm-art" style="width:1088px; height:124px; margin-bottom:14px">
+              <img src="../images/hermes-cloudrun-slides/meet-hermes.svg" alt="Inside nousresearch/hermes-agent container: Gateway, Web Dashboard, Skills Scanner, and SQLite State">
             </div>
-            <div class="cmd fragment" style="margin-top:24px; width:560px">image: nousresearch/hermes-agent:latest</div>
+            <div class="grid g4" style="width:1088px; gap:14px">
+              <div class="pc blue fragment" style="padding:12px 15px"><h3 style="font-size:20px; margin-bottom:6px">Gateway</h3><p style="font-size:15px">The AI backend. Talks to the model and runs tools.</p><p style="font-size:13.5px; margin-top:8px"><code>gateway run</code></p></div>
+              <div class="pc green fragment" style="padding:12px 15px"><h3 style="font-size:20px; margin-bottom:6px">Web Dashboard</h3><p style="font-size:15px">The UI you chat in, behind basic auth.</p><p style="font-size:13.5px; margin-top:8px"><code>dashboard</code></p></div>
+              <div class="pc yellow fragment" style="padding:12px 15px"><h3 style="font-size:20px; margin-bottom:6px">Skills</h3><p style="font-size:15px">Scanned on boot. Hermes also does work in the background.</p></div>
+              <div class="pc red fragment" style="padding:12px 15px"><h3 style="font-size:20px; margin-bottom:6px">State</h3><p style="font-size:15px">Chat history in SQLite (<code>state.db</code>), plus <code>config.yaml</code> and <code>.env</code>.</p></div>
+            </div>
+            <div class="cmd fragment" style="margin-top:14px; width:560px">image: nousresearch/hermes-agent:latest</div>
           </div>
         </div>
         <aside class="notes">Hermes Agent เป็น open source ของ Nous Research • เป็น agent แบบมี state คือจำแชต จำ skill และมี workspace ที่อยู่ข้ามเซสชัน • (คลิก) มี 2 process หลัก: Gateway คือ backend ที่คุยกับโมเดลและเรียก tool / Dashboard คือหน้าเว็บที่เราแชต • (คลิก) ตอนเปิดเครื่องจะ scan skill และทำงานเบื้องหลังได้ • (คลิก) state ทั้งหมดอยู่ใน SQLite ชื่อ state.db กับไฟล์ config • (คลิก) เราไม่ต้องเขียน Dockerfile เลย ใช้ image สำเร็จรูป nousresearch/hermes-agent</aside>
@@ -759,23 +778,23 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Picking the Cloud Run resource</div>
-            <h2 style="margin-bottom:26px">Service or Instance?</h2>
-            <div class="grid g2" style="gap:28px; width:1088px">
-              <div class="pc fragment" style="height:300px">
+            <h2 style="margin-bottom:14px">Service or Instance?</h2>
+            <div class="mm-art" style="width:1088px; height:188px; margin-bottom:14px">
+              <img src="../images/hermes-cloudrun-slides/services-vs-instances.svg" alt="Cloud Run Service scaling multiple copies with folder clash vs single long-lived Cloud Run Instance">
+            </div>
+            <div class="grid g2" style="gap:22px; width:1088px">
+              <div class="pc fragment" style="padding:12px 18px">
                 <span class="tag">Cloud Run Service</span>
-                <ul class="bl" style="font-size:21px; margin-top:20px">
-                  <li>Auto-scales with requests</li>
-                  <li>Many copies, all the same</li>
-                  <li>Fine for Hermes in <b>Gateway mode</b> only</li>
+                <ul class="bl" style="font-size:16.5px; margin-top:10px">
+                  <li style="margin-bottom:6px">Auto-scales with requests · many identical copies</li>
+                  <li style="margin-bottom:0">Fine for Hermes in <b>Gateway mode</b> only</li>
                 </ul>
               </div>
-              <div class="pc green fragment" style="height:300px">
+              <div class="pc green fragment" style="padding:12px 18px">
                 <span class="tag yellow">Cloud Run Instance</span>
-                <ul class="bl" style="font-size:21px; margin-top:20px">
-                  <li><b>Long-lived</b> and runs on its own</li>
-                  <li><b>One addressable</b> environment</li>
-                  <li>Runs up to <b>7 days</b>, then restarts by itself</li>
-                  <li>Fits a stateful agent with background work</li>
+                <ul class="bl" style="font-size:16.5px; margin-top:10px">
+                  <li style="margin-bottom:6px"><b>Long-lived</b>, <b>one addressable</b> environment (up to <b>7 days</b>, auto-restart)</li>
+                  <li style="margin-bottom:0">Fits a stateful agent with background work</li>
                 </ul>
               </div>
             </div>
@@ -790,19 +809,14 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">What we will build</div>
-            <h2 style="margin-bottom:22px">Architecture</h2>
-            <div class="hx-arch">
-              <div class="pc hx-user fragment" data-fragment-index="1"><h3>You</h3><p>Browser · <code>*.run.app</code><br>user <code>admin</code> + password</p></div>
-              <svg class="hx-ln fragment" data-fragment-index="1" style="left:232px; top:93px; width:70px; height:24px" viewBox="0 0 70 24"><path d="M2 12h60M52 3l10 9-10 9"/></svg>
-              <div class="pc blue hx-inst fragment" data-fragment-index="2">
-                <h3>Cloud Run Instance <span class="muted" style="font:400 14px var(--mono)">hermes-instance · 2 CPU · 4 GiB</span></h3>
-                <div class="hx-sup"><b>run_hermes.py</b> supervisor</div>
-                <div class="hx-row"><div class="hx-box">Dashboard<br><code>:8080</code></div><div class="hx-box">Gateway<br>AI backend</div><div class="hx-box hy">/tmp<br>state.db · caches</div></div>
-              </div>
-              <div class="pc green hx-gcs fragment" data-fragment-index="3"><h3>Cloud Storage</h3><p>FUSE mount at <code>/opt/data</code><br>config · scripts · workspace<br>autosave every 5 s</p></div>
-              <div class="pc yellow hx-vx fragment" data-fragment-index="4"><h3>Vertex AI</h3><p>Gemini model via<br><code>hermes-sa</code></p></div>
-              <div class="pc red hx-sm fragment" data-fragment-index="4"><h3>Secret Manager</h3><p>Dashboard password<br>injected at boot</p></div>
-              <svg class="hx-ln fragment" data-fragment-index="3" style="left:812px; top:93px; width:70px; height:24px" viewBox="0 0 70 24"><path d="M8 12h54M18 3 8 12l10 9M52 3l10 9-10 9"/></svg>
+            <h2 style="margin-bottom:14px">Architecture</h2>
+            <div class="mm-art blue" style="width:1088px; height:334px; margin-bottom:14px">
+              <img src="../images/hermes-cloudrun-slides/architecture-map.svg" alt="End-to-end architecture connecting Browser, Cloud Run Instance with run_hermes.py, Cloud Storage FUSE, Vertex AI, and Secret Manager">
+            </div>
+            <div class="grid g3" style="width:1088px; gap:14px">
+              <div class="pc blue fragment" style="padding:10px 14px; font-size:14.5px; line-height:1.35"><b>Dashboard + Gateway:</b> supervised by <code>run_hermes.py</code> inside one 2 CPU · 4 GiB instance.</div>
+              <div class="pc green fragment" style="padding:10px 14px; font-size:14.5px; line-height:1.35"><b>FUSE + /tmp Sync:</b> busy SQLite runs in <code>/tmp</code> and autosaves to <code>/opt/data</code> every 5 s.</div>
+              <div class="pc yellow fragment" style="padding:10px 14px; font-size:14.5px; line-height:1.35"><b>Secure Cloud Wiring:</b> <code>hermes-sa</code> calls Vertex AI; Secret Manager injects dashboard auth.</div>
             </div>
           </div>
         </div>
@@ -812,7 +826,7 @@
       <!-- Section 02 -->
       <section class="bg-green" data-title="02 · Project &amp; security">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="mm-div-art" style="--c:var(--h-green)"><img src="../images/hermes-cloudrun-slides/div-02-security.svg" alt="Glowing IAM shield and Secret Manager vault lock"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -828,9 +842,9 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 1 · Cloud Shell</div>
-            <h2 style="margin-bottom:22px">Set up the project</h2>
-            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:560px; font-size:15px"><code class="language-bash" data-trim>
+            <h2 style="margin-bottom:14px">Set up the project</h2>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start; margin-bottom:16px">
+              <pre style="width:560px; flex:none; font-size:14px"><code class="language-bash" data-trim>
 export PROJECT_ID=&lt;YOUR_PROJECT_ID&gt;
 export REGION="us-west2"
 export BUCKET_NAME="hermes-state-${PROJECT_ID}"
@@ -839,7 +853,7 @@ gcloud config set project $PROJECT_ID
 gcloud components install beta --quiet
 gcloud components update
               </code></pre>
-              <pre class="fragment" style="flex:1; font-size:15px"><code class="language-bash" data-trim>
+              <pre class="fragment" style="flex:1; min-width:0; font-size:14px"><code class="language-bash" data-trim>
 gcloud services enable \
   run.googleapis.com \
   secretmanager.googleapis.com \
@@ -848,7 +862,10 @@ gcloud services enable \
   aiplatform.googleapis.com
               </code></pre>
             </div>
-            <p class="muted fragment" style="font-size:17px; margin-top:20px">Billing must be on · Cloud Run Instances need the <b>gcloud beta</b> component</p>
+            <div class="mm-art fragment" style="width:1088px; height:172px">
+              <img src="../images/hermes-cloudrun-slides/project-apis.svg" alt="Five enabled Google Cloud API switches: Cloud Run, Secret Manager, Cloud Storage, Compute, and Vertex AI">
+            </div>
+            <p class="muted fragment" style="font-size:15.5px; margin-top:12px">Billing must be on · Cloud Run Instances need the <b>gcloud beta</b> component</p>
           </div>
         </div>
         <aside class="notes">ทำใน Cloud Shell ได้เลย • ตั้งตัวแปร 3 ตัว: PROJECT_ID, REGION (codelab ใช้ us-west2) และชื่อ bucket • ติดตั้ง gcloud beta เพราะคำสั่ง run instances ยังอยู่ใน beta • (คลิก) เปิด 5 API: Cloud Run, Secret Manager, Cloud Storage, Compute และ Vertex AI • (คลิก) project ต้องเปิด billing ไว้ • หมายเหตุ: ในหน้า codelab เขียน "components updates" ที่ถูกคือ "update"</aside>
@@ -857,13 +874,16 @@ gcloud services enable \
       <!-- SA + secret -->
       <section data-title="Service account &amp; secret">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:40px 56px">
             <div class="eyebrow">Steps 2–3 · Least privilege</div>
-            <h2 style="margin-bottom:22px">A service account and a secret</h2>
-            <div class="grid g2" style="width:1088px; gap:22px">
+            <h2 style="margin-bottom:12px">A service account and a secret</h2>
+            <div class="mm-art" style="width:1088px; height:110px; margin-bottom:12px">
+              <img src="../images/hermes-cloudrun-slides/iam-and-secret.svg" alt="Least-privilege hermes-sa granted Vertex AI User and Secret Manager password injected at boot">
+            </div>
+            <div class="grid g2" style="width:1088px; gap:20px">
               <div class="fragment">
-                <span class="tag" style="margin-bottom:12px">hermes-sa → Vertex AI user</span>
-                <pre style="font-size:12.5px; margin-top:12px"><code class="language-bash" data-trim>
+                <span class="tag">hermes-sa → Vertex AI user</span>
+                <pre style="font-size:12px; margin-top:8px"><code class="language-bash" data-trim style="padding:12px 16px">
 export SERVICE_ACCOUNT_NAME="hermes-sa"
 gcloud iam service-accounts create ${SERVICE_ACCOUNT_NAME} \
   --display-name="Hermes Service Account"
@@ -877,8 +897,8 @@ gcloud projects add-iam-policy-binding ${PROJECT_ID} \
                 </code></pre>
               </div>
               <div class="fragment">
-                <span class="tag red" style="margin-bottom:12px">Dashboard password → Secret Manager</span>
-                <pre style="font-size:12.5px; margin-top:12px"><code class="language-bash" data-trim>
+                <span class="tag red">Dashboard password → Secret Manager</span>
+                <pre style="font-size:12px; margin-top:8px"><code class="language-bash" data-trim style="padding:12px 16px">
 export DASHBOARD_PASSWORD=$(openssl rand -hex 16)
 echo "Password: ${DASHBOARD_PASSWORD}"
 
@@ -902,7 +922,7 @@ gcloud secrets add-iam-policy-binding \
       <!-- Section 03 -->
       <section class="bg-yellow" data-title="03 · Persistent storage">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="mm-div-art" style="--c:var(--h-yellow)"><img src="../images/hermes-cloudrun-slides/div-03-storage.svg" alt="Cloud Storage bucket mounted at /opt/data syncing every 5 seconds with local /tmp SQLite"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -918,20 +938,26 @@ gcloud secrets add-iam-policy-binding \
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 4 · The agent's home: /opt/data</div>
-            <h2 style="margin-bottom:22px">A bucket and a config file</h2>
+            <h2 style="margin-bottom:16px">A bucket and a config file</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre class="fragment" style="width:600px; font-size:13px"><code class="language-bash" data-trim>
+              <div style="width:600px; flex:none; display:grid; gap:14px">
+                <pre class="fragment" style="font-size:13px"><code class="language-bash" data-trim>
 gcloud storage buckets create gs://${BUCKET_NAME} \
   --location=${REGION}
 
 # let the service account mount the bucket
-gcloud storage buckets add-iam-policy-binding gs://${BUCKET_NAME} \
+gcloud storage buckets add-iam-policy-binding \
+  gs://${BUCKET_NAME} \
   --member="serviceAccount:${SERVICE_ACCOUNT}" \
   --role="roles/storage.objectAdmin"
-              </code></pre>
-              <div class="fragment" style="flex:1">
+                </code></pre>
+                <div class="mm-art green fragment" style="width:600px; height:154px">
+                  <img src="../images/hermes-cloudrun-slides/bucket-config.svg" alt="Cloud Storage bucket mounted at /opt/data paired with Vertex AI and delete journal_mode config">
+                </div>
+              </div>
+              <div class="fragment" style="flex:1; min-width:0">
                 <span class="tag yellow">config.yaml</span>
-                <pre style="font-size:15px; margin-top:12px"><code class="language-yaml" data-trim>
+                <pre style="font-size:14.5px; margin-top:10px"><code class="language-yaml" data-trim>
 _config_version: 12
 
 model:
@@ -946,7 +972,7 @@ database:
                 </code></pre>
               </div>
             </div>
-            <p class="muted fragment" style="font-size:17px; margin-top:20px">Gemini through <b>Vertex AI</b> · no API key, the service account is the credential</p>
+            <p class="muted fragment" style="font-size:16.5px; margin-top:16px">Gemini through <b>Vertex AI</b> · no API key, the service account is the credential</p>
           </div>
         </div>
         <aside class="notes">(คลิก 1) สร้าง bucket ใน region เดียวกัน และให้ hermes-sa เป็น objectAdmin เพื่อ mount และเขียนไฟล์ได้ bucket นี้จะกลายเป็นโฟลเดอร์ /opt/data ใน container • (คลิก 2) config.yaml: ใช้ Gemini ผ่าน provider vertex เปิด dashboard และตั้ง journal_mode ของฐานข้อมูลเป็น delete ไม่ใช้ WAL ซึ่งจะอธิบายในสไลด์ถัดไป • (คลิก 3) ไม่ต้องมี API key เพราะใช้สิทธิ์ของ service account</aside>
@@ -957,19 +983,15 @@ database:
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">The tricky part</div>
-            <h2 style="margin-bottom:12px">Cloud Storage is not a normal disk</h2>
-            <p class="sub" style="font-size:20px; margin-bottom:26px">Cloud Storage FUSE is built for objects and is not fully POSIX compliant</p>
-            <div class="flow" style="width:1088px">
-              <div class="pc red node fragment"><b>No byte-range locks</b>SQLite in WAL mode and busy caches need file locks</div>
-              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
-              <div class="pc red node fragment"><b>Risk</b>Corrupted <code>state.db</code> and blocked I/O</div>
-              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
-              <div class="pc green node fragment"><b>Fix</b>Do the busy work in local <code>/tmp</code>, copy back to the bucket</div>
+            <h2 style="margin-bottom:8px">Cloud Storage is not a normal disk</h2>
+            <p class="sub" style="font-size:18px; margin-bottom:14px">Cloud Storage FUSE is built for objects and is not fully POSIX compliant</p>
+            <div class="mm-art" style="width:1088px; height:224px; margin-bottom:16px">
+              <img src="../images/hermes-cloudrun-slides/fuse-vs-tmp.svg" alt="Direct SQLite WAL failing on non-POSIX FUSE locks vs running in local /tmp RAM-disk with 5-second copy back to GCS">
             </div>
-            <div class="grid g3 fragment" style="width:1088px; gap:16px; margin-top:28px">
-              <div class="pc"><b>Local</b><br>SQLite, locks, uv &amp; XDG caches</div>
-              <div class="pc"><b>TRUNCATE mode</b><br>One database file, easy to copy</div>
-              <div class="pc"><b>Autosave</b><br>Changed files go back every 5 s</div>
+            <div class="grid g3 fragment" style="width:1088px; gap:16px">
+              <div class="pc blue" style="padding:14px 18px; font-size:17px"><b>Local /tmp</b><br>SQLite, locks, uv &amp; XDG caches</div>
+              <div class="pc yellow" style="padding:14px 18px; font-size:17px"><b>TRUNCATE mode</b><br>One database file, easy to copy</div>
+              <div class="pc green" style="padding:14px 18px; font-size:17px"><b>Autosave</b><br>Changed files go back every 5 s</div>
             </div>
           </div>
         </div>
@@ -979,19 +1001,23 @@ database:
       <!-- Supervisor -->
       <section data-title="The supervisor: run_hermes.py">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Step 5 · run_hermes.py</div>
-            <h2 style="margin-bottom:18px">A small Python supervisor</h2>
+            <h2 style="margin-bottom:14px">A small Python supervisor</h2>
             <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
-              <ol class="hx-steps">
-                <li class="fragment" data-fragment-index="1"><b>1</b><span>Make local folders in <code>/tmp</code></span></li>
-                <li class="fragment" data-fragment-index="2"><b>2</b><span>Restore <code>config.yaml</code>, <code>.env</code>, <code>state.db</code> from the bucket</span></li>
-                <li class="fragment" data-fragment-index="3"><b>3</b><span>Set SQLite to <code>TRUNCATE</code></span></li>
-                <li class="fragment" data-fragment-index="4"><b>4</b><span>Point <code>HOME</code>, <code>HERMES_HOME</code>, caches at <code>/tmp</code></span></li>
-                <li class="fragment" data-fragment-index="5"><b>5</b><span>Start the autosave thread</span></li>
-                <li class="fragment" data-fragment-index="6"><b>6</b><span>Launch Gateway + Dashboard on <code>:8080</code></span></li>
+              <ol class="hx-steps" style="gap:6px">
+                <li class="fragment" data-fragment-index="1" style="padding:7px 12px; font-size:15px"><b>1</b><span>Make local folders in <code>/tmp</code></span></li>
+                <li class="fragment" data-fragment-index="2" style="padding:7px 12px; font-size:15px"><b>2</b><span>Restore <code>config.yaml</code>, <code>.env</code>, <code>state.db</code> from bucket</span></li>
+                <li class="fragment" data-fragment-index="3" style="padding:7px 12px; font-size:15px"><b>3</b><span>Set SQLite to <code>TRUNCATE</code></span></li>
+                <li class="fragment" data-fragment-index="4" style="padding:7px 12px; font-size:15px"><b>4</b><span>Point <code>HOME</code>, <code>HERMES_HOME</code>, caches at <code>/tmp</code></span></li>
+                <li class="fragment" data-fragment-index="5" style="padding:7px 12px; font-size:15px"><b>5</b><span>Start the autosave thread</span></li>
+                <li class="fragment" data-fragment-index="6" style="padding:7px 12px; font-size:15px"><b>6</b><span>Launch Gateway + Dashboard on <code>:8080</code></span></li>
               </ol>
-              <pre class="fragment" data-fragment-index="5" style="flex:1; font-size:13px"><code class="language-python" data-trim>
+              <div style="width:596px; flex:none; display:grid; gap:10px">
+                <div class="mm-art blue" style="width:596px; height:112px">
+                  <img src="../images/hermes-cloudrun-slides/supervisor-loop.svg" alt="run_hermes.py restoring state from GCS then running a 5-second autosave daemon thread alongside Gateway and Dashboard subprocesses">
+                </div>
+                <pre class="fragment" data-fragment-index="5" style="font-size:12px"><code class="language-python" data-trim style="padding:12px 16px">
 def sync_to_gcs_loop():
   files_to_sync = ["state.db", "config.yaml", ".env"]
   ...
@@ -1006,7 +1032,8 @@ def sync_to_gcs_loop():
         last_mtimes[f] = mtime
 
 threading.Thread(target=sync_to_gcs_loop, daemon=True).start()
-              </code></pre>
+                </code></pre>
+              </div>
             </div>
           </div>
           <div class="ask fragment" data-fragment-index="7"><b>✦ Full script</b><span>Copy run_hermes.py from the codelab (step 5.3). It is about 150 lines with comments.</span></div>
@@ -1019,11 +1046,11 @@ threading.Thread(target=sync_to_gcs_loop, daemon=True).start()
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 6 · No custom image needed</div>
-            <h2 style="margin-bottom:22px">A startup script, then upload</h2>
-            <div class="grid g2" style="width:1088px; gap:22px">
+            <h2 style="margin-bottom:14px">A startup script, then upload</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
               <div class="fragment">
                 <span class="tag yellow">start_hermes.sh</span>
-                <pre style="font-size:16px; margin-top:12px"><code class="language-bash" data-trim>
+                <pre style="font-size:14.5px; margin-top:8px"><code class="language-bash" data-trim style="padding:12px 18px">
 #!/bin/sh
 set -e
 export PYTHONUNBUFFERED=1
@@ -1032,14 +1059,17 @@ exec python3 /opt/data/run_hermes.py
               </div>
               <div class="fragment">
                 <span class="tag">Upload to the bucket root</span>
-                <pre style="font-size:16px; margin-top:12px"><code class="language-bash" data-trim>
+                <pre style="font-size:14.5px; margin-top:8px"><code class="language-bash" data-trim style="padding:12px 18px">
 gcloud storage cp \
   config.yaml run_hermes.py start_hermes.sh \
   gs://${BUCKET_NAME}/
                 </code></pre>
               </div>
             </div>
-            <div class="pc green fragment" style="width:1088px; margin-top:26px; box-sizing:border-box">The scripts live <b>in the bucket</b>, not in the image. Edit a script and redeploy, no rebuild. The official image runs <code>/bin/sh /opt/data/start_hermes.sh</code>.</div>
+            <div class="mm-art green fragment" style="width:1088px; height:172px; margin-top:14px">
+              <img src="../images/hermes-cloudrun-slides/startup-no-rebuild.svg" alt="Uploading three small files to GCS Bucket Root mounted directly into the official Hermes image with zero Dockerfile rebuild">
+            </div>
+            <div class="pc green fragment" style="width:1088px; margin-top:14px; padding:12px 18px; font-size:16.5px; box-sizing:border-box">The scripts live <b>in the bucket</b>, not in the image. Edit a script and redeploy, no rebuild. The official image runs <code>/bin/sh /opt/data/start_hermes.sh</code>.</div>
           </div>
         </div>
         <aside class="notes">(คลิก 1) start_hermes.sh สั้นมาก แค่เรียก run_hermes.py • (คลิก 2) อัปโหลด 3 ไฟล์ขึ้น bucket • (คลิก 3) จุดเด่น: สคริปต์อยู่ใน bucket ไม่ได้อยู่ใน image เราใช้ image ทางการของ Nous Research ตรง ๆ แล้ว override command ให้รันสคริปต์จาก /opt/data แก้สคริปต์แล้ว redeploy ได้เลยโดยไม่ต้อง build image ใหม่</aside>
@@ -1048,7 +1078,7 @@ gcloud storage cp \
       <!-- Section 04 -->
       <section class="bg-red" data-title="04 · Deploy, test &amp; clean up">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="mm-div-art" style="--c:var(--h-red)"><img src="../images/hermes-cloudrun-slides/div-04-deploy.svg" alt="Cloud Run Instance rocket launch with persistent redeploy verification badge"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1062,11 +1092,11 @@ gcloud storage cp \
       <!-- Deploy command -->
       <section data-title="Deploy the instance">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:40px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Step 7 · gcloud beta run instances deploy</div>
-            <h2 style="margin-bottom:18px">Deploy with one command</h2>
-            <div style="display:flex; gap:20px; width:1088px; align-items:flex-start">
-              <pre style="width:716px; font-size:12px"><code class="language-bash" data-trim>
+            <h2 style="margin-bottom:14px">Deploy with one command</h2>
+            <div style="display:flex; gap:18px; width:1088px; align-items:flex-start">
+              <pre style="width:726px; flex:none; font-size:12px"><code class="language-bash" data-trim style="padding:12px 18px">
 gcloud beta run instances deploy hermes-instance \
   --image nousresearch/hermes-agent:latest \
   --service-account ${SERVICE_ACCOUNT} \
@@ -1080,7 +1110,8 @@ gcloud beta run instances deploy hermes-instance \
   --add-volume name=hermes-storage,mount-path=/opt/data,\
 type=cloud-storage,bucket=$BUCKET_NAME,\
 mount-options="uid=2000;gid=2000;file-mode=0777;dir-mode=0777;implicit-dirs" \
-  --set-secrets "HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=hermes-dashboard-password:latest" \
+  --set-secrets "HERMES_DASHBOARD_BASIC_AUTH_PASSWORD=\
+hermes-dashboard-password:latest" \
   --set-env-vars "PYTHONUNBUFFERED=1,VERTEX_PROJECT_ID=$PROJECT_ID,\
 VERTEX_LOCATION=global,HERMES_DASHBOARD_BASIC_AUTH_USERNAME=admin,\
 HERMES_ALLOW_ROOT_GATEWAY=1,HERMES_WORKSPACE=/opt/data/workspace,\
@@ -1088,11 +1119,14 @@ HERMES_WRITE_SAFE_ROOT=/opt/data" \
   --region $REGION \
   --project $PROJECT_ID
               </code></pre>
-              <div class="hx-flags">
-                <div class="pc blue fragment"><b>--command / --args</b>Run our script from the bucket</div>
-                <div class="pc green fragment"><b>--add-volume</b>Mount the bucket at <code>/opt/data</code></div>
-                <div class="pc red fragment"><b>--set-secrets</b>Password from Secret Manager</div>
-                <div class="pc yellow fragment"><b>--no-invoker-iam-check</b>Public URL, protected by the dashboard login</div>
+              <div class="hx-flags" style="width:344px; flex:none; gap:8px">
+                <div class="mm-art blue" style="width:344px; height:112px">
+                  <img src="../images/hermes-cloudrun-slides/deploy-wiring.svg" alt="Four Cloud Run deploy flags wiring args, FUSE volume, secret, and public URL into hermes-instance">
+                </div>
+                <div class="pc blue fragment" style="padding:9px 12px; font-size:14px; line-height:1.3"><b style="font-size:13.5px; margin-bottom:2px">--command / --args</b>Run our script from the bucket</div>
+                <div class="pc green fragment" style="padding:9px 12px; font-size:14px; line-height:1.3"><b style="font-size:13.5px; margin-bottom:2px">--add-volume</b>Mount the bucket at <code>/opt/data</code></div>
+                <div class="pc red fragment" style="padding:9px 12px; font-size:14px; line-height:1.3"><b style="font-size:13.5px; margin-bottom:2px">--set-secrets</b>Password from Secret Manager</div>
+                <div class="pc yellow fragment" style="padding:9px 12px; font-size:14px; line-height:1.3"><b style="font-size:13.5px; margin-bottom:2px">--no-invoker-iam-check</b>Public URL, protected by dashboard login</div>
               </div>
             </div>
           </div>
@@ -1105,25 +1139,25 @@ HERMES_WRITE_SAFE_ROOT=/opt/data" \
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 8 · Hermes Dashboard</div>
-            <h2 style="margin-bottom:24px">Log in and test it</h2>
-            <div class="grid g3 ag-steps" style="width:1088px; gap:18px">
-              <div class="pc blue fragment" style="height:300px">
-                <span class="num">1</span>
-                <h3 style="margin:0">Open the URL</h3>
-                <p>Open the <code>*.run.app</code> URL of <code>hermes-instance</code>.</p>
-                <p>User <code>admin</code>, password <code>${DASHBOARD_PASSWORD}</code></p>
+            <h2 style="margin-bottom:14px">Log in and test it</h2>
+            <div class="mm-art" style="width:1088px; height:156px; margin-bottom:14px">
+              <img src="../images/hermes-cloudrun-slides/login-and-test.svg" alt="Three-step test: sign in at run.app, verify Vertex AI reply to echo hello, and confirm hello.txt in GCS bucket">
+            </div>
+            <div class="grid g3 ag-steps" style="width:1088px; gap:16px">
+              <div class="pc blue fragment" style="padding:12px 15px; gap:7px">
+                <div style="display:flex; align-items:center; gap:10px"><span class="num" style="width:30px; height:30px; font-size:16px">1</span><h3 style="margin:0; font-size:19px">Open the URL</h3></div>
+                <p style="font-size:14.5px; line-height:1.35">Open the <code>*.run.app</code> URL of <code>hermes-instance</code>.</p>
+                <p style="font-size:14.5px; line-height:1.35">User <code>admin</code>, password <code>${DASHBOARD_PASSWORD}</code></p>
               </div>
-              <div class="pc green fragment" style="height:300px">
-                <span class="num">2</span>
-                <h3 style="margin:0">Say hello</h3>
-                <div class="cmd">echo "hello"</div>
-                <p>The agent answers using Gemini on Vertex AI.</p>
+              <div class="pc green fragment" style="padding:12px 15px; gap:7px">
+                <div style="display:flex; align-items:center; gap:10px"><span class="num" style="width:30px; height:30px; font-size:16px">2</span><h3 style="margin:0; font-size:19px">Say hello</h3></div>
+                <div class="cmd" style="padding:8px 12px; font-size:13.5px">echo "hello"</div>
+                <p style="font-size:14.5px; line-height:1.35">The agent answers using Gemini on Vertex AI.</p>
               </div>
-              <div class="pc yellow fragment" style="height:300px">
-                <span class="num">3</span>
-                <h3 style="margin:0">Write a file</h3>
-                <p>Ask: "Write <i>hello world</i> to hello.txt in your workspace."</p>
-                <div class="cmd" style="font-size:13px">gcloud storage cat gs://$BUCKET_NAME/<wbr>workspace/hello.txt</div>
+              <div class="pc yellow fragment" style="padding:12px 15px; gap:7px">
+                <div style="display:flex; align-items:center; gap:10px"><span class="num" style="width:30px; height:30px; font-size:16px">3</span><h3 style="margin:0; font-size:19px">Write a file</h3></div>
+                <p style="font-size:14.5px; line-height:1.35">Ask: "Write <i>hello world</i> to hello.txt in your workspace."</p>
+                <div class="cmd" style="padding:8px 10px; font-size:12px">gcloud storage cat gs://$BUCKET_NAME/<wbr>workspace/hello.txt</div>
               </div>
             </div>
           </div>
@@ -1137,17 +1171,18 @@ HERMES_WRITE_SAFE_ROOT=/opt/data" \
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 9 · The real test</div>
-            <h2 style="margin-bottom:26px">Redeploy. Nothing is lost.</h2>
-            <div class="flow" style="width:1088px">
-              <div class="pc blue node fragment"><b>Redeploy</b>Run the same deploy command again</div>
-              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
-              <div class="pc yellow node fragment"><b>Boot</b><code>state.db</code> restored from the bucket</div>
-              <svg class="ico arr fragment" viewBox="0 0 46 24"><use href="#i-next"/></svg>
-              <div class="pc green node fragment"><b>Still there</b>Old chats + "read hello.txt" → <i>hello world</i></div>
+            <h2 style="margin-bottom:14px">Redeploy. Nothing is lost.</h2>
+            <div class="mm-art" style="width:1088px; height:208px; margin-bottom:14px">
+              <img src="../images/hermes-cloudrun-slides/redeploy-proof.svg" alt="Container v1 stops while Cloud Storage bucket stays untouched, then Container v2 restores state.db and hello.txt on boot">
             </div>
-            <div class="grid g2 fragment" style="width:1088px; gap:20px; margin-top:30px">
-              <div class="pc"><h3>Up to 7 days</h3>An instance runs for up to 7 days in a row, with an automatic restart policy by default.</div>
-              <div class="pc"><h3>Why it works</h3>Chats come back from <code>state.db</code>. Files come back from the workspace in the bucket.</div>
+            <div class="mm-pills fragment" style="margin-bottom:14px">
+              <span style="--c:var(--h-blue)">1. Redeploy same command</span><i>→</i>
+              <span style="--c:var(--h-yellow)">2. Boot restores state.db</span><i>→</i>
+              <span style="--c:var(--h-green)">3. Old chats + "read hello.txt" → hello world</span>
+            </div>
+            <div class="grid g2 fragment" style="width:1088px; gap:18px">
+              <div class="pc" style="padding:14px 18px; font-size:16.5px"><h3 style="font-size:21px; margin-bottom:4px">Up to 7 days</h3>An instance runs for up to 7 days in a row, with an automatic restart policy by default.</div>
+              <div class="pc" style="padding:14px 18px; font-size:16.5px"><h3 style="font-size:21px; margin-bottom:4px">Why it works</h3>Chats come back from <code>state.db</code>. Files come back from the workspace in the bucket.</div>
             </div>
           </div>
         </div>
@@ -1159,14 +1194,17 @@ HERMES_WRITE_SAFE_ROOT=/opt/data" \
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 10 · Avoid charges</div>
-            <h2 style="margin-bottom:24px">Clean up</h2>
-            <pre style="width:900px; font-size:17px"><code class="language-bash" data-trim>
+            <h2 style="margin-bottom:14px">Clean up</h2>
+            <div class="mm-art red" style="width:1088px; height:164px; margin-bottom:14px">
+              <img src="../images/hermes-cloudrun-slides/cleanup-resources.svg" alt="Four-step resource teardown: hermes-instance, dashboard-password secret, GCS bucket with backup warning, and hermes-sa">
+            </div>
+            <pre style="width:1088px; font-size:15.5px"><code class="language-bash" data-trim style="padding:14px 20px">
 gcloud beta run instances delete hermes-instance --region ${REGION} --quiet
 gcloud secrets delete hermes-dashboard-password --quiet
 gcloud storage rm -r gs://${BUCKET_NAME}
 gcloud iam service-accounts delete ${SERVICE_ACCOUNT} --quiet
             </code></pre>
-            <p class="sub" style="font-size:20px; margin-top:22px">An instance keeps running until you delete it</p>
+            <p class="sub" style="font-size:18px; margin-top:14px">An instance keeps running until you delete it</p>
           </div>
           <div class="ask fragment"><b>⚠ Careful</b><span>gcloud storage rm -r deletes the agent's chats, config and workspace. Back up first if you want to keep them.</span></div>
         </div>
@@ -1178,13 +1216,16 @@ gcloud iam service-accounts delete ${SERVICE_ACCOUNT} --quiet
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Recap</div>
-            <h2 style="margin-bottom:24px">What you learned</h2>
-            <div class="grid g3" style="width:1088px; gap:20px">
-              <div class="pc blue fragment"><h3>Cloud Run Instances</h3>A long-lived home for a stateful agent, deployed with <code>gcloud beta run instances deploy</code></div>
-              <div class="pc green fragment"><h3>Cloud Storage FUSE</h3>Mount a bucket as <code>/opt/data</code> for config, scripts and workspace</div>
-              <div class="pc yellow fragment"><h3>SQLite on FUSE</h3>Keep locks and caches in <code>/tmp</code>, use TRUNCATE, autosave back</div>
+            <h2 style="margin-bottom:16px">What you learned</h2>
+            <div class="mm-art" style="width:1088px; height:180px; margin-bottom:18px">
+              <img src="../images/hermes-cloudrun-slides/recap-hermes.svg" alt="Visual trilogy uniting 7-day Cloud Run Instances, Cloud Storage FUSE /opt/data, and local /tmp SQLite TRUNCATE with 5-second sync">
             </div>
-            <p class="sub fragment" style="font-size:22px; margin-top:34px">Dedicated service account · secrets in Secret Manager · Gemini on Vertex AI</p>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" style="padding:14px 16px; font-size:16.5px"><h3 style="font-size:21px">Cloud Run Instances</h3>A long-lived home for a stateful agent, deployed with <code>gcloud beta run instances deploy</code></div>
+              <div class="pc green fragment" style="padding:14px 16px; font-size:16.5px"><h3 style="font-size:21px">Cloud Storage FUSE</h3>Mount a bucket as <code>/opt/data</code> for config, scripts and workspace</div>
+              <div class="pc yellow fragment" style="padding:14px 16px; font-size:16.5px"><h3 style="font-size:21px">SQLite on FUSE</h3>Keep locks and caches in <code>/tmp</code>, use TRUNCATE, autosave back</div>
+            </div>
+            <p class="sub fragment" style="font-size:19px; margin-top:20px">Dedicated service account · secrets in Secret Manager · Gemini on Vertex AI</p>
           </div>
         </div>
         <aside class="notes">สรุป 3 เรื่อง: (1) Cloud Run Instances เหมาะกับ agent ที่มี state รันได้นาน (2) mount Cloud Storage เป็นโฟลเดอร์ด้วย FUSE (3) SQLite บน FUSE ต้องทำงานใน /tmp ใช้ TRUNCATE และ autosave กลับ • บวกเรื่องความปลอดภัย: service account เฉพาะ รหัสผ่านใน Secret Manager และใช้ Gemini ผ่าน Vertex AI</aside>
@@ -1197,11 +1238,11 @@ gcloud iam service-accounts delete ${SERVICE_ACCOUNT} --quiet
             <div class="eyebrow">Resources</div>
             <h2 style="margin-bottom:28px">Try it yourself</h2>
             <div class="grid g2" style="width:1088px; gap:18px">
-              <div class="pc blue" style="grid-column: span 2"><h3>Codelab</h3><a class="mono" style="font-size:15px" href="https://codelabs.developers.google.com/codelabs/cloud-run/deploy-hermes-cloud-run-instances" target="_blank">codelabs.developers.google.com · deploy-hermes-cloud-run-instances</a></div>
-              <div class="pc green hx-docs"><h3><img src="../images/hermes-cloudrun-slides/hermes-agent-icon.svg" alt="">Hermes Agent docs</h3><a class="mono" style="font-size:15px" href="https://hermes-agent.nousresearch.com/docs/user-guide/docker" target="_blank">hermes-agent.nousresearch.com/docs</a></div>
-              <div class="pc red"><h3>Cloud Storage FUSE limits</h3><a class="mono" style="font-size:15px" href="https://cloud.google.com/storage/docs/cloud-storage-fuse/overview#differences-and-limitations" target="_blank">cloud.google.com/storage/docs/cloud-storage-fuse</a></div>
+              <div class="pc blue mm-res-row" style="grid-column: span 2"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><div><h3>Codelab</h3><a class="mono" style="font-size:15px" href="https://codelabs.developers.google.com/codelabs/cloud-run/deploy-hermes-cloud-run-instances" target="_blank">codelabs.developers.google.com · deploy-hermes-cloud-run-instances</a></div></div>
+              <div class="pc green mm-res-row"><span class="ev-lg"><img src="../images/hermes-cloudrun-slides/hermes-agent-icon.svg" alt="Hermes Agent"></span><div><h3>Hermes Agent docs</h3><a class="mono" style="font-size:15px" href="https://hermes-agent.nousresearch.com/docs/user-guide/docker" target="_blank">hermes-agent.nousresearch.com/docs</a></div></div>
+              <div class="pc red mm-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage"></span><div><h3>Cloud Storage FUSE limits</h3><a class="mono" style="font-size:15px" href="https://cloud.google.com/storage/docs/cloud-storage-fuse/overview#differences-and-limitations" target="_blank">cloud.google.com/storage/docs/cloud-storage-fuse</a></div></div>
             </div>
-            <div class="cmd" style="margin-top:22px; width:620px">gcloud beta run instances deploy hermes-instance …</div>
+            <div class="cmd" style="margin-top:24px; width:620px">gcloud beta run instances deploy hermes-instance …</div>
           </div>
         </div>
         <aside class="notes">ลองทำเองได้จาก codelab • docs ของ Hermes Agent สำหรับรันด้วย Docker • และอ่านข้อจำกัดของ Cloud Storage FUSE เพิ่มเติม • ให้เวลาผู้ฟังถ่ายรูปสไลด์นี้</aside>

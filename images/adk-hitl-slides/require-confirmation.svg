@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 414 400" width="414" height="400">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="35%" stop-color="#ffd427"/>
+      <stop offset="70%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <marker id="arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#e8eaed"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="414" height="400" fill="#202124"/>
+
+  <circle cx="207" cy="175" r="135" fill="url(#amb-y)"/>
+  <circle cx="110" cy="340" r="80" fill="url(#amb-b)"/>
+  <circle cx="310" cy="340" r="80" fill="url(#amb-g)"/>
+
+  <!-- Top: Robot paused -->
+  <rect x="24" y="14" width="366" height="72" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+    <g transform="translate(74,52) scale(0.54)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#ffd427" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="5.5" fill="#ffd427" filter="url(#glow-s)"/>
+    <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#ffd427" stroke-width="2.8"/>
+    <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+    <rect x="-15" y="-24" width="5" height="12" rx="2" fill="#ffd427"/><rect x="10" y="-24" width="5" height="12" rx="2" fill="#ffd427"/><line x1="-6" y1="-7" x2="6" y2="-7" stroke="#ffd427" stroke-width="2.4" stroke-linecap="round"/>
+    <path d="M-24 14 H24 C28 14 26 42 0 46 C-26 42 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#ffd427" stroke-width="2.2"/>
+    <circle cx="0" cy="28" r="6" fill="#ffd427" opacity="0.9"/>
+  </g>
+  <text x="118" y="44" class="t" font-size="16" fill="#ffd427">Agent pauses tool call</text>
+  <text x="118" y="66" class="m" font-size="12" fill="#bdc1c6">adk_request_confirmation</text>
+
+  <line x1="207" y1="86" x2="207" y2="114" stroke="#ffd427" stroke-width="2.8" stroke-dasharray="4 4" marker-end="url(#arr-y)"/>
+
+  <!-- Middle: Sleek adk web dialog -->
+  <rect x="24" y="122" width="366" height="162" rx="18" fill="#f8f9fa" stroke="#57caff" stroke-width="2.8" filter="url(#glow-s)"/>
+  <rect x="24" y="122" width="366" height="42" rx="18" fill="#e8f0fe"/>
+  <rect x="24" y="148" width="366" height="16" fill="#e8f0fe"/>
+  <circle cx="52" cy="143" r="11" fill="#1a73e8"/>
+  <path d="M47 143 L51 147 L58 139" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="72" y="149" font-family="Google Sans, sans-serif" font-weight="700" font-size="16" fill="#202124">Confirm tool call?</text>
+  <text x="366" y="148" text-anchor="end" font-family="Roboto Mono, monospace" font-size="11" fill="#1a73e8">adk web</text>
+
+  <text x="44" y="188" font-family="Roboto Mono, monospace" font-weight="600" font-size="14" fill="#202124">issue_refund</text>
+  <rect x="44" y="198" width="326" height="30" rx="8" fill="#eef1f5"/>
+  <text x="56" y="218" font-family="Roboto Mono, monospace" font-size="13" fill="#3c4043">order_id: 1042  ·  amount: $350</text>
+
+  <rect x="190" y="240" width="84" height="32" rx="16" fill="#fff" stroke="#dadce0" stroke-width="1.8"/>
+  <text x="232" y="261" text-anchor="middle" font-family="Google Sans, sans-serif" font-weight="600" font-size="13.5" fill="#d93025">Reject</text>
+  <rect x="284" y="240" width="88" height="32" rx="16" fill="#1a73e8"/>
+  <text x="328" y="261" text-anchor="middle" font-family="Google Sans, sans-serif" font-weight="600" font-size="13.5" fill="#fff">Confirm</text>
+
+  <!-- Bottom: 2 mode pills -->
+  <rect x="24" y="306" width="174" height="78" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="111" y="334" text-anchor="middle" class="m" font-size="14" fill="#57caff" font-weight="600">= True</text>
+  <text x="111" y="356" text-anchor="middle" class="sub" font-size="13">Ask on every</text>
+  <text x="111" y="372" text-anchor="middle" class="sub" font-size="13">tool call</text>
+
+  <rect x="216" y="306" width="174" height="78" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="303" y="334" text-anchor="middle" class="m" font-size="14" fill="#5cdb6d" font-weight="600">= threshold_fn</text>
+  <text x="303" y="356" text-anchor="middle" class="sub" font-size="13">Ask only when</text>
+  <text x="303" y="372" text-anchor="middle" class="sub" font-size="13">amount &gt; $200</text>
+
+</svg>

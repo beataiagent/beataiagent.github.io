@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 122" width="1088" height="122">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#353840" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="33%" stop-color="#5cdb6d"/>
+      <stop offset="66%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#57caff"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="122" fill="#202124"/>
+
+  <circle cx="240" cy="61" r="105" fill="url(#amb-y)"/>
+  <circle cx="840" cy="61" r="115" fill="url(#amb-g)"/>
+
+  <!-- Left: Part 1 Static Build-Time -->
+  <rect x="12" y="12" width="460" height="98" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="32" y="38" class="m" font-size="11.5" fill="#ffd427">PART 1 · BUILD-TIME STATIC WALLS</text>
+  <rect x="30" y="52" width="96" height="42" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.5"/>
+  <text x="78" y="77" text-anchor="middle" class="m" font-size="11.5" fill="#bdc1c6">Regex</text>
+  <rect x="136" y="52" width="102" height="42" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.5"/>
+  <text x="187" y="77" text-anchor="middle" class="m" font-size="11.5" fill="#bdc1c6">SQL Parser</text>
+  <rect x="248" y="52" width="102" height="42" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.5"/>
+  <text x="299" y="77" text-anchor="middle" class="m" font-size="11.5" fill="#bdc1c6">DIY Docker</text>
+  <rect x="360" y="52" width="96" height="42" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.5"/>
+  <text x="408" y="77" text-anchor="middle" class="m" font-size="11.5" fill="#bdc1c6">Audit Log</text>
+
+  <!-- Center upgrade arrow -->
+  <path d="M484 61 H586" stroke="url(#grad-by)" stroke-width="5" stroke-linecap="round" filter="url(#glow-s)"/>
+  <polygon points="582,50 604,61 582,72" fill="#5cdb6d"/>
+  <text x="544" y="42" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">UPGRADE</text>
+  <text x="544" y="88" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">+ Keep KMS</text>
+
+  <!-- Right: Part 2 Runtime Governance -->
+  <rect x="616" y="12" width="460" height="98" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.6" filter="url(#glow-s)"/>
+  <text x="636" y="38" class="m" font-size="11.5" fill="#5cdb6d">PART 2 · RUNTIME ADAPTIVE GOVERNANCE</text>
+  <rect x="634" y="52" width="102" height="42" rx="10" fill="#17181b" stroke="#ff7daf" stroke-width="1.8"/>
+  <text x="685" y="77" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">Model Armor</text>
+  <rect x="746" y="52" width="104" height="42" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="798" y="77" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">LLM Judge</text>
+  <rect x="860" y="52" width="96" height="42" rx="10" fill="#17181b" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="908" y="77" text-anchor="middle" class="m" font-size="11" fill="#ffd427">Sandbox</text>
+  <rect x="966" y="52" width="96" height="42" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <text x="1014" y="77" text-anchor="middle" class="m" font-size="11" fill="#57caff">Anomalies</text>
+
+</svg>

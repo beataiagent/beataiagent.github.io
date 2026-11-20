@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 366 146" width="366" height="146">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#363942" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-bgy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-full" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="35%" stop-color="#5cdb6d"/>
+      <stop offset="70%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#5f6368" opacity="0.28"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #e8eaed; font-weight: 500; }
+      .ms { font-family: "Roboto Mono", ui-monospace, monospace; fill: #9aa0a6; font-weight: 400; }
+    </style>
+  </defs>
+  <rect width="366" height="146" fill="#202124"/>
+  <rect width="366" height="146" fill="url(#dots)"/>
+
+  <circle cx="183" cy="73" r="105" fill="url(#amb-g)"/>
+  <!-- Left inputs -->
+  <rect x="12" y="16" width="106" height="48" rx="10" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
+  <text x="65" y="37" text-anchor="middle" class="t" font-size="12.5" fill="#57caff">Text chunks</text>
+  <text x="65" y="54" text-anchor="middle" class="ms" font-size="10">Document</text>
+  <rect x="12" y="80" width="106" height="50" rx="10" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="65" y="101" text-anchor="middle" class="t" font-size="12.5" fill="#5cdb6d">Media files</text>
+  <text x="65" y="118" text-anchor="middle" class="ms" font-size="10">png·wav·mp4</text>
+  <!-- Converge to torch.cat -->
+  <path d="M120 40 H148 V73 H166" fill="none" stroke="#57caff" stroke-width="2.2"/>
+  <path d="M120 105 H148 V73" fill="none" stroke="#5cdb6d" stroke-width="2.2"/>
+  <polygon points="162,68 170,73 162,78" fill="#5cdb6d"/>
+  <!-- Center concat node -->
+  <rect x="172" y="36" width="76" height="74" rx="12" fill="#17181b" stroke="#ffd427" stroke-width="2"/>
+  <text x="210" y="65" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">512-d</text>
+  <text x="210" y="84" text-anchor="middle" class="ms" font-size="10.5">L2 norm</text>
+  <path d="M250 73 H270" stroke="#ffd427" stroke-width="2.4"/><polygon points="266,68 274,73 266,78" fill="#ffd427"/>
+  <!-- Right index.pt vault -->
+  <rect x="276" y="24" width="78" height="98" rx="14" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+  <ellipse cx="315" cy="48" rx="20" ry="7" fill="none" stroke="#5cdb6d" stroke-width="2"/>
+  <path d="M295 48 V74 C295 78 304 81 315 81 C326 81 335 78 335 74 V48" fill="none" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="315" y="106" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">index.pt</text>
+
+</svg>

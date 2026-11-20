@@ -1,0 +1,111 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 404 415" width="404" height="415">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="35%" stop-color="#ffd427"/>
+      <stop offset="70%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <marker id="arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#e8eaed"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="404" height="415" fill="#202124"/>
+
+  <circle cx="202" cy="135" r="130" fill="url(#amb-y)"/>
+  <circle cx="202" cy="340" r="110" fill="url(#amb-g)"/>
+
+  <!-- Supervisor + Editable Card -->
+  <rect x="18" y="16" width="368" height="214" rx="18" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+    <g transform="translate(66,62) scale(0.56)">
+    <circle cx="0" cy="-18" r="19" fill="#ffe0b2" stroke="#ffd427" stroke-width="2.5"/>
+    <path d="M-19 -22 C-16 -38 16 -38 19 -22 C12 -28 -12 -28 -19 -22 Z" fill="#3c4043"/>
+    <circle cx="-6" cy="-17" r="2.3" fill="#202124"/>
+    <circle cx="6" cy="-17" r="2.3" fill="#202124"/>
+    <path d="M-5 -9 Q0 -4.5 5 -9" fill="none" stroke="#202124" stroke-width="2.2" stroke-linecap="round"/>
+    
+    <path d="M-27 42 C-27 16 -16 8 0 8 C16 8 27 16 27 42 Z" fill="url(#glass)" stroke="#ffd427" stroke-width="2.5"/>
+    
+  </g>
+  <text x="106" y="52" class="t" font-size="17" fill="#ffd427">Supervisor Review</text>
+  <text x="106" y="72" class="m" font-size="12" fill="#bdc1c6">Requested: $350 · order 1042</text>
+
+  <!-- hint bubble -->
+  <rect x="34" y="92" width="336" height="44" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.5"/>
+  <rect x="42" y="100" width="44" height="20" rx="6" fill="#57caff" fill-opacity="0.22"/>
+  <text x="64" y="114" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">hint</text>
+  <text x="96" y="112" class="sub" font-size="12" fill="#e8eaed">"Set approved_amount, or 0</text>
+  <text x="96" y="128" class="sub" font-size="12" fill="#e8eaed">to reject."</text>
+
+  <!-- payload editable field -->
+  <rect x="34" y="146" width="336" height="42" rx="10" fill="#17181b" stroke="#ffd427" stroke-width="2"/>
+  <rect x="42" y="156" width="60" height="22" rx="6" fill="#ffd427" fill-opacity="0.2"/>
+  <text x="72" y="171" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">payload</text>
+  <text x="112" y="172" class="m" font-size="12.5" fill="#bdc1c6">approved_amount:</text>
+  <rect x="260" y="153" width="98" height="28" rx="7" fill="#2b2f38" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="309" y="172" text-anchor="middle" class="m" font-size="14" fill="#5cdb6d" font-weight="700">300 ✎</text>
+
+  <text x="202" y="214" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">Supervisor lowers $350 → $300 &amp; clicks Approve</text>
+
+  <!-- Arrow down -->
+  <line x1="202" y1="230" x2="202" y2="264" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+
+  <!-- Safety Cap Funnel: min(300, 350) -->
+  <rect x="46" y="272" width="312" height="50" rx="14" fill="url(#glass-hi)" stroke="#57caff" stroke-width="2"/>
+  <text x="202" y="294" text-anchor="middle" class="m" font-size="12" fill="#57caff">SAFETY CAP IN CODE</text>
+  <text x="202" y="313" text-anchor="middle" class="m" font-size="14" fill="#fff">min(approved=300, req=350)</text>
+
+  <line x1="202" y1="322" x2="202" y2="346" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+
+  <!-- Final green pay result -->
+  <rect x="34" y="354" width="336" height="48" rx="14" fill="#5cdb6d" fill-opacity="0.14" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+  <text x="202" y="384" text-anchor="middle" class="t" font-size="17" fill="#5cdb6d">✓ Tool runs again → pays $300</text>
+
+</svg>

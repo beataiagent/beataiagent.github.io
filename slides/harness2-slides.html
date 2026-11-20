@@ -678,6 +678,19 @@
     .reveal ul.h2-tree { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; font: 400 15px/1.35 var(--mono); }
     .h2-tree li { display: flex; justify-content: space-between; gap: 12px; padding: 7px 12px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
     .h2-tree li span { color: var(--dk-sub); font-family: var(--sans); font-size: 14px; }
+    .g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .g3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .g4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+    .mm-art { border: 2px solid var(--dk-line); border-radius: 18px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; }
+    .mm-art.blue { border-color: var(--h-blue); } .mm-art.green { border-color: var(--h-green); }
+    .mm-art.yellow { border-color: var(--h-yellow); } .mm-art.red { border-color: var(--h-red); }
+    .mm-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .mm-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .mm-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .ev-lg { display: inline-grid; place-items: center; width: 46px; height: 46px; border-radius: 12px; background: #fff; flex: none; }
+    .reveal .slides .ev-lg img { width: 28px; height: 28px; object-fit: contain; display: block; }
+    .mm-res-row { display: flex; align-items: center; gap: 16px; }
+    .mm-res-row h3 { margin: 0 0 4px; font-size: 21px; }
   </style>
 </head>
 <body>
@@ -755,7 +768,7 @@
       <!-- Section 01 -->
       <section class="bg-blue" data-title="01 · What is a harness?">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="mm-div-art" style="--c:var(--h-blue)"><img src="../images/harness2-slides/div-01-harness.svg" alt="Frozen model core wrapped by editable 4-part harness ring"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -771,13 +784,15 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">The core idea</div>
-            <h2 style="margin-bottom:24px">Agent = Model + Harness</h2>
-            <div class="h2-eq" style="margin-bottom:28px"><span style="--c:var(--h-blue)">Model</span><i>frozen weights</i><i class="op">+</i><span style="--c:var(--h-green)">Harness</span><i>editable</i><i class="op">=</i><span style="--c:var(--h-red)">Agent</span></div>
-            <div class="grid g4 h2-comp" style="width:1088px; gap:16px">
-              <div class="pc blue fragment"><h3>Context</h3><div class="chips"><span class="chip">system prompt</span><span class="chip">guardrails</span><span class="chip">memory</span><span class="chip">skills</span></div></div>
-              <div class="pc green fragment"><h3>Tool interface</h3><div class="chips"><span class="chip">tool guidance</span><span class="chip">scripts</span></div></div>
-              <div class="pc yellow fragment"><h3>Orchestration</h3><div class="chips"><span class="chip">subagents</span></div></div>
-              <div class="pc red fragment"><h3>Middleware</h3><div class="chips"><span class="chip">plugins</span></div></div>
+            <h2 style="margin-bottom:14px">Agent = Model + Harness</h2>
+            <div class="mm-art" style="width:1088px; height:182px; margin-bottom:16px">
+              <img src="../images/harness2-slides/agent-model-harness.svg" alt="Frozen Model chip plus 8-part Editable Harness equals Self-Improving Agent">
+            </div>
+            <div class="grid g4 h2-comp" style="width:1088px; gap:14px">
+              <div class="pc blue fragment" style="padding:12px 14px"><h3 style="font-size:19px; margin-bottom:8px">Context</h3><div class="chips"><span class="chip" style="font-size:13px; padding:4px 9px">system prompt</span><span class="chip" style="font-size:13px; padding:4px 9px">guardrails</span><span class="chip" style="font-size:13px; padding:4px 9px">memory</span><span class="chip" style="font-size:13px; padding:4px 9px">skills</span></div></div>
+              <div class="pc green fragment" style="padding:12px 14px"><h3 style="font-size:19px; margin-bottom:8px">Tool interface</h3><div class="chips"><span class="chip" style="font-size:13px; padding:4px 9px">tool guidance</span><span class="chip" style="font-size:13px; padding:4px 9px">scripts</span></div></div>
+              <div class="pc yellow fragment" style="padding:12px 14px"><h3 style="font-size:19px; margin-bottom:8px">Orchestration</h3><div class="chips"><span class="chip" style="font-size:13px; padding:4px 9px">subagents</span></div></div>
+              <div class="pc red fragment" style="padding:12px 14px"><h3 style="font-size:19px; margin-bottom:8px">Middleware</h3><div class="chips"><span class="chip" style="font-size:13px; padding:4px 9px">plugins</span></div></div>
             </div>
           </div>
           <div class="ask fragment"><b>Harnessing</b><span>= optimizing these 8 parts. Harness² does it automatically, and never touches the weights.</span></div>
@@ -790,12 +805,15 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">The open-world problem</div>
-            <h2 style="margin-bottom:14px">New task, old harness</h2>
-            <p class="sub" style="font-size:20px; margin-bottom:26px">Agents keep meeting tasks their harness was not designed for</p>
-            <div class="grid g3" style="width:1088px; gap:20px">
-              <div class="pc red fragment" style="height:250px"><h3>Retrain the model</h3><ul class="bl" style="font-size:18px; margin-top:12px"><li>Needs data and GPUs</li><li>Slow to iterate</li><li>Not possible for API models</li></ul></div>
-              <div class="pc yellow fragment" style="height:250px"><h3>Hand-tune the harness</h3><ul class="bl" style="font-size:18px; margin-top:12px"><li>Engineer edits prompts and skills</li><li>Does not scale to every task</li><li>Lessons stay in people's heads</li></ul></div>
-              <div class="pc green fragment" style="height:250px"><h3>Harness²</h3><ul class="bl" style="font-size:18px; margin-top:12px"><li>Agent edits its own harness, per task</li><li>Keeps lessons in a library</li><li>Model weights stay frozen</li></ul></div>
+            <h2 style="margin-bottom:8px">New task, old harness</h2>
+            <p class="sub" style="font-size:18px; margin-bottom:14px">Agents keep meeting tasks their harness was not designed for</p>
+            <div class="mm-art" style="width:1088px; height:172px; margin-bottom:16px">
+              <img src="../images/harness2-slides/why-harness2.svg" alt="Comparing model retraining, manual hand-tuning, and Harness squared autonomous adaptation">
+            </div>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc red fragment" style="padding:14px 18px"><h3 style="font-size:21px">Retrain the model</h3><ul class="bl" style="font-size:16.5px; margin-top:10px"><li style="margin-bottom:8px">Needs data and GPUs</li><li style="margin-bottom:8px">Slow to iterate</li><li style="margin-bottom:0">Not possible for API models</li></ul></div>
+              <div class="pc yellow fragment" style="padding:14px 18px"><h3 style="font-size:21px">Hand-tune the harness</h3><ul class="bl" style="font-size:16.5px; margin-top:10px"><li style="margin-bottom:8px">Engineer edits prompts and skills</li><li style="margin-bottom:8px">Does not scale to every task</li><li style="margin-bottom:0">Lessons stay in people's heads</li></ul></div>
+              <div class="pc green fragment" style="padding:14px 18px"><h3 style="font-size:21px">Harness²</h3><ul class="bl" style="font-size:16.5px; margin-top:10px"><li style="margin-bottom:8px">Agent edits its own harness, per task</li><li style="margin-bottom:8px">Keeps lessons in a library</li><li style="margin-bottom:0">Model weights stay frozen</li></ul></div>
             </div>
           </div>
         </div>
@@ -805,7 +823,7 @@
       <!-- Section 02 -->
       <section class="bg-green" data-title="02 · How Harness² works">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="mm-div-art" style="--c:var(--h-green)"><img src="../images/harness2-slides/div-02-recursion.svg" alt="Two nested recursion loops for task refinement and persistent improvement library"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -821,24 +839,27 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Why "squared"</div>
-            <h2 style="margin-bottom:26px">Two levels of recursion</h2>
-            <div class="grid g2" style="gap:28px; width:1088px">
-              <div class="pc blue fragment" style="height:320px">
+            <h2 style="margin-bottom:16px">Two levels of recursion</h2>
+            <div class="mm-art" style="width:1088px; height:200px; margin-bottom:16px">
+              <img src="../images/harness2-slides/two-levels-recursion.svg" alt="Level 1 Task loop proposing, probing, and composing paired with Level 2 Improvement Library">
+            </div>
+            <div class="grid g2" style="gap:22px; width:1088px">
+              <div class="pc blue fragment" style="padding:14px 18px">
                 <span class="tag">Level 1 · Task</span>
-                <h3 style="margin-top:18px">Refine the harness for this task</h3>
-                <ul class="bl" style="font-size:19px; margin-top:12px">
-                  <li><b>Propose</b> edits, <b>Probe</b> them on the same task, <b>Compose</b> a better harness</li>
-                  <li>Learns from <b>behavior contrasts</b> between runs</li>
-                  <li>No ground-truth score or rubric</li>
+                <h3 style="font-size:21px; margin-top:10px">Refine the harness for this task</h3>
+                <ul class="bl" style="font-size:16.5px; margin-top:8px">
+                  <li style="margin-bottom:7px"><b>Propose</b> edits, <b>Probe</b> them on the same task, <b>Compose</b> a better harness</li>
+                  <li style="margin-bottom:7px">Learns from <b>behavior contrasts</b> between runs</li>
+                  <li style="margin-bottom:0">No ground-truth score or rubric</li>
                 </ul>
               </div>
-              <div class="pc green fragment" style="height:320px">
+              <div class="pc green fragment" style="padding:14px 18px">
                 <span class="tag yellow">Level 2 · Harnessing</span>
-                <h3 style="margin-top:18px">Improve how future tasks are refined</h3>
-                <ul class="bl" style="font-size:19px; margin-top:12px">
-                  <li>A persistent <b>improvement library</b></li>
-                  <li>Stores adopted harnesses and lessons backed by evidence</li>
-                  <li>One library per domain</li>
+                <h3 style="font-size:21px; margin-top:10px">Improve how future tasks are refined</h3>
+                <ul class="bl" style="font-size:16.5px; margin-top:8px">
+                  <li style="margin-bottom:7px">A persistent <b>improvement library</b></li>
+                  <li style="margin-bottom:7px">Stores adopted harnesses and lessons backed by evidence</li>
+                  <li style="margin-bottom:0">One library per domain</li>
                 </ul>
               </div>
             </div>
@@ -852,19 +873,22 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Level 1 · one task</div>
-            <h2 style="margin-bottom:30px">Propose · Probe · Compose</h2>
-            <div class="flow tight" style="width:1088px; height:230px">
-              <div class="pc node fragment" data-fragment-index="1"><b>Reference run</b><p>Start from the base harness H₀</p></div>
-              <svg class="arr fragment" data-fragment-index="1" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
-              <div class="pc blue node fragment" data-fragment-index="2"><b>Propose</b><p>Harness editor writes general and domain-specific edits</p></div>
-              <svg class="arr fragment" data-fragment-index="2" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
-              <div class="pc green node fragment" data-fragment-index="3"><b>Probe</b><p>Run each candidate on the same task</p></div>
-              <svg class="arr fragment" data-fragment-index="3" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
-              <div class="pc yellow node fragment" data-fragment-index="4"><b>Compose</b><p>Composer merges what worked into one harness</p></div>
-              <svg class="arr fragment" data-fragment-index="5" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
-              <div class="pc red node fragment" data-fragment-index="5"><b>Reflect</b><p>Deliver, then write lessons to the library</p></div>
+            <h2 style="margin-bottom:14px">Propose · Probe · Compose</h2>
+            <div class="mm-art" style="width:1088px; height:154px; margin-bottom:14px">
+              <img src="../images/harness2-slides/propose-probe-compose.svg" alt="Five-stage task loop from H0 baseline through Propose, Probe, Compose, and Reflect to the Library">
             </div>
-            <p class="sub fragment" style="font-size:19px; margin-top:26px" data-fragment-index="6">The next task starts again at H₀. Reuse happens through the library, not by carrying the harness forward.</p>
+            <div class="flow tight" style="width:1088px">
+              <div class="pc node fragment" data-fragment-index="1" style="padding:12px 10px"><b style="font-size:18px; margin-bottom:4px">Reference run</b><p style="font-size:13.5px; line-height:1.3">Start from the base harness H₀</p></div>
+              <svg class="arr fragment" data-fragment-index="1" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc blue node fragment" data-fragment-index="2" style="padding:12px 10px"><b style="font-size:18px; margin-bottom:4px">Propose</b><p style="font-size:13.5px; line-height:1.3">Editor writes general &amp; domain edits</p></div>
+              <svg class="arr fragment" data-fragment-index="2" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc green node fragment" data-fragment-index="3" style="padding:12px 10px"><b style="font-size:18px; margin-bottom:4px">Probe</b><p style="font-size:13.5px; line-height:1.3">Run each candidate on the same task</p></div>
+              <svg class="arr fragment" data-fragment-index="3" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="4" style="padding:12px 10px"><b style="font-size:18px; margin-bottom:4px">Compose</b><p style="font-size:13.5px; line-height:1.3">Composer merges what worked into one</p></div>
+              <svg class="arr fragment" data-fragment-index="5" viewBox="0 0 46 24"><path d="M2 12h40M32 3l10 9-10 9"/></svg>
+              <div class="pc red node fragment" data-fragment-index="5" style="padding:12px 10px"><b style="font-size:18px; margin-bottom:4px">Reflect</b><p style="font-size:13.5px; line-height:1.3">Deliver &amp; write lessons to library</p></div>
+            </div>
+            <p class="sub fragment" style="font-size:16.5px; margin-top:14px" data-fragment-index="6">The next task starts again at H₀. Reuse happens through the library, not by carrying the harness forward.</p>
           </div>
           <div class="ask fragment" data-fragment-index="7"><b>Key rule</b><span>No step sees a score or rubric. Every decision rests on observed behavior.</span></div>
         </div>
@@ -876,21 +900,24 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Two knobs: budget <code>k</code> and mode</div>
-            <h2 style="margin-bottom:26px">Parallel or sequential?</h2>
-            <div class="grid g2" style="gap:28px; width:1088px">
-              <div class="pc blue fragment" style="height:270px">
+            <h2 style="margin-bottom:14px">Parallel or sequential?</h2>
+            <div class="mm-art" style="width:1088px; height:196px; margin-bottom:14px">
+              <img src="../images/harness2-slides/budget-k-modes.svg" alt="Parallel fan-out probes vs Sequential step-by-step refinement chain">
+            </div>
+            <div class="grid g2" style="gap:22px; width:1088px">
+              <div class="pc blue fragment" style="padding:12px 18px">
                 <span class="tag">--mode parallel</span>
-                <ul class="bl" style="font-size:20px; margin-top:20px">
-                  <li>Propose and probe <b>k</b> general + <b>k</b> domain candidates at once</li>
-                  <li>Make <b>k</b> compositions from the shared evidence</li>
-                  <li>The default mode</li>
+                <ul class="bl" style="font-size:16.5px; margin-top:10px">
+                  <li style="margin-bottom:6px">Propose and probe <b>k</b> general + <b>k</b> domain candidates at once</li>
+                  <li style="margin-bottom:6px">Make <b>k</b> compositions from the shared evidence</li>
+                  <li style="margin-bottom:0">The default mode</li>
                 </ul>
               </div>
-              <div class="pc green fragment" style="height:270px">
+              <div class="pc green fragment" style="padding:12px 18px">
                 <span class="tag yellow">--mode sequential</span>
-                <ul class="bl" style="font-size:20px; margin-top:20px">
-                  <li><b>k</b> Propose–Probe–Compose steps in a row</li>
-                  <li>Each step carries the refined harness and evidence forward</li>
+                <ul class="bl" style="font-size:16.5px; margin-top:10px">
+                  <li style="margin-bottom:6px"><b>k</b> Propose–Probe–Compose steps in a row</li>
+                  <li style="margin-bottom:0">Each step carries the refined harness and evidence forward</li>
                 </ul>
               </div>
             </div>
@@ -903,7 +930,7 @@
       <!-- Section 03 -->
       <section class="bg-yellow" data-title="03 · Results">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="mm-div-art" style="--c:var(--h-yellow)"><img src="../images/harness2-slides/div-03-results.svg" alt="Ascending neon benchmark bars showing +8.4 point improvement"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -919,10 +946,10 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">WorkBuddy-Bench · Gemini 3.5 Flash + OpenCode · mean of 3 runs</div>
-            <h2 style="margin-bottom:22px">Beats other self-improving methods</h2>
-            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <div class="pc" style="flex:1; min-width:0; padding:8px 14px">
-                <table class="h2-tbl">
+            <h2 style="margin-bottom:18px">Beats other self-improving methods</h2>
+            <div style="display:flex; gap:20px; width:1088px; align-items:flex-start">
+              <div class="pc" style="width:634px; flex:none; padding:10px 14px">
+                <table class="h2-tbl" style="font-size:16px">
                   <tr><th>Method</th><th>Code</th><th>Web</th><th>Office</th><th>Avg</th></tr>
                   <tr><td>Base harness</td><td>73.4</td><td>69.9</td><td>74.0</td><td>72.4</td></tr>
                   <tr><td>ReasoningBank</td><td>72.6</td><td>70.7</td><td>76.8</td><td>73.4</td></tr>
@@ -932,9 +959,14 @@
                   <tr class="hi2 fragment" data-fragment-index="2"><td>Harness² k=5</td><td>80.8</td><td>78.3</td><td>83.4</td><td>80.8</td></tr>
                 </table>
               </div>
-              <div style="width:300px; flex:none; display:grid; gap:14px">
-                <div class="pc green h2-stat fragment" data-fragment-index="1" style="--c:var(--h-green)"><b>+5.1</b><span>one refinement step (k=1) over the base harness</span></div>
-                <div class="pc green h2-stat fragment" data-fragment-index="2" style="--c:var(--h-green)"><b>+8.4</b><span>with budget k=5, parallel</span></div>
+              <div style="width:434px; flex:none; display:grid; gap:12px">
+                <div class="mm-art green" style="width:434px; height:230px">
+                  <img src="../images/harness2-slides/workbuddy-chart.svg" alt="WorkBuddy-Bench average score bar chart rising from 72.4 Base harness to 80.8 Harness squared k=5">
+                </div>
+                <div class="grid g2" style="gap:12px">
+                  <div class="pc green h2-stat fragment" data-fragment-index="1" style="--c:var(--h-green); padding:12px 14px"><b style="font-size:36px">+5.1</b><span style="font-size:13.5px">one step (k=1) over base</span></div>
+                  <div class="pc green h2-stat fragment" data-fragment-index="2" style="--c:var(--h-green); padding:12px 14px"><b style="font-size:36px">+8.4</b><span style="font-size:13.5px">budget k=5, parallel</span></div>
+                </div>
               </div>
             </div>
           </div>
@@ -947,18 +979,23 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Paper headline · arXiv 2610.14224</div>
-            <h2 style="margin-bottom:22px">Best gains, and what matters</h2>
-            <div class="grid g3" style="width:1088px; gap:16px; margin-bottom:26px">
-              <div class="pc blue h2-stat fragment" style="--c:var(--h-blue)"><b>+11.5</b><span>points on WorkBuddy-Bench</span></div>
-              <div class="pc yellow h2-stat fragment" style="--c:var(--h-yellow)"><b>+4.5</b><span>points on JobBench</span></div>
-              <div class="pc red h2-stat fragment" style="--c:var(--h-red)"><b>+11.8 pp</b><span>LAB partial pass rate (legal)</span></div>
+            <h2 style="margin-bottom:16px">Best gains, and what matters</h2>
+            <div class="grid g3" style="width:1088px; gap:16px; margin-bottom:16px">
+              <div class="pc blue h2-stat fragment" style="--c:var(--h-blue); padding:12px 18px"><b style="font-size:40px">+11.5</b><span style="font-size:15px">points on WorkBuddy-Bench</span></div>
+              <div class="pc yellow h2-stat fragment" style="--c:var(--h-yellow); padding:12px 18px"><b style="font-size:40px">+4.5</b><span style="font-size:15px">points on JobBench</span></div>
+              <div class="pc red h2-stat fragment" style="--c:var(--h-red); padding:12px 18px"><b style="font-size:40px">+11.8 pp</b><span style="font-size:15px">LAB partial pass rate (legal)</span></div>
             </div>
-            <div class="pc fragment" style="width:1088px; padding:16px 22px">
-              <h3 style="font-size:20px; margin-bottom:12px">Ablation: score drop when you remove a part <span class="muted" style="font:400 14px var(--mono)">WorkBuddy / JobBench</span></h3>
-              <div class="h2-bars">
-                <div><span>No general vs domain split</span><i style="width:100%"></i><em>−2.9 / −3.7</em></div>
-                <div><span>No improvement library</span><i style="width:74%"></i><em>−3.1 / −1.8</em></div>
-                <div><span>No composition step</span><i style="width:53%"></i><em>−1.6 / −1.9</em></div>
+            <div style="display:flex; gap:18px; width:1088px; align-items:stretch">
+              <div class="pc fragment" style="flex:1; min-width:0; padding:18px 20px; display:flex; flex-direction:column; justify-content:center">
+                <h3 style="font-size:19px; margin-bottom:16px">Ablation: score drop without a part<br><span class="muted" style="font:400 13.5px var(--mono)">WorkBuddy / JobBench</span></h3>
+                <div class="h2-bars" style="gap:16px">
+                  <div style="grid-template-columns:195px 1fr 112px; font-size:15px"><span>General vs domain</span><i style="width:100%"></i><em>−2.9 / −3.7</em></div>
+                  <div style="grid-template-columns:195px 1fr 112px; font-size:15px"><span>Lesson library</span><i style="width:74%; --c:var(--h-yellow)"></i><em>−3.1 / −1.8</em></div>
+                  <div style="grid-template-columns:195px 1fr 112px; font-size:15px"><span>Composition step</span><i style="width:53%; --c:var(--h-blue)"></i><em>−1.6 / −1.9</em></div>
+                </div>
+              </div>
+              <div class="mm-art yellow fragment" style="width:488px; height:248px">
+                <img src="../images/harness2-slides/headline-ablations.svg" alt="Three load-bearing pillars supporting Harness squared gains: General vs Domain split, Lesson Library, and Compose Step">
               </div>
             </div>
           </div>
@@ -969,7 +1006,7 @@
       <!-- Section 04 -->
       <section class="bg-red" data-title="04 · Hands-on setup">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
-        <svg class="ico abs" style="left:85px; top:220px; width:200px; height:200px; stroke-width:4; fill:#fff"><use href="#i-star"/></svg>
+        <div class="mm-div-art" style="--c:var(--h-red)"><img src="../images/harness2-slides/div-04-handson.svg" alt="Terminal window running free local harness2-demo with zero failed tasks"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -985,15 +1022,18 @@
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 1 · no credentials, no model calls</div>
-            <h2 style="margin-bottom:22px">Install &amp; run the demo</h2>
+            <h2 style="margin-bottom:16px">Install &amp; run the demo</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <div style="width:400px; flex:none; display:grid; gap:12px">
-                <div class="pc blue" style="padding:14px 18px; font-size:17px"><b>Linux</b> · Python 3.12 · <code>uv</code> · Node.js 20+</div>
-                <div class="pc" style="padding:14px 18px; font-size:17px">Google Cloud CLI for Vertex AI models</div>
-                <div class="pc" style="padding:14px 18px; font-size:17px">LAB: Pandoc + Poppler<br>WorkBuddy: Docker</div>
+              <div style="width:400px; flex:none; display:grid; gap:10px">
+                <div class="mm-art green" style="width:400px; height:172px">
+                  <img src="../images/harness2-slides/install-free-demo.svg" alt="Free local ledger demo: base script drops credits and candidate patch fixes the sum">
+                </div>
+                <div class="pc blue" style="padding:9px 14px; font-size:14.5px; line-height:1.35"><b>Linux</b> · Python 3.12 · <code>uv</code> · Node.js 20+</div>
+                <div class="pc" style="padding:9px 14px; font-size:14.5px; line-height:1.35">Google Cloud CLI for Vertex AI models</div>
+                <div class="pc" style="padding:9px 14px; font-size:14.5px; line-height:1.35">LAB: Pandoc + Poppler · WorkBuddy: Docker</div>
               </div>
               <div style="flex:1; min-width:0">
-                <pre style="font-size:16px"><code class="language-bash" data-trim>
+                <pre style="font-size:15px"><code class="language-bash" data-trim>
 git clone https://github.com/google-research/harness2
 cd harness2
 uv venv --python 3.12 .venv
@@ -1015,9 +1055,9 @@ harness2-demo --output runs/demo --k 2
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 2 · Vertex AI</div>
-            <h2 style="margin-bottom:22px">Models &amp; credentials</h2>
+            <h2 style="margin-bottom:16px">Models &amp; credentials</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:620px; flex:none; font-size:15px"><code class="language-bash" data-trim>
+              <pre style="width:620px; flex:none; font-size:14.5px"><code class="language-bash" data-trim>
 # .env
 GOOGLE_CLOUD_PROJECT=your-project-id
 GOOGLE_CLOUD_LOCATION=global
@@ -1028,10 +1068,13 @@ HARNESS2_RUNS_DIR=runs/
 
 gcloud auth application-default login
               </code></pre>
-              <div style="flex:1; min-width:0; display:grid; gap:12px">
-                <div class="pc blue fragment" style="padding:12px 16px; font-size:16px"><b>Solver</b> runs the task (OpenCode <code>provider/model</code>)</div>
-                <div class="pc green fragment" style="padding:12px 16px; font-size:16px"><b>Improver</b> edits the harness. Defaults to the solver.</div>
-                <div class="pc yellow fragment" style="padding:12px 16px; font-size:16px"><b>Judge</b> scores afterwards. Keep it fixed across an experiment.</div>
+              <div style="width:444px; flex:none; display:grid; gap:10px">
+                <div class="mm-art blue" style="width:444px; height:156px">
+                  <img src="../images/harness2-slides/three-model-roles.svg" alt="Vertex AI ADC powering three model roles: Solver, Improver, and Judge">
+                </div>
+                <div class="pc blue fragment" style="padding:9px 14px; font-size:14.5px; line-height:1.35"><b>Solver</b> runs the task (OpenCode <code>provider/model</code>)</div>
+                <div class="pc green fragment" style="padding:9px 14px; font-size:14.5px; line-height:1.35"><b>Improver</b> edits the harness. Defaults to the solver.</div>
+                <div class="pc yellow fragment" style="padding:9px 14px; font-size:14.5px; line-height:1.35"><b>Judge</b> scores afterwards. Keep it fixed across an experiment.</div>
               </div>
             </div>
           </div>
@@ -1045,9 +1088,12 @@ gcloud auth application-default login
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 3 · LAB, one domain, one task</div>
-            <h2 style="margin-bottom:22px">Setup → run → judge → report</h2>
-            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:640px; flex:none; font-size:15px"><code class="language-bash" data-trim>
+            <h2 style="margin-bottom:14px">Setup → run → judge → report</h2>
+            <div class="mm-art" style="width:1088px; height:118px; margin-bottom:14px">
+              <img src="../images/harness2-slides/run-pipeline.svg" alt="Four-step CLI workflow: harness2-setup, harness2, harness2-judge, and harness2-report">
+            </div>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-bash" data-trim>
 harness2-setup lab
 harness2-check --bench lab
 
@@ -1057,11 +1103,11 @@ harness2 --bench lab --k 1 --mode parallel \
 harness2-judge --bench lab --k 1 --mode parallel
 harness2-report --bench lab --k 1 --mode parallel
               </code></pre>
-              <ul class="bl" style="flex:1; min-width:0; font-size:18px">
-                <li class="fragment">Benchmarks: <code>lab</code>, <code>jb</code>, <code>wb --subset office|web|code</code></li>
-                <li class="fragment">Add <code>--dry-run</code> to preview tasks with no model calls</li>
-                <li class="fragment"><code>--max-tasks</code> caps <b>per domain</b>, not in total</li>
-                <li class="fragment">Judge and report need the same flags as the run</li>
+              <ul class="bl" style="flex:1; min-width:0; font-size:16.5px">
+                <li class="fragment" style="margin-bottom:10px">Benchmarks: <code>lab</code>, <code>jb</code>, <code>wb --subset office|web|code</code></li>
+                <li class="fragment" style="margin-bottom:10px">Add <code>--dry-run</code> to preview tasks with no model calls</li>
+                <li class="fragment" style="margin-bottom:10px"><code>--max-tasks</code> caps <b>per domain</b>, not in total</li>
+                <li class="fragment" style="margin-bottom:0">Judge and report need the same flags as the run</li>
               </ul>
             </div>
           </div>
@@ -1075,24 +1121,27 @@ harness2-report --bench lab --k 1 --mode parallel
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Step 4 · runs/lab/ · runs/jb/ · runs/wb/&lt;subset&gt;/</div>
-            <h2 style="margin-bottom:22px">The refined harness on disk</h2>
-            <div class="grid g2" style="width:1088px; gap:24px">
-              <div class="pc blue">
-                <h3 style="font-size:20px; margin-bottom:12px">Always on <span class="muted" style="font:400 13px var(--mono)">≤ 24,000 chars</span></h3>
-                <ul class="h2-tree">
-                  <li>systemprompt.md <span>role</span></li>
-                  <li>guardrails.md <span>rules</span></li>
-                  <li>LongTermMEMORY.md <span>memory</span></li>
-                  <li>tool_descriptions/tool_guidance.md <span>tools</span></li>
+            <h2 style="margin-bottom:14px">The refined harness on disk</h2>
+            <div class="mm-art" style="width:1088px; height:142px; margin-bottom:14px">
+              <img src="../images/harness2-slides/harness-on-disk.svg" alt="Disk layout under runs/ splitting into Always-On context files and On-Demand agent/skill/script/plugin files">
+            </div>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div class="pc blue" style="padding:12px 16px">
+                <h3 style="font-size:18.5px; margin-bottom:8px">Always on <span class="muted" style="font:400 13px var(--mono)">≤ 24,000 chars</span></h3>
+                <ul class="h2-tree" style="font-size:14px; gap:5px">
+                  <li style="padding:5px 10px">systemprompt.md <span>role</span></li>
+                  <li style="padding:5px 10px">guardrails.md <span>rules</span></li>
+                  <li style="padding:5px 10px">LongTermMEMORY.md <span>memory</span></li>
+                  <li style="padding:5px 10px">tool_descriptions/tool_guidance.md <span>tools</span></li>
                 </ul>
               </div>
-              <div class="pc green fragment">
-                <h3 style="font-size:20px; margin-bottom:12px">On demand</h3>
-                <ul class="h2-tree">
-                  <li>sub_agents/&lt;name&gt;/AGENT.md <span>subagent</span></li>
-                  <li>skills/&lt;name&gt;/SKILL.md <span>skill</span></li>
-                  <li>scripts/&lt;name&gt;.py <span>script</span></li>
-                  <li>plugin/&lt;name&gt;.ts <span>plugin</span></li>
+              <div class="pc green fragment" style="padding:12px 16px">
+                <h3 style="font-size:18.5px; margin-bottom:8px">On demand</h3>
+                <ul class="h2-tree" style="font-size:14px; gap:5px">
+                  <li style="padding:5px 10px">sub_agents/&lt;name&gt;/AGENT.md <span>subagent</span></li>
+                  <li style="padding:5px 10px">skills/&lt;name&gt;/SKILL.md <span>skill</span></li>
+                  <li style="padding:5px 10px">scripts/&lt;name&gt;.py <span>script</span></li>
+                  <li style="padding:5px 10px">plugin/&lt;name&gt;.ts <span>plugin</span></li>
                 </ul>
               </div>
             </div>
@@ -1107,11 +1156,14 @@ harness2-report --bench lab --k 1 --mode parallel
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Before the first real run</div>
-            <h2 style="margin-bottom:24px">Cost &amp; safety</h2>
+            <h2 style="margin-bottom:14px">Cost &amp; safety</h2>
+            <div class="mm-art" style="width:1088px; height:152px; margin-bottom:14px">
+              <img src="../images/harness2-slides/cost-and-safety.svg" alt="Cost multiplier 4xk exec + 3xk edit, network firewall blocking huggingface and github, and safe launch checklist">
+            </div>
             <div class="grid g3" style="width:1088px; gap:18px">
-              <div class="pc yellow fragment" style="height:230px"><h3>Cost grows with k</h3><p style="font-size:17px; margin-top:6px">Per task, per mode: <b>4 × k</b> executor runs and <b>3 × k</b> improver sessions, plus judge calls.</p><p style="font-size:15px; margin-top:12px" class="muted">Full LAB at k=5: ~22,860 runs</p></div>
-              <div class="pc red fragment" style="height:230px"><h3>Block the answers</h3><p style="font-size:17px; margin-top:6px">After setup, block <code>huggingface.co</code> and <code>github.com</code> at the network layer. JobBench rubrics are public.</p></div>
-              <div class="pc blue fragment" style="height:230px"><h3>Start small</h3><p style="font-size:17px; margin-top:6px">There is no spend cap. Set a budget alert, use <code>--max-tasks 1</code>, and run only offline, repeatable tasks.</p></div>
+              <div class="pc yellow fragment" style="padding:13px 16px"><h3 style="font-size:20px; margin-bottom:4px">Cost grows with k</h3><p style="font-size:15px; line-height:1.35">Per task, per mode: <b>4 × k</b> executor runs and <b>3 × k</b> improver sessions, plus judge calls.</p><p style="font-size:13.5px; margin-top:8px" class="muted">Full LAB at k=5: ~22,860 runs</p></div>
+              <div class="pc red fragment" style="padding:13px 16px"><h3 style="font-size:20px; margin-bottom:4px">Block the answers</h3><p style="font-size:15px; line-height:1.35">After setup, block <code>huggingface.co</code> and <code>github.com</code> at the network layer. JobBench rubrics are public.</p></div>
+              <div class="pc blue fragment" style="padding:13px 16px"><h3 style="font-size:20px; margin-bottom:4px">Start small</h3><p style="font-size:15px; line-height:1.35">There is no spend cap. Set a budget alert, use <code>--max-tasks 1</code>, and run only offline, repeatable tasks.</p></div>
             </div>
           </div>
           <div class="ask fragment"><b>Note</b><span>"This is not an officially supported Google product." Research code, v0.1.0.</span></div>
@@ -1124,13 +1176,16 @@ harness2-report --bench lab --k 1 --mode parallel
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
           <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Recap</div>
-            <h2 style="margin-bottom:24px">What to remember</h2>
-            <div class="grid g3" style="width:1088px; gap:20px">
-              <div class="pc blue fragment"><h3>Improve the harness</h3>Agent = Model + Harness. Edit 8 parts, keep the weights frozen.</div>
-              <div class="pc green fragment"><h3>Two recursions</h3>Propose · Probe · Compose per task, plus a library of lessons across tasks.</div>
-              <div class="pc yellow fragment"><h3>Real gains</h3>+5.1 with one step and +8.4 at k=5 on WorkBuddy-Bench.</div>
+            <h2 style="margin-bottom:16px">What to remember</h2>
+            <div class="mm-art" style="width:1088px; height:180px; margin-bottom:18px">
+              <img src="../images/harness2-slides/recap-harness2.svg" alt="Visual trilogy linking Frozen Model plus Editable Harness, Two Recursions H squared, and +8.4 benchmark gains">
             </div>
-            <p class="sub fragment" style="font-size:22px; margin-top:34px">Start with <code>harness2-demo</code> · then one task with <code>--max-tasks 1</code></p>
+            <div class="grid g3" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" style="padding:15px 18px; font-size:17px"><h3 style="font-size:22px">Improve the harness</h3>Agent = Model + Harness. Edit 8 parts, keep the weights frozen.</div>
+              <div class="pc green fragment" style="padding:15px 18px; font-size:17px"><h3 style="font-size:22px">Two recursions</h3>Propose · Probe · Compose per task, plus a library of lessons across tasks.</div>
+              <div class="pc yellow fragment" style="padding:15px 18px; font-size:17px"><h3 style="font-size:22px">Real gains</h3>+5.1 with one step and +8.4 at k=5 on WorkBuddy-Bench.</div>
+            </div>
+            <p class="sub fragment" style="font-size:20px; margin-top:22px">Start with <code>harness2-demo</code> · then one task with <code>--max-tasks 1</code></p>
           </div>
         </div>
         <aside class="notes">สรุป 3 เรื่อง: (1) ปรับ harness แทนการ retrain (2) recursion 2 ชั้น: ลูปต่องาน และ library ข้ามงาน (3) ได้ผลจริงบน benchmark • เริ่มลองจาก demo ฟรี แล้วค่อยรันงานจริงทีละงาน</aside>
@@ -1143,12 +1198,12 @@ harness2-report --bench lab --k 1 --mode parallel
             <div class="eyebrow">Resources</div>
             <h2 style="margin-bottom:28px">Try it yourself</h2>
             <div class="grid g2" style="width:1088px; gap:18px">
-              <div class="pc blue"><h3>GitHub</h3><a class="mono" style="font-size:15px" href="https://github.com/google-research/harness2" target="_blank">github.com/google-research/harness2</a></div>
-              <div class="pc green"><h3>Project page</h3><a class="mono" style="font-size:15px" href="https://harness2.github.io" target="_blank">harness2.github.io</a></div>
-              <div class="pc yellow"><h3>Paper</h3><a class="mono" style="font-size:15px" href="https://arxiv.org/abs/2610.14224" target="_blank">arxiv.org/abs/2610.14224</a></div>
-              <div class="pc red"><h3>Setup guide</h3><a class="mono" style="font-size:15px" href="https://www.jahanzaib.ai/blog/google-harness2-setup-guide" target="_blank">jahanzaib.ai · google-harness2-setup-guide</a></div>
+              <div class="pc blue mm-res-row"><span class="ev-lg"><img src="../images/shared/logos/github.svg" alt="GitHub"></span><div><h3>GitHub</h3><a class="mono" style="font-size:15px" href="https://github.com/google-research/harness2" target="_blank">github.com/google-research/harness2</a></div></div>
+              <div class="pc green mm-res-row"><span class="ev-lg"><img src="../images/harness2-slides/ico-web.svg" alt="Project page"></span><div><h3>Project page</h3><a class="mono" style="font-size:15px" href="https://harness2.github.io" target="_blank">harness2.github.io</a></div></div>
+              <div class="pc yellow mm-res-row"><span class="ev-lg"><img src="../images/harness2-slides/ico-paper.svg" alt="Paper"></span><div><h3>Paper</h3><a class="mono" style="font-size:15px" href="https://arxiv.org/abs/2610.14224" target="_blank">arxiv.org/abs/2610.14224</a></div></div>
+              <div class="pc red mm-res-row"><span class="ev-lg"><img src="../images/harness2-slides/ico-guide.svg" alt="Setup guide"></span><div><h3>Setup guide</h3><a class="mono" style="font-size:15px" href="https://www.jahanzaib.ai/blog/google-harness2-setup-guide" target="_blank">jahanzaib.ai · google-harness2-setup-guide</a></div></div>
             </div>
-            <div class="cmd" style="margin-top:22px; width:620px">harness2-demo --output runs/demo --k 2</div>
+            <div class="cmd" style="margin-top:24px; width:620px">harness2-demo --output runs/demo --k 2</div>
           </div>
         </div>
         <aside class="notes">ลิงก์: repo บน GitHub ของ google-research (ระวัง fork ปลอมที่ชื่อคล้าย), หน้า project, paper บน arXiv และ setup guide ที่ลองรันจริงพร้อมข้อควรระวัง • ให้เวลาผู้ฟังถ่ายรูปสไลด์นี้</aside>

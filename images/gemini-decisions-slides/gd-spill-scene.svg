@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 330 195" width="330" height="195">
+  <defs>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #1e1e1e; font-weight: 700; }
+      .s { font-family: "Google Sans", system-ui, sans-serif; fill: #3c4043; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #1e1e1e; font-weight: 500; }
+      .ink { stroke: #1e1e1e; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <rect x="2" y="2" width="326" height="191" rx="20" fill="#c3ecf6" class="ink"/>
+  <!-- Counter surface -->
+  <rect x="18" y="114" width="294" height="60" rx="12" fill="#ffe7a5" class="ink"/>
+  <!-- Coffee spill puddle -->
+  <ellipse cx="148" cy="134" rx="54" ry="16" fill="#8d5b4c" stroke="#1e1e1e" stroke-width="2.5"/>
+  <ellipse cx="182" cy="144" rx="20" ry="8" fill="#8d5b4c" stroke="#1e1e1e" stroke-width="2"/>
+  <!-- Tipped coffee mug -->
+  <g transform="translate(88, 108) rotate(22)">
+    <rect x="-24" y="-22" width="46" height="36" rx="8" fill="#fff" class="ink"/>
+    <path d="M-24 -14 C-38 -14 -38 6 -24 6" fill="none" class="ink"/>
+    <ellipse cx="22" cy="-4" rx="5" ry="15" fill="#6f4e37" stroke="#1e1e1e" stroke-width="2"/>
+  </g>
+  <!-- Folded cloth nearby -->
+  <path d="M226 122 L286 116 L296 144 L236 150 Z" fill="#ccf6c5" class="ink"/>
+  <path d="M236 132 L288 127" stroke="#34a853" stroke-width="2"/>
+  <!-- Camera viewfinder reticle -->
+  <path d="M32 34 V20 H46 M284 20 H298 V34 M32 152 V166 H46 M284 166 H298 V152" fill="none" stroke="#4285f4" stroke-width="3" stroke-linecap="round"/>
+  <!-- Live badge -->
+  <rect x="74" y="16" width="182" height="30" rx="15" fill="#fff" class="ink"/>
+  <circle cx="94" cy="31" r="6" fill="#34a853"/>
+  <text x="174" y="36" text-anchor="middle" class="m" font-size="13">has_spill: 0.95</text>
+</svg>

@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 634 144" width="634" height="144">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#353840" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="33%" stop-color="#5cdb6d"/>
+      <stop offset="66%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#57caff"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="634" height="144" fill="#202124"/>
+
+  <circle cx="110" cy="72" r="85" fill="url(#amb-y)"/>
+  <circle cx="320" cy="72" r="85" fill="url(#amb-r)"/>
+  <circle cx="520" cy="72" r="95" fill="url(#amb-g)"/>
+
+  <!-- 1. Telemetry / Anomaly Radar -->
+  <rect x="12" y="16" width="168" height="84" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <circle cx="46" cy="58" r="20" fill="#17181b" stroke="#ffd427" stroke-width="2"/>
+  <path d="M46 58 L60 44 A20 20 0 0 1 66 58 Z" fill="#ffd427" opacity="0.35"/>
+  <circle cx="46" cy="58" r="3.5" fill="#ffd427"/>
+  <text x="76" y="48" class="m" font-size="10" fill="#ffd427">DETECT</text>
+  <text x="76" y="66" class="t" font-size="14">Anomaly</text>
+  <text x="76" y="84" class="m" font-size="10.5" fill="#bdc1c6">3 signals</text>
+
+  <!-- Arrow 1->2 -->
+  <path d="M180 58 H216" stroke="#ffd427" stroke-width="2.6"/>
+  <polygon points="214,51 226,58 214,65" fill="#ffd427"/>
+
+  <!-- 2. SCC Finding -->
+  <rect x="230" y="16" width="166" height="84" rx="14" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+  <polygon points="264,38 282,72 246,72" fill="rgba(255,125,175,0.22)" stroke="#ff7daf" stroke-width="2.2"/>
+  <text x="264" y="67" text-anchor="middle" class="t" font-size="15" fill="#ff7daf">!</text>
+  <text x="292" y="48" class="m" font-size="10" fill="#ff7daf">ALERT</text>
+  <text x="292" y="66" class="t" font-size="14">SCC Finding</text>
+  <text x="292" y="84" class="m" font-size="10.5" fill="#bdc1c6">Audit log</text>
+
+  <!-- Arrow 2->3 -->
+  <path d="M396 58 H432" stroke="#5cdb6d" stroke-width="2.6"/>
+  <polygon points="430,51 442,58 430,65" fill="#5cdb6d"/>
+
+  <!-- 3. Hot-Patch Policy -->
+  <rect x="446" y="16" width="176" height="84" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.6" filter="url(#glow-s)"/>
+  <path d="M478 38 L493.5 45.9 V57.8 C493.5 67.7 484.3 72.6 478 75.4 C471.7 72.6 462.5 67.7 462.5 57.8 V45.9 Z" fill="rgba(92,219,109,0.2)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <path d="M472 56 L476 60 L485 51" fill="none" stroke="#5cdb6d" stroke-width="2.2" stroke-linecap="round"/>
+  <text x="506" y="48" class="m" font-size="10" fill="#5cdb6d">HOT-PATCH</text>
+  <text x="506" y="66" class="t" font-size="14">New Policy</text>
+  <text x="506" y="84" class="m" font-size="10.5" fill="#5cdb6d">0s redeploy</text>
+
+  <!-- Closed loop return arc -->
+  <path d="M534 100 V126 H96 V108" fill="none" stroke="#5cdb6d" stroke-width="2.4" stroke-dasharray="6 4"/>
+  <polygon points="89,110 96,98 103,110" fill="#5cdb6d"/>
+  <rect x="218" y="114" width="198" height="22" rx="11" fill="#202124" stroke="#5cdb6d" stroke-width="1.5"/>
+  <text x="317" y="129" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">ENFORCED ON NEXT CALL</text>
+
+</svg>

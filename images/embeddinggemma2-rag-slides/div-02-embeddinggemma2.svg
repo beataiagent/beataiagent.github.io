@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#363942" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-bgy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-full" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="35%" stop-color="#5cdb6d"/>
+      <stop offset="70%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#5f6368" opacity="0.28"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #e8eaed; font-weight: 500; }
+      .ms { font-family: "Roboto Mono", ui-monospace, monospace; fill: #9aa0a6; font-weight: 400; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <rect width="256" height="256" fill="url(#dots)"/>
+
+  <circle cx="128" cy="128" r="108" fill="url(#amb-g)"/>
+  <!-- Outer coordinate sphere -->
+  <circle cx="128" cy="128" r="94" fill="none" stroke="#5cdb6d" stroke-width="1.8" stroke-dasharray="6 5" opacity="0.7"/>
+  <ellipse cx="128" cy="128" rx="94" ry="34" fill="none" stroke="#57caff" stroke-width="1.5" opacity="0.5"/>
+  <ellipse cx="128" cy="128" rx="34" ry="94" fill="none" stroke="#ffd427" stroke-width="1.5" opacity="0.5"/>
+  <!-- Gemma diamond core -->
+  <path d="M128 62 Q136 118 192 128 Q136 138 128 194 Q120 138 64 128 Q120 118 128 62 Z" fill="url(#grad-bg)" stroke="#ffffff" stroke-width="2" filter="url(#glow-s)"/>
+  <!-- 4 orbiting modality vector dots -->
+  <circle cx="56" cy="72" r="9" fill="#57caff" filter="url(#glow-s)"/>
+  <circle cx="200" cy="72" r="9" fill="#5cdb6d" filter="url(#glow-s)"/>
+  <circle cx="200" cy="184" r="9" fill="#ffd427" filter="url(#glow-s)"/>
+  <circle cx="56" cy="184" r="9" fill="#ff7daf" filter="url(#glow-s)"/>
+  <rect x="78" y="212" width="100" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="128" y="228" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">768-d · Open</text>
+
+</svg>

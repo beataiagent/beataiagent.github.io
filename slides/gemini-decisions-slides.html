@@ -688,27 +688,27 @@
       <!-- Generate vs Decide -->
       <section data-title="Generate vs. decide">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in" style="padding:40px 56px">
             <div class="eyebrow">The problem</div>
-            <h2 style="margin-bottom:12px">Many AI calls are really closed-set decisions</h2>
-            <p class="sub" style="font-size:20px; margin-bottom:30px">Tool selection · policy checks · model routing · context grading</p>
-            <div class="grid g2" style="gap:28px; width:1000px">
-              <div class="pc fragment" style="height:300px">
+            <h2 style="margin-bottom:14px; font-size:42px">Many AI calls are really closed-set decisions</h2>
+            <img src="../images/gemini-decisions-slides/gd-gen-vs-dec.svg" alt="Generative token-by-token vs Gemini Decision 1 single forward pass" style="width:1000px; height:128px; display:block; margin-bottom:16px">
+            <div class="grid g2" style="gap:24px; width:1000px">
+              <div class="pc fragment" style="padding:18px 22px">
                 <span class="tag">Generative model</span>
-                <ul class="bl" style="font-size:21px; margin-top:20px">
-                  <li>Writes the answer token by token</li>
-                  <li>Pay for output &amp; thinking tokens</li>
-                  <li>Parse free text back into a label</li>
-                  <li>No calibrated sense of "how sure"</li>
+                <ul class="bl" style="font-size:19px; margin-top:14px">
+                  <li style="margin-bottom:10px">Writes the answer token by token</li>
+                  <li style="margin-bottom:10px">Pay for output &amp; thinking tokens</li>
+                  <li style="margin-bottom:10px">Parse free text back into a label</li>
+                  <li style="margin-bottom:0">No calibrated sense of "how sure"</li>
                 </ul>
               </div>
-              <div class="pc green fragment" style="height:300px">
+              <div class="pc green fragment" style="padding:18px 22px">
                 <span class="tag yellow">Gemini Decision 1</span>
-                <ul class="bl" style="font-size:21px; margin-top:20px">
-                  <li>Scores candidate options in <b>one forward pass</b></li>
-                  <li>Returns probabilities, not prose</li>
-                  <li>Confidence score from 0 to 1</li>
-                  <li>$0 for output tokens</li>
+                <ul class="bl" style="font-size:19px; margin-top:14px">
+                  <li style="margin-bottom:10px">Scores candidate options in <b>one forward pass</b></li>
+                  <li style="margin-bottom:10px">Returns probabilities, not prose</li>
+                  <li style="margin-bottom:10px">Confidence score from 0 to 1</li>
+                  <li style="margin-bottom:0">$0 for output tokens</li>
                 </ul>
               </div>
             </div>
@@ -938,13 +938,25 @@
       <!-- Question types -->
       <section data-title="Three question types">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Question types · mix them in one request</div>
-            <h2 style="margin-bottom:34px">Three question types</h2>
-            <div class="grid g3" style="width:1088px; gap:24px">
-              <div class="pc blue qt fragment"><code>"noul"</code><h3>Yes / No</h3>Probability that a condition holds. Optional <i>true</i> / <i>false</i> description criteria.</div>
-              <div class="pc yellow qt fragment"><code>"choice"</code><h3>Multiple choice</h3>Pick from <b>2 to 255</b> choices. Returns the winner + normalized probabilities for every candidate.</div>
-              <div class="pc green qt fragment"><code>"score"</code><h3>Ordered rubric</h3>Grade against an ordered rubric (starting at 0). Returns a continuous weighted score + per-level probabilities.</div>
+            <h2 style="margin-bottom:24px">Three question types</h2>
+            <div class="grid g3" style="width:1088px; gap:22px">
+              <div class="pc blue qt fragment" style="padding:20px">
+                <img src="../images/gemini-decisions-slides/gd-q-noul.svg" alt="noul Yes/No probability visual" style="width:100%; height:104px; object-fit:contain; display:block; margin-bottom:14px">
+                <code style="margin-bottom:10px">"noul"</code><h3>Yes / No</h3>
+                <p style="font-size:18px; line-height:1.35">Probability that a condition holds. Optional <i>true</i> / <i>false</i> description criteria.</p>
+              </div>
+              <div class="pc yellow qt fragment" style="padding:20px">
+                <img src="../images/gemini-decisions-slides/gd-q-choice.svg" alt="choice multi-option bar picker visual" style="width:100%; height:104px; object-fit:contain; display:block; margin-bottom:14px">
+                <code style="margin-bottom:10px">"choice"</code><h3>Multiple choice</h3>
+                <p style="font-size:18px; line-height:1.35">Pick from <b>2 to 255</b> choices. Returns winner + probabilities for every candidate.</p>
+              </div>
+              <div class="pc green qt fragment" style="padding:20px">
+                <img src="../images/gemini-decisions-slides/gd-q-score.svg" alt="score ordered rubric bell-curve visual" style="width:100%; height:104px; object-fit:contain; display:block; margin-bottom:14px">
+                <code style="margin-bottom:10px">"score"</code><h3>Ordered rubric</h3>
+                <p style="font-size:18px; line-height:1.35">Grade against ordered levels (from 0). Returns continuous weighted score + level probabilities.</p>
+              </div>
             </div>
           </div>
         </div>
@@ -985,24 +997,23 @@
       <!-- Pricing model -->
       <section data-title="Predictable cost &amp; latency">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in" style="padding:40px 56px">
             <div class="eyebrow">Pricing &amp; latency</div>
-            <h2 style="margin-bottom:34px">Predictable cost &amp; latency</h2>
-            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:40px; width:1088px; align-items:start">
-              <ul class="bl">
-                <li class="fragment"><b>$0.10</b> per 1M input tokens, <b>$0</b> output</li>
-                <li class="fragment">Shared input billed <b>once per request</b>, however many questions</li>
-                <li class="fragment">Each question adds only its own instruction &amp; criteria tokens</li>
-                <li class="fragment">No variable thinking-token bills</li>
+            <h2 style="margin-bottom:16px">Predictable cost &amp; latency</h2>
+            <img src="../images/gemini-decisions-slides/gd-billing-once.svg" alt="Shared input billed once across 1000 questions with zero output tokens" style="width:1088px; height:142px; display:block; margin-bottom:18px">
+            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:32px; width:1088px; align-items:start">
+              <ul class="bl" style="font-size:21px">
+                <li class="fragment" style="margin-bottom:12px"><b>$0.10</b> per 1M input tokens, <b>$0</b> output</li>
+                <li class="fragment" style="margin-bottom:12px">Shared input billed <b>once per request</b>, however many questions</li>
+                <li class="fragment" style="margin-bottom:0">Each question adds only its own instruction tokens — no thinking-token bills</li>
               </ul>
-              <div class="pc yellow fragment">
-                <h3>Latency stays nearly flat</h3>
-                <div class="lat">
+              <div class="pc yellow fragment" style="padding:18px 22px">
+                <h3 style="font-size:22px">Latency stays nearly flat</h3>
+                <div class="lat" style="margin-top:10px">
                   <div><span>1 question</span><i style="width:62%"></i></div>
                   <div><span>100 questions</span><i style="width:66%"></i></div>
                 </div>
-                <p style="font-size:18px; margin-top:14px">150–250 ms end-to-end, "nearly flat from 1 to 100 questions per request" (contexts up to 16K tokens).</p>
-                <p class="muted" style="font-size:14px; margin-top:6px">Bars are illustrative, not measured values.</p>
+                <p style="font-size:16px; margin-top:10px">150–250 ms end-to-end (contexts up to 16K tokens). <span class="muted" style="font-size:13px">Illustrative bars.</span></p>
               </div>
             </div>
           </div>
@@ -1054,12 +1065,12 @@ result = client.decisions.create(
     },
 )
               </code></pre>
-              <div style="display:grid; gap:14px; width:330px">
-                <div class="cmd">pip install google-genai</div>
-                <ul class="bl" style="font-size:19px">
-                  <li><code>client.decisions.create</code> with <code>gemini-decision-1</code></li>
-                  <li><code>input</code> uses the same Content blocks as the Interactions API</li>
-                  <li>Image + text context in one input</li>
+              <div style="display:grid; gap:12px; width:330px">
+                <img src="../images/gemini-decisions-slides/gd-spill-scene.svg" alt="Breakroom coffee spill detected by Decisions API" style="width:330px; height:195px; display:block">
+                <div class="cmd" style="padding:10px 14px; font-size:14px">pip install google-genai</div>
+                <ul class="bl" style="font-size:17px">
+                  <li style="margin-bottom:8px"><code>client.decisions.create</code> with <code>gemini-decision-1</code></li>
+                  <li style="margin-bottom:0">Image + text context in one input</li>
                 </ul>
               </div>
             </div>
@@ -1096,13 +1107,12 @@ result = client.decisions.create(
     ],
 },
               </code></pre>
-              <div style="display:grid; gap:14px; width:330px">
-                <ul class="bl" style="font-size:19px">
-                  <li><b>choice</b>: criteria is a dict — label → description</li>
-                  <li><b>score</b>: criteria is an ordered list, starting at level 0</li>
-                  <li>Named questions → named answers</li>
+              <div style="display:grid; gap:12px; width:330px">
+                <img src="../images/gemini-decisions-slides/gd-spill-rubric.svg" alt="Choice wipe_with_cloth 0.98 and severity score 1.19 visual" style="width:330px; height:195px; display:block">
+                <ul class="bl" style="font-size:17px">
+                  <li style="margin-bottom:8px"><b>choice</b>: dict of label → description</li>
+                  <li style="margin-bottom:0"><b>score</b>: ordered list starting at level 0</li>
                 </ul>
-                <div class="pc green" style="font-size:18px; padding:16px 18px"><b>Result in the blog:</b> spill detected, <code>next_action</code> = <code>wipe_with_cloth</code></div>
               </div>
             </div>
           </div>
@@ -1171,10 +1181,10 @@ print(sev.score, sev.legend[level])
 if a["next_action"].confidence < 0.7:
     send_to_human_review()   # or a bigger model
               </code></pre>
-              <div style="display:grid; gap:14px; width:350px">
-                <div class="pc yellow" style="font-size:18px; padding:18px"><b>Tune thresholds</b> on labeled examples from your own traffic — weigh false positives vs. false negatives.</div>
-                <div class="pc red" style="font-size:18px; padding:18px"><code>noul</code> tops out at <b>0.99</b> — a check like <code>&gt; 0.99</code> never matches.</div>
-                <p class="muted" style="font-size:14px">Thresholds shown are illustrations from the docs, not recommended values.</p>
+              <div style="display:grid; gap:12px; width:350px">
+                <img src="../images/gemini-decisions-slides/gd-confidence-gate.svg" alt="Confidence threshold router: below 0.7 goes to human review, above 0.7 auto-acts" style="width:350px; height:175px; display:block">
+                <div class="pc yellow" style="font-size:16px; padding:12px 16px"><b>Tune thresholds</b> on labeled examples from your own traffic.</div>
+                <div class="pc red" style="font-size:16px; padding:12px 16px"><code>noul</code> tops out at <b>0.99</b> — <code>&gt; 0.99</code> never matches.</div>
               </div>
             </div>
           </div>
@@ -1262,18 +1272,12 @@ curl -X POST \
       <!-- Patterns -->
       <section data-title="Patterns you can build">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Ideas</div>
-            <h2 style="margin-bottom:30px">Patterns you can build</h2>
-            <div class="grid" style="grid-template-columns: 1fr 1fr; gap:40px; width:1088px; align-items:start">
-              <ul class="bl">
-                <li><b>Tool selection</b> for agents</li>
-                <li><b>Model routing</b> — cheap vs. deep</li>
-                <li><b>Policy &amp; rule checks</b> on content</li>
-                <li><b>Context grading</b> — is this chunk relevant?</li>
-                <li><b>Content grading</b> with a rubric</li>
-              </ul>
-              <div class="pc">
+            <h2 style="margin-bottom:22px">Patterns you can build</h2>
+            <div style="display:flex; gap:32px; width:1088px; align-items:center">
+              <img src="../images/gemini-decisions-slides/gd-patterns-hub.svg" alt="Gemini Decision 1 hub powering 5 agent and app patterns" style="width:600px; height:350px; flex:none; display:block">
+              <div class="pc" style="flex:1; padding:22px 24px">
                 <h3 style="margin-bottom:14px">Try the demo apps in AI Studio</h3>
                 <div style="display:grid; gap:12px; font-size:19px">
                   <a href="https://aistudio.google.com/apps/bundled/doorstep-parcels-qa?fullscreenApplet=true" target="_blank"><span class="chip" style="background:var(--p-blue)">Doorstep Parcels</span></a>
@@ -1353,13 +1357,14 @@ curl -X POST \
             <div class="eyebrow">Docs · limits</div>
             <h2 style="margin-bottom:22px; font-size:42px">Limits &amp; rate limits</h2>
             <div class="grid" style="grid-template-columns: 1fr 1fr; gap:32px; width:1104px; align-items:start">
-              <ul class="bl" style="font-size:20px">
-                <li><b>262,144</b> tokens context — shared by input + all questions</li>
-                <li><b>1–1,000</b> questions · <b>2–255</b> choices · <b>2–255</b> rubric levels (2–10 recommended)</li>
-                <li>Inline base64 up to <b>100 MB</b> (PDF 50 MB) · public/signed URLs up to <b>15 MB</b></li>
-                <li>No YouTube URLs or <code>gs://</code> · text-only instructions</li>
-                <li>Resolution: <code>low</code> · <code>medium</code> · <code>high</code> · <code>ultra_high</code> (images only)</li>
-              </ul>
+              <div style="display:grid; gap:16px">
+                <img src="../images/gemini-decisions-slides/gd-context-budget.svg" alt="262,144 token budget split across shared multimodal input and up to 1,000 questions" style="width:530px; height:122px; display:block">
+                <ul class="bl" style="font-size:18px">
+                  <li style="margin-bottom:10px"><b>2–255</b> choices · <b>2–255</b> rubric levels (2–10 recommended)</li>
+                  <li style="margin-bottom:10px">No YouTube URLs or <code>gs://</code> · text-only instructions</li>
+                  <li style="margin-bottom:0">Resolution: <code>low</code> · <code>medium</code> · <code>high</code> · <code>ultra_high</code> (images)</li>
+                </ul>
+              </div>
               <div class="pc" style="padding:20px 24px">
                 <h3 style="margin-bottom:12px">Rate limits (per project)</h3>
                 <table class="rl">

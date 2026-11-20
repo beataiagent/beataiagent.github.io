@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 334" width="1088" height="334">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#ffffff" opacity="0.06"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; font-weight: 400; }
+      .mb { font-family: "Roboto Mono", ui-monospace, monospace; fill: #ffffff; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1088" height="334" fill="#202124"/>
+  <rect width="1088" height="334" fill="url(#dots)"/>
+
+  <circle cx="536" cy="120" r="170" fill="url(#amb-b)"/>
+  <circle cx="940" cy="120" r="120" fill="url(#amb-g)"/>
+  <circle cx="430" cy="272" r="110" fill="url(#amb-y)"/>
+  <circle cx="660" cy="272" r="110" fill="url(#amb-r)"/>
+
+  <!-- 1. User Browser -->
+  <rect x="18" y="48" width="186" height="126" rx="16" fill="url(#glass)" stroke="#9aa0a6" stroke-width="2"/>
+  <rect x="18" y="48" width="186" height="28" rx="16" fill="#17181b"/>
+  <rect x="18" y="64" width="186" height="12" fill="#17181b"/>
+  <circle cx="36" cy="62" r="4" fill="#ff7daf"/>
+  <circle cx="49" cy="62" r="4" fill="#ffd427"/>
+  <circle cx="62" cy="62" r="4" fill="#5cdb6d"/>
+  <text x="111" y="102" text-anchor="middle" class="t" font-size="19">You</text>
+  <text x="111" y="124" text-anchor="middle" class="m" font-size="12" fill="#57caff">*.run.app</text>
+  <text x="111" y="146" text-anchor="middle" class="m" font-size="11">admin + secret</text>
+
+  <!-- Arrow You <-> Instance -->
+  <path d="M210 111 H280" stroke="#e8eaed" stroke-width="3"/>
+  <polygon points="276,104 288,111 276,118" fill="#e8eaed"/>
+  <text x="247" y="99" text-anchor="middle" class="m" font-size="11" fill="#57caff">HTTPS</text>
+
+  <!-- 2. Cloud Run Instance -->
+  <rect x="292" y="18" width="496" height="186" rx="18" fill="url(#glass)" stroke="#57caff" stroke-width="2.5" filter="url(#glow-s)"/>
+  <text x="316" y="48" class="t" font-size="20">Cloud Run Instance</text>
+  <rect x="526" y="28" width="242" height="26" rx="13" fill="#17181b" stroke="#57caff" stroke-width="1.3"/>
+  <text x="647" y="45" text-anchor="middle" class="m" font-size="11" fill="#57caff">hermes-instance · 2 CPU · 4 GiB</text>
+  <text x="316" y="74" class="m" font-size="12.5" fill="#57caff">run_hermes.py <tspan fill="#bdc1c6">supervisor</tspan></text>
+
+  <!-- 3 internal process boxes -->
+  <rect x="314" y="92" width="142" height="92" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <text x="385" y="124" text-anchor="middle" class="t" font-size="16">Dashboard</text>
+  <text x="385" y="148" text-anchor="middle" class="mb" font-size="13" fill="#57caff">:8080</text>
+  <text x="385" y="168" text-anchor="middle" class="m" font-size="10.5">Basic Auth UI</text>
+
+  <rect x="470" y="92" width="142" height="92" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="541" y="124" text-anchor="middle" class="t" font-size="16">Gateway</text>
+  <text x="541" y="148" text-anchor="middle" class="m" font-size="12" fill="#5cdb6d">AI backend</text>
+  <text x="541" y="168" text-anchor="middle" class="m" font-size="10.5">skills + tools</text>
+
+  <rect x="626" y="92" width="142" height="92" rx="12" fill="#17181b" stroke="#ffd427" stroke-width="1.8" stroke-dasharray="6 4"/>
+  <text x="697" y="124" text-anchor="middle" class="mb" font-size="15" fill="#ffd427">/tmp</text>
+  <text x="697" y="148" text-anchor="middle" class="m" font-size="11.5">state.db</text>
+  <text x="697" y="168" text-anchor="middle" class="m" font-size="10.5">locks · caches</text>
+
+  <!-- Bidirectional Arrow Instance <-> GCS -->
+  <path d="M798 111 H862" stroke="#5cdb6d" stroke-width="3"/>
+  <polygon points="802,104 790,111 802,118" fill="#5cdb6d"/>
+  <polygon points="858,104 870,111 858,118" fill="#5cdb6d"/>
+  <text x="830" y="96" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">FUSE</text>
+  <text x="830" y="132" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">sync 5s</text>
+
+  <!-- 3. Cloud Storage -->
+  <rect x="874" y="34" width="196" height="154" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <text x="972" y="66" text-anchor="middle" class="t" font-size="18" fill="#5cdb6d">Cloud Storage</text>
+  <rect x="892" y="80" width="160" height="24" rx="7" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+  <text x="972" y="96" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">/opt/data mount</text>
+  <text x="972" y="124" text-anchor="middle" class="m" font-size="11">config.yaml · scripts</text>
+  <text x="972" y="144" text-anchor="middle" class="m" font-size="11">workspace · state.db</text>
+  <text x="972" y="168" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">survives redeploy</text>
+
+  <!-- Vertical Connectors down to Vertex AI and Secret Manager -->
+  <path d="M416 206 V240" stroke="#ffd427" stroke-width="2.8"/>
+  <polygon points="410,236 416,246 422,236" fill="#ffd427"/>
+  <text x="348" y="230" class="m" font-size="11" fill="#ffd427">hermes-sa</text>
+
+  <path d="M664 246 V212" stroke="#ff7daf" stroke-width="2.8"/>
+  <polygon points="658,216 664,206 670,216" fill="#ff7daf"/>
+  <text x="676" y="230" class="m" font-size="11" fill="#ff7daf">boot env</text>
+
+  <!-- 4. Vertex AI -->
+  <rect x="292" y="248" width="236" height="72" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="410" y="278" text-anchor="middle" class="t" font-size="17" fill="#ffd427">Vertex AI · Gemini</text>
+  <text x="410" y="302" text-anchor="middle" class="m" font-size="11.5">roles/aiplatform.user</text>
+
+  <!-- 5. Secret Manager -->
+  <rect x="552" y="248" width="236" height="72" rx="14" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <text x="670" y="278" text-anchor="middle" class="t" font-size="17" fill="#ff7daf">Secret Manager</text>
+  <text x="670" y="302" text-anchor="middle" class="m" font-size="11.5">dashboard password</text>
+
+</svg>

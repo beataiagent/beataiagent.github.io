@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 144" width="1088" height="144">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/><stop offset="100%" stop-color="#57caff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/><stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/><stop offset="100%" stop-color="#ffd427" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/><stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/></radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #fff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+<rect width="1088" height="144" fill="#202124"/>
+  <circle cx="150" cy="72" r="95" fill="url(#amb-b)"/>
+  <circle cx="410" cy="72" r="95" fill="url(#amb-g)"/>
+  <circle cx="670" cy="72" r="95" fill="url(#amb-y)"/>
+  <circle cx="930" cy="72" r="95" fill="url(#amb-r)"/>
+  <path d="M180 72 H908" stroke="#5f6368" stroke-width="3" stroke-dasharray="8 6"/>
+  <rect x="34" y="26" width="210" height="92" rx="18" fill="url(#glass)" stroke="#57caff" stroke-width="2.5"/>
+  <text x="139" y="64" text-anchor="middle" class="t" font-size="20" fill="#57caff">1 · Simulate</text>
+  <text x="139" y="92" text-anchor="middle" class="m" font-size="12">Synthetic users</text>
+
+  <rect x="296" y="26" width="210" height="92" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.5"/>
+  <text x="401" y="64" text-anchor="middle" class="t" font-size="20" fill="#5cdb6d">2 · Score</text>
+  <text x="401" y="92" text-anchor="middle" class="m" font-size="12">Rubric metrics</text>
+
+  <rect x="558" y="26" width="210" height="92" rx="18" fill="url(#glass)" stroke="#ffd427" stroke-width="2.5"/>
+  <text x="663" y="64" text-anchor="middle" class="t" font-size="20" fill="#ffd427">3 · Explain</text>
+  <text x="663" y="92" text-anchor="middle" class="m" font-size="12">Loss clusters</text>
+
+  <rect x="820" y="26" width="234" height="92" rx="18" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.5"/>
+  <text x="937" y="64" text-anchor="middle" class="t" font-size="20" fill="#ff7daf">4 · Improve</text>
+  <text x="937" y="92" text-anchor="middle" class="m" font-size="12">Optimize &amp; re-run</text>
+</svg>

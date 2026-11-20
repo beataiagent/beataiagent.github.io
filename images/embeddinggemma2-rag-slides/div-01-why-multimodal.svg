@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#363942" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-bgy" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-full" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="35%" stop-color="#5cdb6d"/>
+      <stop offset="70%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="20" height="20" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#5f6368" opacity="0.28"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #e8eaed; font-weight: 500; }
+      .ms { font-family: "Roboto Mono", ui-monospace, monospace; fill: #9aa0a6; font-weight: 400; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <rect width="256" height="256" fill="url(#dots)"/>
+
+  <circle cx="128" cy="128" r="105" fill="url(#amb-b)"/>
+  <!-- Converging rays from 4 modalities -->
+  <path d="M56 56 L112 112" stroke="#57caff" stroke-width="2.6" stroke-dasharray="4 4"/>
+  <path d="M200 56 L144 112" stroke="#5cdb6d" stroke-width="2.6" stroke-dasharray="4 4"/>
+  <path d="M56 200 L112 144" stroke="#ff7daf" stroke-width="2.6" stroke-dasharray="4 4"/>
+  <path d="M200 200 L144 144" stroke="#ffd427" stroke-width="2.6" stroke-dasharray="4 4"/>
+  <!-- 4 corner modality tiles -->
+  <g transform="translate(24,24)">
+    <rect width="54" height="54" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+    <path d="M14 19 H40 M14 27 H40 M14 35 H29" stroke="#57caff" stroke-width="2.8" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(178,24)">
+    <rect width="54" height="54" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+    <circle cx="20" cy="20" r="4" fill="#5cdb6d"/>
+    <path d="M12 40 L24 27 L32 34 L38 26 L44 40" fill="none" stroke="#5cdb6d" stroke-width="2.5" stroke-linejoin="round"/>
+  </g>
+  <g transform="translate(24,178)">
+    <rect width="54" height="54" rx="14" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+    <path d="M13 27 H15 M20 19 V35 M27 13 V41 M34 21 V33 M41 17 V37" stroke="#ff7daf" stroke-width="2.8" stroke-linecap="round"/>
+  </g>
+  <g transform="translate(178,178)">
+    <rect width="54" height="54" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+    <polygon points="22,17 38,27 22,37" fill="#ffd427"/>
+  </g>
+  <!-- Center magnifying search lens -->
+  <circle cx="128" cy="128" r="40" fill="url(#glass-hi)" stroke="#57caff" stroke-width="3" filter="url(#glow-s)"/>
+  <circle cx="123" cy="123" r="15" fill="none" stroke="#fff" stroke-width="3"/>
+  <path d="M134 134 L147 147" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/>
+
+</svg>

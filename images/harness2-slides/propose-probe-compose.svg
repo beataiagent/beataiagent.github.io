@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 154" width="1088" height="154">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#363942" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2026" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <linearGradient id="grad-br" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#ffffff" opacity="0.06"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; font-weight: 400; }
+      .mb { font-family: "Roboto Mono", ui-monospace, monospace; fill: #ffffff; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="1088" height="154" fill="#202124"/>
+  <rect width="1088" height="154" fill="url(#dots)"/>
+
+  <circle cx="544" cy="77" r="180" fill="url(#amb-b)"/>
+  <!-- Stage 1: H0 -->
+  <rect x="14" y="22" width="150" height="84" rx="14" fill="url(#glass)" stroke="#9aa0a6" stroke-width="2"/>
+  <text x="89" y="49" text-anchor="middle" class="mb" font-size="15">H₀ Base</text>
+  <text x="89" y="70" text-anchor="middle" class="m" font-size="11">reference trace</text>
+  <rect x="44" y="79" width="90" height="18" rx="9" fill="#17181b" stroke="#9aa0a6" stroke-width="1"/>
+  <text x="89" y="92" text-anchor="middle" class="m" font-size="10">baseline</text>
+
+  <path d="M168 64 H202" stroke="#57caff" stroke-width="2.5"/>
+  <polygon points="198,58 210,64 198,70" fill="#57caff"/>
+
+  <!-- Stage 2: Propose split -->
+  <rect x="214" y="14" width="186" height="100" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="307" y="36" text-anchor="middle" class="mb" font-size="13" fill="#57caff">PROPOSE EDITS</text>
+  <rect x="228" y="46" width="158" height="26" rx="7" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="307" y="63" text-anchor="middle" class="m" font-size="11" fill="#57caff">General (invariant)</text>
+  <rect x="228" y="78" width="158" height="26" rx="7" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="307" y="95" text-anchor="middle" class="m" font-size="11" fill="#ffd427">Domain-specific</text>
+
+  <path d="M404 64 H438" stroke="#5cdb6d" stroke-width="2.5"/>
+  <polygon points="434,58 446,64 434,70" fill="#5cdb6d"/>
+
+  <!-- Stage 3: Probe -->
+  <rect x="450" y="14" width="176" height="100" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="538" y="36" text-anchor="middle" class="mb" font-size="13" fill="#5cdb6d">PROBE RUNS</text>
+  <rect x="466" y="48" width="66" height="24" rx="6" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="499" y="64" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">cand A</text>
+  <rect x="544" y="48" width="66" height="24" rx="6" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="577" y="64" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">cand B</text>
+  <text x="538" y="96" text-anchor="middle" class="m" font-size="11" fill="#e8eaed">diff behaviors</text>
+
+  <path d="M630 64 H664" stroke="#ffd427" stroke-width="2.5"/>
+  <polygon points="660,58 672,64 660,70" fill="#ffd427"/>
+
+  <!-- Stage 4: Compose -->
+  <rect x="676" y="22" width="166" height="84" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="759" y="48" text-anchor="middle" class="mb" font-size="13.5" fill="#ffd427">COMPOSE H*</text>
+  <text x="759" y="70" text-anchor="middle" class="m" font-size="11">merge best diffs</text>
+  <rect x="702" y="79" width="114" height="18" rx="9" fill="#17181b" stroke="#ffd427" stroke-width="1"/>
+  <text x="759" y="92" text-anchor="middle" class="m" font-size="10" fill="#ffd427">1 unified harness</text>
+
+  <path d="M846 64 H880" stroke="#ff7daf" stroke-width="2.5"/>
+  <polygon points="876,58 888,64 876,70" fill="#ff7daf"/>
+
+  <!-- Stage 5: Reflect & Library -->
+  <rect x="892" y="22" width="182" height="84" rx="14" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <text x="983" y="48" text-anchor="middle" class="mb" font-size="13.5" fill="#ff7daf">REFLECT → LIB</text>
+  <text x="983" y="70" text-anchor="middle" class="m" font-size="11">deliver + log lesson</text>
+  <rect x="920" y="79" width="126" height="18" rx="9" fill="#17181b" stroke="#5cdb6d" stroke-width="1"/>
+  <text x="983" y="92" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">stored in library</text>
+
+  <!-- Return dashed line: next task resets to H0 and reads library -->
+  <path d="M983 110 V136 H89 V112" fill="none" stroke="#5cdb6d" stroke-width="2" stroke-dasharray="7 5"/>
+  <polygon points="83,116 89,106 95,116" fill="#5cdb6d"/>
+  <rect x="378" y="123" width="332" height="22" rx="11" fill="#202124" stroke="#5cdb6d" stroke-width="1.2"/>
+  <text x="544" y="138" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">Next task restarts at H₀ · pulls lessons from library</text>
+
+</svg>

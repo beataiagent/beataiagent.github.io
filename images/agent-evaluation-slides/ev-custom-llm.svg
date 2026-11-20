@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 360 150" width="360" height="150">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/><stop offset="100%" stop-color="#57caff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/><stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/><stop offset="100%" stop-color="#ffd427" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/><stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/></radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #fff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+<rect width="360" height="150" fill="#202124"/>
+  <circle cx="180" cy="75" r="100" fill="url(#amb-g)"/>
+  <rect x="8" y="22" width="104" height="106" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="60" y="54" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="700">RUBRIC</text>
+  <text x="60" y="82" text-anchor="middle" class="t" font-size="13">Prompt</text>
+  <text x="60" y="102" text-anchor="middle" class="sub" font-size="11.5">template</text>
+  <path d="M116 75 H140" stroke="#fff" stroke-width="2.5"/><polygon points="136,70 145,75 136,80" fill="#fff"/>
+  <rect x="148" y="22" width="96" height="106" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="196" y="66" text-anchor="middle" class="t" font-size="14" fill="#ffd427">Judge</text>
+  <text x="196" y="88" text-anchor="middle" class="t" font-size="14" fill="#ffd427">LLM</text>
+  <path d="M248 75 H270" stroke="#fff" stroke-width="2.5"/><polygon points="266,70 275,75 266,80" fill="#fff"/>
+  <rect x="278" y="22" width="74" height="106" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="315" y="66" text-anchor="middle" class="t" font-size="20" fill="#5cdb6d">0.9</text>
+  <text x="315" y="92" text-anchor="middle" class="m" font-size="10">+ why</text>
+</svg>

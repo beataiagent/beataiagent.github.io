@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 488 248" width="488" height="248">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#363942" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2026" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <linearGradient id="grad-br" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <pattern id="dots" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#ffffff" opacity="0.06"/>
+    </pattern>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; font-weight: 400; }
+      .mb { font-family: "Roboto Mono", ui-monospace, monospace; fill: #ffffff; font-weight: 600; }
+    </style>
+  </defs>
+  <rect width="488" height="248" fill="#202124"/>
+  <rect width="488" height="248" fill="url(#dots)"/>
+
+  <circle cx="244" cy="124" r="140" fill="url(#amb-y)"/>
+  <!-- Top Bridge Beam -->
+  <rect x="28" y="22" width="432" height="44" rx="12" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+  <text x="244" y="50" text-anchor="middle" class="t" font-size="16" fill="#5cdb6d">Full Harness² Gain (WorkBuddy · JobBench · LAB)</text>
+
+  <!-- 3 Pillars -->
+  <rect x="44" y="84" width="118" height="114" rx="14" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <text x="103" y="112" text-anchor="middle" class="mb" font-size="12" fill="#ff7daf">PILLAR 1</text>
+  <text x="103" y="135" text-anchor="middle" class="t" font-size="14">General vs</text>
+  <text x="103" y="153" text-anchor="middle" class="t" font-size="14">Domain</text>
+  <rect x="60" y="166" width="86" height="22" rx="11" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="103" y="181" text-anchor="middle" class="mb" font-size="11" fill="#ff7daf">−2.9 / −3.7</text>
+
+  <rect x="185" y="84" width="118" height="114" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="244" y="112" text-anchor="middle" class="mb" font-size="12" fill="#ffd427">PILLAR 2</text>
+  <text x="244" y="135" text-anchor="middle" class="t" font-size="14">Lesson</text>
+  <text x="244" y="153" text-anchor="middle" class="t" font-size="14">Library</text>
+  <rect x="201" y="166" width="86" height="22" rx="11" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="244" y="181" text-anchor="middle" class="mb" font-size="11" fill="#ffd427">−3.1 / −1.8</text>
+
+  <rect x="326" y="84" width="118" height="114" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="385" y="112" text-anchor="middle" class="mb" font-size="12" fill="#57caff">PILLAR 3</text>
+  <text x="385" y="135" text-anchor="middle" class="t" font-size="14">Compose</text>
+  <text x="385" y="153" text-anchor="middle" class="t" font-size="14">Step</text>
+  <rect x="342" y="166" width="86" height="22" rx="11" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="385" y="181" text-anchor="middle" class="mb" font-size="11" fill="#57caff">−1.6 / −1.9</text>
+
+  <!-- Vertical struts -->
+  <line x1="103" y1="66" x2="103" y2="84" stroke="#ff7daf" stroke-width="3"/>
+  <line x1="244" y1="66" x2="244" y2="84" stroke="#ffd427" stroke-width="3"/>
+  <line x1="385" y1="66" x2="385" y2="84" stroke="#57caff" stroke-width="3"/>
+
+  <!-- Base caption -->
+  <rect x="28" y="210" width="432" height="26" rx="13" fill="#17181b" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="244" y="227" text-anchor="middle" class="m" font-size="11" fill="#bdc1c6">Remove any pillar → performance drops on every benchmark</text>
+
+</svg>

@@ -1,0 +1,123 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 194" width="1088" height="194">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#353840" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="33%" stop-color="#5cdb6d"/>
+      <stop offset="66%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#57caff"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="194" fill="#202124"/>
+
+  <circle cx="182" cy="97" r="120" fill="url(#amb-b)"/>
+  <circle cx="544" cy="97" r="120" fill="url(#amb-g)"/>
+  <circle cx="906" cy="97" r="120" fill="url(#amb-y)"/>
+
+  <!-- Pillar 1: Cryptographic Identity -->
+  <rect x="10" y="12" width="342" height="170" rx="18" fill="url(#glass)" stroke="#57caff" stroke-width="2.4"/>
+  <rect x="28" y="30" width="114" height="96" rx="14" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <text x="85" y="50" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">CLOUD KMS</text>
+  <g transform="translate(85,84) scale(0.9)">
+    <circle cx="-12" cy="0" r="10" fill="rgba(255,212,39,0.16)" stroke="#ffd427" stroke-width="3" filter="url(#glow-s)"/>
+    <circle cx="-12" cy="0" r="3.5" fill="#ffd427"/>
+    <path d="M-2 0 H24 M14 0 V8 M21 0 V10" stroke="#ffd427" stroke-width="3" stroke-linecap="round"/>
+  </g>
+  <text x="85" y="114" text-anchor="middle" class="m" font-size="10" fill="#9aa0a6">HSM key</text>
+  <path d="M144 78 H186" stroke="#57caff" stroke-width="3" filter="url(#glow-s)"/>
+  <polygon points="184,71 198,78 184,85" fill="#57caff"/>
+  <!-- Signed ledger badge -->
+  <rect x="202" y="30" width="132" height="96" rx="14" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="268" y="52" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">DB GUARD</text>
+  <circle cx="268" cy="84" r="22" fill="rgba(92,219,109,0.16)" stroke="#5cdb6d" stroke-width="2.4"/>
+  <path d="M259 84 L265 90 L278 77" fill="none" stroke="#5cdb6d" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="181" y="158" text-anchor="middle" class="m" font-size="12" fill="#57caff">SIGN PAYLOAD → VERIFY SIGNATURE</text>
+
+  <!-- Pillar 2: Managed Sandbox -->
+  <rect x="373" y="12" width="342" height="170" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4"/>
+  <!-- Isometric sandbox cube -->
+  <rect x="404" y="32" width="136" height="92" rx="14" fill="rgba(92,219,109,0.10)" stroke="#5cdb6d" stroke-width="2.4" stroke-dasharray="6 4"/>
+  <rect x="422" y="48" width="100" height="60" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="472" y="73" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">gVisor</text>
+  <text x="472" y="93" text-anchor="middle" class="m" font-size="10.5" fill="#e8eaed">calc_fee()</text>
+  <!-- Blocked egress arrow -->
+  <path d="M542 78 H604" stroke="#ff7daf" stroke-width="2.8" stroke-dasharray="5 4"/>
+  <circle cx="576" cy="78" r="14" fill="#17181b" stroke="#ff7daf" stroke-width="2.4" filter="url(#glow-s)"/>
+  <path d="M570 72 L582 84 M582 72 L570 84" stroke="#ff7daf" stroke-width="2.6" stroke-linecap="round"/>
+  <!-- Globe icon -->
+  <circle cx="644" cy="78" r="26" fill="#17181b" stroke="#5f6368" stroke-width="2"/>
+  <ellipse cx="644" cy="78" rx="11" ry="26" fill="none" stroke="#5f6368" stroke-width="1.6"/>
+  <line x1="618" y1="78" x2="670" y2="78" stroke="#5f6368" stroke-width="1.6"/>
+  <text x="544" y="158" text-anchor="middle" class="m" font-size="12" fill="#5cdb6d">USER-SPACE KERNEL · NO EGRESS</text>
+
+  <!-- Pillar 3: Semantic Gateway -->
+  <rect x="736" y="12" width="342" height="170" rx="18" fill="url(#glass)" stroke="#ffd427" stroke-width="2.4"/>
+  <!-- Incoming badges -->
+  <rect x="754" y="34" width="84" height="28" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.6"/>
+  <text x="796" y="52" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">jailbreak</text>
+  <rect x="754" y="70" width="84" height="28" rx="8" fill="#17181b" stroke="#ffd427" stroke-width="1.6"/>
+  <text x="796" y="88" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">sk_live_*</text>
+  <rect x="754" y="106" width="84" height="28" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="796" y="124" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">valid ask</text>
+  <!-- Funnel sieve -->
+  <polygon points="862,36 936,36 912,84 912,126 886,126 886,84" fill="rgba(255,212,39,0.16)" stroke="#ffd427" stroke-width="2.4" filter="url(#glow-s)"/>
+  <line x1="874" y1="54" x2="924" y2="54" stroke="#ffd427" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <line x1="882" y1="70" x2="916" y2="70" stroke="#ffd427" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <!-- Output -->
+  <path d="M936 82 H968" stroke="#5cdb6d" stroke-width="2.6"/>
+  <polygon points="966,75 978,82 966,89" fill="#5cdb6d"/>
+  <rect x="982" y="52" width="80" height="60" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="1022" y="78" text-anchor="middle" class="t" font-size="13" fill="#5cdb6d">CI PASS</text>
+  <text x="1022" y="98" text-anchor="middle" class="m" font-size="10.5" fill="#bdc1c6">redacted</text>
+  <text x="907" y="158" text-anchor="middle" class="m" font-size="12" fill="#ffd427">REGEX FILTER + PII REDACTION</text>
+
+</svg>

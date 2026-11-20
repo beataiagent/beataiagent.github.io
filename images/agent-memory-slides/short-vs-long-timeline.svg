@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 340" width="1088" height="340">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #fff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+<rect width="1088" height="340" fill="#202124"/>
+  <circle cx="880" cy="245" r="140" fill="url(#amb-g)"/>
+  <circle cx="540" cy="245" r="130" fill="url(#amb-y)"/>
+  <!-- Lane headers -->
+  <rect x="10" y="24" width="166" height="122" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.5"/>
+  <text x="28" y="54" class="m" font-size="11.5" fill="#57caff" font-weight="700">SHORT-TERM</text>
+  <text x="28" y="84" class="t" font-size="20">Session + State</text>
+  <text x="28" y="110" class="sub" font-size="13.5">Resets every chat</text>
+
+  <rect x="10" y="190" width="166" height="126" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.5"/>
+  <text x="28" y="220" class="m" font-size="11.5" fill="#ffd427" font-weight="700">LONG-TERM</text>
+  <text x="28" y="250" class="t" font-size="20">Memory Bank</text>
+  <text x="28" y="276" class="sub" font-size="13.5">Grows forever</text>
+
+  <!-- Vertical flow connectors -->
+  <path d="M335 148 V186" stroke="#ffd427" stroke-width="3" stroke-dasharray="5 4"/>
+  <polygon points="328,182 335,194 342,182" fill="#ffd427"/>
+  <path d="M635 148 V186" stroke="#ffd427" stroke-width="3" stroke-dasharray="5 4"/>
+  <polygon points="628,182 635,194 642,182" fill="#ffd427"/>
+  <!-- Friday recall UP arrow -->
+  <path d="M935 188 V152" stroke="#5cdb6d" stroke-width="4" filter="url(#glow-s)"/>
+  <polygon points="926,158 935,144 944,158" fill="#5cdb6d"/>
+  <!-- Horizontal growth arrows in bottom lane -->
+  <path d="M472 254 H496" stroke="#ffd427" stroke-width="3"/>
+  <polygon points="492,247 504,254 492,261" fill="#ffd427"/>
+  <path d="M772 254 H796" stroke="#5cdb6d" stroke-width="3"/>
+  <polygon points="792,247 804,254 792,261" fill="#5cdb6d"/>
+
+  <!-- MONDAY -->
+  <rect x="204" y="24" width="264" height="122" rx="16" fill="url(#glass)" stroke="#5f6368" stroke-width="2"/>
+  <text x="222" y="48" class="m" font-size="12" fill="#bdc1c6" font-weight="700">MONDAY</text>
+  <text x="222" y="76" class="t" font-size="18">"I'm vegetarian."</text>
+  <rect x="222" y="90" width="120" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.5"/>
+  <text x="282" y="106" text-anchor="middle" class="m" font-size="11.5" fill="#57caff">diet = veg</text>
+  <rect x="350" y="90" width="102" height="24" rx="12" fill="rgba(255,125,175,0.14)" stroke="#ff7daf" stroke-width="1.5"/>
+  <text x="401" y="106" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">✕ wiped</text>
+
+  <rect x="204" y="190" width="264" height="126" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.5"/>
+  <text x="222" y="214" class="m" font-size="12" fill="#ffd427" font-weight="700">SAVED FACT</text>
+  <rect x="222" y="232" width="160" height="34" rx="17" fill="rgba(255,212,39,0.14)" stroke="#ffd427" stroke-width="2"/>
+  <text x="242" y="254" class="m" font-size="13.5" fill="#ffd427">🌿 vegetarian</text>
+
+  <!-- WEDNESDAY -->
+  <rect x="504" y="24" width="264" height="122" rx="16" fill="url(#glass)" stroke="#5f6368" stroke-width="2"/>
+  <text x="522" y="48" class="m" font-size="12" fill="#bdc1c6" font-weight="700">WEDNESDAY</text>
+  <text x="522" y="76" class="t" font-size="18">"I love temples."</text>
+  <rect x="522" y="90" width="132" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.5"/>
+  <text x="588" y="106" text-anchor="middle" class="m" font-size="11.5" fill="#57caff">loves = temples</text>
+  <rect x="660" y="90" width="96" height="24" rx="12" fill="rgba(255,125,175,0.14)" stroke="#ff7daf" stroke-width="1.5"/>
+  <text x="708" y="106" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">✕ wiped</text>
+
+  <rect x="504" y="190" width="264" height="126" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.5"/>
+  <text x="522" y="214" class="m" font-size="12" fill="#ffd427" font-weight="700">CONSOLIDATED</text>
+  <rect x="522" y="226" width="160" height="32" rx="16" fill="rgba(255,212,39,0.14)" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="542" y="247" class="m" font-size="13" fill="#ffd427">🌿 vegetarian</text>
+  <rect x="522" y="266" width="186" height="32" rx="16" fill="rgba(255,212,39,0.14)" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="542" y="287" class="m" font-size="13" fill="#ffd427">⛩️ + loves temples</text>
+
+  <!-- FRIDAY -->
+  <rect x="804" y="24" width="274" height="122" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.5" filter="url(#glow-s)"/>
+  <text x="822" y="48" class="m" font-size="12" fill="#5cdb6d" font-weight="700">FRIDAY · NEW CHAT</text>
+  <text x="822" y="76" class="t" font-size="18">"Plan Kyoto!"</text>
+  <rect x="822" y="90" width="234" height="32" rx="16" fill="rgba(92,219,109,0.16)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="939" y="111" text-anchor="middle" class="m" font-size="12.5" fill="#5cdb6d">→ Temples + veg lunch ✓</text>
+
+  <rect x="804" y="190" width="274" height="126" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.5"/>
+  <text x="822" y="214" class="m" font-size="12" fill="#5cdb6d" font-weight="700">RECALLED TOGETHER ↑</text>
+  <rect x="822" y="226" width="160" height="32" rx="16" fill="rgba(92,219,109,0.16)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="842" y="247" class="m" font-size="13" fill="#5cdb6d">🌿 vegetarian</text>
+  <rect x="822" y="266" width="186" height="32" rx="16" fill="rgba(92,219,109,0.16)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="842" y="287" class="m" font-size="13" fill="#5cdb6d">⛩️ loves temples</text>
+</svg>

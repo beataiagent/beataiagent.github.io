@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 440 175" width="440" height="175">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #fff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+<rect width="440" height="175" fill="#202124"/>
+  <circle cx="220" cy="88" r="115" fill="url(#amb-g)"/>
+  <!-- Left hook: Recall IN -->
+  <rect x="10" y="24" width="132" height="126" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <text x="76" y="52" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="700">BEFORE REPLY</text>
+  <text x="76" y="82" text-anchor="middle" class="t" font-size="15">Recall IN</text>
+  <rect x="20" y="98" width="112" height="32" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="76" y="118" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">PreloadMemory</text>
+  <!-- Center Robot -->
+  
+    <g transform="translate(220,92) scale(0.78)">
+      <line x1="0" y1="-44" x2="0" y2="-56" stroke="#ffd427" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="0" cy="-60" r="5" fill="#ffd427" filter="url(#glow-s)"/>
+      <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#ffd427" stroke-width="2.5"/>
+      <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+      <circle cx="-11" cy="-18" r="5.5" fill="#ffd427" filter="url(#glow-s)"/>
+      <circle cx="11" cy="-18" r="5.5" fill="#ffd427" filter="url(#glow-s)"/>
+      <path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#ffd427" stroke-width="2.5" stroke-linecap="round"/>
+      <path d="M-24 14 H24 C28 14 26 42 0 46 C-26 42 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#ffd427" stroke-width="2"/>
+      <circle cx="0" cy="28" r="6" fill="#ffd427" opacity="0.85"/>
+    </g>
+  <!-- Arrows -->
+  <path d="M146 88 H174" stroke="#57caff" stroke-width="3"/>
+  <polygon points="170,82 182,88 170,94" fill="#57caff"/>
+  <path d="M258 88 H286" stroke="#5cdb6d" stroke-width="3"/>
+  <polygon points="282,82 294,88 282,94" fill="#5cdb6d"/>
+  <!-- Right hook: Save OUT -->
+  <rect x="298" y="24" width="132" height="126" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <text x="364" y="52" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="700">AFTER CHAT</text>
+  <text x="364" y="82" text-anchor="middle" class="t" font-size="15">Save OUT</text>
+  <rect x="308" y="98" width="112" height="32" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="364" y="118" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">add_session</text>
+</svg>

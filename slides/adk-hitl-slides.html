@@ -864,6 +864,19 @@
     .fp-lg { left: 322px; top: 330px; display: grid; gap: 8px; font: 400 13px/1 var(--mono); color: var(--dk-sub); }
     .fp-lg span { display: flex; align-items: center; gap: 8px; }
     .fp-lg i { width: 22px; height: 0; border-top: 3px solid var(--c); }
+    .hl-art { border: 2px solid var(--dk-line); border-radius: 16px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; }
+    .hl-art.blue { border-color: var(--h-blue); } .hl-art.green { border-color: var(--h-green); }
+    .hl-art.yellow { border-color: var(--h-yellow); } .hl-art.red { border-color: var(--h-red); }
+    .reveal .slides .hl-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .hl-div-art { position: absolute; left: 57px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .hl-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .hl-ty-art { position: absolute; left: 880px; top: 186px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+    .reveal .slides .hl-ty-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .hl-res-row { display: flex; align-items: center; gap: 16px; padding: 16px 20px; }
+    .hl-res-ico { width: 58px; height: 58px; flex: none; display: block; }
+    .reveal .slides .hl-res-ico img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .hl-res-body { min-width: 0; flex: 1; }
+    .hl-res-body h3 { margin: 0 0 4px; font-size: 22px; }
   </style>
 </head>
 <body>
@@ -951,7 +964,7 @@
       <!-- Section 01 -->
       <section class="bg-blue" data-title="01 · Why a human in the loop">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
-        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-user"/></svg>
+        <div class="hl-div-art" style="--c:var(--h-blue)"><img src="../images/adk-hitl-slides/sec-01-why-hitl.svg" alt="Agent and human supervisor connected by a $200 safety loop"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -965,21 +978,24 @@
       <!-- The refund rule -->
       <section data-title="The $200 refund rule">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Running example · a bank support agent</div>
-            <h2 style="margin-bottom:22px">The agent can call <code style="font-size:40px">issue_refund</code></h2>
+            <h2 style="margin-bottom:14px">The agent can call <code style="font-size:40px">issue_refund</code></h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <div style="width:520px; flex:none" class="zt-stack">
-                <div class="pc green fragment" style="padding:16px 18px"><b style="font-size:20px">≤ $200</b><br>Refund runs automatically</div>
-                <div class="pc red fragment" style="padding:16px 18px"><b style="font-size:20px">&gt; $200</b><br>A supervisor must approve the <b>exact amount</b> before the API runs</div>
+              <div style="width:520px; flex:none; gap:10px" class="zt-stack">
+                <div class="pc green fragment" style="padding:11px 16px; font-size:15.5px"><b style="font-size:18px">≤ $200</b> · Refund runs automatically</div>
+                <div class="pc red fragment" style="padding:11px 16px; font-size:15.5px"><b style="font-size:18px">&gt; $200</b> · A supervisor must approve the <b>exact amount</b> first</div>
               </div>
               <div style="flex:1; min-width:0">
-                <div class="zt-meter fragment" style="margin-top:34px">
+                <div class="zt-meter fragment" style="margin-top:22px">
                   <i>$50</i><i>$120</i><i>$200</i><i class="over">$350</i><i class="over">$900</i>
                   <span class="zt-limit" style="left:60%"><span>$200</span></span>
                 </div>
-                <div class="zt-scale fragment"><span>auto</span><span>needs a human</span></div>
+                <div class="zt-scale fragment" style="margin-top:16px"><span>auto</span><span>needs a human</span></div>
               </div>
+            </div>
+            <div class="hl-art blue fragment" style="width:1088px; height:192px; margin-top:16px">
+              <img src="../images/adk-hitl-slides/refund-rule.svg" alt="Support agent calling issue_refund split at the $200 policy gate into auto-refund and supervisor approval">
             </div>
           </div>
           <div class="ask fragment"><b>Source</b><span>Scenario from "Deterministic ADK Callbacks &amp; HITL on Google Cloud", Roshan Kumar.</span></div>
@@ -990,12 +1006,20 @@
       <!-- Two failed fixes -->
       <section data-title="Two fixes that fail">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">The obvious fixes</div>
-            <h2 style="margin-bottom:24px">Two fixes that fail in production</h2>
+            <h2 style="margin-bottom:18px">Two fixes that fail in production</h2>
             <div class="grid g2 zt-lim" style="width:1088px; gap:20px">
-              <div class="pc red fragment" style="height:250px"><svg class="ev-ico" style="--c:var(--h-red)"><use href="#i-chat"/></svg><h3>A rule in the system prompt</h3><p>"Never refund more than $200." A clever user talks the model out of it with a jailbreak.</p></div>
-              <div class="pc yellow fragment" style="height:250px"><svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-lock"/></svg><h3>A Cloud IAM condition</h3><p>IAM checks permissions on cloud resources. It cannot read the <code>amount</code> inside a tool call's JSON arguments.</p></div>
+              <div class="pc red fragment" style="padding:16px 20px">
+                <div class="hl-art red" style="width:100%; height:170px; margin-bottom:12px"><img src="../images/adk-hitl-slides/fix-fail-prompt.svg" alt="Jailbreak prompt breaking through a flimsy system prompt wall"></div>
+                <h3 style="margin-bottom:6px">A rule in the system prompt</h3>
+                <p style="font-size:16px; line-height:1.4">"Never refund more than $200." A clever user talks the model out of it with a jailbreak.</p>
+              </div>
+              <div class="pc yellow fragment" style="padding:16px 20px">
+                <div class="hl-art yellow" style="width:100%; height:170px; margin-bottom:12px"><img src="../images/adk-hitl-slides/fix-fail-iam.svg" alt="Cloud IAM shield unable to inspect the amount inside JSON tool arguments"></div>
+                <h3 style="margin-bottom:6px">A Cloud IAM condition</h3>
+                <p style="font-size:16px; line-height:1.4">IAM checks permissions on cloud resources. It cannot read the <code>amount</code> inside a tool call's JSON arguments.</p>
+              </div>
             </div>
           </div>
           <div class="ask fragment"><b>Instead</b><span>Enforce the rule in code that runs on every tool call: ADK callbacks and tool confirmation.</span></div>
@@ -1006,17 +1030,20 @@
       <!-- Options map -->
       <section data-title="Six ways to involve a human">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">ADK building blocks</div>
-            <h2 style="margin-bottom:16px">From hard rule to human judgment</h2>
-            <table class="zt-tbl" style="width:1088px">
-              <tr><th style="width:27%">Need</th><th style="width:37%">ADK feature</th><th>Human does</th><th style="width:15%">Since</th></tr>
-              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-red)"><use href="#i-lock"/></svg>A hard limit, no exceptions</td><td><code>before_tool_callback</code></td><td>Nothing. Code blocks it</td><td>Python 1.x</td></tr>
-              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-yellow)"><use href="#i-check"/></svg>Yes/no before a risky call</td><td><code>require_confirmation=True</code></td><td>Approve or reject</td><td>Python 1.14</td></tr>
-              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-green)"><use href="#i-doc"/></svg>Human edits the arguments</td><td><code>tool_context.request_confirmation</code></td><td>Approves with a payload</td><td>Python 1.14</td></tr>
-              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-yellow)"><use href="#i-clock"/></svg>Approval takes hours</td><td><code>LongRunningFunctionTool</code> + resume</td><td>Replies later, elsewhere</td><td>resume: 1.16</td></tr>
-              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-blue)"><use href="#i-chat"/></svg>User wants a person</td><td><code>before_model_callback</code> + escalate tool</td><td>Takes over the chat</td><td>Python 1.x</td></tr>
-              <tr class="fragment"><td><svg class="hl-ti" style="--c:var(--h-green)"><use href="#i-play"/></svg>Free-form input in a workflow</td><td><code>RequestInput</code> in a graph</td><td>Types an answer</td><td>ADK 2.0</td></tr>
+            <h2 style="margin-bottom:12px">From hard rule to human judgment</h2>
+            <div class="hl-art" style="width:1088px; height:88px; margin-bottom:12px">
+              <img src="../images/adk-hitl-slides/six-ways-spectrum.svg" alt="Spectrum from hard code gate to full human judgment across six ADK HITL patterns">
+            </div>
+            <table class="zt-tbl" style="width:1088px; font-size:15.5px">
+              <tr><th style="width:27%; padding:7px 10px">Need</th><th style="width:37%; padding:7px 10px">ADK feature</th><th style="padding:7px 10px">Human does</th><th style="width:15%; padding:7px 10px">Since</th></tr>
+              <tr class="fragment"><td style="padding:8px 10px"><svg class="hl-ti" style="--c:var(--h-red)"><use href="#i-lock"/></svg>A hard limit, no exceptions</td><td style="padding:8px 10px"><code>before_tool_callback</code></td><td style="padding:8px 10px">Nothing. Code blocks it</td><td style="padding:8px 10px">Python 1.x</td></tr>
+              <tr class="fragment"><td style="padding:8px 10px"><svg class="hl-ti" style="--c:var(--h-yellow)"><use href="#i-check"/></svg>Yes/no before a risky call</td><td style="padding:8px 10px"><code>require_confirmation=True</code></td><td style="padding:8px 10px">Approve or reject</td><td style="padding:8px 10px">Python 1.14</td></tr>
+              <tr class="fragment"><td style="padding:8px 10px"><svg class="hl-ti" style="--c:var(--h-green)"><use href="#i-doc"/></svg>Human edits the arguments</td><td style="padding:8px 10px"><code>tool_context.request_confirmation</code></td><td style="padding:8px 10px">Approves with a payload</td><td style="padding:8px 10px">Python 1.14</td></tr>
+              <tr class="fragment"><td style="padding:8px 10px"><svg class="hl-ti" style="--c:var(--h-yellow)"><use href="#i-clock"/></svg>Approval takes hours</td><td style="padding:8px 10px"><code>LongRunningFunctionTool</code> + resume</td><td style="padding:8px 10px">Replies later, elsewhere</td><td style="padding:8px 10px">resume: 1.16</td></tr>
+              <tr class="fragment"><td style="padding:8px 10px"><svg class="hl-ti" style="--c:var(--h-blue)"><use href="#i-chat"/></svg>User wants a person</td><td style="padding:8px 10px"><code>before_model_callback</code> + escalate tool</td><td style="padding:8px 10px">Takes over the chat</td><td style="padding:8px 10px">Python 1.x</td></tr>
+              <tr class="fragment"><td style="padding:8px 10px"><svg class="hl-ti" style="--c:var(--h-green)"><use href="#i-play"/></svg>Free-form input in a workflow</td><td style="padding:8px 10px"><code>RequestInput</code> in a graph</td><td style="padding:8px 10px">Types an answer</td><td style="padding:8px 10px">ADK 2.0</td></tr>
             </table>
           </div>
         </div>
@@ -1026,7 +1053,7 @@
       <!-- Section 02 -->
       <section class="bg-green" data-title="02 · Deterministic gates">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
-        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-lock"/></svg>
+        <div class="hl-div-art" style="--c:var(--h-green)"><img src="../images/adk-hitl-slides/sec-02-gates.svg" alt="Armored code shield blocking unsafe tool calls before execution"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1063,11 +1090,11 @@
       <!-- Callback code -->
       <section data-title="A refund guard in code">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:40px 56px">
             <div class="eyebrow">before_tool_callback · Python</div>
-            <h2 style="margin-bottom:22px">A refund guard in ten lines</h2>
+            <h2 style="margin-bottom:18px">A refund guard in ten lines</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:680px; flex:none; font-size:14px"><code class="language-python" data-trim>
+              <pre style="width:650px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
 from typing import Any, Optional
 from google.adk.agents import Agent
 from google.adk.tools.base_tool import BaseTool
@@ -1090,15 +1117,11 @@ root_agent = Agent(
     before_tool_callback=refund_guard,
 )
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv">
-                <div class="bx b fragment" data-fragment-index="1">LLM wants <b>issue_refund</b><small>with the amount the user asked for</small></div>
-                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="1"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
-                <div class="bx y fragment" data-fragment-index="1"><b>refund_guard</b><small>amount &gt; 200 ?</small></div>
-                <div class="split fragment" data-fragment-index="2">
-                  <div><div class="lab" style="--c:var(--h-green)">$120 · no</div><div class="bx g">Tool runs<small>return None</small></div></div>
-                  <div><div class="lab" style="--c:var(--h-red)">$350 · yes</div><div class="bx r">Tool skipped<small>{"status": "blocked"}</small></div></div>
+              <div style="flex:1; min-width:0">
+                <div class="hl-art yellow fragment" data-fragment-index="1" style="width:414px; height:356px">
+                  <img src="../images/adk-hitl-slides/refund-guard-code.svg" alt="Flow diagram of refund_guard checking amount > 200 and splitting into Tool runs ($120) or Tool skipped ($350)">
                 </div>
-                <div class="hv-note fragment" data-fragment-index="3">A callback can only <b>block</b>. It cannot wait for a supervisor's yes.</div>
+                <div class="hv-note fragment" data-fragment-index="2">A callback can only <b>block</b>. It cannot wait for a supervisor's yes.</div>
               </div>
             </div>
           </div>
@@ -1109,7 +1132,7 @@ root_agent = Agent(
       <!-- Section 03 -->
       <section class="bg-yellow" data-title="03 · Tool confirmation">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
-        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-check"/></svg>
+        <div class="hl-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-hitl-slides/sec-03-confirmation.svg" alt="Pause emblem above a confirmation dialog with Reject and Confirm buttons"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1123,11 +1146,11 @@ root_agent = Agent(
       <!-- require_confirmation -->
       <section data-title="require_confirmation">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:40px 56px">
             <div class="eyebrow">Boolean confirmation · ADK Python v1.14.0+</div>
-            <h2 style="margin-bottom:22px">One flag: <code style="font-size:40px">require_confirmation</code></h2>
+            <h2 style="margin-bottom:18px">One flag: <code style="font-size:40px">require_confirmation</code></h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:680px; flex:none; font-size:15px"><code class="language-python" data-trim>
+              <pre style="width:650px; flex:none; font-size:14.5px"><code class="language-python" data-trim>
 from google.adk.tools import FunctionTool
 from google.adk.tools.tool_context import ToolContext
 
@@ -1144,13 +1167,8 @@ async def confirmation_threshold(
 FunctionTool(issue_refund,
              require_confirmation=confirmation_threshold)
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv">
-                <div class="hv-dlg fragment"><div class="t"><svg viewBox="0 0 24 24"><use href="#i-check"/></svg>Confirm tool call?</div><p><b>issue_refund</b><br>order_id: 1042 · amount: 350</p><div class="btns"><span>Reject</span><span class="p">Confirm</span></div></div>
-                <div class="hv-cap fragment">Sketch of the confirmation dialog in adk web</div>
-                <div class="split fragment" style="margin-top:6px">
-                  <div class="bx b"><b>True</b><small>ask on every call</small></div>
-                  <div class="bx g"><b>a function</b><small>ask only when amount &gt; 200</small></div>
-                </div>
+              <div class="hl-art yellow fragment" style="width:414px; height:400px">
+                <img src="../images/adk-hitl-slides/require-confirmation.svg" alt="ADK agent pausing issue_refund for $350 with an adk web confirmation dialog and boolean vs threshold function modes">
               </div>
             </div>
           </div>
@@ -1184,11 +1202,11 @@ FunctionTool(issue_refund,
       <!-- Advanced confirmation -->
       <section data-title="Let the human change the amount">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Advanced confirmation · hint + payload</div>
-            <h2 style="margin-bottom:20px">Let the supervisor set the amount</h2>
+            <h2 style="margin-bottom:18px">Let the supervisor set the amount</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:700px; flex:none; font-size:13px"><code class="language-python" data-trim>
+              <pre style="width:660px; flex:none; font-size:13px"><code class="language-python" data-trim>
 def issue_refund(order_id: str, amount: float,
                  tool_context: ToolContext) -> dict:
   if amount <= 200:
@@ -1209,11 +1227,8 @@ def issue_refund(order_id: str, amount: float,
     return {"status": "Refund rejected."}
   return pay(order_id, approved)
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv">
-                <div class="hv-dlg fragment" data-fragment-index="1"><div class="t"><svg viewBox="0 0 24 24"><use href="#i-user"/></svg>Supervisor approval</div><p>Approve a refund of $350 for 1042? Set approved_amount, or 0 to reject.</p><div class="fld"><span>approved_amount</span><b>300</b></div><div class="btns"><span>Reject</span><span class="p">Approve</span></div></div>
-                <div class="hv-cap fragment" data-fragment-index="2"><b>hint</b> = the question · <b>payload</b> = the form</div>
-                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="3"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
-                <div class="bx g fragment" data-fragment-index="3"><b>Tool runs again</b><small>min(300, 350) → pays $300</small></div>
+              <div class="hl-art green fragment" style="width:404px; height:415px">
+                <img src="../images/adk-hitl-slides/human-edit-amount.svg" alt="Supervisor editing approved_amount from $350 to $300 via hint and payload, capped safely with min(300, 350)">
               </div>
             </div>
           </div>
@@ -1224,11 +1239,11 @@ def issue_refund(order_id: str, amount: float,
       <!-- Reply over REST -->
       <section data-title="Reply from your own app">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">ADK API server · /run_sse or /run</div>
-            <h2 style="margin-bottom:22px">Reply from your own app</h2>
+            <h2 style="margin-bottom:18px">Reply from your own app</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:660px; flex:none; font-size:14px"><code class="language-bash" data-trim>
+              <pre style="width:640px; flex:none; font-size:13.5px"><code class="language-bash" data-trim>
 curl -X POST http://localhost:8000/run_sse \
   -H "Content-Type: application/json" \
   -d '{
@@ -1243,13 +1258,8 @@ curl -X POST http://localhost:8000/run_sse \
     }}]}
 }'
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv">
-                <div class="bx fragment" data-fragment-index="1"><b>Your app</b><small>the supervisor clicks Approve</small></div>
-                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="2"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
-                <div class="bx y fragment" data-fragment-index="2"><b>POST /run_sse</b><small>function_response · id = FUNCTION_CALL_ID</small></div>
-                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="3"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
-                <div class="bx g fragment" data-fragment-index="3"><b>ADK agent</b><small>issue_refund resumes with confirmed + payload</small></div>
-                <div class="hv-cap fragment" data-fragment-index="4">Resumable app? Also send the original <b>invocation_id</b></div>
+              <div class="hl-art blue fragment" style="width:424px; height:345px">
+                <img src="../images/adk-hitl-slides/reply-rest-app.svg" alt="Your app sending POST /run_sse with matching FUNCTION_CALL_ID to wake and resume the ADK agent">
               </div>
             </div>
           </div>
@@ -1261,7 +1271,7 @@ curl -X POST http://localhost:8000/run_sse \
       <!-- Section 04 · Handoff -->
       <section class="bg-blue" data-title="04 · Hand off to a human">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
-        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-chat"/></svg>
+        <div class="hl-div-art" style="--c:var(--h-blue)"><img src="../images/adk-hitl-slides/sec-04-handoff.svg" alt="ADK robot passing a conversation context card to a human support specialist"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1275,25 +1285,21 @@ curl -X POST http://localhost:8000/run_sse \
       <!-- Two kinds of HITL -->
       <section data-title="Two kinds of HITL">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Tool-level vs conversation-level</div>
-            <h2 style="margin-bottom:24px">Two kinds of human-in-the-loop</h2>
+            <h2 style="margin-bottom:16px">Two kinds of human-in-the-loop</h2>
             <div class="grid g2 h2-comp" style="width:1088px; gap:20px">
-              <div class="pc yellow fragment" style="padding:18px 20px">
-                <svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-tool"/></svg><h3>Tool-level</h3>
-                <p style="font-size:17px; line-height:1.45">The <b>agent</b> asks a person to approve one action. The user keeps talking to the agent.</p>
-                <div class="hl-mini">
-                  <span class="r a">Agent</span><i>→</i><span class="r h">Supervisor</span><i>→</i><span class="r a">Agent</span>
-                </div>
-                <div class="chips" style="margin-top:14px"><span class="chip">require_confirmation</span><span class="chip">LongRunningFunctionTool</span></div>
+              <div class="pc yellow fragment" style="padding:14px 18px">
+                <div class="hl-art yellow" style="width:100%; height:150px; margin-bottom:10px"><img src="../images/adk-hitl-slides/hitl-tool-level.svg" alt="Tool-level HITL: agent stays with customer while asking supervisor to approve one action"></div>
+                <h3 style="margin-bottom:6px">Tool-level</h3>
+                <p style="font-size:16px; line-height:1.4">The <b>agent</b> asks a person to approve one action. The user keeps talking to the agent.</p>
+                <div class="chips" style="margin-top:10px"><span class="chip">require_confirmation</span><span class="chip">LongRunningFunctionTool</span></div>
               </div>
-              <div class="pc blue fragment" style="padding:18px 20px">
-                <svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-user"/></svg><h3>Conversation-level</h3>
-                <p style="font-size:17px; line-height:1.45">The <b>user</b> wants a person. The agent steps aside and a human takes over the chat.</p>
-                <div class="hl-mini">
-                  <span class="r a">Agent</span><i>→</i><span class="r h">Human agent</span><i>⋯</i><span class="r a">Agent?</span>
-                </div>
-                <div class="chips" style="margin-top:14px"><span class="chip">before_model_callback</span><span class="chip">escalate tool</span><span class="chip">session state</span></div>
+              <div class="pc blue fragment" style="padding:14px 18px">
+                <div class="hl-art blue" style="width:100%; height:150px; margin-bottom:10px"><img src="../images/adk-hitl-slides/hitl-convo-level.svg" alt="Conversation-level HITL: agent steps aside and a human support agent takes over the chat"></div>
+                <h3 style="margin-bottom:6px">Conversation-level</h3>
+                <p style="font-size:16px; line-height:1.4">The <b>user</b> wants a person. The agent steps aside and a human takes over the chat.</p>
+                <div class="chips" style="margin-top:10px"><span class="chip">before_model_callback</span><span class="chip">escalate tool</span><span class="chip">session state</span></div>
               </div>
             </div>
           </div>
@@ -1305,9 +1311,9 @@ curl -X POST http://localhost:8000/run_sse \
       <!-- Handoff illustration -->
       <section data-title="A handoff that feels good">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Illustration · an upset customer</div>
-            <h2 style="margin-bottom:20px">A handoff that does not make it worse</h2>
+            <h2 style="margin-bottom:16px">A handoff that does not make it worse</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
               <div class="ev-chat">
                 <div class="ev-msg u fragment" data-fragment-index="1"><small>Customer</small>This is the third time! I want to talk to a real person.</div>
@@ -1316,15 +1322,16 @@ curl -X POST http://localhost:8000/run_sse \
                 <div class="ev-msg h fragment" data-fragment-index="4"><small>Ploy · human agent</small>Hi, I can see order 1042 and both refund attempts. Let me fix this for you.</div>
               </div>
               <div style="flex:1; min-width:0" class="fragment" data-fragment-index="2">
-                <div class="ev-plan" style="font-size:14px"><b>Handoff packet · sent to the human</b>
-                  reason: user asked for a person<br>
-                  mood: frustrated (3rd contact)<br>
-                  order: 1042 · refund $350<br>
-                  tried: 2 refund attempts, both blocked<br>
+                <div class="hl-art yellow" style="width:444px; height:205px; margin-bottom:10px">
+                  <img src="../images/adk-hitl-slides/handoff-packet.svg" alt="ADK agent passing a structured context packet with mood, order, and history to human support specialist Ploy">
+                </div>
+                <div class="ev-plan" style="font-size:13.5px; line-height:1.35; padding:9px 12px"><b>Handoff packet · sent to the human</b>
+                  reason: user asked for a person · mood: frustrated<br>
+                  order: 1042 · refund $350 · tried: 2 blocked attempts<br>
                   summary: "Wants refund for broken item"
                 </div>
-                <div class="zt-stack" style="margin-top:14px">
-                  <div class="pc green" style="padding:10px 14px; font-size:15px">The human starts with <b>context</b>, not "How can I help?"</div>
+                <div class="zt-stack" style="margin-top:10px">
+                  <div class="pc green" style="padding:9px 14px; font-size:14.5px">The human starts with <b>context</b>, not "How can I help?"</div>
                 </div>
               </div>
             </div>
@@ -1336,30 +1343,32 @@ curl -X POST http://localhost:8000/run_sse \
       <!-- Detect -->
       <section data-title="When to hand off">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:36px 56px">
             <div class="eyebrow">Two detectors, one switch</div>
-            <h2 style="margin-bottom:24px">When to hand off</h2>
+            <h2 style="margin-bottom:16px">When to hand off</h2>
             <div class="grid g2 h2-comp" style="width:1088px; gap:20px">
-              <div class="pc red fragment" style="padding:18px 20px">
-                <svg class="ev-ico" style="--c:var(--h-red)"><use href="#i-lock"/></svg><h3>Deterministic · in code</h3>
-                <ul class="hl-list">
+              <div class="pc red fragment" style="padding:14px 18px">
+                <div class="hl-art red" style="width:100%; height:108px; margin-bottom:10px"><img src="../images/adk-hitl-slides/detect-code.svg" alt="Deterministic code laser scanner detecting keywords or repeat failures to set handoff=True"></div>
+                <h3 style="margin-bottom:4px">Deterministic · in code</h3>
+                <ul class="hl-list" style="font-size:15.5px; line-height:1.38">
                   <li>User says "human", "real person", "คุยกับคน"</li>
                   <li>Same problem fails <b>N</b> times</li>
                   <li>Topic is always human-only, e.g. fraud</li>
                 </ul>
-                <div class="chips" style="margin-top:14px"><span class="chip">before_model_callback</span></div>
+                <div class="chips" style="margin-top:10px"><span class="chip">before_model_callback</span></div>
               </div>
-              <div class="pc blue fragment" style="padding:18px 20px">
-                <svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-gauge"/></svg><h3>Model judgment · a tool</h3>
-                <ul class="hl-list">
+              <div class="pc blue fragment" style="padding:14px 18px">
+                <div class="hl-art blue" style="width:100%; height:108px; margin-bottom:10px"><img src="../images/adk-hitl-slides/detect-model.svg" alt="Model detecting upset tone and calling escalate_to_human tool"></div>
+                <h3 style="margin-bottom:4px">Model judgment · a tool</h3>
+                <ul class="hl-list" style="font-size:15.5px; line-height:1.38">
                   <li>User is clearly upset, even without keywords</li>
                   <li>Agent cannot solve it with its tools</li>
                   <li>Instruction says when to call <code>escalate_to_human</code></li>
                 </ul>
-                <div class="chips" style="margin-top:14px"><span class="chip">LongRunningFunctionTool</span></div>
+                <div class="chips" style="margin-top:10px"><span class="chip">LongRunningFunctionTool</span></div>
               </div>
             </div>
-            <div class="hl-sw fragment" style="width:1088px; margin-top:18px"><span class="p r">keyword gate</span><i>→</i><span class="tg"><em></em>state["handoff"] = True</span><i>←</i><span class="p b">escalate tool</span><i>⇒</i><span class="p y">agent quiet · human replies</span></div>
+            <div class="hl-sw fragment" style="width:1088px; margin-top:14px"><span class="p r">keyword gate</span><i>→</i><span class="tg"><em></em>state["handoff"] = True</span><i>←</i><span class="p b">escalate tool</span><i>⇒</i><span class="p y">agent quiet · human replies</span></div>
           </div>
         </div>
         <aside class="notes">ตรวจจับว่าเมื่อไหร่ต้องส่งต่อ ใช้ 2 ชั้น • (คลิก) ชั้นแรก deterministic ในโค้ด: คำว่า human, real person, คุยกับคน, ปัญหาเดิมล้มเหลวเกิน N ครั้ง หรือหัวข้อที่ต้องเป็นคนเท่านั้นเช่นการทุจริต ใช้ before_model_callback จับก่อนถึงโมเดล โมเดลถูกหลอกให้ไม่ส่งต่อไม่ได้ • (คลิก) ชั้นที่สองให้โมเดลตัดสิน: ผู้ใช้หงุดหงิดชัดเจนแม้ไม่ได้พูดคำเหล่านั้น หรือ agent แก้ไม่ได้ เขียนใน instruction ว่าเมื่อไหร่ให้เรียก tool escalate_to_human • (คลิก) ทั้งสองทางตั้ง flag เดียวกันใน session state ระหว่างที่ flag เปิด agent จะเงียบ • การแบ่งแบบนี้เป็นแนวทางที่ผู้บรรยายเสนอ ประกอบจาก API ที่มีใน ADK</aside>
@@ -1368,11 +1377,11 @@ curl -X POST http://localhost:8000/run_sse \
       <!-- Handoff gate code -->
       <section data-title="The handoff gate">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">before_model_callback · Python</div>
-            <h2 style="margin-bottom:20px">The handoff gate</h2>
+            <h2 style="margin-bottom:18px">The handoff gate</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:690px; flex:none; font-size:13px"><code class="language-python" data-trim>
+              <pre style="width:665px; flex:none; font-size:12.8px"><code class="language-python" data-trim>
 from typing import Optional
 from google.adk.agents.callback_context import CallbackContext
 from google.adk.models import LlmRequest, LlmResponse
@@ -1395,15 +1404,8 @@ def handoff_gate(callback_context: CallbackContext,
             role="model", parts=[types.Part(text=msg)]))
     return None                                  # normal turn
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv">
-                <div class="bx b fragment" data-fragment-index="1">User message<small>"I want a real person!"</small></div>
-                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="1"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
-                <div class="bx y fragment" data-fragment-index="1"><b>handoff_gate</b><small>asks for a person, or handoff already on?</small></div>
-                <div class="split fragment" data-fragment-index="2">
-                  <div><div class="lab" style="--c:var(--h-red)">yes</div><div class="bx r">LLM skipped<small>set handoff · notify team · "A person will reply"</small></div></div>
-                  <div><div class="lab" style="--c:var(--h-green)">no</div><div class="bx g">LLM answers<small>return None</small></div></div>
-                </div>
-                <div class="hv-note fragment" data-fragment-index="3">Wire it up with <b>before_model_callback=handoff_gate</b></div>
+              <div class="hl-art yellow fragment" style="width:399px; height:410px">
+                <img src="../images/adk-hitl-slides/handoff-gate.svg" alt="handoff_gate checking user message before LLM: skips LLM and notifies queue on handoff, or returns None for normal turns">
               </div>
             </div>
           </div>
@@ -1414,11 +1416,11 @@ def handoff_gate(callback_context: CallbackContext,
       <!-- Escalate tool code -->
       <section data-title="Let the model escalate">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">A long-running tool the model can call</div>
-            <h2 style="margin-bottom:20px">Let the model escalate, with context</h2>
+            <h2 style="margin-bottom:18px">Let the model escalate, with context</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:660px; flex:none; font-size:14px"><code class="language-python" data-trim>
+              <pre style="width:645px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
 from google.adk.tools import LongRunningFunctionTool
 from google.adk.tools.tool_context import ToolContext
 
@@ -1435,11 +1437,8 @@ escalate = LongRunningFunctionTool(func=escalate_to_human)
 root_agent = Agent(..., tools=[issue_refund, escalate],
                    before_model_callback=handoff_gate)
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv-vt">
-                <div class="fragment" style="--c:var(--h-blue)"><b>LLM decides</b>The user is upset, so it calls escalate_to_human</div>
-                <div class="fragment" style="--c:var(--h-yellow)"><b>Ticket · pending</b>Reason and summary written by the model</div>
-                <div class="fragment" style="--c:var(--h-red)"><b>Human takes over</b>handoff is on, the agent stays quiet</div>
-                <div class="fragment" style="--c:var(--h-green)"><b>Ticket closed</b>A function_response with the same id comes back</div>
+              <div class="hl-art blue fragment" style="width:419px; height:405px">
+                <img src="../images/adk-hitl-slides/model-escalate.svg" alt="Four-step escalation flow: LLM spots frustration, creates pending ticket with summary, human takes over, ticket closes with function_response">
               </div>
             </div>
           </div>
@@ -1474,7 +1473,7 @@ root_agent = Agent(..., tools=[issue_refund, escalate],
       <!-- Section 05 -->
       <section class="bg-red" data-title="05 · Long waits and resume">
         <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">05</div>
-        <svg class="ico abs" style="left:110px; top:230px; width:150px; height:150px; stroke-width:2; fill:none; stroke:#fff"><use href="#i-clock"/></svg>
+        <div class="hl-div-art" style="--c:var(--h-red)"><img src="../images/adk-hitl-slides/sec-05-long-waits.svg" alt="Hourglass and crescent moon wrapped in a circular resume loop arrow"></div>
         <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
         <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
           <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
@@ -1488,11 +1487,11 @@ root_agent = Agent(..., tools=[issue_refund, escalate],
       <!-- Long-running tool -->
       <section data-title="LongRunningFunctionTool">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Start it now, finish it later</div>
-            <h2 style="margin-bottom:22px">LongRunningFunctionTool</h2>
+            <h2 style="margin-bottom:18px">LongRunningFunctionTool</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:640px; flex:none; font-size:15px"><code class="language-python" data-trim>
+              <pre style="width:620px; flex:none; font-size:14.5px"><code class="language-python" data-trim>
 from google.adk.tools import LongRunningFunctionTool
 
 def ask_for_approval(purpose: str,
@@ -1506,11 +1505,8 @@ def ask_for_approval(purpose: str,
 long_running_tool = LongRunningFunctionTool(
     func=ask_for_approval)
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv-vt">
-                <div class="fragment" style="--c:var(--h-blue)"><b>0 min · tool called</b>Returns {'status': 'pending'}. The run pauses</div>
-                <div class="fragment" style="--c:var(--h-yellow)"><b>client</b>Finds the call in long_running_tool_ids</div>
-                <div class="fragment hv-gap" style="--c:#80868b"><b>… hours …</b>The approver decides in another system</div>
-                <div class="fragment" style="--c:var(--h-green)"><b>later · reply</b>function_response with the same id via runner.run_async. The agent continues</div>
+              <div class="hl-art yellow fragment" style="width:444px; height:405px">
+                <img src="../images/adk-hitl-slides/long-running-tool.svg" alt="Async timeline: 0 min returns pending, hours later external approver approves ticket, runner.run_async resumes agent with function_response">
               </div>
             </div>
           </div>
@@ -1547,11 +1543,11 @@ long_running_tool = LongRunningFunctionTool(
       <!-- Resumability -->
       <section data-title="Resumable apps">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">ADK Python v1.16.0+</div>
-            <h2 style="margin-bottom:22px">Pick up the same invocation</h2>
+            <h2 style="margin-bottom:18px">Pick up the same invocation</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:600px; flex:none; font-size:15px"><code class="language-python" data-trim>
+              <pre style="width:595px; flex:none; font-size:14.5px"><code class="language-python" data-trim>
 app = App(
     name='my_resumable_agent',
     root_agent=root_agent,
@@ -1565,11 +1561,8 @@ runner.run_async(user_id='u_123',
                  session_id='s_abc',
                  invocation_id='invocation-123')
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv-vt">
-                <div class="fragment" style="--c:var(--h-blue)"><b>invocation-123 runs</b>The agent calls tools, step by step</div>
-                <div class="fragment" style="--c:var(--h-yellow)"><b>stops</b>Waiting for a human, or the process restarted</div>
-                <div class="fragment" style="--c:var(--h-green)"><b>resume</b>run_async(..., invocation_id='invocation-123')</div>
-                <div class="fragment" style="--c:var(--h-red)"><b>⚠ tool may run again</b>Use order_id as an idempotency key, so it never pays twice</div>
+              <div class="hl-art red fragment" style="width:469px; height:405px">
+                <img src="../images/adk-hitl-slides/resumable-apps.svg" alt="Resumable invocation checkpointing, exact resume by invocation_id, and an idempotency shield keyed on order_id">
               </div>
             </div>
           </div>
@@ -1580,11 +1573,11 @@ runner.run_async(user_id='u_123',
       <!-- ADK 2.0 RequestInput -->
       <section data-title="RequestInput in ADK 2.0">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">ADK 2.0 · graph workflows</div>
-            <h2 style="margin-bottom:22px">Ask for input inside a workflow</h2>
+            <h2 style="margin-bottom:18px">Ask for input inside a workflow</h2>
             <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
-              <pre style="width:640px; flex:none; font-size:15px"><code class="language-python" data-trim>
+              <pre style="width:625px; flex:none; font-size:14.5px"><code class="language-python" data-trim>
 from google.adk import Workflow
 from google.adk.events import RequestInput
 
@@ -1599,14 +1592,8 @@ yield RequestInput(message=message,
 root_agent = Workflow(name="root_agent",
                       edges=[('START', step1, step2)])
               </code></pre>
-                            <div style="flex:1; min-width:0" class="hv">
-                <div class="bx fragment" data-fragment-index="1" style="justify-self:center; padding:7px 18px"><b>START</b></div>
-                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="1"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
-                <div class="bx b fragment" data-fragment-index="1"><b>step1</b><small>yield RequestInput(message="Enter a number:")</small></div>
-                <div class="hv-pause fragment" data-fragment-index="2"><svg viewBox="0 0 24 24"><use href="#i-clock"/></svg>Paused. The user types "7"</div>
-                <svg class="dn fragment" viewBox="0 0 20 22" data-fragment-index="3"><path d="M10 2v16M4 12l6 6 6-6"/></svg>
-                <div class="bx g fragment" data-fragment-index="3"><b>step2</b><small>node_input = "7"</small></div>
-                <div class="hv-note fragment" data-fragment-index="4"><b>payload</b>: data to show · <b>response_schema</b>: the shape you expect</div>
+              <div class="hl-art green fragment" style="width:439px; height:405px">
+                <img src="../images/adk-hitl-slides/request-input-adk2.svg" alt="ADK 2.0 graph workflow pausing at step1 via RequestInput, capturing user input '7', and passing it into step2">
               </div>
             </div>
           </div>
@@ -1617,16 +1604,21 @@ root_agent = Workflow(name="root_agent",
       <!-- Production checklist -->
       <section data-title="Production checklist">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Before you ship</div>
-            <h2 style="margin-bottom:24px">HITL production checklist</h2>
-            <ol class="hx-steps" style="width:1088px">
-              <li class="fragment"><b>1</b><span>Put the <strong>hard limit in code</strong> (a callback), not only in the prompt</span></li>
-              <li class="fragment"><b>2</b><span>Ask a human only where it matters: a <strong>threshold function</strong>, not every call</span></li>
-              <li class="fragment"><b>3</b><span>Let the human set the <strong>exact value</strong> with a payload, then cap it with <strong>min()</strong></span></li>
-              <li class="fragment"><b>4</b><span>Make side-effect tools <strong>idempotent</strong>. Resume can run a tool more than once</span></li>
-              <li class="fragment"><b>5</b><span>Check your <strong>session service</strong> supports confirmation, and log who approved what</span></li>
-            </ol>
+            <h2 style="margin-bottom:20px">HITL production checklist</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:center">
+              <ol class="hx-steps" style="width:640px; flex:none; gap:10px">
+                <li class="fragment"><b>1</b><span>Put the <strong>hard limit in code</strong> (a callback), not only in the prompt</span></li>
+                <li class="fragment"><b>2</b><span>Ask a human only where it matters: a <strong>threshold function</strong>, not every call</span></li>
+                <li class="fragment"><b>3</b><span>Let the human set the <strong>exact value</strong> with a payload, then cap it with <strong>min()</strong></span></li>
+                <li class="fragment"><b>4</b><span>Make side-effect tools <strong>idempotent</strong>. Resume can run a tool more than once</span></li>
+                <li class="fragment"><b>5</b><span>Check your <strong>session service</strong> supports confirmation, and log who approved what</span></li>
+              </ol>
+              <div class="hl-art green fragment" style="width:424px; height:390px">
+                <img src="../images/adk-hitl-slides/production-checklist.svg" alt="Production HITL readiness shield with five safety pillars: code gate, threshold, min cap, idempotency, and audit log">
+              </div>
+            </div>
           </div>
         </div>
         <aside class="notes">เช็กลิสต์ก่อนขึ้น production • (คลิก) 1 กฎที่ห้ามละเมิดต้องอยู่ในโค้ด ไม่ใช่แค่ใน prompt • (คลิก) 2 ถามคนเฉพาะจุดที่สำคัญ ใช้ฟังก์ชัน threshold ไม่อย่างนั้นคนจะกดอนุมัติแบบไม่อ่าน • (คลิก) 3 ให้คนกำหนดค่าที่แน่นอนผ่าน payload และครอบด้วย min() • (คลิก) 4 tool ที่มีผลข้างเคียงต้อง idempotent เพราะ resume อาจรันซ้ำ • (คลิก) 5 เช็กว่า session service ที่ใช้รองรับ confirmation และเก็บ log ว่าใครอนุมัติอะไร ข้อ 5 ส่วน log เป็นคำแนะนำของผู้บรรยาย ไม่ได้มาจากเอกสาร</aside>
@@ -1705,17 +1697,33 @@ root_agent = Workflow(name="root_agent",
       <!-- Recap -->
       <section data-title="Recap">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:44px 56px">
+          <div class="in" style="padding:38px 56px">
             <div class="eyebrow">Recap</div>
-            <h2 style="margin-bottom:24px">Humans where it counts</h2>
+            <h2 style="margin-bottom:20px">Humans where it counts</h2>
             <div class="grid g4" style="width:1088px; gap:16px">
-              <div class="pc red fragment" style="height:260px"><svg class="ev-ico" style="--c:var(--h-red)"><use href="#i-lock"/></svg><h3>Gate</h3><p style="font-size:17px">before_tool_callback blocks what must never happen.</p></div>
-              <div class="pc yellow fragment" style="height:260px"><svg class="ev-ico" style="--c:var(--h-yellow)"><use href="#i-check"/></svg><h3>Confirm</h3><p style="font-size:17px">require_confirmation pauses for a yes or no.</p></div>
-              <div class="pc green fragment" style="height:260px"><svg class="ev-ico" style="--c:var(--h-green)"><use href="#i-user"/></svg><h3>Decide</h3><p style="font-size:17px">request_confirmation lets the human set the value.</p></div>
-              <div class="pc blue fragment" style="height:260px"><svg class="ev-ico" style="--c:var(--h-blue)"><use href="#i-clock"/></svg><h3>Wait</h3><p style="font-size:17px">Long-running tools and resume handle hours-long approvals.</p></div>
+              <div class="pc red fragment" style="padding:14px 16px">
+                <div class="hl-art red" style="width:100%; height:116px; margin-bottom:10px"><img src="../images/adk-hitl-slides/recap-gate.svg" alt="Code gate blocking prohibited actions"></div>
+                <h3 style="margin-bottom:6px">Gate</h3>
+                <p style="font-size:15.5px; line-height:1.38"><code>before_tool_callback</code> blocks what must never happen.</p>
+              </div>
+              <div class="pc yellow fragment" style="padding:14px 16px">
+                <div class="hl-art yellow" style="width:100%; height:116px; margin-bottom:10px"><img src="../images/adk-hitl-slides/recap-confirm.svg" alt="Yes or No confirmation dialog"></div>
+                <h3 style="margin-bottom:6px">Confirm</h3>
+                <p style="font-size:15.5px; line-height:1.38"><code>require_confirmation</code> pauses for a yes or no.</p>
+              </div>
+              <div class="pc green fragment" style="padding:14px 16px">
+                <div class="hl-art green" style="width:100%; height:116px; margin-bottom:10px"><img src="../images/adk-hitl-slides/recap-decide.svg" alt="Supervisor adjusting refund from $350 to $300"></div>
+                <h3 style="margin-bottom:6px">Decide</h3>
+                <p style="font-size:15.5px; line-height:1.38"><code>request_confirmation</code> lets the human set the value.</p>
+              </div>
+              <div class="pc blue fragment" style="padding:14px 16px">
+                <div class="hl-art blue" style="width:100%; height:116px; margin-bottom:10px"><img src="../images/adk-hitl-slides/recap-wait.svg" alt="Hourglass and circular resume arrow for hours-long approvals"></div>
+                <h3 style="margin-bottom:6px">Wait</h3>
+                <p style="font-size:15.5px; line-height:1.38">Long-running tools and resume handle hours-long approvals.</p>
+              </div>
             </div>
-            <p class="sub fragment" style="font-size:20px; margin-top:24px">And when the user wants a person: <b>hand off</b> with context, right away.</p>
-            <p class="sub fragment" style="font-size:20px; margin-top:10px">Try it today: <code>FunctionTool(your_tool, require_confirmation=True)</code> in <code>adk web</code></p>
+            <p class="sub fragment" style="font-size:20px; margin-top:20px">And when the user wants a person: <b>hand off</b> with context, right away.</p>
+            <p class="sub fragment" style="font-size:20px; margin-top:8px">Try it today: <code>FunctionTool(your_tool, require_confirmation=True)</code> in <code>adk web</code></p>
           </div>
         </div>
         <aside class="notes">สรุป 4 คำ • (คลิก) Gate: callback บล็อกสิ่งที่ห้ามเกิดเด็ดขาด • (คลิก) Confirm: require_confirmation หยุดถาม yes/no • (คลิก) Decide: request_confirmation ให้คนกำหนดค่า • (คลิก) Wait: long-running tool กับ resume สำหรับการอนุมัติที่ใช้เวลานาน • (คลิก) และเมื่อผู้ใช้อยากคุยกับคน ส่งต่อทันทีพร้อมบริบท • (คลิก) ลองวันนี้: ใส่ require_confirmation=True ให้ tool ของตัวเองแล้วเปิด adk web</aside>
@@ -1724,16 +1732,16 @@ root_agent = Workflow(name="root_agent",
       <!-- Resources -->
       <section data-title="Resources">
         <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
-          <div class="in" style="padding:48px 56px">
+          <div class="in" style="padding:44px 56px">
             <div class="eyebrow">Resources</div>
-            <h2 style="margin-bottom:26px">Read more and try it</h2>
+            <h2 style="margin-bottom:24px">Read more and try it</h2>
             <div class="grid g2" style="width:1088px; gap:16px">
-              <div class="pc blue"><h3>Tool confirmation</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools-custom/confirmation/" target="_blank">adk.dev/tools-custom/confirmation</a></div>
-              <div class="pc blue"><h3>Long-running tools</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools-custom/function-tools/" target="_blank">adk.dev/tools-custom/function-tools</a></div>
-              <div class="pc green"><h3>Callbacks · Resume</h3><a class="mono" style="font-size:14px" href="https://adk.dev/callbacks/" target="_blank">Callbacks</a> · <a class="mono" style="font-size:14px" href="https://adk.dev/runtime/resume/" target="_blank">Resume</a></div>
-              <div class="pc green"><h3>Human input in graphs</h3><a class="mono" style="font-size:14px" href="https://adk.dev/graphs/human-input/" target="_blank">adk.dev/graphs/human-input</a></div>
-              <div class="pc yellow"><h3>Sample</h3><a class="mono" style="font-size:14px" href="https://github.com/google/adk-python/tree/main/contributing/samples/human_tool_confirmation" target="_blank">adk-python/…/human_tool_confirmation</a></div>
-              <div class="pc red"><h3>Article</h3><a class="mono" style="font-size:14px" href="https://medium.com/agentic-ai-vantage/deterministic-adk-callbacks-human-in-the-loop-hitl-on-google-cloud-86765bddd07a" target="_blank">Deterministic ADK Callbacks &amp; HITL</a></div>
+              <div class="pc blue hl-res-row"><span class="hl-res-ico"><img src="../images/adk-hitl-slides/res-confirm.svg" alt=""></span><div class="hl-res-body"><h3>Tool confirmation</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools-custom/confirmation/" target="_blank">adk.dev/tools-custom/confirmation</a></div></div>
+              <div class="pc blue hl-res-row"><span class="hl-res-ico"><img src="../images/adk-hitl-slides/res-longrun.svg" alt=""></span><div class="hl-res-body"><h3>Long-running tools</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools-custom/function-tools/" target="_blank">adk.dev/tools-custom/function-tools</a></div></div>
+              <div class="pc green hl-res-row"><span class="hl-res-ico"><img src="../images/adk-hitl-slides/res-callbacks.svg" alt=""></span><div class="hl-res-body"><h3>Callbacks · Resume</h3><a class="mono" style="font-size:14px" href="https://adk.dev/callbacks/" target="_blank">Callbacks</a> · <a class="mono" style="font-size:14px" href="https://adk.dev/runtime/resume/" target="_blank">Resume</a></div></div>
+              <div class="pc green hl-res-row"><span class="hl-res-ico"><img src="../images/adk-hitl-slides/res-graph.svg" alt=""></span><div class="hl-res-body"><h3>Human input in graphs</h3><a class="mono" style="font-size:14px" href="https://adk.dev/graphs/human-input/" target="_blank">adk.dev/graphs/human-input</a></div></div>
+              <div class="pc yellow hl-res-row"><span class="hl-res-ico"><img src="../images/adk-hitl-slides/res-sample.svg" alt=""></span><div class="hl-res-body"><h3>Sample</h3><a class="mono" style="font-size:14px" href="https://github.com/google/adk-python/tree/main/contributing/samples/human_tool_confirmation" target="_blank">adk-python/…/human_tool_confirmation</a></div></div>
+              <div class="pc red hl-res-row"><span class="hl-res-ico"><img src="../images/adk-hitl-slides/res-article.svg" alt=""></span><div class="hl-res-body"><h3>Article</h3><a class="mono" style="font-size:14px" href="https://medium.com/agentic-ai-vantage/deterministic-adk-callbacks-human-in-the-loop-hitl-on-google-cloud-86765bddd07a" target="_blank">Deterministic ADK Callbacks &amp; HITL</a></div></div>
             </div>
           </div>
         </div>
@@ -1750,7 +1758,7 @@ root_agent = Workflow(name="root_agent",
           </div>
         </div>
         <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
-        <svg class="ico abs" style="left:930px; top:240px; width:200px; height:200px; stroke-width:4"><use href="#i-star"/></svg>
+        <div class="hl-ty-art"><img src="../images/adk-hitl-slides/thank-you-art.svg" alt="ADK robot and human collaborating under Google halftone sparkles"></div>
         <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
         <aside class="notes">ขอบคุณครับ/ค่ะ • เปิดถาม-ตอบ • ชวนลองใส่ require_confirmation ให้ tool ที่เสี่ยงใน agent ของตัวเอง</aside>
       </section>

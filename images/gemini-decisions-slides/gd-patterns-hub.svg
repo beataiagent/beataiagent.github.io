@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 350" width="600" height="350">
+  <defs>
+    <style>
+      .t { font-family: "Google Sans", system-ui, sans-serif; fill: #1e1e1e; font-weight: 700; }
+      .s { font-family: "Google Sans", system-ui, sans-serif; fill: #3c4043; font-weight: 400; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #1e1e1e; font-weight: 500; }
+      .ink { stroke: #1e1e1e; stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+
+  <!-- Connecting lines from center hub -->
+  <path d="M168 175 L258 46 M168 175 L258 110 M168 175 L258 175 M168 175 L258 240 M168 175 L258 304" stroke="#1e1e1e" stroke-width="2.5" stroke-dasharray="6 4"/>
+  <!-- Center Decision 1 hub -->
+  <rect x="12" y="116" width="160" height="118" rx="24" fill="#ffe7a5" class="ink"/>
+  <text x="92" y="166" text-anchor="middle" class="t" font-size="22">Gemini</text>
+  <text x="92" y="194" text-anchor="middle" class="t" font-size="20">Decision 1</text>
+  <text x="92" y="218" text-anchor="middle" class="m" font-size="12">1 pass · 0–1</text>
+
+  <!-- 5 pattern pills -->
+  <rect x="256" y="18" width="332" height="54" rx="16" fill="#c3ecf6" class="ink"/>
+  <text x="278" y="43" class="t" font-size="17">🔧 Tool selection</text>
+  <text x="278" y="62" class="s" font-size="13">Pick the right tool before calling an LLM</text>
+
+  <rect x="256" y="82" width="332" height="54" rx="16" fill="#ccf6c5" class="ink"/>
+  <text x="278" y="107" class="t" font-size="17">🔀 Model routing</text>
+  <text x="278" y="126" class="s" font-size="13">Send easy prompts to Flash, hard ones to Pro</text>
+
+  <rect x="256" y="146" width="332" height="54" rx="16" fill="#f8d8d8" class="ink"/>
+  <text x="278" y="171" class="t" font-size="17">🛡️ Policy &amp; safety checks</text>
+  <text x="278" y="190" class="s" font-size="13">Check dozens of rules in one request</text>
+
+  <rect x="256" y="210" width="332" height="54" rx="16" fill="#ffe7a5" class="ink"/>
+  <text x="278" y="235" class="t" font-size="17">📚 RAG context grading</text>
+  <text x="278" y="254" class="s" font-size="13">Score which chunks are actually relevant</text>
+
+  <rect x="256" y="274" width="332" height="54" rx="16" fill="#fff" class="ink"/>
+  <text x="278" y="299" class="t" font-size="17">⭐ Content rubric grading</text>
+  <text x="278" y="318" class="s" font-size="13">Rate quality on a calibrated 0–N scale</text>
+</svg>

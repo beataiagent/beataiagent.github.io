@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 146" width="384" height="146">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="4" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#353840" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="grad-by" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="50%" stop-color="#5cdb6d"/>
+      <stop offset="100%" stop-color="#ffd427"/>
+    </linearGradient>
+    <linearGradient id="grad-4" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="33%" stop-color="#5cdb6d"/>
+      <stop offset="66%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#57caff"/>
+    </linearGradient>
+    <linearGradient id="grad-yr" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", system-ui, -apple-system, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="384" height="146" fill="#202124"/>
+
+  <circle cx="164" cy="73" r="85" fill="url(#amb-y)"/>
+  <circle cx="310" cy="40" r="65" fill="url(#amb-r)"/>
+  <circle cx="310" cy="108" r="65" fill="url(#amb-g)"/>
+
+  <!-- Tool call node -->
+  <rect x="10" y="46" width="76" height="54" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="48" y="69" text-anchor="middle" class="t" font-size="12">Refund</text>
+  <text x="48" y="87" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">+$20</text>
+  <path d="M86 73 H110" stroke="#57caff" stroke-width="2.5"/>
+  <polygon points="108,67 118,73 108,79" fill="#57caff"/>
+
+  <!-- Stateful gate -->
+  <rect x="120" y="24" width="106" height="98" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2.4" filter="url(#glow-s)"/>
+  <text x="173" y="45" text-anchor="middle" class="m" font-size="9.5" fill="#ffd427">SESSION STATE</text>
+  <!-- Mini meter bar -->
+  <rect x="134" y="54" width="78" height="16" rx="6" fill="#17181b" stroke="#5f6368" stroke-width="1.3"/>
+  <rect x="136" y="56" width="58" height="12" rx="4" fill="#5cdb6d"/>
+  <rect x="194" y="56" width="16" height="12" rx="4" fill="#ff7daf"/>
+  <text x="173" y="88" text-anchor="middle" class="t" font-size="12">gate_refund</text>
+  <text x="173" y="106" text-anchor="middle" class="m" font-size="10" fill="#ffd427">sum &gt; $149?</text>
+
+  <!-- Upper branch: dict DENIED -->
+  <path d="M226 54 C244 54 246 38 260 38" fill="none" stroke="#ff7daf" stroke-width="2.5"/>
+  <polygon points="258,32 268,38 258,44" fill="#ff7daf"/>
+  <rect x="270" y="14" width="104" height="48" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <text x="322" y="35" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">return dict</text>
+  <text x="322" y="52" text-anchor="middle" class="t" font-size="11.5">DENIED ✕</text>
+
+  <!-- Lower branch: None -> Run tool -->
+  <path d="M226 92 C244 92 246 108 260 108" fill="none" stroke="#5cdb6d" stroke-width="2.5"/>
+  <polygon points="258,102 268,108 258,114" fill="#5cdb6d"/>
+  <rect x="270" y="84" width="104" height="48" rx="12" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="322" y="105" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">return None</text>
+  <text x="322" y="122" text-anchor="middle" class="t" font-size="11.5">Run tool ✓</text>
+
+</svg>
