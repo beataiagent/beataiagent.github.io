@@ -4,18 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Domain 1: Agent Solutions · GCP Agentic Architecture Cert Prep</title>
-<link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
-<link href="../fonts/fonts.css" rel="stylesheet">
-<link href="assets/doc.css" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../../images/shared/logos/b-favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../../images/shared/logos/b-favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../../images/shared/logos/b-favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../../images/shared/logos/b-favicon-180.png">
+<link href="../../fonts/fonts.css" rel="stylesheet">
+<link href="../assets/doc.css" rel="stylesheet">
 <script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 </head>
 <body data-slug="sec1">
 <header class="topbar">
   <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
-  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <a class="brand" href="hub.html"><img src="../../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
   <span class="sp"></span>
   <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
 </header>
@@ -166,7 +166,7 @@ td li { margin: 3px 0; }
     <div class="aside-title">&#9888; The Rosku Bank over-engineering trap: using a multi-agent hammer for every nail!</div>
     <p style="margin:0">Rosku Bank’s new AI task force wants to build a 5-agent <abbr title="Large Language Model">LLM</abbr> system for <strong>every</strong> project in the bank:</p>
     <ol>
-      <li><span class="chip"><img class="lg" src="../images/shared/logos/gcp-bigquery.png" alt="">CSV → BigQuery</span> <strong>Fixed data pipeline:</strong> For a nightly CSV-to-BigQuery ledger job with fixed columns and a sub-50ms <abbr title="Service Level Agreement — required response time or uptime target">SLA</abbr>, their LLM agent racks up $4,000/day in token fees and hallucinates rounding numbers!</li>
+      <li><span class="chip"><img class="lg" src="../../images/shared/logos/gcp-bigquery.png" alt="">CSV → BigQuery</span> <strong>Fixed data pipeline:</strong> For a nightly CSV-to-BigQuery ledger job with fixed columns and a sub-50ms <abbr title="Service Level Agreement — required response time or uptime target">SLA</abbr>, their LLM agent racks up $4,000/day in token fees and hallucinates rounding numbers!</li>
       <li><span class="chip txt">💳 3 read-only APIs</span> <strong>Simple FAQ bot:</strong> For a credit-card balance bot that only calls 3 read-only APIs, they build a 6-agent hierarchy that adds 9 seconds of slow handoff delay!</li>
       <li><span class="chip txt">🧰 35 tools → 1 agent</span> <strong>Overloaded monolith:</strong> Meanwhile, for a commercial loan system needing 35 distinct tools across legal, tax, and fraud departments, they cram all 35 tools into a <strong>single agent</strong>—confusing the LLM so it picks the wrong tools!</li>
     </ol>
@@ -185,10 +185,10 @@ td li { margin: 3px 0; }
   <div class="ladder" aria-label="The four tiers at a glance">
     <div class="ladder-head"><span>Simplest · cheapest · fastest</span><span>Most flexible · most overhead</span></div>
     <div class="ladder-grid">
-      <div class="rung"><span class="n">TIER 1</span><div class="lg-row"><img class="lg" src="../images/shared/logos/workflows.svg" alt="Cloud Workflows"><img class="lg" src="../images/shared/logos/gcp-dataflow.png" alt="Dataflow"></div><div class="t">Deterministic automation</div><div class="w">Fixed rules, structured data. No LLM.</div></div>
-      <div class="rung"><span class="n">TIER 2</span><div class="lg-row"><img class="lg" src="../images/shared/logos/gemini.svg" alt="Gemini"><img class="lg" src="../images/shared/logos/jira.svg" alt="Jira"><img class="lg" src="../images/shared/logos/gmail.svg" alt="Gmail"></div><div class="t">Workflow Builder</div><div class="w">No-code trigger → Gemini step → SaaS connector → approval.</div></div>
-      <div class="rung"><span class="n">TIER 3</span><div class="lg-row"><img class="lg" src="../images/shared/logos/adk.png" alt="ADK"></div><div class="t">Single agent + CoT</div><div class="w">1 domain, under 10 tools, 1 identity.</div></div>
-      <div class="rung"><span class="n">TIER 4</span><div class="lg-row"><img class="lg" src="../images/shared/logos/adk.png" alt="ADK"><img class="lg" src="../images/shared/logos/adk.png" alt=""><img class="lg" src="../images/shared/logos/gcp-iam.png" alt="IAM"></div><div class="t">Multi-agent system</div><div class="w">15+ tools, conflicting personas, parallel fan-out, or separate <abbr title="Principal Access Boundary">PAB</abbr>.</div></div>
+      <div class="rung"><span class="n">TIER 1</span><div class="lg-row"><img class="lg" src="../../images/shared/logos/workflows.svg" alt="Cloud Workflows"><img class="lg" src="../../images/shared/logos/gcp-dataflow.png" alt="Dataflow"></div><div class="t">Deterministic automation</div><div class="w">Fixed rules, structured data. No LLM.</div></div>
+      <div class="rung"><span class="n">TIER 2</span><div class="lg-row"><img class="lg" src="../../images/shared/logos/gemini.svg" alt="Gemini"><img class="lg" src="../../images/shared/logos/jira.svg" alt="Jira"><img class="lg" src="../../images/shared/logos/gmail.svg" alt="Gmail"></div><div class="t">Workflow Builder</div><div class="w">No-code trigger → Gemini step → SaaS connector → approval.</div></div>
+      <div class="rung"><span class="n">TIER 3</span><div class="lg-row"><img class="lg" src="../../images/shared/logos/adk.png" alt="ADK"></div><div class="t">Single agent + CoT</div><div class="w">1 domain, under 10 tools, 1 identity.</div></div>
+      <div class="rung"><span class="n">TIER 4</span><div class="lg-row"><img class="lg" src="../../images/shared/logos/adk.png" alt="ADK"><img class="lg" src="../../images/shared/logos/adk.png" alt=""><img class="lg" src="../../images/shared/logos/gcp-iam.png" alt="IAM"></div><div class="t">Multi-agent system</div><div class="w">15+ tools, conflicting personas, parallel fan-out, or separate <abbr title="Principal Access Boundary">PAB</abbr>.</div></div>
     </div>
     <div class="ladder-bar"></div>
   </div>
@@ -196,17 +196,17 @@ td li { margin: 3px 0; }
   <h3 id="1-key-definitions">1. Key definitions: what each tier is and why you need it</h3>
   <div class="def-grid">
     <div class="def-card">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/workflows.svg" alt="Cloud Workflows"><img class="lg" src="../images/shared/logos/gcp-dataflow.png" alt="Dataflow"><img class="lg" src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/workflows.svg" alt="Cloud Workflows"><img class="lg" src="../../images/shared/logos/gcp-dataflow.png" alt="Dataflow"><img class="lg" src="../../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></div>
       <div class="def-name">1. Deterministic cloud automation</div><span class="def-path">Cloud Workflows &amp; Dataflow</span>
       <div class="def-text"><ul><li><strong>What it is:</strong> Code or YAML pipelines that run fixed API steps or high-volume data streams without an AI model.</li><li><strong>Why you need it:</strong> Delivers 100% predictable branching, sub-second speed, and $0 LLM token cost whenever inputs are structured and rules are fixed.</li></ul></div>
     </div>
     <div class="def-card">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/gemini.svg" alt="Gemini"><img class="lg" src="../images/shared/logos/jira.svg" alt="Jira"><span class="now-badge" title="ServiceNow">now</span><img class="lg" src="../images/shared/logos/gmail.svg" alt="Gmail"></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/gemini.svg" alt="Gemini"><img class="lg" src="../../images/shared/logos/jira.svg" alt="Jira"><span class="now-badge" title="ServiceNow">now</span><img class="lg" src="../../images/shared/logos/gmail.svg" alt="Gmail"></div>
       <div class="def-name">2. Gemini Enterprise Workflow Builder</div><span class="def-path">No-code business automation</span>
       <div class="def-text"><ul><li><strong>What it is:</strong> A visual, no-code automation builder inside Gemini Enterprise for business users.</li><li><strong>Why you need it:</strong> Lets non-developers chain event triggers, Gemini summarization steps, SaaS connectors (Jira, ServiceNow, Gmail), and human approval gates in minutes.</li></ul></div>
     </div>
     <div class="def-card">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/adk.png" alt="ADK"><img class="lg" src="../images/shared/logos/gemini.svg" alt="Gemini"></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/adk.png" alt="ADK"><img class="lg" src="../../images/shared/logos/gemini.svg" alt="Gemini"></div>
       <div class="def-name">3. Single-agent system</div><span class="def-path">1 domain + under 10 tools</span>
       <div class="def-text"><ul><li><strong>What it is:</strong> One <abbr title="Large Language Model">LLM</abbr> agent handling open-ended natural-language requests inside one cohesive topic area.</li><li><strong>Why you need it:</strong> When you have under 10 clear tools and one security identity, a single agent gives the fastest response time and lowest token cost.</li></ul></div>
     </div>
@@ -216,7 +216,7 @@ td li { margin: 3px 0; }
       <div class="def-text"><ul><li><strong>What it is:</strong> Prompt instructions that tell a single agent to reason step-by-step (<abbr title="Chain-of-Thought">CoT</abbr>) paired with 3–5 ideal input/output examples (few-shot).</li><li><strong>Why you need it:</strong> Fixes reasoning mistakes and tool-ordering errors inside a single agent without adding multi-agent complexity.</li></ul></div>
     </div>
     <div class="def-card">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/adk.png" alt="ADK"><img class="lg" src="../images/shared/logos/adk.png" alt=""><img class="lg" src="../images/shared/logos/adk.png" alt=""><img class="lg" src="../images/shared/logos/gcp-iam.png" alt="IAM"></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/adk.png" alt="ADK"><img class="lg" src="../../images/shared/logos/adk.png" alt=""><img class="lg" src="../../images/shared/logos/adk.png" alt=""><img class="lg" src="../../images/shared/logos/gcp-iam.png" alt="IAM"></div>
       <div class="def-name">5. Multi-agent system</div><span class="def-path">Coordinator + specialist sub-agents</span>
       <div class="def-text"><ul><li><strong>What it is:</strong> A team of specialized agents that divide and conquer complex work.</li><li><strong>Why you need it:</strong> Essential when you hit <strong>tool overload (15+ tools)</strong>, <strong>conflicting personas</strong> (Drafter vs. Critic), <strong>parallel fan-out speedups</strong>, or <strong>separate <abbr title="Identity and Access Management / Principal Access Boundary">IAM/PAB</abbr> security boundaries</strong>.</li></ul></div>
     </div>
@@ -254,16 +254,16 @@ td li { margin: 3px 0; }
   <div class="tbl-wrap"><table>
     <thead><tr>
       <th>Architectural dimension</th>
-      <th><div class="lg-row"><img class="lg" src="../images/shared/logos/workflows.svg" alt=""><img class="lg" src="../images/shared/logos/gcp-dataflow.png" alt=""></div><strong>Cloud Workflows / Dataflow</strong> <em>(code automation)</em></th>
-      <th><div class="lg-row"><img class="lg" src="../images/shared/logos/gemini.svg" alt=""><img class="lg" src="../images/shared/logos/jira.svg" alt=""></div><strong>Gemini Enterprise Workflow Builder</strong> <em>(no-code automation)</em></th>
-      <th><div class="lg-row"><img class="lg" src="../images/shared/logos/adk.png" alt=""></div><strong>Single-agent system</strong> <em>(1 persona + CoT)</em></th>
-      <th><div class="lg-row"><img class="lg" src="../images/shared/logos/adk.png" alt=""><img class="lg" src="../images/shared/logos/adk.png" alt=""><img class="lg" src="../images/shared/logos/adk.png" alt=""></div><strong>Multi-agent system</strong> <em>(coordinator + specialists)</em></th>
+      <th><div class="lg-row"><img class="lg" src="../../images/shared/logos/workflows.svg" alt=""><img class="lg" src="../../images/shared/logos/gcp-dataflow.png" alt=""></div><strong>Cloud Workflows / Dataflow</strong> <em>(code automation)</em></th>
+      <th><div class="lg-row"><img class="lg" src="../../images/shared/logos/gemini.svg" alt=""><img class="lg" src="../../images/shared/logos/jira.svg" alt=""></div><strong>Gemini Enterprise Workflow Builder</strong> <em>(no-code automation)</em></th>
+      <th><div class="lg-row"><img class="lg" src="../../images/shared/logos/adk.png" alt=""></div><strong>Single-agent system</strong> <em>(1 persona + CoT)</em></th>
+      <th><div class="lg-row"><img class="lg" src="../../images/shared/logos/adk.png" alt=""><img class="lg" src="../../images/shared/logos/adk.png" alt=""><img class="lg" src="../../images/shared/logos/adk.png" alt=""></div><strong>Multi-agent system</strong> <em>(coordinator + specialists)</em></th>
     </tr></thead>
     <tbody>
       <tr><td><strong>Input and task nature</strong></td><td>Structured schemas (JSON/CSV) and 100% fixed mathematical/routing rules.</td><td>Repeatable trigger-based business tasks combining AI summaries + SaaS apps.</td><td>Unstructured natural language within <strong>1 cohesive domain</strong>.</td><td>Complex, multi-domain goals requiring <strong>diverse specialized skills</strong>.</td></tr>
       <tr><td><strong>Optimal tool count</strong></td><td>Fixed API steps (no dynamic LLM tool choice).</td><td>Visual sequence of pre-built enterprise connectors.</td><td><strong>1 to ~10 distinct tools</strong> with clear schemas.</td><td><strong>15+ tools</strong> partitioned into focused domain sub-agents.</td></tr>
       <tr><td><strong>Latency and token cost</strong></td><td><strong>Lowest latency (ms) and $0 LLM token cost.</strong></td><td>Low cost; runs per triggered business event.</td><td><strong>Low latency (1 LLM loop)</strong> and moderate token cost.</td><td><strong>Higher token and handoff overhead</strong> (mitigated via Flash routers).</td></tr>
-      <tr><td><div class="lg-row" style="margin-bottom:6px"><img class="lg" src="../images/shared/logos/gcp-iam.png" alt=""></div><strong>Security and IAM boundary</strong></td><td>Service account per workflow or pipeline step.</td><td>Executes connectors under the user’s OAuth 2.0 permissions.</td><td><strong>Single Agent Identity</strong> sufficient for all tools.</td><td><strong>Distinct Agent Identities and <abbr title="Principal Access Boundary">PAB</abbr> boundaries</strong> per specialist sub-agent.</td></tr>
+      <tr><td><div class="lg-row" style="margin-bottom:6px"><img class="lg" src="../../images/shared/logos/gcp-iam.png" alt=""></div><strong>Security and IAM boundary</strong></td><td>Service account per workflow or pipeline step.</td><td>Executes connectors under the user’s OAuth 2.0 permissions.</td><td><strong>Single Agent Identity</strong> sufficient for all tools.</td><td><strong>Distinct Agent Identities and <abbr title="Principal Access Boundary">PAB</abbr> boundaries</strong> per specialist sub-agent.</td></tr>
       <tr><td><strong>Primary scenario trigger</strong></td><td><em>“High-frequency structured <abbr title="Extract, Transform, Load">ETL</abbr>,” “strict sub-100ms <abbr title="Service Level Agreement">SLA</abbr>,” “fixed formula.”</em></td><td><em>“Business user automating email-to-Jira triage with human approval.”</em></td><td><em>“Customer FAQ + 4 account tools,” “minimize agent handoff latency.”</em></td><td><em>“30+ tools causing routing errors,” “Drafter + Critic,” “isolated <abbr title="Principal Access Boundary">PAB</abbr>.”</em></td></tr>
     </tbody>
   </table></div>
@@ -274,19 +274,19 @@ td li { margin: 3px 0; }
     <thead><tr><th>Architect question</th><th>Plain-English answer</th></tr></thead>
     <tbody>
       <tr>
-        <td><div class="lg-row"><img class="lg" src="../images/shared/logos/workflows.svg" alt=""><span>+</span><img class="lg" src="../images/shared/logos/gemini.svg" alt=""></div><strong>“What if a 10-step back-office mortgage pipeline has 9 fixed database steps, and ONLY Step 4 requires extracting unstructured notes from a scanned employer letter?”</strong></td>
+        <td><div class="lg-row"><img class="lg" src="../../images/shared/logos/workflows.svg" alt=""><span>+</span><img class="lg" src="../../images/shared/logos/gemini.svg" alt=""></div><strong>“What if a 10-step back-office mortgage pipeline has 9 fixed database steps, and ONLY Step 4 requires extracting unstructured notes from a scanned employer letter?”</strong></td>
         <td><ul><li><strong>Embed Gemini inside deterministic Cloud Workflows:</strong> Do not turn all 10 steps into an autonomous multi-agent chat!</li><li>Orchestrate the 10-step pipeline deterministically in <strong>Cloud Workflows</strong>, and have Step 4 make a single focused call to Gemini with a strict JSON schema before resuming Step 5 deterministically.</li></ul></td>
       </tr>
       <tr>
-        <td><div class="lg-row"><img class="lg" src="../images/shared/logos/adk.png" alt=""><span class="chip txt">5 tools</span></div><strong>“Our single agent only has 5 tools, but it occasionally skips a policy rule before calling a tool. Should we split it into 3 agents?”</strong></td>
+        <td><div class="lg-row"><img class="lg" src="../../images/shared/logos/adk.png" alt=""><span class="chip txt">5 tools</span></div><strong>“Our single agent only has 5 tools, but it occasionally skips a policy rule before calling a tool. Should we split it into 3 agents?”</strong></td>
         <td><ul><li><strong>No—apply Chain-of-Thought (<abbr title="Chain-of-Thought">CoT</abbr>) and few-shot prompting first!</strong></li><li>With only 5 tools in a single domain, adding multi-agent handoffs wastes latency and tokens. Adding a structured <strong>CoT reasoning template</strong> and 3–5 <strong>few-shot examples</strong> fixes single-domain reasoning without extra agents.</li></ul></td>
       </tr>
       <tr>
-        <td><div class="lg-row"><img class="lg" src="../images/shared/logos/kubernetes.svg" alt="Kubernetes"><img class="lg" src="../images/shared/logos/gcp-logging.png" alt="Logging"><img class="lg" src="../images/shared/logos/gcp-sql.png" alt="Database"></div><strong>“Why does a single agent degrade when asked to inspect 150,000 tokens of raw Kubernetes, VPC, and database logs before answering?”</strong></td>
+        <td><div class="lg-row"><img class="lg" src="../../images/shared/logos/kubernetes.svg" alt="Kubernetes"><img class="lg" src="../../images/shared/logos/gcp-logging.png" alt="Logging"><img class="lg" src="../../images/shared/logos/gcp-sql.png" alt="Database"></div><strong>“Why does a single agent degrade when asked to inspect 150,000 tokens of raw Kubernetes, VPC, and database logs before answering?”</strong></td>
         <td><ul><li><strong>Context window pollution:</strong> Loading three massive raw log streams into a single agent’s conversation history bloats every subsequent reasoning turn.</li><li>Delegating each log stream to a specialized <strong>sub-agent</strong> isolates the raw logs inside the sub-agent’s scoped invocation and returns only a concise 10-line summary to the coordinator!</li></ul></td>
       </tr>
       <tr>
-        <td><div class="lg-row"><span class="chip"><img class="lg" src="../images/shared/logos/gemini.svg" alt="">Flash 80%</span><span class="chip"><img class="lg" src="../images/shared/logos/gemini.svg" alt="">Pro 20%</span></div><strong>“How does a multi-agent system keep costs low when 80% of user turns are simple greetings or routing lookups?”</strong></td>
+        <td><div class="lg-row"><span class="chip"><img class="lg" src="../../images/shared/logos/gemini.svg" alt="">Flash 80%</span><span class="chip"><img class="lg" src="../../images/shared/logos/gemini.svg" alt="">Pro 20%</span></div><strong>“How does a multi-agent system keep costs low when 80% of user turns are simple greetings or routing lookups?”</strong></td>
         <td><ul><li><strong>Per-agent model tiering:</strong> Run the front-door Coordinator/Router agent on <strong>Gemini Flash</strong> (ultra-low latency and cost), and invoke <strong>Gemini Pro</strong> strictly inside the specialist sub-agent for the 20% of turns that need deep reasoning.</li></ul></td>
       </tr>
     </tbody>
@@ -296,9 +296,9 @@ td li { margin: 3px 0; }
     <div class="aside-title">&#9733; Golden rules for Module 1.1</div>
     <p style="margin:0">Always apply <strong>Occam’s Razor for agents</strong>:</p>
     <ol>
-      <li><span class="chip"><img class="lg" src="../images/shared/logos/workflows.svg" alt="">Tier 1–2</span> If <strong>no natural-language reasoning</strong> is needed → select <strong>deterministic automation (Cloud Workflows / Dataflow)</strong> or <strong>Gemini Enterprise Workflow Builder</strong> (for no-code multi-app tasks).</li>
-      <li><span class="chip"><img class="lg" src="../images/shared/logos/adk.png" alt="">Tier 3</span> If <strong>1 cohesive persona with under 10 tools</strong> can solve it → select a <strong>single agent</strong> (optimized with <strong>Chain-of-Thought and few-shot templates</strong>).</li>
-      <li><span class="chip"><img class="lg" src="../images/shared/logos/gcp-iam.png" alt="">Tier 4</span> Only pay the orchestration cost of a <strong>multi-agent system</strong> when you hit <strong>tool overload (15+ tools), conflicting personas, parallel fan-out needs, or <abbr title="Identity and Access Management / Principal Access Boundary">IAM/PAB</abbr> isolation boundaries</strong>!</li>
+      <li><span class="chip"><img class="lg" src="../../images/shared/logos/workflows.svg" alt="">Tier 1–2</span> If <strong>no natural-language reasoning</strong> is needed → select <strong>deterministic automation (Cloud Workflows / Dataflow)</strong> or <strong>Gemini Enterprise Workflow Builder</strong> (for no-code multi-app tasks).</li>
+      <li><span class="chip"><img class="lg" src="../../images/shared/logos/adk.png" alt="">Tier 3</span> If <strong>1 cohesive persona with under 10 tools</strong> can solve it → select a <strong>single agent</strong> (optimized with <strong>Chain-of-Thought and few-shot templates</strong>).</li>
+      <li><span class="chip"><img class="lg" src="../../images/shared/logos/gcp-iam.png" alt="">Tier 4</span> Only pay the orchestration cost of a <strong>multi-agent system</strong> when you hit <strong>tool overload (15+ tools), conflicting personas, parallel fan-out needs, or <abbr title="Identity and Access Management / Principal Access Boundary">IAM/PAB</abbr> isolation boundaries</strong>!</li>
     </ol>
   </div>
 
@@ -315,12 +315,12 @@ td li { margin: 3px 0; }
 <script>
 (function () {
   const L = {
-    wf: ["../images/shared/logos/workflows.svg", "Cloud Workflows"], df: ["../images/shared/logos/gcp-dataflow.png", "Dataflow"],
-    bq: ["../images/shared/logos/gcp-bigquery.png", "BigQuery"], sch: ["../images/shared/logos/gcp-scheduler.png", "Cloud Scheduler"],
-    gem: ["../images/shared/logos/gemini.svg", "Gemini"], jira: ["../images/shared/logos/jira.svg", "Jira"], gmail: ["../images/shared/logos/gmail.svg", "Gmail"],
-    sheets: ["../images/shared/logos/googlesheets.svg", "Google Sheets"], docs: ["../images/shared/logos/googledocs.svg", "Google Docs"],
-    sf: ["../images/shared/logos/salesforce.svg", "Salesforce"], adk: ["../images/shared/logos/adk.png", "ADK"], iam: ["../images/shared/logos/gcp-iam.png", "IAM"],
-    run: ["../images/shared/logos/gcp-run.png", "Cloud Run"]
+    wf: ["../../images/shared/logos/workflows.svg", "Cloud Workflows"], df: ["../../images/shared/logos/gcp-dataflow.png", "Dataflow"],
+    bq: ["../../images/shared/logos/gcp-bigquery.png", "BigQuery"], sch: ["../../images/shared/logos/gcp-scheduler.png", "Cloud Scheduler"],
+    gem: ["../../images/shared/logos/gemini.svg", "Gemini"], jira: ["../../images/shared/logos/jira.svg", "Jira"], gmail: ["../../images/shared/logos/gmail.svg", "Gmail"],
+    sheets: ["../../images/shared/logos/googlesheets.svg", "Google Sheets"], docs: ["../../images/shared/logos/googledocs.svg", "Google Docs"],
+    sf: ["../../images/shared/logos/salesforce.svg", "Salesforce"], adk: ["../../images/shared/logos/adk.png", "ADK"], iam: ["../../images/shared/logos/gcp-iam.png", "IAM"],
+    run: ["../../images/shared/logos/gcp-run.png", "Cloud Run"]
   };
   const G = {
     now: '<span class="now-badge" title="ServiceNow">now</span>',
@@ -2469,11 +2469,11 @@ details.qa-card > summary.qa-summary::after {
 
 <aside class="starlight-aside starlight-aside--tip" id="mock-exam-sec1"><p class="starlight-aside__title">More practice: Mock Exam</p><div class="starlight-aside__content"><p>The <a href="exam.html#section-1">Mock Exam</a> has more Domain 1 questions in exam-guide style, each linked to the Google documentation page it comes from. Try a <a href="exam.html#exam-standard">timed 50-question mock</a> once you have finished all five domains.</p></div></aside>
 </section>
-<div class="pagination-links"><a href="roadmap.html" rel="prev"><span>Previous<br><span class="link-title">Learning Roadmap</span></span></a><a href="sec2.html" rel="next"><span>Next<br><span class="link-title">Domain 2: AI-Assisted Dev</span></span></a></div>
+<div class="pagination-links"><a href="index.html" rel="prev"><span>Previous<br><span class="link-title">Learning Roadmap</span></span></a><a href="sec2.html" rel="next"><span>Next<br><span class="link-title">Domain 2: AI-Assisted Dev</span></span></a></div>
 </main>
 <nav class="toc" id="toc" aria-label="On this page"></nav>
 </div>
 </div>
-<script src="assets/doc.js"></script>
+<script src="../assets/doc.js"></script>
 </body>
 </html>

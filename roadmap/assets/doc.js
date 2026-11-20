@@ -1,11 +1,21 @@
 /* GCP Agentic Architecture Cert Prep — shared sidebar, theme toggle, on-this-page and product logos */
 (function () {
   const LOGO = new URL("../../images/shared/logos/", document.currentScript.src).href;
+  const ROOT = new URL("../", document.currentScript.src).href; /* roadmap/ */
 
   const NAV = [
     {
-      title: "Start here", icon: "googlecloud.svg", items: [
-        ["index", "Home"], ["roadmap", "Learning Roadmap"], ["overview", "Certification Blueprint"], ["exam", "Mock Exam · 118 questions"]]
+      title: "Learning Roadmaps", icon: "googlecloud.svg", items: [
+        ["index", "All Roadmaps (Index)"],
+        ["rm:agentic-architect", "GCP Agentic Architect"],
+        ["rm:line-api-expert", "LINE API Expert"],
+        ["rm:data-engineer", "GCP Data Engineer Cert"]]
+    },
+    {
+      title: "Agentic Architect Prep", icon: "adk.png", items: [
+        ["hub", "Study Guide Hub"],
+        ["overview", "Certification Blueprint"],
+        ["exam", "Mock Exam · 118 questions"]]
     },
     {
       title: "Sec 1: Agent Solutions", icon: "workflows.svg", items: [
@@ -167,8 +177,19 @@
     return clone.textContent.trim();
   };
   const slug = document.body.dataset.slug;
-  const pageOf = k => { const m = /^(?:mcq-)?sec(\d)/.exec(k); return m ? "sec" + m[1] : k; };
-  const hrefOf = k => pageOf(k) === k ? k + ".html" : pageOf(k) + ".html#" + k;
+  const activeRmId = slug === "roadmap" ? (document.body.dataset.roadmap || "agentic-architect") : "";
+  const activeKey = slug === "roadmap" ? "rm:" + activeRmId : slug;
+  const pageOf = k => {
+    const base = k.split("?")[0];
+    const m = /^(?:mcq-)?sec(\d)/.exec(base);
+    return m ? "sec" + m[1] : base;
+  };
+  const hrefOf = k => {
+    if (k === "index") return ROOT + "index.html";
+    if (k.startsWith("rm:")) return ROOT + k.slice(3) + "/index.html";
+    const A = ROOT + "agentic-architect/";
+    return pageOf(k) === k ? A + k + ".html" : A + pageOf(k) + ".html#" + k;
+  };
   const navLabels = {};
   NAV.forEach(g => g.items.forEach(([k, label]) => { navLabels[k] = label; }));
 
@@ -176,9 +197,9 @@
   const sideLinks = {};
   if (side) {
     side.innerHTML = NAV.map(g => {
-      const open = g.items.some(i => pageOf(i[0]) === slug) || g.title === "Start here";
+      const open = g.items.some(i => pageOf(i[0]) === slug) || g.title === "Learning Roadmaps";
       return '<details' + (open ? " open" : "") + '><summary><img src="' + LOGO + g.icon + '" alt="">' + g.title + '</summary>' +
-        g.items.map(i => '<a href="' + hrefOf(i[0]) + '" data-key="' + i[0] + '"' + (i[0] === slug ? ' class="cur" aria-current="page"' : "") + '>' + esc(i[1]) + '</a>').join("") +
+        g.items.map(i => '<a href="' + hrefOf(i[0]) + '" data-key="' + i[0] + '"' + (i[0] === activeKey ? ' class="cur" aria-current="page"' : "") + '>' + esc(i[1]) + '</a>').join("") +
         '</details>';
     }).join("");
     side.querySelectorAll("a[data-key]").forEach(a => {
@@ -202,7 +223,7 @@
     } else if (toc) toc.remove();
   }
 
-  if (!main || slug === "index" || slug === "roadmap" || slug === "exam") return;
+  if (!main || slug === "index" || slug === "hub" || slug === "roadmap" || slug === "exam") return;
   const hand = document.body.classList.contains("hand");
 
   /* 1. logos next to headings, card names and table headers (hand-built pages place their own) */

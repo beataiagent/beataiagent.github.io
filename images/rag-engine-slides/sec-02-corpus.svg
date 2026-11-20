@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <circle cx="128" cy="124" r="96" fill="url(#amb-g)"/>
+  <circle cx="128" cy="128" r="100" fill="none" stroke="#5cdb6d" stroke-width="2" stroke-dasharray="6 6" opacity="0.45"/>
+
+  <!-- Corpus Cylinder / Index -->
+  <ellipse cx="128" cy="80" rx="60" ry="20" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.5"/>
+  <path d="M68 80 v76 c0 11 27 20 60 20 s60-9 60-20 V80" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.5"/>
+  <path d="M68 118 c0 11 27 20 60 20 s60-9 60-20" fill="none" stroke="#57caff" stroke-width="2" opacity="0.8"/>
+
+  <!-- Vector dots inside -->
+  <circle cx="98" cy="108" r="4" fill="#57caff" filter="url(#glow-s)"/>
+  <circle cx="128" cy="112" r="4" fill="#ffd427" filter="url(#glow-s)"/>
+  <circle cx="156" cy="106" r="4" fill="#ff7daf" filter="url(#glow-s)"/>
+  <circle cx="110" cy="148" r="4" fill="#5cdb6d" filter="url(#glow-s)"/>
+  <circle cx="144" cy="150" r="4" fill="#57caff" filter="url(#glow-s)"/>
+  <line x1="98" y1="108" x2="128" y2="112" stroke="#5f6368" stroke-width="1.2"/>
+  <line x1="128" y1="112" x2="156" y2="106" stroke="#5f6368" stroke-width="1.2"/>
+
+  <text x="128" y="226" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">MANAGED RAG CORPUS</text>
+</svg>

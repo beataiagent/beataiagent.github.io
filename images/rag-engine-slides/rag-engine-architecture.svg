@@ -1,0 +1,143 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 440" width="1088" height="440" role="img" aria-label="RAG Engine architecture: ingest documents (Source, Parsing, Transformation, Indexing into a Vector DB) and query retrieval (LLM API query goes through Preparing, Retrieval from the Vector DB, Ranking and Serving back to the LLM API)">
+  <defs>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238"/>
+      <stop offset="100%" stop-color="#1d1e22"/>
+    </linearGradient>
+    <linearGradient id="spark" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#9168c0"/>
+      <stop offset="45%" stop-color="#5684d1"/>
+      <stop offset="100%" stop-color="#1ba1e3"/>
+    </linearGradient>
+    <marker id="ag" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#9aa0a6"/></marker>
+    <marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="an" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <path id="gem" d="M0 -20 C2 -6 6 -2 20 0 C6 2 2 6 0 20 C-2 6 -6 2 -20 0 C-6 -2 -2 -6 0 -20 Z" fill="url(#spark)"/>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 700; }
+      .s { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; font-weight: 600; }
+      .lb { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #e8eaed; font-weight: 500; }
+    </style>
+  </defs>
+  <rect width="1088" height="440" fill="#202124"/>
+
+  <!-- ===== Bracket: Ingest documents ===== -->
+  <line x1="24" y1="30" x2="656" y2="30" stroke="#57caff" stroke-width="2" stroke-opacity="0.6"/>
+  <circle cx="24" cy="30" r="5" fill="#57caff"/><circle cx="656" cy="30" r="5" fill="#57caff"/>
+  <rect x="246" y="14" width="188" height="32" rx="16" fill="#17181b" stroke="#57caff" stroke-width="1.6"/>
+  <text x="340" y="36" text-anchor="middle" class="lb" font-size="16">Ingest documents</text>
+
+  <!-- ===== Row 1: ingest (cols 0-4, x = 11 + i*136, w 114) ===== -->
+  <!-- Source -->
+  <rect x="11" y="62" width="114" height="112" rx="14" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.6"/>
+  <text x="68" y="90" text-anchor="middle" class="t" font-size="16">Source</text>
+  <g transform="translate(54 104)" fill="none" stroke="#bdc1c6" stroke-width="2" stroke-linejoin="round">
+    <path d="M0 0 H19 L28 9 V46 H0 Z"/><path d="M19 0 V9 H28"/>
+    <path d="M6 22 H22 M6 29 H22 M6 36 H18" stroke-linecap="round"/>
+  </g>
+
+  <path d="M125 118 H143" stroke="#9aa0a6" stroke-width="2.2" marker-end="url(#ag)"/>
+
+  <!-- Parsing -->
+  <rect x="147" y="62" width="114" height="112" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2.4"/>
+  <text x="204" y="84" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">01</text>
+  <text x="204" y="108" text-anchor="middle" class="t" font-size="16">Parsing</text>
+  <text x="204" y="136" text-anchor="middle" class="s" font-size="12.5">Parsing &amp;</text>
+  <text x="204" y="153" text-anchor="middle" class="s" font-size="12.5">enriching</text>
+
+  <path d="M261 118 H279" stroke="#57caff" stroke-width="2.2" marker-end="url(#ab)"/>
+
+  <!-- Transformation -->
+  <rect x="283" y="62" width="114" height="112" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2.4"/>
+  <text x="340" y="84" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">02</text>
+  <text x="340" y="108" text-anchor="middle" class="t" font-size="16">Transform</text>
+  <text x="340" y="136" text-anchor="middle" class="s" font-size="12.5">e.g. Chunking</text>
+
+  <path d="M397 118 H415" stroke="#57caff" stroke-width="2.2" marker-end="url(#ab)"/>
+
+  <!-- Indexing -->
+  <rect x="419" y="62" width="114" height="112" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2.4"/>
+  <text x="476" y="84" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">03</text>
+  <text x="476" y="108" text-anchor="middle" class="t" font-size="16">Indexing</text>
+  <text x="476" y="136" text-anchor="middle" class="s" font-size="12.5">Embedding &amp;</text>
+  <text x="476" y="153" text-anchor="middle" class="s" font-size="12.5">indexing</text>
+
+  <path d="M533 118 H551" stroke="#57caff" stroke-width="2.2" marker-end="url(#ab)"/>
+
+  <!-- Vector DB (cylinder) -->
+  <path d="M557 76 V160 A55 14 0 0 0 667 160 V76" fill="url(#glass)" stroke="#57caff" stroke-width="2.4"/>
+  <ellipse cx="612" cy="76" rx="55" ry="14" fill="#2c3a44" stroke="#57caff" stroke-width="2.4"/>
+  <text x="612" y="124" text-anchor="middle" class="t" font-size="16">Vector DB</text>
+  <text x="612" y="144" text-anchor="middle" class="s" font-size="12">RAG Corpus</text>
+
+  <!-- Vector DB -> Retrieval -->
+  <path d="M612 176 V236" stroke="#9aa0a6" stroke-width="2.2" marker-end="url(#ag)"/>
+  <text x="622" y="212" class="s" font-size="12" fill="#9aa0a6">nearest chunks</text>
+
+  <!-- ===== Row 2: query (y 244-356) ===== -->
+  <!-- LLM API (in) -->
+  <rect x="11" y="244" width="114" height="112" rx="14" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.6"/>
+  <text x="68" y="272" text-anchor="middle" class="t" font-size="16">LLM API</text>
+  <use href="#gem" transform="translate(68 314)"/>
+
+  <path d="M125 300 H415" stroke="#9aa0a6" stroke-width="2.2" marker-end="url(#ag)"/>
+  <text x="270" y="290" text-anchor="middle" class="s" font-size="12.5" fill="#9aa0a6">user question</text>
+
+  <!-- Preparing -->
+  <rect x="419" y="244" width="114" height="112" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4"/>
+  <text x="476" y="266" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">04</text>
+  <text x="476" y="290" text-anchor="middle" class="t" font-size="16">Preparing</text>
+  <text x="476" y="318" text-anchor="middle" class="s" font-size="12.5">Query processing</text>
+  <text x="476" y="335" text-anchor="middle" class="s" font-size="12.5">&amp; embedding</text>
+
+  <path d="M533 300 H551" stroke="#5cdb6d" stroke-width="2.2" marker-end="url(#an)"/>
+
+  <!-- Retrieval -->
+  <rect x="555" y="244" width="114" height="112" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4"/>
+  <text x="612" y="266" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">05</text>
+  <text x="612" y="290" text-anchor="middle" class="t" font-size="16">Retrieval</text>
+  <g transform="translate(612 324)" stroke="#bdc1c6" stroke-width="1.8" fill="#1d1e22">
+    <path d="M0 0 L-14 -12 M0 0 L14 -12 M0 0 L-14 12 M0 0 L4 15" fill="none"/>
+    <circle r="5"/><circle cx="-14" cy="-12" r="3.5"/><circle cx="14" cy="-12" r="3.5"/>
+    <circle cx="-14" cy="12" r="3.5"/><circle cx="4" cy="15" r="3.5"/>
+  </g>
+
+  <path d="M669 300 H687" stroke="#5cdb6d" stroke-width="2.2" marker-end="url(#an)"/>
+
+  <!-- Ranking -->
+  <rect x="691" y="244" width="114" height="112" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4"/>
+  <text x="748" y="266" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">06</text>
+  <text x="748" y="290" text-anchor="middle" class="t" font-size="16">Ranking</text>
+  <g transform="translate(732 310)" stroke="#bdc1c6" stroke-width="2.4" stroke-linecap="round" fill="none">
+    <path d="M0 0 H22 M0 9 H18 M0 18 H12"/><path d="M28 2 V22 M22 16 L28 22 L34 16"/>
+  </g>
+
+  <path d="M805 300 H823" stroke="#5cdb6d" stroke-width="2.2" marker-end="url(#an)"/>
+
+  <!-- Serving -->
+  <rect x="827" y="244" width="114" height="112" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4"/>
+  <text x="884" y="266" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">07</text>
+  <text x="884" y="290" text-anchor="middle" class="t" font-size="16">Serving</text>
+  <text x="884" y="318" text-anchor="middle" class="s" font-size="12.5">Format results</text>
+  <text x="884" y="335" text-anchor="middle" class="s" font-size="12.5">for the LLM</text>
+
+  <path d="M941 300 H959" stroke="#9aa0a6" stroke-width="2.2" marker-end="url(#ag)"/>
+
+  <!-- LLM API (out) -->
+  <rect x="963" y="244" width="114" height="112" rx="14" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.6"/>
+  <text x="1020" y="272" text-anchor="middle" class="t" font-size="16">LLM API</text>
+  <use href="#gem" transform="translate(1020 314)"/>
+
+  <!-- ===== Bracket: Query retrieval ===== -->
+  <line x1="419" y1="378" x2="941" y2="378" stroke="#5cdb6d" stroke-width="2" stroke-opacity="0.6"/>
+  <circle cx="419" cy="378" r="5" fill="#5cdb6d"/><circle cx="941" cy="378" r="5" fill="#5cdb6d"/>
+  <rect x="592" y="362" width="176" height="32" rx="16" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="680" y="384" text-anchor="middle" class="lb" font-size="16">Query retrieval</text>
+
+  <!-- ===== Bracket: Use RAG Engine ===== -->
+  <line x1="24" y1="420" x2="1064" y2="420" stroke="#ffd427" stroke-width="2" stroke-opacity="0.55"/>
+  <circle cx="24" cy="420" r="5" fill="#ffd427"/><circle cx="1064" cy="420" r="5" fill="#ffd427"/>
+  <rect x="452" y="404" width="184" height="32" rx="16" fill="#17181b" stroke="#ffd427" stroke-width="1.6"/>
+  <text x="544" y="426" text-anchor="middle" class="lb" font-size="16">Use RAG Engine</text>
+</svg>

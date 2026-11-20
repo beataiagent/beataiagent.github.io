@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Learning Roadmaps · Certification &amp; Expert Tracks</title>
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+  <link href="../fonts/fonts.css" rel="stylesheet">
+  <link href="assets/doc.css" rel="stylesheet">
+  <script>try { var t = localStorage.getItem("doc-theme"); if (t) document.documentElement.dataset.theme = t } catch (e) { }</script>
+  <style>
+    .hero {
+      margin: 18px 0 28px;
+    }
+
+    .hero .kicker {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 2.9rem);
+      margin: 8px 0 12px;
+    }
+
+    .hero p {
+      max-width: 680px;
+      font-size: 1.04rem;
+      margin: 0 0 18px;
+    }
+
+    .summary-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px 24px;
+      padding: 12px 18px;
+      border-radius: 12px;
+      background: var(--bg-nav);
+      border: 1px solid var(--line);
+      margin-bottom: 24px;
+      font-size: .86rem;
+    }
+
+    .summary-bar .stat {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--sub);
+    }
+
+    .summary-bar .stat b {
+      color: var(--white);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-bar .sp {
+      flex: 1;
+    }
+
+    .summary-bar .back-slides {
+      font-size: .82rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
+
+    .summary-bar .back-slides:hover {
+      text-decoration: underline;
+    }
+
+    .rm-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));
+      gap: 18px;
+    }
+
+    .rm-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 20px;
+      border-radius: 16px;
+      background: var(--bg-nav);
+      border: 1px solid var(--line);
+      border-top: 4px solid var(--c);
+      transition: border-color .15s, transform .15s;
+    }
+
+    .rm-card:hover {
+      border-color: var(--c);
+      transform: translateY(-2px);
+    }
+
+    .rm-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .rm-card .lg-row {
+      gap: 8px;
+    }
+
+    .rm-card .lg {
+      width: 28px;
+      height: 28px;
+    }
+
+    .rm-badge {
+      font: 700 .68rem var(--mono);
+      letter-spacing: .05em;
+      text-transform: uppercase;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--c) 16%, transparent);
+      color: var(--c);
+      border: 1px solid color-mix(in srgb, var(--c) 40%, transparent);
+      white-space: nowrap;
+    }
+
+    .rm-card h2 {
+      margin: 2px 0 0;
+      font-size: 1.28rem;
+      line-height: 1.25;
+    }
+
+    .rm-card h2 a {
+      color: var(--white);
+      text-decoration: none;
+    }
+
+    .rm-card h2 a:hover {
+      color: var(--accent);
+    }
+
+    .rm-card .desc {
+      margin: 0;
+      font-size: .9rem;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    .domain-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 2px 0;
+    }
+
+    .domain-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid var(--line);
+      font-size: .74rem;
+      color: var(--text);
+    }
+
+    .domain-pill i {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--dc);
+      flex: none;
+    }
+
+    .rm-card-prog {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-top: auto;
+      padding-top: 8px;
+      border-top: 1px dashed var(--line);
+    }
+
+    .rm-card-prog-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: .78rem;
+      color: var(--sub);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .rm-card-prog-meta b {
+      color: var(--white);
+    }
+
+    .rm-card-track {
+      height: 7px;
+      border-radius: 999px;
+      background: var(--line);
+      overflow: hidden;
+    }
+
+    .rm-card-fill {
+      height: 100%;
+      background: var(--green);
+      transition: width .3s;
+    }
+
+    .rm-card-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .cta {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      padding: 8px 15px;
+      border-radius: 999px;
+      background: var(--c, var(--blue));
+      color: #111317;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: .84rem;
+    }
+
+    .cta.dark-txt {
+      color: #fff;
+    }
+
+    .cta-sec {
+      display: inline-flex;
+      gap: 4px;
+      align-items: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--line);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: .8rem;
+    }
+
+    .cta-sec:hover {
+      border-color: var(--accent);
+      background: var(--bg-soft);
+    }
+  </style>
+</head>
+
+<body data-slug="index" class="hand">
+  <header class="topbar">
+    <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
+    <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>Learning
+        Roadmaps</span></a>
+    <span class="sp"></span>
+    <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
+  </header>
+  <div class="shell">
+    <nav id="sidebar" aria-label="Modules"></nav>
+    <div class="page" style="grid-template-columns:minmax(0,1fr)">
+      <main>
+        <div class="hero">
+          <div class="kicker">Interactive Study &amp; Certification Tracks</div>
+          <h1 id="_top">Learning Roadmaps</h1>
+          <p>Choose a roadmap below to follow an interactive domain-by-domain map. Click any box to unfold its key
+            concepts, goals, and curated study resources — your checklist progress is saved automatically per roadmap in
+            this browser.</p>
+        </div>
+
+        <div class="summary-bar" id="summary-bar"></div>
+        <div class="rm-grid" id="rm-grid"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="assets/doc.js"></script>
+  <script src="agentic-architect/data.js"></script>
+  <script src="line-api-expert/data.js"></script>
+  <script src="data-engineer/data.js"></script>
+  <script src="assets/roadmaps.js"></script>
+  <script>
+    (function () {
+      const ROADMAPS = window.ROADMAPS || [];
+      const LOGO = "../images/shared/logos/";
+      const esc = s => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/"/g, "&quot;");
+      const extAttr = ' target="_blank" rel="noopener noreferrer"';
+
+      let totalNodes = 0, totalDone = 0, totalDomains = 0;
+      const stats = ROADMAPS.map(rm => {
+        const st = window.getRoadmapStats(rm);
+        totalNodes += st.total;
+        totalDone += st.done;
+        totalDomains += st.domains;
+        return st;
+      });
+
+      document.getElementById("summary-bar").innerHTML =
+        '<span class="stat"><b>' + ROADMAPS.length + '</b> Roadmaps</span>' +
+        '<span class="stat"><b>' + totalDomains + '</b> Core Domains</span>' +
+        '<span class="stat"><b>' + totalDone + ' / ' + totalNodes + '</b> Topics completed</span>' +
+        '<span class="sp"></span>' +
+        '<a class="back-slides" href="../index.html">← Back to Talk Decks</a>';
+
+      document.getElementById("rm-grid").innerHTML = ROADMAPS.map((rm, idx) => {
+        const st = stats[idx];
+        const isLightAccent = rm.accent === "#fbbc04" || rm.accent === "#06C755";
+        const logosHtml = (rm.logos || [rm.logo]).map(l => '<img class="lg" src="' + LOGO + l + '" alt="">').join("");
+        const pillsHtml = (rm.stages || []).filter(s => !s.opt).map(s =>
+          '<span class="domain-pill"><i style="--dc:' + s.c + '"></i>' + esc(s.t) + '</span>'
+        ).join("");
+        const extrasHtml = (rm.extraLinks || []).map(lk =>
+          '<a class="cta-sec" href="' + lk.href + '"' + (lk.external ? extAttr : "") + '>' + esc(lk.label) + '</a>'
+        ).join("");
+
+        return '<article class="rm-card" style="--c:' + rm.accent + '">' +
+          '<div class="rm-card-top"><div class="lg-row">' + logosHtml + '</div><span class="rm-badge">' + esc(rm.category) + '</span></div>' +
+          '<h2><a href="' + rm.url + '">' + esc(rm.title) + '</a></h2>' +
+          '<p class="desc">' + esc(rm.description) + '</p>' +
+          '<div class="domain-pills">' + pillsHtml + '</div>' +
+          '<div class="rm-card-prog">' +
+          '<div class="rm-card-prog-meta"><span><b>' + st.done + ' / ' + st.total + '</b> topics · ' + st.domains + ' domains</span><span>' + st.pct + '%</span></div>' +
+          '<div class="rm-card-track"><div class="rm-card-fill" style="width:' + st.pct + '%"></div></div>' +
+          '</div>' +
+          '<div class="rm-card-actions">' +
+          '<a class="cta' + (isLightAccent ? "" : " dark-txt") + '" href="' + rm.url + '">Open Roadmap →</a>' +
+          extrasHtml +
+          '</div>' +
+          '</article>';
+      }).join("");
+    })();
+  </script>
+</body>
+
+</html>

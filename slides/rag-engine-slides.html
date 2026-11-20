@@ -1,0 +1,807 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Vertex AI RAG Engine — Ingest, Retrieve, Generate</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- Vertex AI RAG Engine deck extras ---------- */
+    .rg-div-art { position: absolute; left: 57px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .rg-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .rg-ty-art { position: absolute; left: 880px; top: 186px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+    .reveal .slides .rg-ty-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .rg-diag { width: 1088px; border-radius: 18px; overflow: hidden; border: 2px solid var(--dk-line); background: #202124; box-sizing: border-box; box-shadow: 0 10px 28px rgba(0,0,0,.35); }
+    .reveal .slides .rg-diag img { width: 100%; height: auto; display: block; margin: 0; }
+    .rg-head-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 1088px; }
+    .rg-lg-badges { display: flex; align-items: center; gap: 8px; flex: none; }
+    .rg-lg-pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 7px; border-radius: 999px; background: #17181b; border: 1.5px solid #3c4043; font: 500 12.5px/1 var(--mono); color: var(--dk-text); }
+    .rg-lg-pill .ev-lg { width: 24px; height: 24px; border-radius: 6px; }
+    .reveal .slides .rg-lg-pill .ev-lg img { width: 16px; height: 16px; }
+    .ev-lg.sm { width: 32px; height: 32px; border-radius: 8px; }
+    .reveal .slides .ev-lg.sm img { width: 20px; height: 20px; }
+
+    /* grid safety */
+    .grid > * { min-width: 0; }
+    .rg-2col { display: grid; grid-template-columns: minmax(0, 620px) minmax(0, 1fr); gap: 20px; width: 1088px; align-items: start; }
+    .rg-2col-eq { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 18px; width: 1088px; align-items: start; }
+    .rg-side { display: grid; gap: 12px; align-content: start; min-width: 0; }
+    .rg-side .pc { padding: 14px 16px; font-size: 15px; line-height: 1.38; }
+    .rg-side .pc h3 { font-size: 18px; margin-bottom: 5px; }
+    .rg-code-sm { font-size: 13.5px !important; line-height: 1.42 !important; }
+    .rg-code-xs { font-size: 12.8px !important; line-height: 1.4 !important; }
+    .rg-label { font: 600 12.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+    /* 2x2 value cards */
+    .rg-val .pc { padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start; }
+    .rg-val .pc .fi { flex: none; width: 42px; height: 42px; border-radius: 12px; border: 1.5px solid var(--c); background: #17181b; display: grid; place-items: center; }
+    .rg-val .pc .fi svg { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .rg-val .pc h3 { font-size: 20px; margin-bottom: 5px; color: var(--c); }
+    .rg-val .pc p { font-size: 15.5px; line-height: 1.38; color: var(--dk-sub); }
+    .rg-val .pc.blue { --c: var(--h-blue); } .rg-val .pc.green { --c: var(--h-green); }
+    .rg-val .pc.yellow { --c: var(--h-yellow); } .rg-val .pc.red { --c: var(--h-red); }
+
+    /* checklist */
+    .reveal ul.rg-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .rg-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .rg-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .rg-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .rg-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* recap & resources */
+    .rg-hook { flex: none; font: 500 13px/1.2 var(--mono); padding: 7px 12px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; box-sizing: border-box; }
+    .rg-res-row { display: flex; align-items: center; gap: 14px; padding: 15px 18px; }
+    .rg-res-row h3 { margin: 0 0 4px; font-size: 19px; }
+    .reveal table.zt-tbl td.hi-g { color: var(--h-green); }
+    .reveal table.zt-tbl td.hi-b { color: var(--h-blue); }
+    .reveal table.zt-tbl td.hi-y { color: var(--h-yellow); }
+  </style>
+</head>
+<body data-deck="Vertex AI RAG Engine">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2Z"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-coins" viewBox="0 0 24 24"><ellipse cx="10" cy="8" rx="6" ry="2.5"/><path d="M4 8v4c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5V8"/><path d="M4 12v4c0 1.4 2.7 2.5 6 2.5s6-1.1 6-2.5v-4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Vertex AI RAG Engine">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Ingest</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Retrieve</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Generate</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Vertex AI RAG Engine</b><span>Build scalable, modular RAG systems on Gemini Enterprise Agent Platform</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="">RAG Engine</i><i style="--c:var(--h-green)"><img src="../images/shared/logos/gemini.svg" alt="">Gemini</i><i style="--c:var(--h-yellow)"><img src="../images/shared/logos/googledrive.svg" alt="">GCS &amp; Drive</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • วันนี้เราจะมาดูวิธีสร้างระบบ RAG ที่ขยายสเกลได้และเป็นโมดูลาร์ด้วย Vertex AI RAG Engine บน Gemini Enterprise Agent Platform ตามตัวอย่าง notebook อย่างเป็นทางการ • 3 ขั้นตอนหลักคือ Ingest (นำเข้าเอกสารจาก Local, GCS, Drive), Retrieve (ค้นหาบริบทที่แม่นยำ), และ Generate (ตอบคำถามด้วย Gemini แบบมีหลักฐานอ้างอิง)</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Why RAG Engine</strong><span>Private knowledge, 6-stage pipeline &amp; modularity</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Setup &amp; Corpus</strong><span>Agent Platform SDK, Gen AI SDK &amp; creating a corpus</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Ingest &amp; Chunk</strong><span>Local files, Cloud Storage, Google Drive &amp; IAM</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Retrieve &amp; Generate</strong><span>Direct retrieval, Gemini Tool &amp; production checklist</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/rag-engine-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">แบ่งเป็น 4 ช่วงครับ: (1) ทำไมต้องใช้ RAG Engine และ 6 ขั้นตอนการทำงานของ RAG (2) การติดตั้ง SDK และสร้าง RAG Corpus แรก (3) การนำเข้าข้อมูลจาก Local, Cloud Storage และ Google Drive พร้อมการตั้งสิทธิ์ Service Agent และปรับ chunking (4) การดึงข้อมูลแบบ Direct Context Retrieval เทียบกับการผูกเป็น Gemini Retrieval Tool และเช็กลิสต์ขึ้น production • สแกน QR ด้านขวาเปิดสไลด์ตามได้ครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · Why RAG Engine">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="rg-div-art" style="--c:var(--h-blue)"><img src="../images/rag-engine-slides/sec-01-why-rag.svg" alt="Knowledge documents with retrieval lens and Gemini spark"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Why RAG<br>Engine</h1>
+            <p class="sub" style="margin-top:28px">Private enterprise knowledge,<br>6-stage pipeline &amp; modularity</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • มาทบทวนกันก่อนว่าทำไม LLM อย่างเดียวถึงไม่พอกับข้อมูลองค์กร และ RAG Engine บน Gemini Enterprise Agent Platform เข้ามาช่วยจัดการ pipeline ทั้งหมดได้ยังไง</aside>
+      </section>
+
+      <!-- 4. Why LLMs Need RAG -->
+      <section data-title="Why LLMs need RAG">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the problem &amp; payoff</div>
+            <h2 style="margin-bottom:20px">Why ground LLMs with external private data?</h2>
+            <div class="grid g2 rg-val" style="width:1088px; gap:16px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <div class="fi"><svg viewBox="0 0 24 24"><use href="#i-clock"/></svg></div>
+                <div><h3>Up-to-date private knowledge</h3><p>Pre-trained models freeze at a cutoff and never see internal docs. RAG injects current org data at query time.</p></div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2">
+                <div class="fi"><svg viewBox="0 0 24 24"><use href="#i-shield"/></svg></div>
+                <div><h3>Factual grounding, fewer hallucinations</h3><p>Anchoring generation in retrieved passages drastically lowers fabricated answers and improves domain accuracy.</p></div>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3">
+                <div class="fi"><svg viewBox="0 0 24 24"><use href="#i-doc"/></svg></div>
+                <div><h3>Trust &amp; source citations</h3><p>Retrieved chunks carry source metadata so users can trace every claim back to the original PDF or Drive file.</p></div>
+              </div>
+              <div class="pc red fragment" data-fragment-index="4">
+                <div class="fi"><svg viewBox="0 0 24 24"><use href="#i-coins"/></svg></div>
+                <div><h3>Cost-efficient updates</h3><p>Add or refresh documents in a corpus in seconds instead of paying for continuous model retraining or fine-tuning.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Key idea</b><span>RAG bridges vast general LLM reasoning with accurate, current, private enterprise context.</span></div>
+        </div>
+        <aside class="notes">4 เหตุผลหลักที่องค์กรต้องใช้ RAG ครับ • (คลิก 1) โมเดลทั่วไปถูกเทรนด้วยข้อมูลเก่าและไม่รู้จักเอกสารภายในบริษัท RAG ช่วยเติมความรู้ล่าสุดตอนถามคำถาม • (คลิก 2) ลดอาการหลอน (hallucination) เพราะตอบจากหลักฐานจริง • (คลิก 3) สร้างความน่าเชื่อถือเพราะแนบแหล่งอ้างอิงกลับไปที่ไฟล์ต้นฉบับได้ • (คลิก 4) ประหยัดกว่าการ fine-tune หรือ retrain โมเดลทุกครั้งที่เอกสารเปลี่ยน</aside>
+      </section>
+
+      <!-- 5. The 6-Stage RAG Engine Pipeline -->
+      <section data-title="6-Stage RAG Engine pipeline">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">01 · architecture</div>
+            <div class="rg-head-row" style="margin-bottom:14px">
+              <h2>Six stages managed by RAG Engine</h2>
+              <div class="rg-lg-badges">
+                <span class="rg-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>RAG Engine</span>
+                <span class="rg-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Gemini</span>
+              </div>
+            </div>
+            <div class="rg-diag fragment" data-fragment-index="1">
+              <img src="../images/rag-engine-slides/rag-6stage-pipeline.svg" alt="6-stage RAG Engine pipeline: Ingest, Transform, Embed, Index into Corpus, Retrieve Top-K, Generate with Gemini">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:16px">
+              <div class="pc blue" style="padding:12px 15px; font-size:14.5px"><b style="color:var(--h-blue)">Managed Corpus:</b> Acts like a semantic table of contents optimized for vector search.</div>
+              <div class="pc yellow" style="padding:12px 15px; font-size:14.5px"><b style="color:var(--h-yellow)">Modular Stages:</b> Tune chunking, retrieval thresholds, or swap models independently.</div>
+              <div class="pc green" style="padding:12px 15px; font-size:14.5px"><b style="color:var(--h-green)">Native Gemini Tool:</b> Plug your corpus straight into <code>generate_content</code>.</div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Zero glue code</b><span>RAG Engine orchestrates ingestion, chunking, embeddings, and indexing behind one Python SDK.</span></div>
+        </div>
+        <aside class="notes">นี่คือ 6 ขั้นตอนทั้งหมดของ RAG Engine ครับ • ฝั่งซ้ายคือ Indexing Pipeline: (1) Ingest ดึงไฟล์จาก Local, GCS, Drive → (2) Transform หั่นเป็น chunk → (3) Embed แปลงเป็นเวกเตอร์เชิงความหมาย → (4) Index เก็บใน RAG Corpus เปรียบเหมือนสารบัญละเอียดของหนังสือเล่มใหญ่ • ฝั่งขวาคือ Query Time: (5) Retrieve ค้นหา chunk ที่ใกล้เคียงที่สุดด้วย top_k และ threshold → (6) Generate ส่ง context เข้า Gemini เพื่อสร้างคำตอบที่มีหลักฐานอ้างอิง</aside>
+      </section>
+
+      <!-- 5b. RAG Engine architecture (ingest + query retrieval) -->
+      <section data-title="RAG Engine architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">01 · architecture</div>
+            <div class="rg-head-row" style="margin-bottom:14px">
+              <h2>Ingest documents, then query retrieval</h2>
+              <div class="rg-lg-badges">
+                <span class="rg-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>RAG Engine</span>
+              </div>
+            </div>
+            <div class="rg-diag">
+              <img src="../images/rag-engine-slides/rag-engine-architecture.svg" alt="RAG Engine architecture: Source, Parsing, Transformation, Indexing into Vector DB; LLM API query through Preparing, Retrieval, Ranking, Serving back to LLM API">
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ภาพรวมสถาปัตยกรรมของ RAG Engine ครับ • แถวบน Ingest documents: เอกสารจาก Source → Parsing แยกเนื้อหาและเติม metadata → Transformation เช่นหั่นเป็น chunk → Indexing ทำ embedding แล้วเก็บลง Vector DB (RAG Corpus) • แถวล่าง Query retrieval: คำถามจาก LLM API → Preparing แปลงคำถามเป็น embedding → Retrieval ดึง chunk ที่ใกล้ที่สุดจาก Vector DB → Ranking จัดลำดับความเกี่ยวข้อง → Serving จัดรูปแบบผลลัพธ์ส่งกลับให้ LLM • ทั้งหมดนี้คือสิ่งที่ RAG Engine จัดการให้ครบในที่เดียว</aside>
+      </section>
+
+      <!-- 6. Section 02 -->
+      <section class="bg-green" data-title="02 · Setup &amp; Corpus">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="rg-div-art" style="--c:var(--h-green)"><img src="../images/rag-engine-slides/sec-02-corpus.svg" alt="Managed RAG Corpus vector cylinder"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Setup &amp;<br>Corpus</h1>
+            <p class="sub" style="margin-top:28px">Install SDKs, initialize clients &amp;<br>create your first RAG Corpus</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • มาเริ่มเขียนโค้ดกันครับ ตั้งแต่ติดตั้ง package ตั้งค่า Google Cloud Project จนถึงการสร้าง RAG Corpus แรกของเรา</aside>
+      </section>
+
+      <!-- 7. Install & Initialize Clients -->
+      <section data-title="Install &amp; initialize clients">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · getting started</div>
+            <h2 style="margin-bottom:18px">Install SDKs and initialize Agent Platform</h2>
+            <div class="rg-2col">
+              <div>
+                <div class="rg-label" style="color:var(--h-blue)">1 · Install packages</div>
+                <div class="cmd" style="margin-bottom:14px; font-size:13.5px">pip install --upgrade google-cloud-aiplatform google-genai</div>
+                <div class="rg-label" style="color:var(--h-green)">2 · Initialize client &amp; imports</div>
+                <pre><code class="language-python rg-code-sm">import os
+import agentplatform
+from agentplatform import types
+from google import genai
+from google.genai import types as genai_types
+
+PROJECT_ID = os.environ.get("GOOGLE_CLOUD_PROJECT")
+
+client = agentplatform.Client(
+    project=PROJECT_ID,
+    location="us-east1",
+)</code></pre>
+              </div>
+              <div class="rg-side">
+                <div class="pc blue fragment" data-fragment-index="1">
+                  <h3>Enable Agent Platform API</h3>
+                  <p style="color:var(--dk-sub)">Enable <code>aiplatform.googleapis.com</code> in your GCP project and authenticate via Colab or ADC.</p>
+                </div>
+                <div class="pc green fragment" data-fragment-index="2">
+                  <h3>Clean Two-SDK Split</h3>
+                  <p style="color:var(--dk-sub)"><code>agentplatform</code> manages corpora, imports &amp; retrieval. <code>google-genai</code> runs Gemini generation.</p>
+                </div>
+                <div class="pc yellow fragment" data-fragment-index="3">
+                  <h3>Pick a Supported Region</h3>
+                  <p style="color:var(--dk-sub)">Check RAG Engine regional availability (e.g. <code>us-east1</code>, <code>us-central1</code>) before creating corpora.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เริ่มต้นด้วยการติดตั้ง 2 แพ็กเกจหลักคือ google-cloud-aiplatform และ google-genai • จากนั้นสร้าง agentplatform.Client โดยระบุ project และ location เช่น us-east1 • จุดที่ออกแบบมาดีมากคือการแยกหน้าที่ชัดเจน: agentplatform.Client ใช้จัดการ corpus, import ไฟล์ และดึง context ส่วน google-genai ใช้เรียก Gemini เพื่อสร้างคำตอบ</aside>
+      </section>
+
+      <!-- 8. Create & List a RAG Corpus -->
+      <section data-title="Create &amp; list a RAG Corpus">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · knowledge base</div>
+            <h2 style="margin-bottom:18px">Create and verify your RAG Corpus</h2>
+            <div class="rg-2col">
+              <div>
+                <div class="rg-label" style="color:var(--h-green)">Create a managed corpus</div>
+                <pre style="margin-bottom:14px"><code class="language-python rg-code-sm">rag_corpus = client.rag.create_corpus(
+    rag_corpus=types.RagCorpus(
+        display_name="my-rag-corpus",
+    )
+)
+
+print(rag_corpus.name)
+# projects/{num}/locations/us-east1/ragCorpora/{id}</code></pre>
+                <div class="rg-label" style="color:var(--h-blue)">Verify corpora in project</div>
+                <pre><code class="language-python rg-code-sm">corpora = client.rag.list_corpora()
+for c in corpora:
+    print(c.display_name, "→", c.name)</code></pre>
+              </div>
+              <div class="rg-side">
+                <div class="pc green fragment" data-fragment-index="1">
+                  <h3>What is a RAG Corpus?</h3>
+                  <p style="color:var(--dk-sub)">A logical container that stores your files, chunks, embeddings, and managed vector index together.</p>
+                </div>
+                <div class="pc blue fragment" data-fragment-index="2">
+                  <h3>Resource Name Handle</h3>
+                  <p style="color:var(--dk-sub)">Keep <code>rag_corpus.name</code> — you pass this full resource path to upload, import, retrieve, and Gemini tools.</p>
+                </div>
+                <div class="pc yellow fragment" data-fragment-index="3">
+                  <h3>Domain Isolation</h3>
+                  <p style="color:var(--dk-sub)">Create separate corpora per domain (e.g. HR policies, investor filings, support runbooks) for cleaner recall.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Pro tip</b><span>Default vector DB &amp; embedding model are provisioned automatically — zero infrastructure setup needed.</span></div>
+        </div>
+        <aside class="notes">สร้าง Corpus ง่ายมากครับ ใช้แค่ client.rag.create_corpus แล้วตั้ง display_name • ระบบจะคืนค่า rag_corpus.name ซึ่งเป็น resource path เต็มที่เราต้องเอาไปใช้ต่อทุกขั้นตอน ทั้งตอนอัปโหลดไฟล์ ดึงข้อมูล และผูกกับ Gemini • แนะนำให้แยก Corpus ตามโดเมนข้อมูล เช่น ฝ่ายบุคคล กับ ฝ่ายกฎหมาย เพื่อให้ค้นหาแม่นยำและจัดการสิทธิ์ได้ง่าย</aside>
+      </section>
+
+      <!-- 9. Section 03 -->
+      <section class="bg-yellow" data-title="03 · Ingest &amp; Chunk">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="rg-div-art" style="--c:var(--h-yellow)"><img src="../images/rag-engine-slides/sec-03-ingest.svg" alt="Local, GCS, and Drive sources funneling into chunks"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Ingest &amp;<br>Chunk</h1>
+            <p class="sub" style="margin-top:28px">Local files, Cloud Storage,<br>Google Drive &amp; Service Agent IAM</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • เมื่อมี Corpus แล้ว มาดู 3 วิธีในการนำเข้าข้อมูลจาก Local, Google Cloud Storage และ Google Drive พร้อมการตั้งสิทธิ์ที่หลายคนชอบพลาด</aside>
+      </section>
+
+      <!-- 10. Three Ingestion Sources -->
+      <section data-title="Three ways to ingest data">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · data sources</div>
+            <h2 style="margin-bottom:22px">Three built-in paths to load your corpus</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Local"></span>
+                  <h3 style="margin:0">Local File Upload</h3>
+                </div>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:12px">Synchronous upload straight from your notebook or laptop via <code>upload_file()</code>.</p>
+                <div class="chips"><span class="chip">Quick prototyping</span><span class="chip">.md / .txt / .pdf</span></div>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-storage.png" alt="GCS"></span>
+                  <h3 style="margin:0">Cloud Storage (GCS)</h3>
+                </div>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:12px">Bulk async ingestion from <code>gs://bucket/*</code> with custom chunking &amp; QPM throttling.</p>
+                <div class="chips"><span class="chip">Enterprise scale</span><span class="chip">Wildcards</span></div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="3">
+                <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/googledrive.svg" alt="Google Drive"></span>
+                  <h3 style="margin:0">Google Drive</h3>
+                </div>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:12px">Pull living team folders or individual Drive files directly via <code>GoogleDriveSource</code>.</p>
+                <div class="chips"><span class="chip">Team Docs</span><span class="chip">Folder or File ID</span></div>
+              </div>
+            </div>
+            <div class="pc red fragment" data-fragment-index="4" style="width:1088px; margin-top:20px; padding:14px 20px; display:flex; align-items:center; gap:16px">
+              <span class="ev-lg sm"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span>
+              <div style="font-size:15.5px; line-height:1.4">
+                <b style="color:var(--h-red)">Required for GCS &amp; Google Drive:</b> Grant <b>Viewer</b> access to the Vertex RAG Data Service Agent:<br>
+                <code style="font-size:14px">service-{project_number}@gcp-sa-vertex-rag.iam.gserviceaccount.com</code>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">RAG Engine รองรับการนำเข้าข้อมูล 3 ช่องทางหลักใน notebook นี้ครับ • (คลิก 1) Local file ด้วย upload_file เหมาะกับทดสอบเร็ว ๆ • (คลิก 2) Google Cloud Storage เหมาะกับไฟล์จำนวนมาก รองรับ wildcard และการคุม rate limit • (คลิก 3) Google Drive ดึงทั้งโฟลเดอร์หรือรายไฟล์จากทีมงานได้ตรง ๆ • (คลิก 4) จุดสำคัญที่ห้ามลืมสำหรับ GCS และ Drive คือต้องแชร์สิทธิ์ Viewer ให้ Vertex RAG Data Service Agent ตามอีเมลด้านล่าง ไม่งั้นจะติด 403 Permission Denied ครับ</aside>
+      </section>
+
+      <!-- 11. Upload Local & Import from GCS -->
+      <section data-title="Local upload &amp; GCS import">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">03 · ingestion code</div>
+            <h2 style="margin-bottom:16px">Upload a local file or bulk-import from GCS</h2>
+            <div class="rg-2col-eq">
+              <div>
+                <div class="rg-label" style="color:var(--h-blue)">Local file · synchronous</div>
+                <pre style="margin-bottom:14px"><code class="language-python rg-code-xs">rag_file = client.rag.upload_file(
+    corpus_name=rag_corpus.name,
+    path="test.md",
+    display_name="test.md",
+)</code></pre>
+                <div class="pc blue" style="padding:14px 16px; font-size:14.5px; line-height:1.4">
+                  <b style="color:var(--h-blue)">Best for fast iteration</b>
+                  <p style="color:var(--dk-sub); margin-top:4px">Upload a single markdown or PDF file directly from Colab to test retrieval quality before wiring up cloud storage.</p>
+                </div>
+              </div>
+              <div>
+                <div class="rg-label" style="color:var(--h-yellow)">Google Cloud Storage · bulk + chunking</div>
+                <pre><code class="language-python rg-code-xs">GCS_URI = (
+    "gs://cloud-samples-data/gen-app-builder/"
+    "search/alphabet-investor-pdfs/*"
+)
+
+response = client.rag.import_files(
+    name=rag_corpus.name,
+    import_config=types.ImportRagFilesConfig(
+        gcs_source=types.GcsSource(uris=[GCS_URI]),
+        rag_file_transformation_config=(
+            types.RagFileTransformationConfig(
+                rag_file_chunking_config=(
+                    types.RagFileChunkingConfig(
+                        chunk_size=1024,
+                        chunk_overlap=100,
+                    )
+                )
+            )
+        ),
+        max_embedding_requests_per_min=900,
+    ),
+)</code></pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ดูโค้ดเปรียบเทียบกันครับ • ฝั่งซ้ายคือการอัปโหลดไฟล์ local แค่ 5 บรรทัดก็พร้อมค้นหาเลย • ฝั่งขวาคือการ import จาก GCS bucket ตัวอย่างเป็นรายงานนักลงทุนของ Alphabet แบบ PDF • สังเกตว่าเราปรับ chunk_size=1024 และ chunk_overlap=100 ได้ใน ImportRagFilesConfig พร้อมตั้ง max_embedding_requests_per_min=900 เพื่อไม่ให้ยิงเกินโควตา embedding ครับ</aside>
+      </section>
+
+      <!-- 12. Import from Google Drive -->
+      <section data-title="Import from Google Drive">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">03 · google drive connector</div>
+            <div class="rg-head-row" style="margin-bottom:14px">
+              <h2>Import folders or files from Google Drive</h2>
+              <div class="rg-lg-badges">
+                <span class="rg-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/googledrive.svg" alt="Drive"></span>GoogleDriveSource</span>
+              </div>
+            </div>
+            <div class="rg-2col">
+              <div>
+                <pre><code class="language-python rg-code-xs">folder_url = (
+    "https://drive.google.com/drive/folders/{folder_id}"
+)
+
+response = client.rag.import_files(
+    name=rag_corpus.name,
+    import_config=types.ImportRagFilesConfig(
+        google_drive_source=types.GoogleDriveSource(
+            resource_ids=[
+                types.GoogleDriveSourceResourceId(
+                    resource_id=folder_url,
+                    resource_type=(
+                        types.ResourceType.RESOURCE_TYPE_FOLDER
+                    ),
+                )
+            ]
+        ),
+        rag_file_transformation_config=(
+            types.RagFileTransformationConfig(
+                rag_file_chunking_config=(
+                    types.RagFileChunkingConfig(
+                        chunk_size=512,
+                        chunk_overlap=50,
+                    )
+                )
+            )
+        ),
+    ),
+)</code></pre>
+              </div>
+              <div class="rg-side">
+                <div class="pc green fragment" data-fragment-index="1">
+                  <h3>Eligible Drive URLs</h3>
+                  <p style="color:var(--dk-sub); font-size:14px; line-height:1.45">
+                    Folder: <code>drive/folders/{folder_id}</code><br>
+                    File: <code>drive.google.com/file/d/{file_id}</code>
+                  </p>
+                </div>
+                <div class="pc red fragment" data-fragment-index="2">
+                  <h3>Share with Service Agent</h3>
+                  <p style="color:var(--dk-sub); font-size:14px; line-height:1.4">Click <b>Share → Viewer</b> in Google Drive and add:<br><code>service-{num}@gcp-sa-vertex-rag</code><br><code>.iam.gserviceaccount.com</code></p>
+                </div>
+                <div class="pc yellow fragment" data-fragment-index="3">
+                  <h3>Tighter Chunks for Docs</h3>
+                  <p style="color:var(--dk-sub); font-size:14px; line-height:1.4">Uses <code>chunk_size=512</code> and <code>chunk_overlap=50</code> for focused Q&amp;A over shorter Drive docs.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">หน้านี้ตรงกับส่วน Google Drive ใน Colab notebook เลยครับ • เราสามารถส่ง URL ของทั้งโฟลเดอร์ (RESOURCE_TYPE_FOLDER) หรือรายไฟล์เข้า GoogleDriveSource ได้ • ขั้นตอนที่สำคัญที่สุดคือต้องกด Share ใน Google Drive ให้สิทธิ์ Viewer กับ service account ของ Vertex RAG Data Service Agent ก่อนรันโค้ด • และสังเกตว่าสำหรับเอกสาร Drive ทั่วไป ตัวอย่างปรับ chunk_size ลงมาเป็น 512 กับ overlap 50 เพื่อให้ดึงคำตอบได้เจาะจงขึ้น</aside>
+      </section>
+
+      <!-- 13. Chunking & Ingestion Tuning -->
+      <section data-title="Chunking &amp; rate-limit tuning">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:42px 56px">
+            <div class="eyebrow">03 · transformation tuning</div>
+            <h2 style="margin-bottom:20px">How to choose chunk size, overlap &amp; throughput</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <thead>
+                <tr>
+                  <th style="width:24%">Parameter</th>
+                  <th style="width:22%">Notebook Value</th>
+                  <th style="width:27%">Too Small / Low</th>
+                  <th style="width:27%">Too Large / High</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="fragment">
+                  <td><code>chunk_size</code></td>
+                  <td class="hi-b"><code>512</code> (Drive)<br><code>1024</code> (PDFs)</td>
+                  <td>Loses surrounding context; fragments tables or multi-step answers.</td>
+                  <td>Dilutes vector similarity; wastes prompt tokens with noisy text.</td>
+                </tr>
+                <tr class="fragment">
+                  <td><code>chunk_overlap</code></td>
+                  <td class="hi-g"><code>50</code> – <code>100</code><br>(~10% of size)</td>
+                  <td>Sentences split across boundaries miss exact keyword/idea matches.</td>
+                  <td>Duplicate chunks eat up <code>top_k</code> slots with repeated content.</td>
+                </tr>
+                <tr class="fragment">
+                  <td><code>max_embedding_</code><br><code>requests_per_min</code></td>
+                  <td class="hi-y"><code>900</code> QPM</td>
+                  <td>Slow bulk backfill on large GCS buckets (thousands of PDFs).</td>
+                  <td>Can hit project embedding quota (<code>429 RESOURCE_EXHAUSTED</code>).</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Rule of thumb</b><span>Start at 512–1024 tokens with ~10% overlap, then measure recall on real user questions.</span></div>
+        </div>
+        <aside class="notes">ตารางนี้สรุปวิธีปรับ 3 พารามิเตอร์หลักตอน ingest ครับ • (คลิก 1) chunk_size: เอกสารสั้น/FAQ ใช้ 512 ส่วน PDF รายงานยาว ๆ ใช้ 1024 ถ้าเล็กไปบริบทขาด ถ้าใหญ่ไปเวกเตอร์จะเจือจาง • (คลิก 2) chunk_overlap: ตั้งไว้ราว 10% ของ chunk_size (เช่น 50 หรือ 100) เพื่อกันประโยคขาดกลางคันแต่ไม่ซ้ำจนกินโควตา top_k • (คลิก 3) max_embedding_requests_per_min: คุมความเร็วในการสร้าง embedding ไม่ให้ชน rate limit 429</aside>
+      </section>
+
+      <!-- 14. Section 04 -->
+      <section class="bg-red" data-title="04 · Retrieve &amp; Generate">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="rg-div-art" style="--c:var(--h-red)"><img src="../images/rag-engine-slides/sec-04-retrieve.svg" alt="Top-K retrieval bars feeding into Gemini grounded answer"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Retrieve &amp;<br>Generate</h1>
+            <p class="sub" style="margin-top:28px">Direct context retrieval, Gemini<br>Retrieval Tool &amp; production tips</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้าย ช่วงที่ 4 • เมื่อเอกสารอยู่ใน Corpus เรียบร้อยแล้ว เราจะมาดู 2 วิธีในการนำข้อมูลออกมาใช้งาน: การดึงบริบทโดยตรง (Direct Context Retrieval) และการเสียบเข้าเป็น Tool ให้ Gemini ตอบอัตโนมัติครับ</aside>
+      </section>
+
+      <!-- 15. Direct Context Retrieval -->
+      <section data-title="Direct context retrieval">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">04 · option A · direct retrieval</div>
+            <h2 style="margin-bottom:16px">Inspect raw chunks with <code>retrieve_contexts()</code></h2>
+            <div class="rg-2col">
+              <div>
+                <pre><code class="language-python rg-code-xs">response = client.rag.retrieve_contexts(
+    vertex_rag_store=genai_types.VertexRagStore(
+        rag_resources=[
+            genai_types.VertexRagStoreRagResource(
+                rag_corpus=rag_corpus.name
+            )
+        ]
+    ),
+    query=types.RagQuery(
+        text="What is RAG and why it is helpful?",
+        rag_retrieval_config=types.RagRetrievalConfig(
+            top_k=10,
+            filter=types.RagRetrievalConfigFilter(
+                vector_distance_threshold=0.5
+            ),
+        ),
+    ),
+)
+print(response)</code></pre>
+              </div>
+              <div class="rg-side">
+                <div class="pc blue fragment" data-fragment-index="1">
+                  <h3>Model-Agnostic Context</h3>
+                  <p style="color:var(--dk-sub)">Returns raw ranked text chunks &amp; scores — pass them to any LLM, custom reranker, or evaluation harness.</p>
+                </div>
+                <div class="pc green fragment" data-fragment-index="2">
+                  <h3><code>top_k</code> + Distance Filter</h3>
+                  <p style="color:var(--dk-sub)"><code>top_k=10</code> caps candidate count; <code>vector_distance_threshold=0.5</code> drops irrelevant matches.</p>
+                </div>
+                <div class="pc yellow fragment" data-fragment-index="3">
+                  <h3>Debug Recall First</h3>
+                  <p style="color:var(--dk-sub)">Always run <code>retrieve_contexts()</code> before generation to verify your corpus actually retrieves the right passage.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">วิธีแรกคือ Direct Context Retrieval ด้วย client.rag.retrieve_contexts() • เราส่งคำถามเข้าไปพร้อม top_k=10 และ vector_distance_threshold=0.5 (ยิ่งค่าน้อยยิ่งเข้มงวด ต้องเหมือนจริง ๆ ถึงจะดึงมา) • ข้อดีคือเราเห็น chunk ดิบ ๆ และคะแนนความใกล้เคียงทันที เหมาะมากสำหรับเอาไว้ debug คุณภาพการค้นหา หรือเอา context ไปต่อกับโมเดล/reranker อื่นเอง</aside>
+      </section>
+
+      <!-- 16. Grounded Generation with Gemini -->
+      <section data-title="Grounded generation with Gemini">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">04 · option B · gemini retrieval tool</div>
+            <div class="rg-head-row" style="margin-bottom:14px">
+              <h2>Generate grounded answers with one Gemini Tool</h2>
+              <div class="rg-lg-badges">
+                <span class="rg-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>google-genai</span>
+              </div>
+            </div>
+            <div class="rg-2col">
+              <div>
+                <pre><code class="language-python rg-code-xs"># 1. Wrap your RAG Corpus as a Gemini Tool
+rag_retrieval_tool = genai_types.Tool(
+    retrieval=genai_types.Retrieval(
+        vertex_rag_store=genai_types.VertexRagStore(
+            rag_corpora=[rag_corpus.name],
+            similarity_top_k=10,
+            vector_distance_threshold=0.5,
+        )
+    )
+)
+
+# 2. Generate grounded content via Gen AI SDK
+genai_client = genai.Client(
+    project=PROJECT_ID, location="us-east1"
+)
+response = genai_client.models.generate_content(
+    model="gemini-4-hydrogen",
+    contents="What is RAG?",
+    config=genai_types.GenerateContentConfig(
+        tools=[rag_retrieval_tool]
+    ),
+)
+print(response.text)</code></pre>
+              </div>
+              <div class="rg-side">
+                <div class="pc green fragment" data-fragment-index="1">
+                  <h3>Single-Call Grounding</h3>
+                  <p style="color:var(--dk-sub)">Gemini automatically queries your corpus, injects top-K chunks, and synthesizes a grounded answer in one API call.</p>
+                </div>
+                <div class="pc blue fragment" data-fragment-index="2">
+                  <h3>No Manual Prompt Stuffing</h3>
+                  <p style="color:var(--dk-sub)">Skip string concatenation — pass <code>tools=[rag_retrieval_tool]</code> into <code>GenerateContentConfig</code>.</p>
+                </div>
+                <div class="pc red fragment" data-fragment-index="3">
+                  <h3>Built-in Grounding Metadata</h3>
+                  <p style="color:var(--dk-sub)">Inspect <code>response.candidates[0].grounding_metadata</code> to surface citations and source URIs in your UI.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">วิธีที่สองคือผูก RAG Corpus เป็น Retrieval Tool ของ Gemini โดยตรง • ขั้นที่ 1 สร้าง genai_types.Tool ที่มี VertexRagStore ชี้ไปที่ rag_corpus.name • ขั้นที่ 2 ส่ง tools=[rag_retrieval_tool] เข้าไปใน genai_client.models.generate_content • Gemini จะจัดการค้นหา ดึงบริบท และสรุปคำตอบให้จบในครั้งเดียว ไม่ต้องเขียนโค้ดต่อ string เอง และยังดึง grounding_metadata ไปโชว์แหล่งอ้างอิงใน UI ได้ด้วยครับ</aside>
+      </section>
+
+      <!-- 17. Direct Retrieval vs Gemini Retrieval Tool -->
+      <section data-title="Direct retrieval vs Gemini Tool">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:42px 56px">
+            <div class="eyebrow">04 · choosing the right pattern</div>
+            <h2 style="margin-bottom:20px">Direct retrieval vs. Gemini Retrieval Tool</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <thead>
+                <tr>
+                  <th style="width:22%">Dimension</th>
+                  <th style="width:39%">Direct (<code>retrieve_contexts</code>)</th>
+                  <th style="width:39%">Gemini Tool (<code>VertexRagStore</code>)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="fragment">
+                  <td>SDK Call</td>
+                  <td><code>agentplatform.Client().rag</code></td>
+                  <td><code>genai.Client().models.generate_content</code></td>
+                </tr>
+                <tr class="fragment">
+                  <td>Pipeline Control</td>
+                  <td class="hi-b">Full control — add custom reranking, filtering, or multi-source merge.</td>
+                  <td class="hi-g">Managed end-to-end — minimal boilerplate, single round-trip.</td>
+                </tr>
+                <tr class="fragment">
+                  <td>Model Choice</td>
+                  <td>Works with any LLM (Gemini, open models, custom endpoints).</td>
+                  <td>Native to Gemini models on Vertex AI / Agent Platform.</td>
+                </tr>
+                <tr class="fragment">
+                  <td>Best Use Case</td>
+                  <td>Debugging recall, eval pipelines, hybrid search, ADK custom tools.</td>
+                  <td>Fast production Q&amp;A apps &amp; chatbots with built-in citations.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Best practice</b><span>Use <code>retrieve_contexts()</code> during dev &amp; eval, then ship <code>rag_retrieval_tool</code> in production.</span></div>
+        </div>
+        <aside class="notes">สรุปเปรียบเทียบทั้ง 2 แบบครับ • Direct Retrieval เหมาะตอนพัฒนาและทำ evaluation เพราะเราคุมทุกขั้นตอนได้ ใส่ reranker หรือเอาไปต่อกับโมเดลไหนก็ได้ • ส่วน Gemini Retrieval Tool เหมาะตอนขึ้นระบบจริง เพราะโค้ดสั้นกว่า เรียก API รอบเดียว และได้ grounding metadata สำหรับแสดง citation ทันที</aside>
+      </section>
+
+      <!-- 18. Production Checklist -->
+      <section data-title="Production checklist">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · best practices</div>
+            <h2 style="margin-bottom:20px">Production checklist for Vertex AI RAG Engine</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <ul class="rg-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Grant Service Agent Viewer IAM</b> on every GCS bucket and Drive folder before importing.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Tune chunking per doc type</b> — 512/50 for concise docs, 1024/100 for dense PDFs.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Set <code>vector_distance_threshold</code></b> (e.g. 0.5) so off-topic chunks never pollute Gemini.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Throttle bulk imports</b> with <code>max_embedding_requests_per_min</code> to avoid 429 errors.</span></li>
+              </ul>
+              <ul class="rg-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Debug with <code>retrieve_contexts()</code></b> before tweaking prompts — fix retrieval first.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Separate corpora by domain &amp; ACL</b> so users only search authorized knowledge bases.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Don't hardcode <code>PROJECT_ID</code></b> — read <code>GOOGLE_CLOUD_PROJECT</code> and match supported regions.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Don't ignore citations</b> — surface <code>grounding_metadata</code> so users can verify answers.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เช็กลิสต์ 8 ข้อก่อนขึ้น production ครับ • ฝั่งซ้าย: ตั้งสิทธิ์ Viewer ให้ Service Agent ก่อนเสมอ, ปรับ chunk_size/overlap ให้เหมาะกับประเภทเอกสาร, ใส่ vector_distance_threshold กันเนื้อหาไม่เกี่ยวข้องหลุดเข้าไป, และคุม QPM ตอน import ไฟล์เยอะ ๆ • ฝั่งขวา: debug การค้นหาด้วย retrieve_contexts ก่อนแก้ prompt, แยก corpus ตามโดเมนและสิทธิ์, อย่า hardcode project ID, และอย่าลืมโชว์ citation จาก grounding_metadata ให้ผู้ใช้ตรวจสอบได้ครับ</aside>
+      </section>
+
+      <!-- 19. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:22px">Ingest, Retrieve, Generate</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <div style="display:flex; gap:8px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-storage.png" alt="GCS"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/googledrive.svg" alt="Drive"></span>
+                </div>
+                <h3>1 · Ingest</h3>
+                <p style="font-size:15.5px; line-height:1.42">Create a <b>RAG Corpus</b> and load Local files, <b>GCS buckets</b>, or <b>Google Drive</b> folders with tuned chunking.</p>
+              </div>
+              <div class="pc green fragment">
+                <div style="display:flex; gap:8px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span>
+                </div>
+                <h3>2 · Retrieve</h3>
+                <p style="font-size:15.5px; line-height:1.42">Query semantic vectors via <code>retrieve_contexts()</code> with <code>top_k</code> and <code>vector_distance_threshold</code>.</p>
+              </div>
+              <div class="pc red fragment">
+                <div style="display:flex; gap:8px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                </div>
+                <h3>3 · Generate</h3>
+                <p style="font-size:15.5px; line-height:1.42">Attach <code>VertexRagStore</code> as a <b>Gemini Retrieval Tool</b> for grounded, cited answers in one call.</p>
+              </div>
+            </div>
+            <div class="fragment" style="width:1088px; margin-top:22px; display:flex; flex-wrap:wrap; gap:8px">
+              <span class="rg-hook" style="--c:var(--h-blue)">agentplatform.Client</span>
+              <span class="rg-hook" style="--c:var(--h-green)">create_corpus</span>
+              <span class="rg-hook" style="--c:var(--h-yellow)">GcsSource</span>
+              <span class="rg-hook" style="--c:var(--h-yellow)">GoogleDriveSource</span>
+              <span class="rg-hook" style="--c:var(--h-blue)">RagFileChunkingConfig</span>
+              <span class="rg-hook" style="--c:var(--h-green)">retrieve_contexts</span>
+              <span class="rg-hook" style="--c:var(--h-red)">VertexRagStore Tool</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Try it now</b><span>Open <code>intro_rag_engine.ipynb</code> in Colab, create a corpus, and ground Gemini on your own Drive folder in 5 minutes.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำของวันนี้ครับ • (คลิก 1) Ingest: สร้าง Corpus แล้วดึงไฟล์จาก Local, GCS หรือ Google Drive พร้อมตั้ง chunking • (คลิก 2) Retrieve: ค้นหาบริบทที่แม่นยำด้วย top_k และ distance threshold • (คลิก 3) Generate: เสียบ VertexRagStore เป็น Tool ให้ Gemini ตอบแบบมีหลักฐานอ้างอิง • ลองเปิด Colab notebook ทำตามได้ภายใน 5 นาทีเลยครับ</aside>
+      </section>
+
+      <!-- 20. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:46px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:22px">Notebook, docs &amp; next steps</h2>
+            <div class="grid g2" style="width:1088px; gap:14px">
+              <div class="pc yellow rg-res-row"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Colab"></span><div><h3>Colab: Intro to RAG Engine</h3><a class="mono" style="font-size:13.5px" href="https://colab.research.google.com/github/GoogleCloudPlatform/generative-ai/blob/main/gemini/rag-engine/intro_rag_engine.ipynb" target="_blank">Open intro_rag_engine.ipynb in Colab</a></div></div>
+              <div class="pc blue rg-res-row"><span class="ev-lg"><img src="../images/shared/logos/github.svg" alt="GitHub"></span><div><h3>GitHub Source Notebook</h3><a class="mono" style="font-size:13.5px" href="https://github.com/GoogleCloudPlatform/generative-ai/blob/main/gemini/rag-engine/intro_rag_engine.ipynb" target="_blank">GoogleCloudPlatform/generative-ai</a></div></div>
+              <div class="pc green rg-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><div><h3>RAG Engine Overview Docs</h3><a class="mono" style="font-size:13.5px" href="https://docs.cloud.google.com/gemini-enterprise-agent-platform/build/rag-engine/rag-overview" target="_blank">Agent Platform RAG Engine Docs</a></div></div>
+              <div class="pc blue rg-res-row"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Regions"></span><div><h3>Supported Regions</h3><a class="mono" style="font-size:13.5px" href="https://cloud.google.com/vertex-ai/generative-ai/docs/rag-engine/rag-overview#supported-regions" target="_blank">Vertex AI RAG Engine Locations</a></div></div>
+              <div class="pc red rg-res-row"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><div><h3>Google Gen AI Python SDK</h3><a class="mono" style="font-size:13.5px" href="https://googleapis.github.io/python-genai/" target="_blank">googleapis.github.io/python-genai/</a></div></div>
+              <div class="pc green rg-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Pair with ADK Agents</h3><a class="mono" style="font-size:13.5px" href="adk-mcp-tools-slides.html">Explore Tools &amp; ADK decks →</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รวมลิงก์ทั้งหมดสำหรับลองทำตามครับ ทั้งลิงก์ Colab notebook ต้นฉบับ, GitHub repo, เอกสาร RAG Engine Overview, รายชื่อ Region ที่รองรับ และ Google Gen AI SDK • สแกน QR หน้า Agenda เพื่อเปิดสไลด์นี้กดลิงก์ได้ทันทีครับ</aside>
+      </section>
+
+      <!-- 21. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="rg-ty-art"><img src="../images/rag-engine-slides/thank-you-art.svg" alt="Glowing RAG Engine corpus with Gemini spark"></div>
+        <div class="dots" style="left:970px; top:536px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณทุกคนมากครับ/ค่ะ • เปิดช่วง Q &amp; A สอบถามเรื่อง Vertex AI RAG Engine, การต่อ GCS/Drive หรือการนำไปใช้กับ Gemini และ ADK ได้เลยครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

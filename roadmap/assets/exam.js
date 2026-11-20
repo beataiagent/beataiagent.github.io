@@ -9,16 +9,16 @@
   "use strict";
   const DATA = JSON.parse(document.getElementById("quiz-data").textContent);
   // Near-identical pairs in the source bank: hide the later copy so it isn't asked twice
-  const DUPES = { "1.1-8": "1.1-2", "3.1-13": "3.1-14" };
+  const DUPES = DATA.meta.dupes || { "1.1-8": "1.1-2", "3.1-13": "3.1-14" };
   const SECTIONS = DATA.sections;
   const Q = DATA.questions.filter(q => !DUPES[q.id]);
   const BY_ID = Object.fromEntries(Q.map(q => [q.id, q]));
   const PASS = DATA.meta.passScore || 70;
   const LETTERS = "ABCDE";
-  const COLORS = { 1: "#4285f4", 2: "#34a853", 3: "#fbbc04", 4: "#ea4335", 5: "#a142f4" };
+  const COLORS = DATA.meta.colors || { 1: "#4285f4", 2: "#34a853", 3: "#fbbc04", 4: "#ea4335", 5: "#a142f4" };
   const SUBS = SECTIONS.flatMap(s => s.subtopics.map(t => ({ ...t, section: s.id })));
   // where each exam-guide subtopic is taught on this site
-  const STUDY = {
+  const STUDY = DATA.meta.study || {
     "1.1": [["sec1-ces-omnichannel", "1.3 CES: Flows, Playbooks & Omnichannel"], ["sec1-platform-selection", "1.2 Agent Designer vs. Code-First ADK"]],
     "1.2": [["sec1-platform-selection", "1.2 Multimodal ingestion & Agent Search ACLs"], ["sec3-rag-grounding", "3.4 RAG Engine, Agent Search & Caching"]],
     "2.1": [["sec2-cicd-sandboxing", "2.3 CI/CD Automation & Sandboxing"], ["sec2-mcp-subagents", "2.2 MCP Tooling & Subagents"]],
@@ -31,15 +31,17 @@
     "5.1": [["sec5-identity", "5.2 Agent Identity & OAuth 2.0"], ["sec5-perimeter", "5.1 Follow the Prompt: Perimeter"]],
     "5.2": [["sec5-callbacks", "5.3 ADK Callbacks & HITL"], ["sec5-identity", "5.2 Agent Identity & OAuth 2.0"]]
   };
-  const studyHref = slug => "sec" + slug[3] + ".html#" + slug;
+  const studyHref = slug => /[.:/#]/.test(slug) ? slug : "sec" + slug[3] + ".html#" + slug;
+  const [NQ, NS] = DATA.meta.examSizes || [25, 50];
   const EXAMS = [
-    { id: "quick", n: 25, min: 50, label: "Quick check" },
-    { id: "standard", n: 50, min: 100, label: "Standard mock" },
+    { id: "quick", n: NQ, min: NQ * 2, label: "Quick check" },
+    { id: "standard", n: NS, min: NS * 2, label: "Standard mock" },
     { id: "marathon", n: Q.length, min: Q.length * 2, label: "Whole bank" }
   ];
 
   /* ---------- storage ---------- */
-  const HKEY = "doc-exam-history-v1", RKEY = "doc-exam-run-v1";
+  const SK = DATA.meta.storageKey ? "-" + DATA.meta.storageKey : "";
+  const HKEY = "doc-exam-history-v1" + SK, RKEY = "doc-exam-run-v1" + SK;
   const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) || d; } catch (e) { return d; } };
   const store = (k, v) => { try { v == null ? localStorage.removeItem(k) : localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} };
   let hist = load(HKEY, { q: {}, runs: [] });
@@ -152,7 +154,7 @@
     const weights = SECTIONS.map(s => '<i style="width:' + s.weight + '%;background:' + COLORS[s.id] + '" title="' + esc(s.title) + " " + s.weight + '%"></i>').join("");
     const rows = SECTIONS.map(s => {
       const qs = Q.filter(q => q.section === s.id);
-      return '<section class="ex-dom" style="--c:' + COLORS[s.id] + '"><div class="ex-dom-h"><div><span class="ex-code">DOMAIN ' + s.code + ' · ' + s.weight + '% OF EXAM</span><h3>' + esc(s.title) + '</h3></div>' +
+      return '<section class="ex-dom" style="--c:' + COLORS[s.id] + '"><div class="ex-dom-h"><div><span class="ex-code">DOMAIN ' + s.code + ' · ' + s.weight + '% ' + (DATA.meta.weightLabel || "OF EXAM") + '</span><h3>' + esc(s.title) + '</h3></div>' +
         '<button class="ex-btn sm" data-a="practice" data-k="section" data-v="' + s.id + '">Practice all ' + qs.length + '</button></div>' +
         s.subtopics.map(t => {
           const m = subStats(t.code), w = pct(m.seen, m.total), acc = m.seen ? pct(m.right, m.seen) : null;
@@ -163,8 +165,8 @@
         }).join("") + '</section>';
     }).join("");
     const runs = hist.runs.slice(0, 5).map(r => '<li><b class="' + (pct(r.ok, r.total) >= PASS ? "ok" : "bad") + '">' + pct(r.ok, r.total) + '%</b> ' + esc(r.title) + ' <span>' + r.ok + '/' + r.total + ' · ' + ago(r.at) + (r.mode === "exam" ? " · " + fmtTime(r.ms) : "") + '</span></li>').join("");
-    return '<div class="ex-hero"><div class="kicker">Practice exam · ' + Q.length + ' questions</div><h1>Mock Exam</h1>' +
-      '<p>Scenario questions for the five exam domains. Every answer is explained and links to the Google documentation page it comes from, plus the module on this site that teaches it.</p>' +
+    return '<div class="ex-hero"><div class="kicker">Practice exam · ' + Q.length + ' questions</div><h1>' + esc(DATA.meta.heading || 'Mock Exam') + '</h1>' +
+      '<p>' + (DATA.meta.intro || 'Scenario questions for the five exam domains. Every answer is explained and links to the Google documentation page it comes from, plus the module on this site that teaches it.') + '</p>' +
       '<div class="ex-stats"><div><b>' + st.seen + '<small>/' + Q.length + '</small></b>answered</div><div><b class="ok">' + st.right + '</b>right last time</div><div><b class="bad">' + st.wrong + '</b>in mistake bank</div><div><b>' + PASS + '%</b>target score</div></div></div>' +
 
       '<h2 class="ex-h">1 · Timed exam simulation</h2><p class="ex-note">Questions are drawn in proportion to each domain\'s exam weight. No answers are shown until you submit. Flag questions to come back to, and jump around with the question map. Pace: 2 minutes per question.</p>' +
@@ -176,7 +178,7 @@
       '<div class="ex-weight">' + weights + '</div>' + rows +
 
       (runs ? '<h2 class="ex-h">Recent runs</h2><ul class="ex-runs">' + runs + '</ul>' : "") +
-      '<p class="ex-note small">' + esc(DATA.meta.citationNote) + ' These are study questions written from the exam guide topics, not official exam content. ' + (Object.keys(DUPES).length) + ' near-duplicate questions from the source set are hidden.' +
+      '<p class="ex-note small">' + esc(DATA.meta.citationNote) + ' ' + (DATA.meta.disclaimer || 'These are study questions written from the exam guide topics, not official exam content.') + (Object.keys(DUPES).length ? ' ' + Object.keys(DUPES).length + ' near-duplicate questions from the source set are hidden.' : '') +
       (hist.runs.length || Object.keys(hist.q).length ? ' <button class="ex-link" data-a="wipe">Reset my history</button>' : "") + '</p>';
   }
 
@@ -316,6 +318,7 @@
     if ((m = /^exam-(\w+)$/.exec(h)) && EXAMS.some(x => x.id === m[1])) startExam(m[1]);
     else if ((m = /^section-(\d)$/.exec(h)) && sec(+m[1])) startPractice("section", +m[1], "unseen");
     else if ((m = /^sub-(\d\.\d)$/.exec(h)) && sub(m[1])) startPractice("sub", m[1], "unseen");
+    else if ((m = /^sub-(\d)\.\d$/.exec(h)) && sec(+m[1])) startPractice("section", +m[1], "unseen");
     else if (h === "mistakes" && stats().wrong) startPractice("mistakes", null, "unseen");
     else render();
   } else render();

@@ -1,0 +1,45 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <circle cx="128" cy="124" r="96" fill="url(#amb-y)"/>
+  <circle cx="128" cy="128" r="100" fill="none" stroke="#ffd427" stroke-width="2" stroke-dasharray="6 6" opacity="0.45"/>
+
+  <!-- 3 source badges top -->
+  <rect x="38" y="60" width="54" height="36" rx="10" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="65" y="82" text-anchor="middle" class="m" font-size="11" fill="#57caff">LOCAL</text>
+
+  <rect x="101" y="60" width="54" height="36" rx="10" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="128" y="82" text-anchor="middle" class="m" font-size="11" fill="#ffd427">GCS</text>
+
+  <rect x="164" y="60" width="54" height="36" rx="10" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="191" y="82" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">DRIVE</text>
+
+  <!-- Funnel lines -->
+  <path d="M65 96 V114 H128 M128 96 V128 M191 96 V114 H128" fill="none" stroke="#ffd427" stroke-width="2.2"/>
+
+  <!-- Chunks output -->
+  <rect x="52" y="132" width="44" height="44" rx="10" fill="url(#glass)" stroke="#ffd427" stroke-width="2" filter="url(#glow-s)"/>
+  <text x="74" y="158" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">C1</text>
+  <rect x="106" y="132" width="44" height="44" rx="10" fill="url(#glass)" stroke="#ffd427" stroke-width="2" filter="url(#glow-s)"/>
+  <text x="128" y="158" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">C2</text>
+  <rect x="160" y="132" width="44" height="44" rx="10" fill="url(#glass)" stroke="#ffd427" stroke-width="2" filter="url(#glow-s)"/>
+  <text x="182" y="158" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">C3</text>
+
+  <text x="128" y="226" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">INGEST &amp; CHUNKING</text>
+</svg>

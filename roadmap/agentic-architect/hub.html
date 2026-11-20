@@ -4,19 +4,21 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>GCP Agentic Architecture Cert Prep</title>
-<link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
-<link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
-<link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
-<link href="../fonts/fonts.css" rel="stylesheet">
-<link href="assets/doc.css" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="../../images/shared/logos/b-favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="../../images/shared/logos/b-favicon-32.png">
+<link rel="icon" type="image/png" sizes="192x192" href="../../images/shared/logos/b-favicon-192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../../images/shared/logos/b-favicon-180.png">
+<link href="../../fonts/fonts.css" rel="stylesheet">
+<link href="../assets/doc.css" rel="stylesheet">
 <script>try{var t=localStorage.getItem("doc-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
 <style>
 .hero { margin: 18px 0 30px; }
 .hero .kicker { font-size: .78rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
 .hero h1 { font-size: clamp(2rem, 5vw, 2.9rem); margin: 8px 0 12px; }
 .hero p { max-width: 640px; font-size: 1.05rem; margin: 0 0 16px; }
+.cta-row { display: flex; flex-wrap: wrap; gap: 10px; }
 .cta { display: inline-flex; gap: 8px; align-items: center; padding: 9px 16px; border-radius: 999px; background: var(--blue); color: #fff; text-decoration: none; font-weight: 700; font-size: .9rem; }
+.cta.sec-btn { background: transparent; color: var(--accent); border: 1px solid var(--line); }
 .sec-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 14px; }
 .sec { display: flex; flex-direction: column; gap: 10px; padding: 18px; border-radius: 14px; background: var(--bg-nav); border: 1px solid var(--line); border-top: 4px solid var(--c); }
 .sec .n { font-size: .74rem; font-weight: 700; color: var(--sub); letter-spacing: .06em; }
@@ -28,10 +30,10 @@
 .sec .lg { width: 28px; height: 28px; }
 </style>
 </head>
-<body data-slug="index" class="hand">
+<body data-slug="hub" class="hand">
 <header class="topbar">
   <button class="tb-btn menu-btn" id="menu-btn" type="button" aria-label="Open menu">☰</button>
-  <a class="brand" href="index.html"><img src="../images/shared/logos/googlecloud.svg" alt=""><span>GCP Agentic Architecture Cert Prep</span></a>
+  <a class="brand" href="../index.html"><img src="../../images/shared/logos/googlecloud.svg" alt=""><span>Learning Roadmaps · Agentic Architect</span></a>
   <span class="sp"></span>
   <button class="tb-btn" id="theme-btn" type="button">Light / dark</button>
 </header>
@@ -43,32 +45,36 @@
     <div class="kicker">Google Cloud · Professional Agentic Architect</div>
     <h1 id="_top">GCP Agentic Architecture Cert Prep</h1>
     <p>Five domains, 35 study modules and 5 practice-question sets, from choosing between automation and agents to deploying and securing them on Google Cloud.</p>
-    <a class="cta" href="roadmap.html">Follow the Learning Roadmap →</a> <a class="cta" href="overview.html" style="background:transparent;color:var(--accent);border:1px solid var(--line)">Certification Blueprint</a>
+    <div class="cta-row">
+      <a class="cta" href="index.html">Follow the Learning Roadmap →</a>
+      <a class="cta sec-btn" href="overview.html">Certification Blueprint</a>
+      <a class="cta sec-btn" href="../index.html">← All Roadmaps</a>
+    </div>
   </div>
 
   <div class="sec-grid">
     <section class="sec" style="--c:#4285f4">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/workflows.svg" alt=""><img class="lg" src="../images/shared/logos/gemini.svg" alt=""><img class="lg" src="../images/shared/logos/gcp-dialog-flow-enterprise-edition.png" alt=""></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/workflows.svg" alt=""><img class="lg" src="../../images/shared/logos/gemini.svg" alt=""><img class="lg" src="../../images/shared/logos/gcp-dialog-flow-enterprise-edition.png" alt=""></div>
       <span class="n">SECTION 1</span><h2>Agent Solutions</h2>
       <ul><li><a href="sec1.html#sec1-exam-guide">1.0 Domain 1 Roadmap</a></li><li><a href="sec1.html#sec1-architecture">1.1 Automation vs. Single vs. Multi-Agent</a></li><li><a href="sec1.html#sec1-platform-selection">1.2 Agent Designer vs. Code-First ADK</a></li><li><a href="sec1.html#sec1-ces-omnichannel">1.3 CES: Flows, Playbooks &amp; Omnichannel</a></li><li><a href="sec1.html#sec1-takeaway">1.4 Master Takeaway</a> · <a href="sec1.html#sec1-qa">1.5 Q&amp;A</a></li><li><a href="sec1.html#mcq-sec1">Practice Questions</a></li></ul>
     </section>
     <section class="sec" style="--c:#34a853">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/gemini-cli.png" alt=""><img class="lg" src="../images/shared/logos/antigravity.png" alt=""><img class="lg mono" src="../images/shared/logos/mcp.svg" alt=""><img class="lg mono" src="../images/shared/logos/github.svg" alt=""></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/gemini-cli.png" alt=""><img class="lg" src="../../images/shared/logos/antigravity.png" alt=""><img class="lg mono" src="../../images/shared/logos/mcp.svg" alt=""><img class="lg mono" src="../../images/shared/logos/github.svg" alt=""></div>
       <span class="n">SECTION 2</span><h2>AI-Assisted Dev</h2>
       <ul><li><a href="sec2.html#sec2-exam-guide">2.0 Domain 2 Roadmap</a></li><li><a href="sec2.html#sec2-context-skills">2.1 Context, Custom Skills &amp; Secrets</a></li><li><a href="sec2.html#sec2-mcp-subagents">2.2 MCP Tooling &amp; Subagent Refactoring</a></li><li><a href="sec2.html#sec2-cicd-sandboxing">2.3 CI/CD Automation &amp; Sandboxing</a></li><li><a href="sec2.html#sec2-takeaway">2.4 Master Takeaway</a> · <a href="sec2.html#sec2-qa">2.5 Q&amp;A</a></li><li><a href="sec2.html#mcq-sec2">Practice Questions</a></li></ul>
     </section>
     <section class="sec" style="--c:#fbbc04">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/adk.png" alt=""><img class="lg mono" src="../images/shared/logos/a2a.svg" alt=""><img class="lg" src="../images/shared/logos/gcp-vertex-ai.png" alt=""><img class="lg mono" src="../images/shared/logos/mcp.svg" alt=""></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/adk.png" alt=""><img class="lg mono" src="../../images/shared/logos/a2a.svg" alt=""><img class="lg" src="../../images/shared/logos/gcp-vertex-ai.png" alt=""><img class="lg mono" src="../../images/shared/logos/mcp.svg" alt=""></div>
       <span class="n">SECTION 3</span><h2>Custom Agents</h2>
       <ul><li><a href="sec3.html#sec3-exam-guide">3.0 Domain 3 Roadmap</a></li><li><a href="sec3.html#sec3-single-agent">3.1 Single-Agent Design &amp; ADK Params</a></li><li><a href="sec3.html#sec3-workflows">3.2 Multi-Agent Workflow Patterns</a></li><li><a href="sec3.html#sec3-mcp-tools">3.3 MCP Toolbox &amp; Custom Tools</a></li><li><a href="sec3.html#sec3-rag-grounding">3.4 RAG Engine, Agent Search &amp; Caching</a></li><li><a href="sec3.html#sec3-state-memory">3.5 State, Sessions &amp; Memory Bank</a></li><li><a href="sec3.html#sec3-a2a-protocol">3.6 A2A Protocol &amp; Agent Cards</a></li><li><a href="sec3.html#sec3-takeaway">3.7 Master Takeaway</a> · <a href="sec3.html#sec3-qa">3.8 Q&amp;A</a></li><li><a href="sec3.html#mcq-sec3">Practice Questions</a></li></ul>
     </section>
     <section class="sec" style="--c:#ea4335">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/gcp-run.png" alt=""><img class="lg" src="../images/shared/logos/gcp-kubernetes-engine.png" alt=""><img class="lg" src="../images/shared/logos/opentelemetry.svg" alt=""><img class="lg" src="../images/shared/logos/gcp-build.png" alt=""></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/gcp-run.png" alt=""><img class="lg" src="../../images/shared/logos/gcp-kubernetes-engine.png" alt=""><img class="lg" src="../../images/shared/logos/opentelemetry.svg" alt=""><img class="lg" src="../../images/shared/logos/gcp-build.png" alt=""></div>
       <span class="n">SECTION 4</span><h2>Eval &amp; Deploy</h2>
       <ul><li><a href="sec4.html#sec4-exam-guide">4.0 Domain 4 Roadmap</a></li><li><a href="sec4.html#sec4-evaluation">4.1 Trajectory Eval &amp; Rubric Syntax</a></li><li><a href="sec4.html#sec4-runtimes">4.2 Runtimes: Agent Runtime, Cloud Run &amp; GKE</a></li><li><a href="sec4.html#sec4-cicd">4.3 Agent Starter Pack &amp; CI/CD Gates</a></li><li><a href="sec4.html#sec4-observability">4.4 Tracing, Monitoring &amp; Optimization</a></li><li><a href="sec4.html#sec4-takeaway">4.5 Master Takeaway</a> · <a href="sec4.html#sec4-qa">4.6 Q&amp;A</a></li><li><a href="sec4.html#mcq-sec4">Practice Questions</a></li></ul>
     </section>
     <section class="sec" style="--c:#a142f4">
-      <div class="lg-row"><img class="lg" src="../images/shared/logos/gcp-iam.png" alt=""><img class="lg" src="../images/shared/logos/gcp-armor.png" alt=""><img class="lg" src="../images/shared/logos/gcp-virtual-private-cloud.png" alt=""><img class="lg" src="../images/shared/logos/gcp-iap.png" alt=""></div>
+      <div class="lg-row"><img class="lg" src="../../images/shared/logos/gcp-iam.png" alt=""><img class="lg" src="../../images/shared/logos/gcp-armor.png" alt=""><img class="lg" src="../../images/shared/logos/gcp-virtual-private-cloud.png" alt=""><img class="lg" src="../../images/shared/logos/gcp-iap.png" alt=""></div>
       <span class="n">SECTION 5</span><h2>Security &amp; Governance</h2>
       <ul><li><a href="sec5.html#sec5-exam-guide">5.0 Domain 5 Roadmap</a></li><li><a href="sec5.html#sec5-perimeter">5.1 Follow the Prompt: Perimeter</a></li><li><a href="sec5.html#sec5-identity">5.2 Agent Identity &amp; OAuth 2.0</a></li><li><a href="sec5.html#sec5-callbacks">5.3 ADK Callbacks &amp; HITL</a></li><li><a href="sec5.html#sec5-registry">5.4 Agent Registry &amp; Governance</a></li><li><a href="sec5.html#sec5-takeaway">5.5 Master Takeaway</a> · <a href="sec5.html#sec5-qa">5.6 Q&amp;A</a></li><li><a href="sec5.html#mcq-sec5">Practice Questions</a></li></ul>
     </section>
@@ -76,6 +82,6 @@
 </main>
 </div>
 </div>
-<script src="assets/doc.js"></script>
+<script src="../assets/doc.js"></script>
 </body>
 </html>
