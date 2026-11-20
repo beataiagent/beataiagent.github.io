@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="gauge-grad" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#5cdb6d"/>
+      <stop offset="45%" stop-color="#57caff"/>
+      <stop offset="75%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <circle cx="96" cy="144" r="96" fill="url(#amb-b)"/>
+  <circle cx="176" cy="94" r="88" fill="url(#amb-r)"/>
+  <circle cx="128" cy="128" r="102" fill="none" stroke="#57caff" stroke-width="1.8" stroke-dasharray="6 6" opacity="0.4"/>
+
+  <!-- Glass gauge housing -->
+  <rect x="34" y="54" width="188" height="136" rx="22" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+
+  <!-- Semicircular gauge track -->
+  <path d="M62 152 A66 66 0 0 1 194 152" fill="none" stroke="#17181b" stroke-width="16" stroke-linecap="round"/>
+  <!-- Filled glowing arc (96% full) -->
+  <path d="M62 152 A66 66 0 0 1 192 138" fill="none" stroke="url(#gauge-grad)" stroke-width="14" stroke-linecap="round" filter="url(#glow-s)"/>
+
+  <!-- Gauge needle pointing into red overflow -->
+  <line x1="128" y1="152" x2="178" y2="112" stroke="#ff7daf" stroke-width="4" stroke-linecap="round" filter="url(#glow-s)"/>
+  <circle cx="128" cy="152" r="9" fill="#202124" stroke="#ff7daf" stroke-width="3"/>
+
+  <!-- Center readout -->
+  <text x="128" y="132" text-anchor="middle" class="t" font-size="22" fill="#ffffff">140K+</text>
+  <text x="128" y="176" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">TOKENS · O(N²)</text>
+
+  <!-- Overflowing token chips spilling out top-right -->
+  <g transform="translate(174, 46) rotate(14)">
+    <rect x="-18" y="-10" width="36" height="20" rx="6" fill="url(#glass)" stroke="#ff7daf" stroke-width="1.8"/>
+    <text x="0" y="4" text-anchor="middle" class="m" font-size="9.5" fill="#ff7daf">PDF</text>
+  </g>
+  <g transform="translate(212, 74) rotate(24)">
+    <rect x="-18" y="-10" width="36" height="20" rx="6" fill="url(#glass)" stroke="#ffd427" stroke-width="1.8"/>
+    <text x="0" y="4" text-anchor="middle" class="m" font-size="9.5" fill="#ffd427">JSON</text>
+  </g>
+
+  <!-- Warning spark badge -->
+  <g transform="translate(196, 114)">
+    <polygon points="0,-18 5,-6 18,-6 8,3 12,16 0,8 -12,16 -8,3 -18,-6 -5,-6" fill="#ffd427" filter="url(#glow-s)"/>
+    <text x="0" y="4" text-anchor="middle" class="t" font-size="13" fill="#202124">!</text>
+  </g>
+
+  <!-- Bottom label -->
+  <text x="128" y="226" text-anchor="middle" class="m" font-size="12" fill="#57caff">CONTEXT OVERFLOW</text>
+</svg>

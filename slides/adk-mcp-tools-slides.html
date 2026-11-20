@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tools &amp; MCP in ADK — Connect, Extend, Ground</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- Tools & MCP in ADK deck extras ---------- */
+    .mcp-div-art { position: absolute; left: 57px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .mcp-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .mcp-ty-art { position: absolute; left: 880px; top: 186px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+    .reveal .slides .mcp-ty-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .mcp-art { border: 2px solid var(--dk-line); border-radius: 16px; overflow: hidden; background: #202124; box-sizing: border-box; width: 1088px; }
+    .mcp-art.blue { border-color: var(--h-blue); } .mcp-art.green { border-color: var(--h-green); }
+    .mcp-art.yellow { border-color: var(--h-yellow); } .mcp-art.red { border-color: var(--h-red); }
+    .reveal .slides .mcp-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+
+    /* compact logo strips & card headers */
+    .lg-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .lg-pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 6px; border-radius: 999px; background: #17181b; border: 1.5px solid #3c4043; font: 500 12.5px/1 var(--mono); color: var(--dk-text); }
+    .lg-pill .ev-lg-sm { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 6px; background: #fff; flex: none; }
+    .reveal .slides .lg-pill .ev-lg-sm img { width: 15px; height: 15px; object-fit: contain; display: block; }
+    .h-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .h-row h3 { margin: 0; }
+    .ev-lg.sm { width: 32px; height: 32px; border-radius: 8px; }
+    .reveal .slides .ev-lg.sm img { width: 20px; height: 20px; }
+
+    .cb-ico { display: block; width: 38px; height: 38px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+
+    /* pill badges */
+    .cb-hook { flex: none; font: 500 13.5px/1.2 var(--mono); padding: 7px 13px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; box-sizing: border-box; }
+    .cb-recap-hooks .cb-hook { font-size: 13px; padding: 7px 11px; }
+
+    /* side cards next to code */
+    .cb-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .cb-side .pc { padding: 12px 16px; font-size: 15px; line-height: 1.38; }
+    .cb-side .pc h3 { font-size: 18px; margin-bottom: 4px; }
+
+    /* checklist */
+    .reveal ul.cb-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .cb-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .cb-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .cb-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .cb-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* resources */
+    .cb-res-row { display: flex; align-items: center; gap: 14px; padding: 16px 20px; }
+    .cb-res-row h3 { margin: 0 0 4px; font-size: 20px; }
+
+    /* N x M vs N + M visual */
+    .mcp-nxm { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; width: 1088px; }
+    .mcp-nxm .pc { padding: 18px 20px; }
+    .mcp-nxm-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .mcp-nxm-head h3 { margin: 0; font-size: 22px; }
+    .mcp-nxm-svg { display: block; width: 100%; height: 260px; }
+
+    /* MCP architecture boxes */
+    .mcp-arch { display: grid; grid-template-columns: 1fr 34px 1fr 34px 1fr; align-items: stretch; gap: 8px; width: 1088px; }
+    .mcp-arch .pc { padding: 16px 18px; display: flex; flex-direction: column; justify-content: flex-start; }
+    .mcp-arch .ar { width: 34px; height: 24px; align-self: center; fill: none; stroke: var(--dk-text); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .mcp-prim { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; width: 1088px; margin-top: 14px; }
+    .mcp-prim .pc { padding: 12px 16px; font-size: 14.5px; line-height: 1.35; }
+    .mcp-prim .pc b { display: block; font-size: 16.5px; margin-bottom: 4px; }
+
+    /* Cloud Run deployment diagram */
+    .cr-arch { display: grid; grid-template-columns: 170px 28px 280px 28px 280px 28px 1fr; align-items: stretch; gap: 6px; width: 1088px; }
+    .cr-arch .pc { padding: 16px 14px; text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; }
+    .cr-arch .ar { width: 28px; height: 22px; align-self: center; fill: none; stroke: var(--dk-text); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+    .cr-arch .badge-sm { font: 500 11.5px/1.2 var(--mono); padding: 4px 9px; border-radius: 999px; background: #17181b; border: 1.5px solid var(--c, var(--dk-line)); color: var(--c, var(--dk-text)); }
+    .cr-arch p { font-size: 13.5px; line-height: 1.35; color: var(--dk-sub); }
+    .cr-arch b { font-size: 17px; line-height: 1.2; }
+
+    /* composite memory + mcp diagram */
+    .mem-grid { display: grid; grid-template-columns: 1fr 220px 1fr; gap: 16px; align-items: center; width: 1088px; }
+    .mem-grid .pc { padding: 16px 18px; }
+    .mem-mid { text-align: center; padding: 18px 14px !important; }
+
+    .reveal table.zt-tbl td.hi { color: var(--h-green); font-weight: 500; }
+    .reveal table.zt-tbl td.dim { color: var(--dk-sub); }
+  </style>
+</head>
+<body data-deck="Tools &amp; MCP in ADK">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M7 8h10v3a5 5 0 0 1-10 0V8Z"/><path d="M12 16v5"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><circle cx="7" cy="7" r="1"/><circle cx="7" cy="17" r="1"/></symbol>
+    <symbol id="i-code" viewBox="0 0 24 24"><path d="m8 7-5 5 5 5M16 7l5 5-5 5M14 4l-4 16"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4a3.5 3.5 0 0 0-3.3 4.7A3.5 3.5 0 0 0 5 15a3.5 3.5 0 0 0 4.5 5V4Z"/><path d="M14.5 4a3.5 3.5 0 0 1 3.3 4.7A3.5 3.5 0 0 1 19 15a3.5 3.5 0 0 1-4.5 5V4Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Tools &amp; MCP in ADK">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Connect</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Extend</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Ground</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Tools &amp; MCP in ADK</b><span>Give your agent real capabilities with Function Tools, OpenAPI and MCP</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-blue)"><img src="../images/shared/logos/mcp.svg" alt="">MCP</i><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-yellow)"><img src="../images/shared/logos/python.svg" alt="">Python</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • วันนี้มาคุยเรื่อง Tools และ MCP ใน ADK (Agent Development Kit) • 3 คำหลัก: Connect เชื่อม agent เข้ากับ API และข้อมูลจริง, Extend ขยายความสามารถด้วยมาตรฐาน MCP โดยไม่ต้องเขียนโค้ดเชื่อมซ้ำ, Ground ทำให้คำตอบอ้างอิงความจริงในระบบของเราและรันขึ้น production ได้อย่างปลอดภัย</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>The ADK tool spectrum</strong><span>Function tools, built-ins, OpenAPI &amp; long-running ops</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Model Context Protocol</strong><span>USB-C for AI: architecture and transports</span></div></li>
+          <li class="c3"><b>03</b><div><strong>MCPToolset in ADK</strong><span>Local, remote, filtering, exposing tools &amp; memory</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Production tooling</strong><span>User OAuth, Cloud Run deployment &amp; security</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-mcp-tools-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">วันนี้แบ่งเป็น 4 ช่วงครับ: (1) ทำความรู้จักเครื่องมือทั้งหมดใน ADK ตั้งแต่ฟังก์ชัน Python ธรรมดา Built-in tools ไปจนถึง OpenAPI และ Long-running tool (2) รู้จัก Model Context Protocol หรือ MCP ว่าแก้ปัญหาอะไรและทำงานยังไง (3) ใช้ MCPToolset ใน ADK ทั้งแบบ local, remote, การกรอง tool และการเปิด ADK tool เป็น MCP server (4) การเอาขึ้น production ทั้งเรื่อง OAuth, Cloud Run และความปลอดภัย • สแกน QR ด้านขวาเปิดสไลด์ตามได้เลยครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · The ADK tool spectrum">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="mcp-div-art" style="--c:var(--h-blue)"><img src="../images/adk-mcp-tools-slides/sec-01-spectrum.svg" alt="ADK tool spectrum"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">The ADK<br>tool spectrum</h1>
+            <p class="sub" style="margin-top:28px">Function tools, built-ins,<br>OpenAPI &amp; long-running ops</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • โมเดล LLM อย่างเดียวคุยเก่ง แต่ทำอะไรกับโลกภายนอกไม่ได้ ถ้าไม่มี Tool • มาดูว่าใน ADK เรามีวิธีสร้างและต่อ Tool แบบไหนบ้าง</aside>
+      </section>
+
+      <!-- 4. Docstrings & Type Hints -->
+      <section data-title="Docstrings are the API contract">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · how gemini calls tools</div>
+            <h2 style="margin-bottom:18px">Docstrings and type hints are the API contract</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+def get_flight_status(
+    flight_no: str,
+    date: str,
+) -> dict:
+    """Look up real-time flight status.
+
+    Use when the user asks if a flight is on time,
+    delayed, or which gate it departs from.
+
+    Args:
+        flight_no: IATA flight code, e.g. 'TG640'.
+        date: Departure date in YYYY-MM-DD format.
+
+    Returns:
+        dict with 'status', 'gate', and 'eta'.
+    """
+    ...
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc blue fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><h3 style="color:var(--h-blue)">What Gemini sees</h3></div>ADK inspects the function signature and docstring to generate a JSON Schema <code>FunctionDeclaration</code>.</div>
+                <div class="pc green fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-green)">Docstring = prompt</h3></div>Say <b>when</b> to call the tool, exact formats (<code>YYYY-MM-DD</code>), and what the keys mean.</div>
+                <div class="pc yellow fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-yellow)">Strict types</h3></div>Use concrete types (<code>str</code>, <code>int</code>, <code>bool</code>, <code>list[str]</code>). Avoid <code>Any</code> or untyped <code>**kwargs</code>.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Golden rule</b><span>Gemini never reads your function body — only its name, type hints and docstring.</span></div>
+        </div>
+        <aside class="notes">เรื่องแรกที่สำคัญที่สุดในการเขียน tool: Gemini ไม่ได้อ่านโค้ดข้างในฟังก์ชันเราครับ สิ่งเดียวที่โมเดลเห็นคือ ชื่อฟังก์ชัน, type hints และ docstring • (คลิก) ADK จะแปลง signature กับ docstring เป็น JSON Schema ส่งให้ Gemini • (คลิก) ดังนั้น docstring คือ prompt ของ tool บอกให้ชัดว่าควรเรียกตอนไหน format ของ input เป็นยังไง เช่น YYYY-MM-DD • (คลิก) ใช้ type ที่ชัดเจน หลีกเลี่ยง Any หรือ **kwargs เพราะโมเดลจะเดาไม่ถูก • (คลิก) จำไว้เลยว่า docstring ที่ดีลดอาการโมเดลเรียก tool ผิดได้มากที่สุด</aside>
+      </section>
+
+      <!-- 5. Custom Python Function Tools -->
+      <section data-title="Custom Function Tools">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · custom function tools</div>
+            <h2 style="margin-bottom:18px">Plain Python functions, structured <code style="font-size:.82em">dict</code> results</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents import LlmAgent
+
+def get_order_status(order_id: str) -> dict:
+    """Return shipping status for a customer order."""
+    order = db.find_order(order_id)
+    if not order:
+        return {
+            "status": "error",
+            "error_message": f"Order {order_id} not found.",
+        }
+    return {"status": "success", "state": order.state, "eta": order.eta}
+
+support_agent = LlmAgent(
+    name="support_agent",
+    model="gemini-2.5-flash",
+    instruction="Help customers track orders using tools.",
+    tools=[get_order_status],  # auto-wrapped as FunctionTool
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc green fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-green)">Zero boilerplate</h3></div>Pass a plain <code>def</code> or <code>async def</code> into <code>tools=[]</code>. ADK wraps it in <code>FunctionTool</code> automatically.</div>
+                <div class="pc blue fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><h3 style="color:var(--h-blue)">Return a <code>dict</code></h3></div>Include a <code>"status"</code> key (<code>success</code> / <code>error</code>) so Gemini knows whether to answer, retry or ask the user.</div>
+                <div class="pc yellow fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-yellow)">Need state or auth?</h3></div>Add a <code>tool_context: ToolContext</code> parameter — ADK injects it and hides it from Gemini.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">วิธีสร้าง custom tool ใน ADK ง่ายมากครับ เขียนฟังก์ชัน Python ธรรมดาแล้วโยนเข้า list tools=[] ของ LlmAgent ได้เลย • (คลิก) ไม่ต้องใส่ decorator พิเศษ รองรับทั้ง def และ async def • (คลิก) แนวปฏิบัติที่ดีคือคืนค่าเป็น dict ที่มี key "status" บอกว่า success หรือ error พร้อม error_message ที่อ่านเข้าใจ เพื่อให้โมเดลตัดสินใจต่อได้ว่าจะตอบผู้ใช้หรือถามเลข order ใหม่ • (คลิก) ถ้าใน tool อยากอ่าน session state หรือขอ auth แค่เติมพารามิเตอร์ tool_context: ToolContext ADK จะ inject ให้เองและซ่อนจาก schema ที่ส่งให้ Gemini</aside>
+      </section>
+
+      <!-- 6. Built-in Tools -->
+      <section data-title="Built-in Tools">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · built-in tools</div>
+            <h2 style="margin-bottom:22px">Ground and compute out of the box</h2>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" style="--c:var(--h-blue)">
+                <div class="h-row" style="margin-bottom:10px"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><h3 style="color:var(--h-blue)">google_search</h3></div>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:12px">Live web grounding backed by Google Search with citations and grounding metadata.</p>
+                <code>from google.adk.tools import google_search</code>
+              </div>
+              <div class="pc green fragment" style="--c:var(--h-green)">
+                <div class="h-row" style="margin-bottom:10px"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-green)">BuiltInCodeExecutor</h3></div>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:12px">Sandboxed Python execution inside Gemini for math, CSV analysis and charts.</p>
+                <code>code_executor=BuiltInCodeExecutor()</code>
+              </div>
+              <div class="pc yellow fragment" style="--c:var(--h-yellow)">
+                <div class="h-row" style="margin-bottom:10px"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span><h3 style="color:var(--h-yellow)">VertexAiSearchTool</h3></div>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:12px">Enterprise RAG over your private Vertex AI Search data stores and PDFs.</p>
+                <code>VertexAiSearchTool(data_store_id=...)</code>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Watch out</b><span>Gemini built-in tools cannot be mixed with custom tools in the same LlmAgent — wrap them in a sub-agent or <code>AgentTool</code>.</span></div>
+        </div>
+        <aside class="notes">นอกจากเขียนเอง ADK มี Built-in Tools ที่ทำงานคู่กับ Gemini มาให้เลยครับ • (คลิก) google_search สำหรับค้นเว็บแบบ real-time พร้อมแหล่งอ้างอิง • (คลิก) BuiltInCodeExecutor ให้โมเดลเขียนและรัน Python ใน sandbox เพื่อคำนวณเลขหรือวิเคราะห์ข้อมูลอย่างแม่นยำ • (คลิก) VertexAiSearchTool สำหรับทำ RAG ค้นเอกสารภายในองค์กรบน Google Cloud • (คลิก) ข้อควรระวังที่คนติดบ่อย: ห้ามใส่ built-in tool ผสมกับ custom function tool ใน LlmAgent ตัวเดียวกัน ให้แยก built-in tool ไปไว้ใน sub-agent แล้วห่อด้วย AgentTool แทน</aside>
+      </section>
+
+      <!-- 7. OpenAPIToolset & Third-Party Adapters -->
+      <section data-title="OpenAPI &amp; third-party tools">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · reuse existing ecosystems</div>
+            <h2 style="margin-bottom:18px">Import OpenAPI specs and third-party tools</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:600px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.tools.openapi_tool import OpenAPIToolset
+
+petstore_tools = OpenAPIToolset(
+    spec_str=openapi_yaml,
+    spec_str_type="yaml",
+    # Optional: filter which operations to expose
+    tool_filter=["listPets", "getPetById"],
+)
+
+agent = LlmAgent(
+    name="petstore_agent",
+    model="gemini-2.5-flash",
+    tools=[petstore_tools],
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc blue fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-blue)">OpenAPIToolset</h3></div>Auto-generates callable REST tools directly from any OpenAPI 3.x YAML or JSON spec.</div>
+                <div class="pc green fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-green)">LangChain &amp; CrewAI</h3></div>Wrap existing community tools with <code>LangchainTool(tool)</code> or <code>CrewaiTool(tool)</code> without rewriting.</div>
+                <div class="pc yellow fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><h3 style="color:var(--h-yellow)">AgentTool</h3></div>Wrap another specialist ADK agent as a tool so a root agent can call it on demand.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ถ้าองค์กรมี REST API หรือมี tool เดิมอยู่แล้ว ไม่ต้องเขียน wrapper ใหม่ทีละตัวครับ • โค้ดซ้าย: OpenAPIToolset โหลดไฟล์ OpenAPI 3.x YAML หรือ JSON เข้าไป ADK สร้าง tool ให้ทุก endpoint อัตโนมัติ แถมกรองด้วย tool_filter ได้ด้วย • (คลิก) เหมาะมากกับ REST API ภายในที่มี Swagger อยู่แล้ว • (คลิก) ถ้าเคยใช้ LangChain หรือ CrewAI ก็มี adapter LangchainTool กับ CrewaiTool ห่อเอามาใช้ต่อได้ทันที • (คลิก) และมี AgentTool ที่ห่อ ADK agent อีกตัวให้กลายเป็น tool ให้ agent หลักเรียกใช้</aside>
+      </section>
+
+      <!-- 8. LongRunningFunctionTool -->
+      <section data-title="LongRunningFunctionTool">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · async &amp; human-in-the-loop</div>
+            <h2 style="margin-bottom:18px">LongRunningFunctionTool for slow or gated tasks</h2>
+            <div class="flow tight" style="width:1088px; margin-bottom:20px">
+              <div class="pc blue node fragment" data-fragment-index="1"><b>1 · Call tool</b><p>Gemini invokes <code>request_approval()</code></p></div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="2"><b>2 · Return pending</b><p>Tool returns ticket ID &amp; <code>status: pending</code></p></div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc red node fragment" data-fragment-index="3"><b>3 · Pause turn</b><p>ADK yields to UI / human or background job</p></div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc green node fragment" data-fragment-index="4"><b>4 · Resume</b><p>Client sends final <code>FunctionResponse</code></p></div>
+            </div>
+            <div style="display:flex; gap:20px; width:1088px; align-items:stretch">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.tools import LongRunningFunctionTool
+
+def ask_for_approval(amount: float, reason: str) -> dict:
+    """Create a reimbursement ticket awaiting manager sign-off."""
+    return {"status": "pending", "ticket_id": create_ticket(amount, reason)}
+
+approval_tool = LongRunningFunctionTool(func=ask_for_approval)
+              </code></pre>
+              <div class="pc fragment" data-fragment-index="5" style="flex:1; padding:16px 18px; font-size:15px; line-height:1.42">
+                <h3 style="font-size:18px; color:var(--h-blue); margin-bottom:6px">When to use it</h3>
+                Manager approvals, payment confirmations, or cloud batch jobs that take minutes — without blocking the agent's event loop.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">tool สุดท้ายในกลุ่มแรกคือ LongRunningFunctionTool สำหรับงานที่ใช้เวลานานหรือต้องรอคนอนุมัติ • (คลิก 1) โมเดลเรียก tool เช่น ask_for_approval • (คลิก 2) tool สร้าง ticket แล้วรีบคืน status: pending กลับมาก่อน • (คลิก 3) ADK หยุดรอบการทำงานไว้ชั่วคราว ไม่ค้าง thread แล้วส่งสถานะให้ UI หรือระบบภายนอก • (คลิก 4) พอหัวหน้ากดอนุมัติ client ส่ง FunctionResponse ที่มีผลลัพธ์จริงกลับเข้ามา agent ก็ทำงานต่อจากจุดเดิมได้เลย • (คลิก 5) เหมาะกับ Human-in-the-loop และ batch job ที่รันเป็นนาที</aside>
+      </section>
+
+      <!-- 9. Section 02 -->
+      <section class="bg-green" data-title="02 · Model Context Protocol">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="mcp-div-art" style="--c:var(--h-green)"><img src="../images/adk-mcp-tools-slides/sec-02-mcp.svg" alt="Model Context Protocol"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Model Context<br>Protocol</h1>
+            <p class="sub" style="margin-top:28px">The open standard connecting<br>agents to external systems</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • พอมีหลาย agent และหลายระบบหลังบ้าน การเขียน FunctionTool ซ้ำในทุกโปรเจกต์เริ่มไม่ไหว • นี่คือจุดที่ Model Context Protocol หรือ MCP เข้ามาเปลี่ยนเกม</aside>
+      </section>
+
+      <!-- 10. N x M -> N + M -->
+      <section data-title="The N×M integration problem">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · why mcp</div>
+            <h2 style="margin-bottom:16px">From N &times; M custom glue to N + M with MCP</h2>
+            <div class="mcp-art green fragment" data-fragment-index="1" style="margin-bottom:14px">
+              <img src="../images/adk-mcp-tools-slides/nxm-to-mcp.svg" alt="Before N×M custom glue vs With MCP N+M standard">
+            </div>
+            <div class="lg-strip fragment" data-fragment-index="2" style="width:1088px">
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>MCP Hub</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>BigQuery</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/github.svg" alt="GitHub"></span>GitHub</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/googledrive.svg" alt="Google Drive"></span>Google Drive</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/slack.svg" alt="Slack"></span>Slack</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/jira.svg" alt="Jira"></span>Jira</span>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>USB-C for AI</b><span>Build an MCP server once, plug it into ADK, Gemini CLI, IDEs or any MCP-compatible host.</span></div>
+        </div>
+        <aside class="notes">ปัญหาคลาสสิกก่อนมี MCP คือ N คูณ M ครับ • (คลิก 1) สมมติเรามี 3 แอป AI และ 4 ระบบหลังบ้าน ต้องเขียนโค้ดเชื่อมถึง 12 ตัว พอระบบเปลี่ยนก็ต้องแก้ทุกแอป • (คลิก 2) MCP เปลี่ยนให้เหลือ N บวก M: ฝั่งระบบหลังบ้านทำ MCP Server แค่ครั้งเดียว ฝั่ง AI แอปพูดโปรโตคอล MCP เดียวกัน • (คลิก 3) หลายคนเปรียบ MCP ว่าเหมือนสาย USB-C สำหรับ AI สร้าง server ครั้งเดียว เสียบใช้ได้ทั้ง ADK, Gemini CLI และ IDE อื่น ๆ</aside>
+      </section>
+
+      <!-- 11. MCP Architecture -->
+      <section data-title="MCP architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">02 · architecture</div>
+            <h2 style="margin-bottom:14px">Host, Client and Server: who does what</h2>
+            <div class="mcp-art blue fragment" data-fragment-index="1" style="margin-bottom:12px">
+              <img src="../images/adk-mcp-tools-slides/mcp-host-client-server.svg" alt="ADK Host, MCP Client and MCP Servers architecture">
+            </div>
+            <div class="lg-strip fragment" data-fragment-index="2" style="width:1088px">
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span>Host: ADK LlmAgent</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>Client: McpToolset</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Model-controlled Tools</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>Cloud / Local Servers</span>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Protocol</b><span>All messages use JSON-RPC 2.0 — language-agnostic across Python, TypeScript, Go and Java.</span></div>
+        </div>
+        <aside class="notes">มาดูสถาปัตยกรรมของ MCP มี 3 บทบาทครับ • (คลิก 1) MCP Host คือแอปหลักอย่าง ADK Agent ของเรา ที่คุยกับ Gemini และคุม policy • (คลิก 2) MCP Client อยู่ใน McpToolset ของ ADK ดูแลการเชื่อมต่อแบบ 1 ต่อ 1 ด้วย JSON-RPC 2.0 เพื่อดึงรายการ tool และสั่งรัน • (คลิก 3) MCP Server คือตัวที่ห่อระบบภายนอก เช่น BigQuery, GitHub หรือ API บริษัท • (คลิก 4) MCP มี 3 primitives: Tools ให้โมเดลเรียก (ตัวหลักที่ใช้ใน ADK), Resources ข้อมูลอ่านอย่างเดียว, และ Prompts เทมเพลตคำสั่ง • (คลิก 5) ทั้งหมดคุยผ่าน JSON-RPC 2.0 จึงเขียน server เป็นภาษาอะไรก็ได้</aside>
+      </section>
+
+      <!-- 12. Transports -->
+      <section data-title="MCP transports">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · transports</div>
+            <h2 style="margin-bottom:18px">Choose the transport that fits your deployment</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <colgroup><col style="width:220px"><col style="width:170px"><col style="width:270px"><col></colgroup>
+              <thead><tr><th>Transport</th><th>Where it runs</th><th>ADK params class</th><th>Best for</th></tr></thead>
+              <tbody>
+                <tr class="fragment">
+                  <td><code>Stdio</code></td>
+                  <td>Local subprocess</td>
+                  <td><code>StdioConnectionParams</code></td>
+                  <td>Local dev, CLI tools, filesystem/git servers spawned via <code>npx</code> or <code>uvx</code>. Zero open ports.</td>
+                </tr>
+                <tr class="fragment">
+                  <td class="hi"><code>Streamable HTTP</code></td>
+                  <td class="hi">Remote / Cloud</td>
+                  <td><code>StreamableHTTPConnectionParams</code></td>
+                  <td><b>Recommended for production.</b> Single HTTP endpoint, stateless or stateful, works cleanly on Cloud Run &amp; load balancers.</td>
+                </tr>
+                <tr class="fragment">
+                  <td class="dim"><code>SSE (Legacy)</code></td>
+                  <td class="dim">Remote / Cloud</td>
+                  <td><code>SseConnectionParams</code></td>
+                  <td class="dim">Older MCP servers using dual HTTP POST + SSE streams. Supported for backward compatibility.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Rule of thumb</b><span>Use <code>Stdio</code> on your laptop, and <code>Streamable HTTP</code> for anything deployed to the cloud.</span></div>
+        </div>
+        <aside class="notes">MCP แยกชั้น transport ออกชัดเจน ตอนนี้มี 3 แบบครับ • (คลิก) Stdio: รัน server เป็น subprocess บนเครื่องเดียวกัน คุยผ่าน stdin/stdout เหมาะกับ dev บนเครื่องและ CLI tool เช่น npx หรือ uvx • (คลิก) Streamable HTTP: มาตรฐานใหม่สำหรับ production บน cloud ใช้ HTTP endpoint เดียว ทำงานร่วมกับ Cloud Run, load balancer และ auth header ได้ลื่นไหล • (คลิก) SSE: แบบเก่าสำหรับ remote server ยังใช้ได้แต่แนะนำให้ใช้ Streamable HTTP สำหรับของใหม่ • (คลิก) จำง่าย ๆ: รันในเครื่องใช้ Stdio ขึ้นคลาวด์ใช้ Streamable HTTP</aside>
+      </section>
+
+      <!-- 13. MCP Discovery & Execution Flow -->
+      <section data-title="MCP discovery &amp; execution">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · protocol flow</div>
+            <h2 style="margin-bottom:22px">How ADK discovers and executes an MCP tool</h2>
+            <div class="flow" style="width:1088px; margin-bottom:22px">
+              <div class="pc blue node fragment" data-fragment-index="1">
+                <span class="cb-hook" style="--c:var(--h-blue); margin:0 auto 10px">initialize</span>
+                <b>1 · Handshake</b>
+                <p><code>McpToolset</code> connects &amp; negotiates protocol capabilities.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc green node fragment" data-fragment-index="2">
+                <span class="cb-hook" style="--c:var(--h-green); margin:0 auto 10px">tools/list</span>
+                <b>2 · Discover</b>
+                <p>Fetches JSON schemas, applies <code>tool_filter</code>, wraps as ADK tools.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="3">
+                <span class="cb-hook" style="--c:var(--h-yellow); margin:0 auto 10px">Gemini</span>
+                <b>3 · Reason</b>
+                <p>Model sees tool declarations &amp; emits a <code>FunctionCall</code>.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc red node fragment" data-fragment-index="4">
+                <span class="cb-hook" style="--c:var(--h-red); margin:0 auto 10px">tools/call</span>
+                <b>4 · Execute</b>
+                <p>ADK forwards args to server &amp; feeds the result back to Gemini.</p>
+              </div>
+            </div>
+            <div class="pc fragment" data-fragment-index="5" style="width:1088px; padding:16px 22px; font-size:16.5px; line-height:1.42">
+              <b>Dynamic discovery:</b> Add a new tool on your MCP server and ADK agents pick it up automatically — <b>no agent code changes or redeploy required</b>.
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ใน 1 รอบการทำงาน ADK คุยกับ MCP Server 4 ขั้นแบบนี้ครับ • (คลิก 1) Handshake: McpToolset เชื่อมต่อและส่ง initialize • (คลิก 2) Discover: ส่ง tools/list เพื่อขอ schema ของทุก tool จากนั้นกรองด้วย tool_filter แล้วแปลงเป็น ADK tool • (คลิก 3) Reason: ส่ง schema ให้ Gemini โมเดลตัดสินใจเลือก tool และสร้าง arguments • (คลิก 4) Execute: ADK ส่ง tools/call ไปที่ server แล้วเอาผลลัพธ์ส่งกลับให้ Gemini สรุปตอบ • (คลิก 5) ข้อดีมาก ๆ คือ dynamic discovery เพิ่ม tool ใหม่ฝั่ง server ปุ๊บ agent มองเห็นเองโดยไม่ต้องแก้โค้ด agent</aside>
+      </section>
+
+      <!-- 14. Section 03 -->
+      <section class="bg-yellow" data-title="03 · MCPToolset in ADK">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="mcp-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-mcp-tools-slides/sec-03-toolset.svg" alt="MCPToolset in ADK"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">MCPToolset<br>in ADK</h1>
+            <p class="sub" style="margin-top:28px">Local &amp; remote servers, filtering,<br>exposing tools &amp; memory</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • มาดูโค้ดจริงใน ADK Python กันครับ ว่าใช้ McpToolset เชื่อมต่อทั้งแบบ local, remote, กรอง tool, เปิด ADK tool เป็น MCP server และใช้คู่กับ Memory ยังไง</aside>
+      </section>
+
+      <!-- 15. Local MCP Server (Stdio) -->
+      <section data-title="Local MCP · Stdio">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · local mcp server</div>
+            <h2 style="margin-bottom:18px">Connect locally with <code style="font-size:.8em">StdioConnectionParams</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:650px; flex:none; font-size:13px"><code class="language-python" data-trim>
+from google.adk.agents import LlmAgent
+from google.adk.tools.mcp_tool import McpToolset
+from google.adk.tools.mcp_tool.mcp_session_manager import (
+    StdioConnectionParams,
+)
+from mcp import StdioServerParameters
+
+fs_tools = McpToolset(
+    connection_params=StdioConnectionParams(
+        server_params=StdioServerParameters(
+            command="npx",
+            args=["-y", "@modelcontextprotocol/server-filesystem",
+                  "/Users/me/workspace"],
+        ),
+        timeout=30.0,
+    ),
+)
+
+root_agent = LlmAgent(
+    model="gemini-2.5-flash",
+    name="file_assistant",
+    instruction="Help the user explore files in /Users/me/workspace.",
+    tools=[fs_tools],
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc blue fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-blue)">Managed lifecycle</h3></div><code>adk web</code> / <code>Runner</code> spawns the subprocess and closes it cleanly on shutdown.</div>
+                <div class="pc green fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-green)">Any runtime</h3></div>Works with Node (<code>npx</code>), Python (<code>uvx</code> / <code>python</code>) or compiled Go/Rust binaries.</div>
+                <div class="pc yellow fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><h3 style="color:var(--h-yellow)">Set <code>timeout</code></h3></div>Always pass a generous timeout (e.g. <code>30.0</code>s) when <code>npx</code> downloads packages on first run.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่างแรก: เชื่อมต่อ Local MCP Server ผ่าน StdioConnectionParams • โค้ดซ้ายใช้ filesystem server อย่างเป็นทางการของ MCP รันผ่าน npx แล้วส่ง McpToolset เข้า tools=[] ของ LlmAgent • (คลิก) ADK จัดการเปิดและปิด subprocess ให้เองตอนจบงาน • (คลิก) รันได้ทุกภาษา ทั้ง npx, uvx, python หรือ binary • (คลิก) แนะนำให้ตั้ง timeout ไว้ประมาณ 30 วินาที โดยเฉพาะตอนรัน npx ครั้งแรกที่ต้องโหลดแพ็กเกจ</aside>
+      </section>
+
+      <!-- 16. Remote MCP Server (Streamable HTTP) -->
+      <section data-title="Remote MCP · Streamable HTTP">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · remote mcp server</div>
+            <h2 style="margin-bottom:18px">Connect to cloud servers with <code style="font-size:.8em">StreamableHTTP</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:650px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents import LlmAgent
+from google.adk.tools.mcp_tool import McpToolset
+from google.adk.tools.mcp_tool.mcp_session_manager import (
+    StreamableHTTPConnectionParams,
+)
+
+bq_mcp = McpToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url="https://bq-mcp-server.run.app/mcp",
+        headers={"Authorization": f"Bearer {SERVICE_TOKEN}"},
+        timeout=30.0,
+    ),
+)
+
+root_agent = LlmAgent(
+    model="gemini-2.5-flash",
+    name="analytics_agent",
+    instruction="Answer business questions using BigQuery tools.",
+    tools=[bq_mcp],
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc green fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><h3 style="color:var(--h-green)">Cloud-ready</h3></div>Connect to MCP servers on Cloud Run, GKE, or managed SaaS endpoints over HTTPS.</div>
+                <div class="pc blue fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span><h3 style="color:var(--h-blue)">Static vs dynamic headers</h3></div>Use <code>headers={...}</code> for static keys, or <code>header_provider</code> for per-user OAuth tokens.</div>
+                <div class="pc yellow fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span><h3 style="color:var(--h-yellow)">Multiple servers</h3></div>Pass multiple <code>McpToolset</code> instances in <code>tools=[]</code> alongside custom Python tools.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">พอขึ้น cloud เปลี่ยนแค่ connection_params เป็น StreamableHTTPConnectionParams แล้วชี้ URL ไปที่ endpoint /mcp ครับ • (คลิก) ใช้งานกับ Cloud Run, GKE หรือ hosted MCP server ผ่าน HTTPS ได้ทันที • (คลิก) ส่ง Authorization ผ่าน headers ได้ ถ้าเป็น token ที่เปลี่ยนตาม user เดี๋ยวช่วงที่ 4 เราดู header_provider กัน • (คลิก) ใน tools=[] ของ agent ใส่ McpToolset หลายตัวพร้อมกับ custom Python tool ได้เลย</aside>
+      </section>
+
+      <!-- 17. Filtering tools with tool_filter -->
+      <section data-title="Filtering tools · tool_filter">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:34px 56px">
+            <div class="eyebrow">03 · least privilege &amp; token hygiene</div>
+            <h2 style="margin-bottom:12px">Scope what the agent sees with <code style="font-size:.8em">tool_filter</code></h2>
+            <div class="mcp-art yellow fragment" style="height:196px; margin-bottom:14px">
+              <img src="../images/adk-mcp-tools-slides/tool-filter-guardrail.svg" alt="40 raw MCP tools filtered down to 4 least-privilege tools">
+            </div>
+            <div style="display:flex; gap:20px; width:1088px; align-items:flex-start">
+              <pre style="width:650px; flex:none; font-size:12.5px"><code class="language-python" data-trim>
+# 1) Static allowlist — simplest &amp; safest
+read_only_mcp = McpToolset(
+    connection_params=conn_params,
+    tool_filter=["read_file", "list_dir", "search_code", "get_issue"],
+)
+
+# 2) Dynamic predicate using ReadonlyContext
+def role_based_filter(tool, readonly_context) -> bool:
+    if readonly_context.state.get("user:role") == "admin":
+        return True
+    return not tool.name.startswith(("delete_", "drop_", "force_"))
+              </code></pre>
+              <div class="cb-side" style="gap:10px">
+                <div class="pc red fragment" style="padding:10px 14px; font-size:14.5px"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/github.svg" alt="GitHub"></span><h3 style="color:var(--h-red); font-size:16.5px">Least privilege</h3></div>Hide destructive tools from read-only agents.</div>
+                <div class="pc green fragment" style="padding:10px 14px; font-size:14.5px"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><h3 style="color:var(--h-green); font-size:16.5px">Per-user predicates</h3></div>Filter dynamically by <code>user:role</code> in <code>ReadonlyContext</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">MCP Server หนึ่งตัวอาจมี 30–50 tool ซึ่งเราไม่ควรเปิดให้ agent เห็นทั้งหมดครับ • โค้ดบน: วิธีที่ง่ายและปลอดภัยสุดคือส่ง list ชื่อ tool ที่อนุญาตเข้า tool_filter • โค้ดล่าง: ถ้าต้องกรองตามสิทธิ์ของ user ส่งเป็นฟังก์ชัน predicate ที่รับ tool กับ readonly_context แล้วเช็ก user:role จาก state ได้เลย • (คลิก) ได้ความปลอดภัยแบบ Least privilege • (คลิก) ประหยัด token เพราะ schema ของ tool ทุกตัวถูกส่งเข้า prompt ทุกรอบ ยิ่งน้อยโมเดลยิ่งเลือกแม่น • (คลิก) และปรับสิทธิ์ตามผู้ใช้แต่ละคนได้แบบ dynamic</aside>
+      </section>
+
+      <!-- 18. Exposing ADK tools as an MCP server -->
+      <section data-title="Expose ADK tools as MCP">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · the other direction</div>
+            <h2 style="margin-bottom:18px">Expose ADK tools as an MCP server</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:650px; flex:none; font-size:13px"><code class="language-python" data-trim>
+import json
+from mcp import types as mcp_types
+from mcp.server.lowlevel import Server
+from google.adk.tools.function_tool import FunctionTool
+from google.adk.tools.mcp_tool.conversion_utils import (
+    adk_to_mcp_tool_type,
+)
+
+adk_tool = FunctionTool(get_order_status)
+app = Server("orders-mcp-server")
+
+@app.list_tools()
+async def list_tools() -> list[mcp_types.Tool]:
+    return [adk_to_mcp_tool_type(adk_tool)]
+
+@app.call_tool()
+async def call_tool(name: str, arguments: dict):
+    result = await adk_tool.run_async(args=arguments, tool_context=None)
+    return [mcp_types.TextContent(type="text", text=json.dumps(result))]
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc blue fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-blue)">One-line conversion</h3></div><code>adk_to_mcp_tool_type()</code> converts any ADK tool's schema into a valid MCP <code>Tool</code>.</div>
+                <div class="pc green fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><h3 style="color:var(--h-green)">Reuse everywhere</h3></div>Let Gemini CLI, IDEs or other teams' agents consume your existing ADK tools.</div>
+                <div class="pc yellow fragment"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-yellow)">Single source of truth</h3></div>Keep domain logic in one Python module — serve both ADK agents and external MCP clients.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ADK ไม่ได้เป็นแค่ฝั่ง client อย่างเดียวครับ ถ้าเราเขียน ADK tool ไว้ดีแล้ว อยากให้ทีมอื่นหรือ IDE เรียกใช้ผ่าน MCP ก็ทำได้กลับด้านเลย • โค้ดซ้าย: ใช้ฟังก์ชัน adk_to_mcp_tool_type() แปลง ADK tool เป็น MCP schema ใน @app.list_tools() แล้วใน @app.call_tool() ก็เรียก adk_tool.run_async() • (คลิก) แปลง schema ให้ในบรรทัดเดียว • (คลิก) แชร์ให้ Gemini CLI, IDE หรือ agent ทีมอื่นใช้ได้ทันที • (คลิก) ไม่ต้องดูแลโค้ดสองชุด</aside>
+      </section>
+
+      <!-- 19. Combining MCP + Long-Term Memory -->
+      <section data-title="MCP + Long-Term Memory">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · composite pattern</div>
+            <h2 style="margin-bottom:18px">Combine live MCP tools with ADK Memory</h2>
+            <div class="mem-grid" style="margin-bottom:18px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <svg class="cb-ico" style="--c:var(--h-blue)"><use href="#i-brain"/></svg>
+                <h3 style="color:var(--h-blue)">ADK Long-Term Memory</h3>
+                <p style="font-size:15px; color:var(--dk-sub)"><code>PreloadMemoryTool</code> / <code>load_memory</code> recalls user preferences, past tickets &amp; decisions across sessions.</p>
+              </div>
+              <div class="pc green mem-mid fragment" data-fragment-index="2">
+                <span class="ev-lg" style="margin:0 auto 8px"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                <b style="display:block; font-size:20px; color:#fff">LlmAgent</b>
+                <p style="font-size:13.5px; color:var(--dk-sub); margin-top:4px">Fuses personal context + live facts</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3">
+                <div class="h-row" style="margin-bottom:8px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/github.svg" alt="GitHub"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/slack.svg" alt="Slack"></span>
+                </div>
+                <h3 style="color:var(--h-yellow)">Live MCP Servers</h3>
+                <p style="font-size:15px; color:var(--dk-sub)"><code>McpToolset</code> queries real-time data from BigQuery, GitHub, Slack or internal APIs.</p>
+              </div>
+            </div>
+            <pre class="fragment" data-fragment-index="4" style="width:1088px; font-size:13.5px"><code class="language-python" data-trim>
+agent = LlmAgent(
+    model="gemini-2.5-flash",
+    name="personal_ops_agent",
+    tools=[load_memory, github_mcp, bigquery_mcp],  # memory + live MCP together
+)
+            </code></pre>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Why both?</b><span>Memory remembers <i>who the user is</i>; MCP grounds the agent in <i>what is true right now</i>.</span></div>
+        </div>
+        <aside class="notes">Pattern ที่ทรงพลังมากใน ADK คือการจับคู่ Memory กับ MCP เข้าด้วยกันครับ • (คลิก 1) ฝั่งซ้าย ADK Memory (load_memory หรือ PreloadMemoryTool) จำบริบทผู้ใช้ ความชอบ และสิ่งที่เคยคุยกันข้าม session • (คลิก 2) ตรงกลาง LlmAgent เอามาผสานกัน • (คลิก 3) ฝั่งขวา MCPToolset ดึงข้อมูลสดใหม่จาก BigQuery, GitHub หรือ API จริง • (คลิก 4) ในโค้ดแค่ใส่รวมกันใน tools=[] • (คลิก 5) จำง่าย ๆ: Memory จำว่าผู้ใช้คือใคร ส่วน MCP ทำให้รู้ความจริง ณ วินาทีนี้</aside>
+      </section>
+
+      <!-- 20. Section 04 -->
+      <section class="bg-red" data-title="04 · Production tooling">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="mcp-div-art" style="--c:var(--h-red)"><img src="../images/adk-mcp-tools-slides/sec-04-prod-tools.svg" alt="Production tooling"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Production<br>tooling</h1>
+            <p class="sub" style="margin-top:28px">Pass-through OAuth, Cloud Run<br>deployment and security</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้าย • การเอา MCP และ Tool ขึ้น production จริง ๆ ต้องคิดเรื่อง authentication, deployment และความปลอดภัยอะไรบ้าง</aside>
+      </section>
+
+      <!-- 21. Pass-through User OAuth & ToolContext -->
+      <section data-title="Pass-through OAuth &amp; ToolContext">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:32px 56px">
+            <div class="eyebrow">04 · authentication</div>
+            <h2 style="margin-bottom:10px">Pass through user OAuth — avoid god-mode keys</h2>
+            <div class="mcp-art red fragment" style="height:192px; margin-bottom:12px">
+              <img src="../images/adk-mcp-tools-slides/oauth-passthrough.svg" alt="Pass-through User OAuth flow with ADK ToolContext and header_provider">
+            </div>
+            <div style="display:flex; gap:18px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:12.5px"><code class="language-python" data-trim>
+def user_oauth_headers(ctx: ReadonlyContext) -> dict[str, str]:
+    token = ctx.state.get("temp:user_access_token")
+    return {"Authorization": f"Bearer {token}"} if token else {}
+
+secure_mcp = McpToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url="https://crm-mcp.run.app/mcp",
+    ),
+    header_provider=user_oauth_headers,
+)
+              </code></pre>
+              <div class="cb-side" style="gap:10px">
+                <div class="pc blue fragment" style="padding:10px 14px; font-size:14px"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-blue); font-size:16px">Interactive consent</h3></div>Custom tools can call <code>tool_context.request_credential()</code> for OAuth flows.</div>
+                <div class="pc green fragment" style="padding:10px 14px; font-size:14px"><div class="h-row"><span class="ev-lg sm"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span><h3 style="color:var(--h-green); font-size:16px">Real RBAC &amp; audit</h3></div>Downstream APIs enforce each user's real permissions.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Store safely</b><span>Keep short-lived tokens in <code>temp:</code> state or a credential manager — never hardcode in prompts.</span></div>
+        </div>
+        <aside class="notes">ความเสี่ยงอันดับ 1 เวลาเอา agent ขึ้น production คือการใช้ API key ตัวเดียวที่มีสิทธิ์ admin หมดทั้งบริษัท • โค้ดซ้าย: ใช้ header_provider ใน McpToolset ดึง user access token จาก temp: state ส่งเป็น Bearer header ทุกครั้งที่เรียก MCP Server • (คลิก) แต่ละ user ใช้ตัวตนของตัวเอง • (คลิก) ส่วน custom tool เองก็ขอ OAuth consent ผ่าน tool_context.request_credential() ได้ • (คลิก) ระบบหลังบ้านจะตรวจสิทธิ์ RBAC และบันทึก audit log ตามคนใช้งานจริง • (คลิก) เก็บ token อายุสั้นไว้ใน temp: state อย่าใส่ลง prompt เด็ดขาด</aside>
+      </section>
+
+      <!-- 22. Deploying MCP + ADK on Cloud Run -->
+      <section data-title="Deploy on Cloud Run">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">04 · cloud run architecture</div>
+            <h2 style="margin-bottom:14px">Deploy MCP server and ADK agent on Cloud Run</h2>
+            <div class="mcp-art green fragment" data-fragment-index="1" style="margin-bottom:14px">
+              <img src="../images/adk-mcp-tools-slides/cloudrun-mcp-arch.svg" alt="Serverless Cloud Run ADK Agent and Private MCP Server architecture">
+            </div>
+            <div class="lg-strip fragment" data-fragment-index="2" style="width:1088px; margin-bottom:14px">
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>Cloud Run</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK Agent</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>Private MCP</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span>IAM Invoker</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>BigQuery</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/github.svg" alt="GitHub"></span>GitHub</span>
+              <span class="lg-pill"><span class="ev-lg-sm"><img src="../images/shared/logos/slack.svg" alt="Slack"></span>Slack</span>
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="3" style="width:1088px; gap:16px">
+              <div class="pc" style="padding:12px 16px; font-size:14.5px">
+                <b style="color:var(--h-green)">Independent scaling &amp; deploys:</b> Ship new MCP tools without redeploying the agent. Both services scale to zero when idle.
+              </div>
+              <div class="pc" style="padding:12px 16px; font-size:14.5px">
+                <b style="color:var(--h-blue)">Zero-trust IAM:</b> Lock the MCP service with <code>--no-allow-unauthenticated</code> and grant <code>roles/run.invoker</code> only to the agent's service account.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">นี่คือสถาปัตยกรรมตาม Google Codelab สำหรับเอา MCP และ ADK ขึ้น Cloud Run ครับ • (คลิก 1-2) ผู้ใช้คุยกับ ADK Agent บน Cloud Run ซึ่ง deploy ง่าย ๆ ด้วย adk deploy cloud_run • (คลิก 3) ADK Agent เรียกไปที่ MCP Server บน Cloud Run อีก service หนึ่งผ่าน Streamable HTTP โดยปิด public access ด้วย --no-allow-unauthenticated และยืนยันตัวตนด้วย IAM ID token • (คลิก 4) ฝั่ง MCP Server ค่อยเชื่อม BigQuery, Cloud SQL หรือ API ภายใน • (คลิก 5) แยก deploy และ scale อิสระจากกันได้ แถมปลอดภัยด้วย IAM</aside>
+      </section>
+
+      <!-- 23. Tool Design & Security Checklist -->
+      <section data-title="Security &amp; design checklist">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · best practices</div>
+            <h2 style="margin-bottom:20px">Tool design &amp; security checklist</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <ul class="cb-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Keep toolsets lean (5–15 tools).</b> Always use <code>tool_filter</code> on broad MCP servers.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Return structured dicts</b> with <code>status</code> and actionable error messages for Gemini.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Set explicit timeouts</b> on <code>McpToolset</code> and recover via <code>on_tool_error_callback</code>.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Gate destructive actions</b> with <code>before_tool_callback</code> or <code>LongRunningFunctionTool</code>.</span></li>
+              </ul>
+              <ul class="cb-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Pass through user OAuth / IAM</b> instead of sharing one high-privilege API key.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Pin trusted MCP servers.</b> Treat third-party MCP servers like production dependencies.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Beware tool poisoning:</b> untrusted MCP descriptions &amp; outputs can carry prompt injections.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Separate built-in tools</b> from custom tools into their own sub-agent or <code>AgentTool</code>.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เช็กลิสต์ก่อนส่งขึ้น production ครับ • จำกัดจำนวน tool ต่อ agent ให้อยู่ราว 5–15 ตัว ใช้ tool_filter กรองเสมอ • คืน dict ที่มี status และข้อความ error ที่ชัดเจน • ตั้ง timeout และใช้ on_tool_error_callback กันระบบพัง • งานที่ลบหรือแก้ไขข้อมูลสำคัญให้กั้นด้วย before_tool_callback หรือ LongRunningFunctionTool • ใช้ OAuth/IAM รายบุคคล • ตรวจสอบและ pin เวอร์ชันของ MCP server เหมือน dependency ทั่วไป • ระวัง 2 กับดัก: prompt injection ที่แฝงมาใน description หรือ output ของ MCP server ที่ไม่น่าเชื่อถือ และอย่าผสม built-in tool กับ custom tool ใน LlmAgent เดียวกัน</aside>
+      </section>
+
+      <!-- 24. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:22px">Connect, Extend, Ground</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <div class="h-row" style="margin-bottom:10px"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span></div>
+                <h3>1 · Connect</h3>
+                <p style="font-size:15.5px; line-height:1.42">Start with typed Python functions &amp; crisp docstrings. Reuse <b>OpenAPI</b> specs and <b>built-in</b> grounding tools.</p>
+              </div>
+              <div class="pc green fragment">
+                <div class="h-row" style="margin-bottom:10px"><span class="ev-lg sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><span class="ev-lg sm"><img src="../images/shared/logos/github.svg" alt="GitHub"></span></div>
+                <h3>2 · Extend</h3>
+                <p style="font-size:15.5px; line-height:1.42">Replace N&times;M glue with <b>MCP</b>. Plug local or cloud servers into ADK via <b>McpToolset</b> &amp; <code>tool_filter</code>.</p>
+              </div>
+              <div class="pc red fragment">
+                <div class="h-row" style="margin-bottom:10px"><span class="ev-lg sm"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><span class="ev-lg sm"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span></div>
+                <h3>3 · Ground</h3>
+                <p style="font-size:15.5px; line-height:1.42">Pair live MCP tools with <b>Memory</b>, enforce per-user <b>OAuth</b>, and deploy cleanly on <b>Cloud Run</b>.</p>
+              </div>
+            </div>
+            <div class="fragment cb-recap-hooks" style="width:1088px; margin-top:24px; display:flex; flex-wrap:wrap; gap:8px">
+              <span class="cb-hook" style="--c:var(--h-blue)">FunctionTool</span>
+              <span class="cb-hook" style="--c:var(--h-blue)">OpenAPIToolset</span>
+              <span class="cb-hook" style="--c:var(--h-green)">McpToolset</span>
+              <span class="cb-hook" style="--c:var(--h-green)">StreamableHTTP</span>
+              <span class="cb-hook" style="--c:var(--h-yellow)">tool_filter</span>
+              <span class="cb-hook" style="--c:var(--h-yellow)">adk_to_mcp_tool_type</span>
+              <span class="cb-hook" style="--c:var(--h-red)">header_provider</span>
+              <span class="cb-hook" style="--c:var(--h-red)">Cloud Run</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Wrap one internal API in an MCP server on Cloud Run and connect it to ADK with <code>McpToolset</code>.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำครับ • (คลิก) Connect: เริ่มจากฟังก์ชัน Python ที่มี type hint และ docstring ชัดเจน รวมถึง OpenAPI และ built-in tools • (คลิก) Extend: ใช้ MCP ลดงานเชื่อมแบบ N×M ต่อเข้า ADK ด้วย McpToolset และกรองด้วย tool_filter • (คลิก) Ground: ผสานข้อมูลสดจาก MCP เข้ากับ Memory ใช้ OAuth รายบุคคล และ deploy บน Cloud Run • (คลิก) ทวนชิ้นส่วนหลักทั้งหมด • (คลิก) กลับไปลองวันนี้ได้เลยครับ ห่อ API ภายในสัก 1 ตัวเป็น MCP Server บน Cloud Run แล้วต่อเข้า ADK ดู</aside>
+      </section>
+
+      <!-- 25. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:24px">Read more and try it</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK Tools overview</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools/" target="_blank">adk.dev/tools/</a></div></div>
+              <div class="pc green cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><div><h3>MCP Tools in ADK</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools-custom/mcp-tools/" target="_blank">adk.dev/tools-custom/mcp-tools/</a></div></div>
+              <div class="pc green cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><div><h3>Model Context Protocol</h3><a class="mono" style="font-size:14px" href="https://modelcontextprotocol.io/" target="_blank">modelcontextprotocol.io</a></div></div>
+              <div class="pc yellow cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><div><h3>Codelab: MCP on Cloud Run</h3><a class="mono" style="font-size:14px" href="https://codelabs.developers.google.com/codelabs/cloud-run/how-to-deploy-a-secure-mcp-server-on-cloud-run" target="_blank">Deploy a secure MCP server on Cloud Run</a></div></div>
+              <div class="pc blue cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span><div><h3>Codelab: Multi-Tool Agents</h3><a class="mono" style="font-size:14px" href="https://codelabs.developers.google.com/" target="_blank">Google Codelabs · ADK &amp; MCP</a></div></div>
+              <div class="pc red cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/github.svg" alt="GitHub"></span><div><h3>ADK Python Samples</h3><a class="mono" style="font-size:14px" href="https://github.com/google/adk-samples" target="_blank">github.com/google/adk-samples</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รวมลิงก์อ่านต่อและลงมือทำครับ: หน้า ADK Tools หลัก, คู่มือ MCP Tools ใน ADK, เว็บมาตรฐาน modelcontextprotocol.io, Google Codelab สอน deploy MCP server แบบปลอดภัยบน Cloud Run, Codelab สร้าง Multi-Tool Agent และโค้ดตัวอย่างใน adk-samples บน GitHub</aside>
+      </section>
+
+      <!-- 26. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="mcp-ty-art"><img src="../images/adk-mcp-tools-slides/thank-you-art.svg" alt="ADK and MCP tool hub"></div>
+        <div class="dots" style="left:946px; top:540px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณครับ/ค่ะ • เปิดช่วง Q &amp; A • ใครมีคำถามเรื่อง Tool, MCP หรือการเอาขึ้น Cloud Run ถามได้เลยครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

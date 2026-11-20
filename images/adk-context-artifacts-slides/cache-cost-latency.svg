@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 240" width="1088" height="240">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="240" fill="#202124"/>
+
+  <circle cx="270" cy="120" r="140" fill="url(#amb-r)"/>
+  <circle cx="818" cy="120" r="140" fill="url(#amb-g)"/>
+
+  <!-- LEFT CARD: Uncached 10-turn cost & TTFT -->
+  <rect x="16" y="14" width="504" height="212" rx="18" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <text x="36" y="42" class="t" font-size="18" fill="#ff7daf">Uncached Prefix (10 Turns)</text>
+  <rect x="336" y="23" width="166" height="26" rx="13" fill="#ff7daf" fill-opacity="0.16" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="419" y="40" text-anchor="middle" class="m" font-size="11" fill="#ff7daf" font-weight="600">200K TOK @ 100%</text>
+
+  <!-- 10-turn bar chart (all tall pink bars) -->
+  <line x1="36" y1="158" x2="500" y2="158" stroke="#5f6368" stroke-width="1.2"/>
+  <g transform="translate(46, 68)">
+    <rect x="0" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="16" y="106" text-anchor="middle" class="m" font-size="10">T1</text>
+    <rect x="45" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="61" y="106" text-anchor="middle" class="m" font-size="10">T2</text>
+    <rect x="90" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="106" y="106" text-anchor="middle" class="m" font-size="10">T3</text>
+    <rect x="135" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="151" y="106" text-anchor="middle" class="m" font-size="10">T4</text>
+    <rect x="180" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="196" y="106" text-anchor="middle" class="m" font-size="10">T5</text>
+    <rect x="225" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="241" y="106" text-anchor="middle" class="m" font-size="10">T6</text>
+    <rect x="270" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="286" y="106" text-anchor="middle" class="m" font-size="10">T7</text>
+    <rect x="315" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="331" y="106" text-anchor="middle" class="m" font-size="10">T8</text>
+    <rect x="360" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="376" y="106" text-anchor="middle" class="m" font-size="10">T9</text>
+    <rect x="405" y="0" width="32" height="90" rx="5" fill="#ff7daf" opacity="0.88"/><text x="421" y="106" text-anchor="middle" class="m" font-size="10">T10</text>
+  </g>
+  <rect x="36" y="186" width="224" height="28" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.2"/>
+  <text x="148" y="204" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">Cost: 1.00× (Full Input)</text>
+  <rect x="272" y="186" width="228" height="28" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.2"/>
+  <text x="386" y="204" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">TTFT: High every turn</text>
+
+  <!-- CENTER VS BADGE -->
+  <circle cx="544" cy="120" r="22" fill="#17181b" stroke="#ffd427" stroke-width="2.2" filter="url(#glow-s)"/>
+  <text x="544" y="125" text-anchor="middle" class="m" font-size="13" fill="#ffd427" font-weight="700">VS</text>
+
+  <!-- RIGHT CARD: Cached Prefix 10-turn cost & TTFT -->
+  <rect x="568" y="14" width="504" height="212" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="588" y="42" class="t" font-size="18" fill="#5cdb6d">With ContextCacheConfig</text>
+  <rect x="862" y="23" width="190" height="26" rx="13" fill="#5cdb6d" fill-opacity="0.18" stroke="#5cdb6d" stroke-width="1.5" filter="url(#glow-s)"/>
+  <text x="957" y="40" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">UP TO 75–90% LESS</text>
+
+  <!-- 10-turn bar chart (T1 write yellow, T2..T10 short green hits) -->
+  <line x1="588" y1="158" x2="1052" y2="158" stroke="#5f6368" stroke-width="1.2"/>
+  <g transform="translate(598, 68)">
+    <!-- T1 Cache Write -->
+    <rect x="0" y="0" width="32" height="90" rx="5" fill="#ffd427"/>
+    <text x="16" y="-6" text-anchor="middle" class="m" font-size="9.5" fill="#ffd427">WRITE</text>
+    <text x="16" y="106" text-anchor="middle" class="m" font-size="10" fill="#ffd427">T1</text>
+    <!-- T2..T10 Cache Hits -->
+    <rect x="45" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="61" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T2</text>
+    <rect x="90" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="106" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T3</text>
+    <rect x="135" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="151" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T4</text>
+    <rect x="180" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="196" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T5</text>
+    <rect x="225" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="241" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T6</text>
+    <rect x="270" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="286" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T7</text>
+    <rect x="315" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="331" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T8</text>
+    <rect x="360" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="376" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T9</text>
+    <rect x="405" y="68" width="32" height="22" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/><text x="421" y="106" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">T10</text>
+    <!-- Annotation bracket over T2..T10 -->
+    <path d="M48 56 H434" stroke="#5cdb6d" stroke-width="1.4" stroke-dasharray="4 3"/>
+    <text x="241" y="48" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">⚡ 9× CACHE HITS · SKIP PREFIX PREFILL</text>
+  </g>
+  <rect x="588" y="186" width="224" height="28" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="700" y="204" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">Cost: ~0.18× (Discounted)</text>
+  <rect x="824" y="186" width="228" height="28" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="938" y="204" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">TTFT: Fast on T2–T10</text>
+</svg>

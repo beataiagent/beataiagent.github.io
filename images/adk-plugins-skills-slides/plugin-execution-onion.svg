@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+  <circle cx="240" cy="115" r="120" fill="url(#amb-g)"/>
+  <circle cx="560" cy="115" r="125" fill="url(#amb-b)"/>
+  <circle cx="380" cy="215" r="95" fill="url(#amb-r)"/>
+
+  <!-- OUTER LAYER: Global Plugin Shell -->
+  <rect x="118" y="14" width="954" height="170" rx="20" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4"/>
+  <text x="138" y="38" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">RUNNER / APP PLUGIN LAYER (GLOBAL · RUNS FIRST)</text>
+
+  <!-- INNER LAYER: Agent Callback Shell -->
+  <rect x="330" y="50" width="526" height="118" rx="16" fill="#17181b" stroke="#57caff" stroke-width="2"/>
+  <text x="348" y="72" class="m" font-size="11" fill="#57caff" font-weight="600">AGENT CALLBACK LAYER (PER-AGENT)</text>
+
+  <!-- User Node (Left) -->
+  <g transform="translate(16,80)">
+    <rect width="80" height="72" rx="14" fill="url(#glass-hi)" stroke="#e8eaed" stroke-width="1.8"/>
+    <circle cx="40" cy="28" r="11" fill="#57caff" fill-opacity="0.2" stroke="#57caff" stroke-width="2"/>
+    <path d="M24 54 C24 44 56 44 56 54" fill="none" stroke="#57caff" stroke-width="2" stroke-linecap="round"/>
+    <text x="40" y="66" text-anchor="middle" class="m" font-size="10.5" fill="#fff">USER</text>
+  </g>
+  <path d="M96 116 H134" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+
+  <!-- Node 1: Plugin before_* -->
+  <g transform="translate(142,84)">
+    <rect width="156" height="64" rx="12" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+    <text x="78" y="26" text-anchor="middle" class="m" font-size="12" fill="#5cdb6d" font-weight="600">Plugin.before_*</text>
+    <text x="78" y="45" text-anchor="middle" class="sub" font-size="11.5">on_user_message</text>
+    <text x="78" y="58" text-anchor="middle" class="sub" font-size="10.5">before_run / model / tool</text>
+  </g>
+  <path d="M298 116 H342" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+
+  <!-- Node 2: Agent before_* -->
+  <g transform="translate(350,86)">
+    <rect width="140" height="60" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
+    <text x="70" y="27" text-anchor="middle" class="m" font-size="11.5" fill="#57caff" font-weight="600">Agent.before_*</text>
+    <text x="70" y="46" text-anchor="middle" class="sub" font-size="11">local prompt tweak</text>
+  </g>
+  <path d="M490 116 H518" stroke="#ffd427" stroke-width="2.6" marker-end="url(#arr-y)"/>
+
+  <!-- Node 3: Core Model / Tool -->
+  <g transform="translate(526,84)">
+    <rect width="134" height="64" rx="14" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2.4" filter="url(#glow-s)"/>
+    <text x="67" y="29" text-anchor="middle" class="t" font-size="15" fill="#ffd427">Gemini / Tool</text>
+    <text x="67" y="48" text-anchor="middle" class="sub" font-size="11.5">core execution</text>
+  </g>
+  <path d="M660 116 H688" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+
+  <!-- Node 4: Agent after_* -->
+  <g transform="translate(696,86)">
+    <rect width="140" height="60" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
+    <text x="70" y="27" text-anchor="middle" class="m" font-size="11.5" fill="#57caff" font-weight="600">Agent.after_*</text>
+    <text x="70" y="46" text-anchor="middle" class="sub" font-size="11">local post-process</text>
+  </g>
+  <path d="M836 116 H878" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+
+  <!-- Node 5: Plugin after_* -->
+  <g transform="translate(886,84)">
+    <rect width="166" height="64" rx="12" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+    <text x="83" y="26" text-anchor="middle" class="m" font-size="12" fill="#5cdb6d" font-weight="600">Plugin.after_*</text>
+    <text x="83" y="45" text-anchor="middle" class="sub" font-size="11.5">on_event / after_run</text>
+    <text x="83" y="58" text-anchor="middle" class="sub" font-size="10.5">telemetry &amp; audit</text>
+  </g>
+
+  <!-- SHORT-CIRCUIT EXIT PATH (Bottom) -->
+  <path d="M220 148 V222 H860" fill="none" stroke="#ff7daf" stroke-width="2.6" stroke-dasharray="7 5" marker-end="url(#arr-r)"/>
+  <rect x="268" y="204" width="440" height="36" rx="18" fill="#2b1921" stroke="#ff7daf" stroke-width="2" filter="url(#glow-s)"/>
+  <text x="488" y="227" text-anchor="middle" class="m" font-size="12" fill="#ff7daf" font-weight="600">SHORT-CIRCUIT: return non-None → skip Agent &amp; LLM/Tool</text>
+
+  <!-- Error recovery pill (Bottom Right) -->
+  <rect x="874" y="204" width="198" height="36" rx="18" fill="url(#glass)" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="973" y="226" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">on_*_error recovery</text>
+</svg>

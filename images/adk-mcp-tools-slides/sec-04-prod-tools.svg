@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <circle cx="128" cy="122" r="100" fill="url(#amb-r)"/>
+  <circle cx="176" cy="90" r="68" fill="url(#amb-b)"/>
+  <circle cx="128" cy="124" r="95" fill="none" stroke="#ff7daf" stroke-width="1.8" stroke-dasharray="6 6" opacity="0.45"/>
+
+  <!-- Cloud Run Shield wrapping MCP Server -->
+  <path d="M128 42 L192 66 V126 C192 164 164 192 128 206 C92 192 64 164 64 126 V66 Z" fill="url(#glass-hi)" stroke="#ff7daf" stroke-width="2.8" stroke-linejoin="round" filter="url(#glow-s)"/>
+
+  <!-- Inner MCP Server Rack -->
+  <rect x="92" y="88" width="72" height="26" rx="7" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <circle cx="104" cy="101" r="3.2" fill="#5cdb6d"/>
+  <line x1="114" y1="101" x2="152" y2="101" stroke="#57caff" stroke-width="2" stroke-linecap="round"/>
+
+  <rect x="92" y="122" width="72" height="26" rx="7" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <circle cx="104" cy="135" r="3.2" fill="#5cdb6d"/>
+  <text x="134" y="139" text-anchor="middle" class="m" font-size="11" fill="#e8eaed" font-weight="600">/mcp</text>
+
+  <!-- Floating OAuth Key Badge (top-left) -->
+  <g transform="translate(66, 74)">
+    <rect x="-40" y="-15" width="80" height="30" rx="15" fill="url(#glass)" stroke="#ffd427" stroke-width="2" filter="url(#glow-s)"/>
+    <circle cx="-21" cy="0" r="5" fill="none" stroke="#ffd427" stroke-width="2"/>
+    <path d="M-16 0 H-6 M-9 0 V4" stroke="#ffd427" stroke-width="2" stroke-linecap="round"/>
+    <text x="14" y="4" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427" font-weight="600">OAuth</text>
+  </g>
+
+  <!-- Floating IAM Badge (bottom-right) -->
+  <g transform="translate(186, 166)">
+    <rect x="-34" y="-15" width="68" height="30" rx="15" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2" filter="url(#glow-s)"/>
+    <path d="M-19 0 L-14 5 L-6 -4" fill="none" stroke="#5cdb6d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="12" y="4" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">IAM</text>
+  </g>
+
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="12" fill="#ff7daf" font-weight="600">PRODUCTION SECURITY</text>
+</svg>

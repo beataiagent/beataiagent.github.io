@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 280" width="1088" height="280">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/><stop offset="100%" stop-color="#57caff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/><stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/><stop offset="100%" stop-color="#ffd427" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/><stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/></radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="280" fill="#202124"/>
+  <circle cx="200" cy="140" r="120" fill="url(#amb-b)"/>
+  <circle cx="480" cy="180" r="130" fill="url(#amb-g)"/>
+  <circle cx="720" cy="180" r="110" fill="url(#amb-y)"/>
+  <circle cx="885" cy="180" r="110" fill="url(#amb-r)"/>
+
+  <!-- Subtle frame -->
+  <rect x="8" y="8" width="1072" height="264" rx="18" fill="#17181b" fill-opacity="0.55" stroke="#3c4043" stroke-width="1.5"/>
+
+  <!-- Edges -->
+  <path d="M84 140 H126" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+  <!-- Intake to simple -->
+  <path d="M276 122 C318 122 324 54 388 54" fill="none" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+  <!-- Simple to END -->
+  <path d="M578 54 C740 54 910 54 996 106" fill="none" stroke="#57caff" stroke-width="2.4" stroke-dasharray="6 4" marker-end="url(#arr-b)"/>
+  <!-- Intake to complex parallel -->
+  <path d="M276 158 C318 158 324 184 382 184" fill="none" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+  <!-- Parallel to Merge/Draft -->
+  <path d="M584 184 H628" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+  <!-- Draft to Quality Gate -->
+  <path d="M768 184 H812" stroke="#ffd427" stroke-width="2.6" marker-end="url(#arr-y)"/>
+  <!-- Quality Gate pass to END -->
+  <path d="M940 184 L986 154" fill="none" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+  <!-- Bounded retry cycle -->
+  <path d="M878 220 C878 260 698 260 698 224" fill="none" stroke="#ff7daf" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#arr-r)"/>
+
+  <!-- START Pill -->
+  <rect x="20" y="116" width="64" height="48" rx="24" fill="url(#glass)" stroke="#57caff" stroke-width="2.4" filter="url(#glow-s)"/>
+  <text x="52" y="145" text-anchor="middle" class="m" font-size="12.5" fill="#57caff" font-weight="600">START</text>
+
+  <!-- Intake & Classify -->
+  <rect x="130" y="102" width="146" height="76" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2.4"/>
+  <text x="203" y="132" text-anchor="middle" class="t" font-size="15.5">Intake &amp; Route</text>
+  <rect x="148" y="144" width="110" height="22" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.2"/>
+  <text x="203" y="159" text-anchor="middle" class="m" font-size="11" fill="#57caff">LlmAgent · Flash</text>
+
+  <!-- Branch pills -->
+  <rect x="302" y="54" width="66" height="20" rx="10" fill="#202124" stroke="#57caff" stroke-width="1.4"/>
+  <text x="335" y="68" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">simple</text>
+  <rect x="296" y="190" width="72" height="20" rx="10" fill="#202124" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="332" y="204" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">complex</text>
+
+  <!-- Upper Fast Path -->
+  <rect x="392" y="24" width="186" height="60" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <text x="485" y="50" text-anchor="middle" class="t" font-size="15">Quick Answer</text>
+  <text x="485" y="70" text-anchor="middle" class="m" font-size="11.5" fill="#bdc1c6">FAQ / semantic cache</text>
+
+  <!-- Parallel Fan-Out Container -->
+  <rect x="386" y="114" width="198" height="138" rx="16" fill="#202124" stroke="#5cdb6d" stroke-width="2.2" stroke-dasharray="6 4"/>
+  <text x="485" y="135" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">PARALLEL FAN-OUT</text>
+  <rect x="402" y="146" width="166" height="42" rx="10" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="485" y="172" text-anchor="middle" class="t" font-size="13.5">Docs RAG Agent</text>
+  <rect x="402" y="198" width="166" height="42" rx="10" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="485" y="224" text-anchor="middle" class="t" font-size="13.5">Web Search Agent</text>
+
+  <!-- Merge & Draft -->
+  <rect x="632" y="146" width="136" height="76" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2.4"/>
+  <text x="700" y="176" text-anchor="middle" class="t" font-size="15">Merge &amp; Draft</text>
+  <rect x="648" y="188" width="104" height="22" rx="8" fill="#17181b" stroke="#ffd427" stroke-width="1.2"/>
+  <text x="700" y="203" text-anchor="middle" class="m" font-size="11" fill="#ffd427">Gemini Pro</text>
+
+  <!-- Quality Gate -->
+  <rect x="816" y="146" width="124" height="76" rx="14" fill="url(#glass-hi)" stroke="#ff7daf" stroke-width="2.4" filter="url(#glow-s)"/>
+  <text x="878" y="176" text-anchor="middle" class="t" font-size="15">Quality Gate</text>
+  <rect x="832" y="188" width="92" height="22" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.2"/>
+  <text x="878" y="203" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">score ≥ 8?</text>
+
+  <!-- Retry pill -->
+  <rect x="708" y="242" width="160" height="22" rx="11" fill="#202124" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="788" y="257" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">score &lt; 8 · retry ≤ 3</text>
+
+  <!-- Pass label -->
+  <rect x="944" y="174" width="44" height="20" rx="10" fill="#202124" stroke="#5cdb6d" stroke-width="1.3"/>
+  <text x="966" y="188" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">pass</text>
+
+  <!-- END Pill -->
+  <rect x="992" y="110" width="72" height="52" rx="26" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.6" filter="url(#glow-s)"/>
+  <text x="1028" y="141" text-anchor="middle" class="m" font-size="13" fill="#5cdb6d" font-weight="700">END</text>
+</svg>

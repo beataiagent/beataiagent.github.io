@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 196" width="1088" height="196" role="img" aria-label="Without callbacks the agent is a black box between prompt and answer; with callbacks you can observe, customize and control the agent, model and tool steps">
+<defs>
+  <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#303238"/><stop offset="1" stop-color="#1d1e22"/></linearGradient>
+  <linearGradient id="gem" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f8df7"/><stop offset=".55" stop-color="#a77bf3"/><stop offset="1" stop-color="#57caff"/></linearGradient>
+  <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-s" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <radialGradient id="amb-b" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#57caff" stop-opacity=".26"/><stop offset="1" stop-color="#57caff" stop-opacity="0"/></radialGradient><radialGradient id="amb-g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#5cdb6d" stop-opacity=".26"/><stop offset="1" stop-color="#5cdb6d" stop-opacity="0"/></radialGradient><radialGradient id="amb-y" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd427" stop-opacity=".26"/><stop offset="1" stop-color="#ffd427" stop-opacity="0"/></radialGradient><radialGradient id="amb-r" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ff7daf" stop-opacity=".26"/><stop offset="1" stop-color="#ff7daf" stop-opacity="0"/></radialGradient>
+  <marker id="a-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker><marker id="a-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker><marker id="a-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker><marker id="a-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker><marker id="a-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#e8eaed"/></marker><marker id="a-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#80868b"/></marker>
+</defs>
+<text x="20" y="22" font-family='"Roboto Mono", ui-monospace, monospace' font-size="12" font-weight="700" fill="#80868b" text-anchor="start">WITHOUT CALLBACKS</text>
+<circle cx="250" cy="110" r="120" fill="url(#amb-r)"/>
+<rect x="20" y="92" width="74.4" height="30" rx="15.0" fill="#17181b" stroke="#e8eaed" stroke-width="1.8"/><text x="57.2" y="112.04" font-family='"Roboto Mono", ui-monospace, monospace' font-size="14" font-weight="600" fill="#e8eaed" text-anchor="middle">prompt</text>
+<path d="M108 107 H150" fill="none" stroke="#e8eaed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-w)"/>
+<rect x="156" y="52" width="190" height="112" rx="16" fill="#0e0f11" stroke="#3c4043" stroke-width="2"/>
+<text x="251" y="120" font-family='"Google Sans", "Product Sans", system-ui, sans-serif' font-size="46" font-weight="700" fill="#5f6368" text-anchor="middle">?</text>
+<text x="251" y="156" font-family='"Roboto Mono", ui-monospace, monospace' font-size="12" font-weight="500" fill="#80868b" text-anchor="middle">black box</text>
+<path d="M350 107 H392" fill="none" stroke="#e8eaed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-w)"/>
+<rect x="396" y="92" width="74.4" height="30" rx="15.0" fill="#17181b" stroke="#e8eaed" stroke-width="1.8"/><text x="433.2" y="112.04" font-family='"Roboto Mono", ui-monospace, monospace' font-size="14" font-weight="600" fill="#e8eaed" text-anchor="middle">answer</text>
+<path d="M500 20 V180" fill="none" stroke="#3c4043" stroke-width="2" stroke-linecap="round" stroke-dasharray="5 5" opacity="1"/>
+<text x="530" y="22" font-family='"Roboto Mono", ui-monospace, monospace' font-size="12" font-weight="700" fill="#5cdb6d" text-anchor="start">WITH CALLBACKS</text>
+<circle cx="800" cy="110" r="220" fill="url(#amb-b)"/>
+<rect x="530" y="92" width="74.4" height="30" rx="15.0" fill="#17181b" stroke="#e8eaed" stroke-width="1.8"/><text x="567.2" y="112.04" font-family='"Roboto Mono", ui-monospace, monospace' font-size="14" font-weight="600" fill="#e8eaed" text-anchor="middle">prompt</text>
+<path d="M618 107 H650" fill="none" stroke="#e8eaed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-w)"/>
+<rect x="654" y="46" width="330" height="124" rx="16" fill="rgba(87,202,255,.05)" stroke="#57caff" stroke-width="2"/>
+<rect x="662" y="112" width="76" height="40" rx="10" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+<text x="700" y="137" font-family='"Google Sans", "Product Sans", system-ui, sans-serif' font-size="14" font-weight="600" fill="#e8eaed" text-anchor="middle">agent</text>
+<path d="M740 132 H758" fill="none" stroke="#e8eaed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-w)"/>
+<rect x="762" y="112" width="76" height="40" rx="10" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+<text x="800" y="137" font-family='"Google Sans", "Product Sans", system-ui, sans-serif' font-size="14" font-weight="600" fill="#e8eaed" text-anchor="middle">model</text>
+<path d="M840 132 H858" fill="none" stroke="#e8eaed" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-w)"/>
+<rect x="862" y="112" width="76" height="40" rx="10" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+<text x="900" y="137" font-family='"Google Sans", "Product Sans", system-ui, sans-serif' font-size="14" font-weight="600" fill="#e8eaed" text-anchor="middle">tool</text>
+<path d="M700 88 V110" fill="none" stroke="#57caff" stroke-width="2" stroke-linecap="round" opacity="1"/>
+<circle cx="700" cy="72" r="17" fill="#202124" stroke="#57caff" stroke-width="2" filter="url(#glow-s)"/><g transform="translate(690.65,62.65) scale(0.7792)" fill="none" stroke="#57caff" stroke-width="2.567" stroke-linecap="round" stroke-linejoin="round" opacity="1"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></g>
+<text x="700" y="188" font-family='"Roboto Mono", ui-monospace, monospace' font-size="12" font-weight="600" fill="#57caff" text-anchor="middle">observe</text>
+<path d="M800 88 V110" fill="none" stroke="#5cdb6d" stroke-width="2" stroke-linecap="round" opacity="1"/>
+<circle cx="800" cy="72" r="17" fill="#202124" stroke="#5cdb6d" stroke-width="2" filter="url(#glow-s)"/><g transform="translate(790.65,62.65) scale(0.7792)" fill="none" stroke="#5cdb6d" stroke-width="2.567" stroke-linecap="round" stroke-linejoin="round" opacity="1"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></g>
+<text x="800" y="188" font-family='"Roboto Mono", ui-monospace, monospace' font-size="12" font-weight="600" fill="#5cdb6d" text-anchor="middle">customize</text>
+<path d="M900 88 V110" fill="none" stroke="#ff7daf" stroke-width="2" stroke-linecap="round" opacity="1"/>
+<circle cx="900" cy="72" r="17" fill="#202124" stroke="#ff7daf" stroke-width="2" filter="url(#glow-s)"/><g transform="translate(890.65,62.65) scale(0.7792)" fill="none" stroke="#ff7daf" stroke-width="2.567" stroke-linecap="round" stroke-linejoin="round" opacity="1"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/></g>
+<text x="900" y="188" font-family='"Roboto Mono", ui-monospace, monospace' font-size="12" font-weight="600" fill="#ff7daf" text-anchor="middle">control</text>
+<path d="M988 107 H1010" fill="none" stroke="#e8eaed" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#a-w)"/>
+<rect x="1014" y="92" width="70" height="30" rx="15.0" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/><text x="1049.0" y="112.04" font-family='"Roboto Mono", ui-monospace, monospace' font-size="14" font-weight="600" fill="#5cdb6d" text-anchor="middle">answer</text>
+</svg>

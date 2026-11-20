@@ -1,0 +1,850 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADK Plugins &amp; Agent Skills — Modularize, Enforce, Reuse</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- ADK Plugins & Skills deck extras ---------- */
+    .ps-div-art { position: absolute; left: 57px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .ps-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .ps-ty-art { position: absolute; left: 880px; top: 186px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+    .reveal .slides .ps-ty-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .ps-art { width: 1088px; border: 2px solid var(--c, var(--dk-line)); border-radius: 16px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; box-shadow: 0 10px 28px rgba(0,0,0,.35); }
+    .reveal .slides .ps-art img { width: 100%; height: auto; display: block; margin: 0; }
+    .ps-lg-sm { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 7px; border-radius: 999px; background: #17181b; border: 1.5px solid var(--c, #3c4043); font: 500 12.5px/1.2 var(--mono); color: var(--dk-text); vertical-align: middle; }
+    .reveal .slides .ps-lg-sm img { width: 18px; height: 18px; object-fit: contain; display: block; margin: 0; }
+    .ps-hd-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .ps-hd-row .ev-lg { width: 34px; height: 34px; padding: 5px; border-radius: 10px; flex: none; }
+    .ps-hd-row h3, .ps-hd-row b { margin: 0; }
+    .cb-ico { display: block; width: 38px; height: 38px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+
+    /* pill hooks & tags */
+    .cb-hook { display: inline-block; flex: none; font: 500 13.5px/1.2 var(--mono); padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; box-sizing: border-box; }
+    .ps-pill { display: inline-flex; align-items: center; gap: 6px; font: 500 13px/1.2 var(--mono); padding: 5px 10px; border-radius: 8px; border: 1.5px solid var(--c, var(--dk-line)); color: var(--c, var(--dk-text)); background: #17181b; }
+
+    /* checklist */
+    .reveal ul.cb-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .cb-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .cb-chk li > i { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font: 700 13px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .cb-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .cb-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* side cards next to code */
+    .cb-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .cb-side .pc { padding: 12px 16px; font-size: 15px; line-height: 1.4; }
+    .cb-side .pc h3 { font-size: 18px; margin-bottom: 4px; }
+
+    /* resources */
+    .cb-res-row { display: flex; align-items: center; gap: 14px; padding: 14px 18px; }
+    .cb-res-row h3 { margin: 0 0 4px; font-size: 19px; }
+    .reveal table.zt-tbl td.hi { color: var(--h-green); font-weight: 500; }
+
+    /* fleet drift diagram (Slide 4) */
+    .ps-fleet { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; margin-top: 12px; }
+    .ps-agent { background: #17181b; border: 1.5px solid #3c4043; border-radius: 10px; padding: 10px 12px; }
+    .ps-agent.bad { border-color: var(--h-red); background: rgba(255,125,175,.07); }
+    .ps-agent b { display: block; font: 500 14px/1.2 var(--mono); color: #fff; margin-bottom: 6px; }
+    .ps-agent .tags { display: flex; flex-wrap: wrap; gap: 4px; }
+    .ps-agent .tags span { font: 500 11px/1.1 var(--mono); padding: 3px 6px; border-radius: 5px; background: #2a2b2f; color: var(--dk-sub); }
+    .ps-agent .tags span.miss { background: rgba(255,125,175,.2); color: var(--h-red); border: 1px dashed var(--h-red); }
+
+    /* execution wrapper diagram (Slide 6) */
+    .ps-wrap { width: 1088px; display: grid; gap: 10px; }
+    .ps-layer { border-radius: 14px; padding: 12px 16px; border: 2px solid var(--c); background: #17181b; }
+    .ps-layer-hd { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .ps-layer-hd b { font: 700 12.5px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--c); }
+    .ps-layer-hd span { font: 400 12.5px/1 var(--mono); color: var(--dk-sub); }
+    .ps-chain { display: flex; align-items: center; gap: 8px; flex-wrap: nowrap; }
+    .ps-chain .ar { width: 18px; height: 14px; flex: none; fill: none; stroke: var(--dk-sub); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .ps-box { flex: 1; text-align: center; padding: 8px 10px; border-radius: 10px; background: var(--dk-card); border: 1.5px solid var(--c, var(--dk-line)); font: 500 13.5px/1.25 var(--mono); color: #fff; }
+    .ps-box small { display: block; font: 400 11.5px/1.2 var(--sans); color: var(--dk-sub); margin-top: 2px; }
+
+    /* plugin gallery cards (Slide 10) */
+    .ps-gal { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; width: 1088px; }
+    .ps-gal .pc { padding: 16px 18px; display: flex; gap: 14px; align-items: flex-start; }
+    .ps-gal h3 { font-size: 19px; margin: 0 0 5px; }
+    .ps-gal p { font-size: 14.5px; line-height: 1.38; color: var(--dk-sub); margin: 0; }
+    .ps-gal .meta { margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px; }
+
+    /* skill tree (Slide 16) */
+    .ps-tree { background: #17181b; border: 2px solid var(--dk-line); border-radius: 14px; padding: 18px 20px; font: 400 14.5px/1.65 var(--mono); color: var(--dk-text); }
+    .ps-tree .dir { color: var(--h-blue); font-weight: 700; }
+    .ps-tree .file { color: var(--h-yellow); font-weight: 700; }
+    .ps-tree .cmt { color: #9aa0a6; font-family: var(--sans); font-size: 13.5px; }
+
+    /* progressive disclosure tiers (Slide 17) */
+    .ps-tier { display: grid; grid-template-columns: 150px 1fr 165px; gap: 16px; align-items: center; padding: 14px 18px; border-radius: 14px; background: var(--dk-card); border: 2px solid var(--c); }
+    .ps-tier .t-badge { font: 700 13px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--c); }
+    .ps-tier .t-badge b { display: block; font: 500 22px/1.15 var(--sans); color: #fff; margin-top: 3px; }
+    .ps-tier .t-desc { font-size: 15.5px; line-height: 1.38; color: var(--dk-text); }
+    .ps-tier .t-desc small { display: block; color: var(--dk-sub); margin-top: 3px; font-size: 13.5px; }
+    .ps-tier .t-tok { text-align: right; font: 500 14px/1.3 var(--mono); color: var(--c); background: #17181b; padding: 8px 12px; border-radius: 10px; border: 1.5px solid var(--c); }
+
+    /* enterprise architecture diagram (Slide 21) */
+    .ps-arch { width: 1088px; display: grid; gap: 12px; }
+    .ps-arch-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 12px 16px; border-radius: 14px; background: #17181b; border: 2px solid var(--c); }
+    .ps-arch-bar .lbl { font: 700 13px/1.2 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--c); white-space: nowrap; }
+    .ps-arch-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+    .ps-arch-agents { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .ps-arch-card { background: var(--dk-card); border: 2px solid var(--c); border-top: 5px solid var(--c); border-radius: 14px; padding: 14px 16px; }
+    .ps-arch-card h3 { font-size: 18px; color: var(--c) !important; margin: 0 0 6px; }
+    .ps-arch-card p { font-size: 14px; color: var(--dk-sub); margin: 0 0 10px; line-height: 1.35; }
+  </style>
+</head>
+<body data-deck="ADK Plugins &amp; Skills">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="M12 22v-5"/><path d="M9 8V2"/><path d="M15 8V2"/><path d="M18 8v5a4 4 0 0 1-4 4h-4a4 4 0 0 1-4-4V8Z"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2Z"/></symbol>
+    <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2Z"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="m17 2 4 4-4 4"/><path d="M3 11v-1a4 4 0 0 1 4-4h14"/><path d="m7 22-4-4 4-4"/><path d="M21 13v1a4 4 0 0 1-4 4H3"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18.5A2 2 0 0 0 3.5 21.5h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></symbol>
+    <symbol id="i-git" viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M6 9v6"/><path d="M18 9a6 6 0 0 1-6 6H9"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="ADK Plugins &amp; Agent Skills">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Modularize</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Enforce</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Reuse</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>ADK Plugins &amp; Agent Skills</b><span>Scale cross-cutting policies and reusable capabilities across every agent</span></div>
+        <div class="hx-chips">
+          <i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i>
+          <i style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-armor.png" alt="">Model Armor</i>
+          <i style="--c:var(--h-blue)"><img src="../images/shared/logos/python.svg" alt="">Python</i>
+        </div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • วันนี้เรามาต่อยอดจาก Agent ตัวเดียว สู่ระดับองค์กรด้วย 2 ฟีเจอร์สำคัญของ ADK คือ Plugins และ Agent Skills • 3 คำหลักของวันนี้: Modularize แยกความเชี่ยวชาญเป็นโมดูล, Enforce บังคับใช้นโยบายความปลอดภัยและ telemetry กับทุก agent พร้อมกัน, และ Reuse นำกลับมาใช้ซ้ำได้ทั้งทีมโดยไม่ต้องก๊อปปี้โค้ดหรือ prompt ซ้ำ ๆ</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>From callbacks to plugins</strong><span>Why per-agent hooks break at scale</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Prebuilt &amp; custom plugins</strong><span>Model Armor, retries, BigQuery &amp; BasePlugin</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Agent Skills</strong><span>SKILL.md &amp; progressive disclosure</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Enterprise architecture</strong><span>Combining plugins &amp; skills across fleets</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-plugins-skills-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">วันนี้แบ่งเป็น 4 ช่วงครับ: (1) ทำไม callback รายตัวถึงเริ่มไม่ไหวเมื่อมีหลาย agent และ Plugin เข้ามาแก้ยังไง (2) เจาะลึกการเขียน BasePlugin เอง และ Plugin สำเร็จรูปอย่าง Model Armor, Reflect-and-Retry และ BigQuery Analytics (3) Agent Skills คืออะไร โครงสร้าง SKILL.md และกลไก Progressive Disclosure ที่ช่วยประหยัด token (4) สถาปัตยกรรมระดับ Enterprise ที่ผสาน Plugin กับ Skill เข้าด้วยกัน • สแกน QR ด้านขวาเปิดสไลด์ตามได้เลยครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · From callbacks to plugins">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="ps-div-art" style="--c:var(--h-blue)"><img src="../images/adk-plugins-skills-slides/sec-01-plugins.svg" alt="Glowing Runner shield wrapping multiple agent nodes"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:70px">From callbacks<br>to plugins</h1>
+            <p class="sub" style="margin-top:28px">Scaling cross-cutting hooks<br>across every agent in your app</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • มาดูกันว่าเมื่อระบบโตจาก 1 agent เป็น 10+ agents การใช้ callback แบบเดิมเจอปัญหาอะไร และ Plugin ใน ADK ถูกออกแบบมาแก้ตรงไหน</aside>
+      </section>
+
+      <!-- 4. Why per-agent callbacks break at 10+ agents -->
+      <section data-title="Why callbacks break at scale">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">01 · the scaling wall</div>
+            <h2 style="margin-bottom:14px">Per-agent callbacks break down at 10+ agents</h2>
+            <div class="ps-art fragment" data-fragment-index="1" style="--c:var(--dk-line); margin-bottom:14px">
+              <img src="../images/adk-plugins-skills-slides/callback-drift-vs-plugin.svg" alt="Visual contrast: 10+ agents with drifting per-agent callbacks vs 1 Runner-level BasePlugin protecting every agent automatically">
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="2" style="width:1088px; gap:16px">
+              <div class="pc red" style="padding:12px 16px; font-size:15px">
+                <b style="color:var(--h-red)">Copy-paste drift:</b> Every new sub-agent must manually wire guardrails, audit logs &amp; retries — one omission creates a blind spot.
+              </div>
+              <div class="pc green" style="padding:12px 16px; font-size:15px">
+                <b style="color:var(--h-green)">Runner-level shield:</b> Register <code>BasePlugin</code> once on <code>Runner</code> / <code>App</code> — every existing &amp; future agent is protected automatically.
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>The risk</b><span>One new sub-agent forgetting <code>before_model_callback</code> becomes a production security hole.</span></div>
+        </div>
+        <aside class="notes">ตอนมี agent ตัวเดียว การใส่ callback 3-4 ตัวไว้ที่ตัว agent ดูเรียบง่ายมาก • (คลิก 1) แต่พอระบบโตเป็น 10+ agents ที่มีหลายทีมช่วยกันเขียน จะเกิดปัญหาทันที: ต้องก๊อปปี้ callback ซ้ำทุกตัว พออัปเดตเวอร์ชันก็เกิด drift และอันตรายที่สุดคือมี agent ใหม่ตัวเดียวที่ลืมใส่ pii_guard หรือ audit_log • (คลิก 2) ต่างจาก Plugin ที่ลงทะเบียนครั้งเดียวที่ Runner แล้วครอบคลุมทุก agent 100% • (คลิก 3) แค่ลืมตัวเดียวก็กลายเป็นช่องโหว่ความปลอดภัยทั้งระบบแล้ว</aside>
+      </section>
+
+      <!-- 5. Callbacks vs Plugins comparison table -->
+      <section data-title="Callbacks vs Plugins">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">01 · side by side</div>
+            <h2 style="margin-bottom:14px">Callbacks vs. Plugins in ADK</h2>
+            <table class="zt-tbl" style="width:1088px; font-size:15px">
+              <colgroup><col style="width:190px"><col style="width:410px"><col></colgroup>
+              <thead><tr><th>Dimension</th><th>Agent Callbacks</th><th>ADK Plugins (<code>BasePlugin</code>)</th></tr></thead>
+              <tbody>
+                <tr><td>Scope</td><td>Single <code>LlmAgent</code> (or explicit list)</td><td class="hi">Every agent, model &amp; tool in the <code>Runner</code> / <code>App</code></td></tr>
+                <tr><td>Registration</td><td>Keyword args on each agent constructor</td><td class="hi">Registered once via <code>plugins=[...]</code></td></tr>
+                <tr><td>Execution Priority</td><td>Runs <i>after</i> plugin hooks</td><td class="hi">Runs <i>first</i> — global policy always wins</td></tr>
+                <tr><td>Hook Surface</td><td>8 hooks (agent, model, tool, error)</td><td class="hi">12+ hooks (adds <code>on_user_message</code>, <code>before/after_run</code>, <code>on_event</code>)</td></tr>
+                <tr><td>Packaging</td><td>Standalone Python functions</td><td class="hi">Reusable, stateful classes with config &amp; clients</td></tr>
+                <tr><td>Best For</td><td>Agent-specific formatting &amp; local rules</td><td class="hi">Guardrails, audit logs, retries, cost &amp; auth</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Rule of thumb</b><span>Use <b>Callbacks</b> for one agent's behavior. Use <b>Plugins</b> for app-wide policy.</span></div>
+        </div>
+        <aside class="notes">ตารางเปรียบเทียบ Callbacks กับ Plugins ชัด ๆ ครับ • Scope: Callback ผูกกับ agent รายตัว ส่วน Plugin ครอบคลุมทุก agent ทุก model ทุก tool ใน Runner หรือ App เดียวกัน • Registration: ลงทะเบียนครั้งเดียวที่ Runner ไม่ต้องแก้โค้ดของแต่ละ agent • Priority: Plugin รันก่อนเสมอ ดังนั้น policy กลางจะไม่มีวันถูก agent ข้ามได้ • Hook Surface: Plugin มี hook เพิ่มระดับ invocation เช่น on_user_message, before_run, after_run และ on_event • สรุปสั้น ๆ: พฤติกรรมเฉพาะตัวใช้ Callback นโยบายทั้งระบบใช้ Plugin</aside>
+      </section>
+
+      <!-- 6. Execution order visual -->
+      <section data-title="Plugin execution order">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">01 · execution flow</div>
+            <h2 style="margin-bottom:14px">Plugins wrap every invocation, agent, model &amp; tool</h2>
+            <div class="ps-art fragment" data-fragment-index="1" style="--c:var(--h-green); margin-bottom:14px">
+              <img src="../images/adk-plugins-skills-slides/plugin-execution-onion.svg" alt="Layered execution flow: User to Plugin before_* to Agent Callback to Gemini/Tool to Agent Callback to Plugin after_* with short-circuit exit">
+            </div>
+            <div class="fragment" data-fragment-index="2" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+              <span class="ps-lg-sm" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">Runner Plugin Layer runs first</span>
+              <span class="ps-lg-sm" style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Agent Callbacks run only on None</span>
+              <span class="ps-lg-sm" style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor">Short-circuit blocks unsafe calls early</span>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Short-circuiting</b><span>If a plugin's <code>before_*</code> returns an object, agent callbacks &amp; the LLM/tool call are skipped.</span></div>
+        </div>
+        <aside class="notes">มาดูลำดับการทำงานจริงใน Runner ครับ • (คลิก 1) ชั้นนอกสุดคือ Plugin Layer: เริ่มตั้งแต่ on_user_message และ before_run ก่อนที่จะเข้าตัว agent ด้วยซ้ำ จากนั้นทุกครั้งที่มีการเรียก agent, model หรือ tool ตัว Plugin.before_* จะทำงานก่อน ชั้นในคือ Agent Callback Layer จะทำงานก็ต่อเมื่อ Plugin คืนค่า None แล้วจึงวิ่งไปที่ Gemini หรือ Tool • (คลิก 2-3) ถ้า Plugin คืนค่า object กลับมา (เช่น Model Armor บล็อก prompt) ระบบจะ short-circuit ข้ามทั้ง agent callback และไม่เรียก Gemini เลย ประหยัดทั้งเงินและปลอดภัย 100%</aside>
+      </section>
+
+      <!-- 7. Two dimensions of modularity -->
+      <section data-title="Plugins + Skills: two dimensions">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the mental model</div>
+            <h2 style="margin-bottom:22px">Two complementary axes of modularity in ADK</h2>
+            <div class="grid g2 h2-comp" style="width:1088px; gap:22px">
+              <div class="pc green fragment" data-fragment-index="1" style="padding:22px 24px">
+                <div class="ps-hd-row" style="margin-bottom:12px">
+                  <span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                  <h3>ADK Plugins · Horizontal Governance</h3>
+                </div>
+                <p style="font-size:16px; color:var(--dk-sub); margin-bottom:14px">Controls <b>how</b> every agent executes across the entire application.</p>
+                <div class="chips" style="display:flex; flex-wrap:wrap; gap:8px">
+                  <span class="ps-lg-sm" style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor">Safety &amp; PII</span>
+                  <span class="ps-lg-sm" style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery">Audit &amp; Telemetry</span>
+                  <span class="ps-pill" style="--c:var(--h-yellow)">Tool Retries</span>
+                  <span class="ps-pill" style="--c:var(--h-green)">Context Filtering</span>
+                </div>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2" style="padding:22px 24px">
+                <div class="ps-hd-row" style="margin-bottom:12px">
+                  <span class="ev-lg"><img src="../images/shared/logos/agents-cli.png" alt="Agent Skills"></span>
+                  <h3>Agent Skills · Vertical Expertise</h3>
+                </div>
+                <p style="font-size:16px; color:var(--dk-sub); margin-bottom:14px">Teaches <b>what</b> an agent knows and loads instructions only when needed.</p>
+                <div class="chips" style="display:flex; flex-wrap:wrap; gap:8px">
+                  <span class="ps-lg-sm" style="--c:var(--h-yellow)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">SOPs &amp; Workflows</span>
+                  <span class="ps-lg-sm" style="--c:var(--h-blue)"><img src="../images/shared/logos/python.svg" alt="Python">Helper Scripts</span>
+                  <span class="ps-pill" style="--c:var(--h-yellow)">Domain Guides</span>
+                  <span class="ps-pill" style="--c:var(--h-yellow)">Templates</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Together</b><span>Plugins keep the fleet <b>safe &amp; observable</b>. Skills keep agents <b>smart &amp; lean</b>.</span></div>
+        </div>
+        <aside class="notes">ก่อนจะลงลึกโค้ด อยากให้เห็นภาพรวมของทั้ง 2 เรื่องก่อนครับ • (คลิก 1) Plugins คือแกนแนวนอน (Horizontal Governance) ควบคุม "วิธีการทำงาน" ของทุก agent เช่น ความปลอดภัย การเก็บ log การ retry • (คลิก 2) Agent Skills คือแกนแนวตั้ง (Vertical Expertise) บรรจุ "ความรู้และขั้นตอนเฉพาะทาง" ที่โหลดเข้ามาเฉพาะตอนที่จำเป็น • (คลิก 3) เมื่อใช้คู่กัน Plugin จะทำให้ระบบปลอดภัยและตรวจสอบได้ ส่วน Skill จะทำให้ agent ฉลาดขึ้นโดยไม่เปลือง context window</aside>
+      </section>
+
+      <!-- 8. Section 02 -->
+      <section class="bg-green" data-title="02 · Prebuilt &amp; custom plugins">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="ps-div-art" style="--c:var(--h-green)"><img src="../images/adk-plugins-skills-slides/sec-02-prebuilt.svg" alt="Modular plug-in bricks: Armor, Retry, BigQuery, Filter"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:70px">Prebuilt &amp;<br>custom plugins</h1>
+            <p class="sub" style="margin-top:28px">BasePlugin, Model Armor,<br>retries &amp; BigQuery analytics</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • มาดูวิธีเขียน custom plugin ด้วย BasePlugin และสำรวจ Plugin สำเร็จรูปที่ ADK เตรียมไว้ให้พร้อมใช้บน production</aside>
+      </section>
+
+      <!-- 9. Writing a custom BasePlugin -->
+      <section data-title="Write a custom BasePlugin">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · custom plugin</div>
+            <h2 style="margin-bottom:16px">Subclass <code>BasePlugin</code> and register on the <code>Runner</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:650px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.plugins.base_plugin import BasePlugin
+from google.adk.runners import Runner
+
+class ToolQuotaPlugin(BasePlugin):
+    def __init__(self, max_calls: int = 10):
+        super().__init__(name="tool_quota")
+        self.max_calls = max_calls
+
+    async def before_tool_callback(
+        self, *, tool, tool_args, tool_context
+    ):
+        used = tool_context.state.get("temp:calls", 0)
+        if used >= self.max_calls:
+            return {"error": "Tool call quota exceeded"}
+        tool_context.state["temp:calls"] = used + 1
+        return None  # allow tool execution
+
+runner = Runner(
+    app_name="support_app",
+    agent=root_agent,
+    session_service=session_service,
+    plugins=[ToolQuotaPlugin(max_calls=5)],
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc green fragment"><div class="ps-hd-row"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-green)">1 · Unique name</h3></div>Pass a descriptive <code>name</code> to <code>super().__init__()</code> for logs &amp; debugging.</div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">2 · Same return rule</h3>Return <code>None</code> to continue; return a <code>dict</code> or <code>LlmResponse</code> to short-circuit.</div>
+                <div class="pc yellow fragment"><div class="ps-hd-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-yellow)">3 · Runner or App</h3></div>Attach to <code>Runner(plugins=[...])</code> or <code>App(plugins=[...])</code> so every sub-agent inherits it.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">วิธีเขียน custom plugin ง่ายมากครับ • สืบทอดจาก BasePlugin แล้วตั้งชื่อผ่าน super().__init__(name=...) • จากนั้น override เฉพาะ hook ที่ต้องการ อย่างตัวอย่างนี้เราจำกัดจำนวนครั้งการเรียก tool ต่อรอบด้วย before_tool_callback • (คลิก) กฎการคืนค่าเหมือน callback เป๊ะ: คืน None คือปล่อยผ่าน คืน dict คือบล็อกและส่งผลลัพธ์กลับให้โมเดลทันที • (คลิก) เสร็จแล้วส่งเข้า Runner(plugins=[...]) หรือ App(plugins=[...]) ครั้งเดียว มีผลกับทุก sub-agent โดยอัตโนมัติ</aside>
+      </section>
+
+      <!-- 10. Prebuilt Plugins Gallery -->
+      <section data-title="Prebuilt plugins gallery">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · prebuilt plugins</div>
+            <h2 style="margin-bottom:18px">Production plugins ready out of the box</h2>
+            <div class="ps-gal">
+              <div class="pc red fragment" data-fragment-index="1">
+                <span class="ev-lg"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor"></span>
+                <div>
+                  <h3 style="color:var(--h-red)">Model Armor Plugin</h3>
+                  <p>Screens prompts &amp; responses against Google Cloud Model Armor templates for jailbreaks, PII, and malicious URLs.</p>
+                  <div class="meta"><span class="ps-pill" style="--c:var(--h-red)">before_model</span><span class="ps-pill" style="--c:var(--h-red)">after_model</span></div>
+                </div>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2">
+                <span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                <div>
+                  <h3 style="color:var(--h-yellow)">Reflect &amp; Retry Tool Plugin</h3>
+                  <p>Catches tool exceptions, injects structured reflection guidance, and lets Gemini self-correct arguments automatically.</p>
+                  <div class="meta"><span class="ps-pill" style="--c:var(--h-yellow)">on_tool_error</span><span class="ps-pill" style="--c:var(--h-yellow)">after_tool</span></div>
+                </div>
+              </div>
+              <div class="pc blue fragment" data-fragment-index="3">
+                <span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                <div>
+                  <h3 style="color:var(--h-blue)">BigQuery Analytics Plugin</h3>
+                  <p>Streams every invocation, LLM latency, token count, and tool call into BigQuery for audit trails, BI &amp; evals.</p>
+                  <div class="meta"><span class="ps-pill" style="--c:var(--h-blue)">on_event</span><span class="ps-pill" style="--c:var(--h-blue)">after_model</span></div>
+                </div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="4">
+                <span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <div>
+                  <h3 style="color:var(--h-green)">Global Instructions &amp; Context Filter</h3>
+                  <p>Applies org-wide rules to every LLM call and trims older turns to bound token cost and context noise.</p>
+                  <div class="meta"><span class="ps-pill" style="--c:var(--h-green)">before_model</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Don't reinvent</b><span>Start with ADK's prebuilt plugins before writing custom boilerplate.</span></div>
+        </div>
+        <aside class="notes">ก่อนจะเขียน plugin เอง มาดู 4 กลุ่ม Prebuilt Plugins ที่ ADK มีให้ใช้ทันทีครับ • (คลิก 1) Model Armor Plugin เชื่อมกับ Google Cloud Model Armor ตรวจจับ prompt injection, jailbreak และ PII ทั้งขาเข้าและขาออก • (คลิก 2) Reflect-and-Retry Tool Plugin ดัก error จาก tool แล้วส่งคำแนะนำให้ Gemini แก้ argument และลองใหม่เอง • (คลิก 3) BigQuery Analytics Plugin ส่ง telemetry ทั้งหมดเข้า BigQuery เพื่อทำ audit, คิดต้นทุน และสร้างชุด eval • (คลิก 4) Global Instructions & Context Filter ใส่กฎระดับองค์กรและตัดประวัติแชทเก่าเพื่อคุมค่า token • (คลิก 5) ใช้ของสำเร็จรูปก่อนเสมอ ลดโค้ดที่ต้องดูแลได้เยอะครับ</aside>
+      </section>
+
+      <!-- 11. Deep dive: Model Armor & Reflect-and-Retry -->
+      <section data-title="Safety &amp; auto-recovery plugins">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · safety &amp; resilience</div>
+            <h2 style="margin-bottom:16px">Protect inputs &amp; auto-recover failed tool calls</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.apps import App
+from google.adk.plugins import (
+    ReflectAndRetryToolPlugin,
+)
+# Plus Model Armor plugin from ADK safety integration
+app = App(
+    name="customer_portal",
+    root_agent=root_agent,
+    plugins=[
+        ModelArmorPlugin(
+            project_id="my-gcp-project",
+            location_id="us-central1",
+            template_id="enterprise-strict",
+        ),
+        ReflectAndRetryToolPlugin(
+            max_retries=3,
+            throw_exception_if_retry_exceeded=False,
+        ),
+    ],
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc red fragment">
+                  <div class="ps-hd-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor"></span><h3 style="color:var(--h-red)">Model Armor</h3></div>
+                  Centralized security policies managed by SecOps in Cloud Console — update rules without redeploying agents.
+                </div>
+                <div class="pc yellow fragment">
+                  <div class="ps-hd-row"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><h3 style="color:var(--h-yellow)">Reflect &amp; Retry</h3></div>
+                  Turns brittle tool crashes (bad SQL, missing param, HTTP 400) into structured feedback so Gemini fixes the call on retry 2.
+                </div>
+                <div class="pc blue fragment">
+                  <div class="ps-hd-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-blue)">Zero agent edits</h3></div>
+                  Neither plugin requires touching a single line inside <code>root_agent</code> or its sub-agents.
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่างการเปิดใช้งาน Model Armor กับ Reflect-and-Retry คู่กันใน App ครับ • (คลิก 1) Model Armor อ้างอิง template_id จาก Google Cloud ทำให้ทีม Security ปรับนโยบายตรวจจับได้จาก Console โดยไม่ต้องแก้โค้ดหรือ deploy agent ใหม่ • (คลิก 2) ReflectAndRetryToolPlugin ช่วยเปลี่ยน error ที่ปกติจะทำให้ agent พัง เช่น SQL ผิด syntax หรือส่ง parameter ขาด ให้กลายเป็น feedback กลับไปให้ Gemini คิดใหม่และลองเรียก tool ซ้ำได้สูงสุดตาม max_retries • (คลิก 3) ที่สำคัญคือเราไม่ต้องแก้โค้ดในตัว agent เลยแม้แต่บรรทัดเดียว</aside>
+      </section>
+
+      <!-- 12. Deep dive: BigQuery Analytics & Context Filter -->
+      <section data-title="Observability &amp; context plugins">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · observability &amp; cost</div>
+            <h2 style="margin-bottom:16px">BigQuery telemetry, global rules &amp; context trimming</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:18px 20px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                  <h3 style="color:var(--h-blue); margin:0">BigQuery Agent Analytics</h3>
+                </div>
+                <p style="font-size:15px; color:var(--dk-sub); margin-bottom:12px">Non-blocking telemetry stream for every agent event:</p>
+                <ul class="cb-chk">
+                  <li class="ok"><i>✓</i><span>Captures <b>prompts, tool args, latency &amp; tokens</b></span></li>
+                  <li class="ok"><i>✓</i><span>Query cost by <code>user_id</code>, <code>agent_name</code> or team</span></li>
+                  <li class="ok"><i>✓</i><span>Export production traces straight into <b>ADK eval sets</b></span></li>
+                </ul>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:18px 20px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:10px">
+                  <span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                  <h3 style="color:var(--h-green); margin:0">Global Instructions &amp; Context Filter</h3>
+                </div>
+                <p style="font-size:15px; color:var(--dk-sub); margin-bottom:12px">Keep every LLM call compliant and affordable:</p>
+                <ul class="cb-chk">
+                  <li class="ok"><i>✓</i><span><code>GlobalInstructionPlugin</code> injects legal &amp; brand rules</span></li>
+                  <li class="ok"><i>✓</i><span><code>ContextFilterPlugin</code> caps history with <code>num_invocations_to_keep</code></span></li>
+                  <li class="ok"><i>✓</i><span>Prevents runaway token bills on long support chats</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Ops win</b><span>One BigQuery table gives you audit compliance, latency dashboards and eval data.</span></div>
+        </div>
+        <aside class="notes">อีก 2 ตัวที่ทีม Ops ชอบมากครับ • (คลิก 1) BigQuery Agent Analytics Plugin ส่งข้อมูลทุกอย่างทั้ง prompt, tool args, latency และ token เข้า BigQuery แบบไม่บล็อกการทำงาน ทำให้เราทำ dashboard คุมงบ หรือดึง trace จริงมาสร้างชุด eval ได้ทันที • (คลิก 2) GlobalInstructionPlugin ช่วยแทรกกฎระดับองค์กร เช่น disclaimer หรือโทนภาษา ส่วน ContextFilterPlugin ช่วยตัดประวัติแชทที่เก่าเกินกำหนด ไม่ให้ค่า token บานปลายในการคุยยาว ๆ • (คลิก 3) แค่เปิดใช้ plugin ชุดนี้ก็ได้ทั้ง compliance, cost control และ eval pipeline พร้อมกัน</aside>
+      </section>
+
+      <!-- 13. Composing multiple plugins safely -->
+      <section data-title="Composing plugins safely">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · composition</div>
+            <h2 style="margin-bottom:18px">Order matters when composing multiple plugins</h2>
+            <div class="flow tight" style="width:1088px; margin-bottom:20px">
+              <div class="pc red node fragment" data-fragment-index="1">
+                <span class="ev-lg" style="margin:0 auto 8px"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor"></span>
+                <b style="color:var(--h-red)">1 · Guardrails</b>
+                <p><code>ModelArmorPlugin</code><br>Block unsafe input first before spending tokens.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+              <div class="pc green node fragment" data-fragment-index="2">
+                <span class="ev-lg" style="margin:0 auto 8px"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <b style="color:var(--h-green)">2 · Context</b>
+                <p><code>GlobalInstruction</code><br><code>ContextFilter</code><br>Shape &amp; trim request.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="3">
+                <span class="ev-lg" style="margin:0 auto 8px"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                <b style="color:var(--h-yellow)">3 · Resilience</b>
+                <p><code>ReflectAndRetry</code><br>Recover tool failures cleanly.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+              <div class="pc blue node fragment" data-fragment-index="4">
+                <span class="ev-lg" style="margin:0 auto 8px"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                <b style="color:var(--h-blue)">4 · Telemetry</b>
+                <p><code>BigQueryAnalytics</code><br>Observe &amp; log without blocking.</p>
+              </div>
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="5" style="width:1088px; gap:16px">
+              <div class="pc" style="padding:12px 16px; font-size:15px"><b>Short-circuit awareness:</b> The first plugin returning a non-<code>None</code> value stops subsequent plugins in that hook.</div>
+              <div class="pc" style="padding:12px 16px; font-size:15px"><b>Fail-safe design:</b> Wrap telemetry/external I/O in <code>try/except</code> so a logging outage never breaks user traffic.</div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="6"><b>Ordering rule</b><span>Put <b>blocking security first</b>, <b>mutations second</b>, and <b>observers last</b>.</span></div>
+        </div>
+        <aside class="notes">เวลาเราใส่หลาย plugin ใน list ลำดับมีผลมากครับ เพราะ ADK รันตามลำดับใน list • (คลิก 1) ตัวแรกควรเป็น Guardrail อย่าง Model Armor ถ้าไม่ปลอดภัยให้บล็อกทันทีไม่ต้องเสียค่าเรียกโมเดล • (คลิก 2) ถัดมาค่อยปรับแต่ง context และ global instructions • (คลิก 3) ตามด้วย plugin ฝั่ง resilience อย่าง Reflect-and-Retry • (คลิก 4) ปิดท้ายด้วย Telemetry อย่าง BigQuery Analytics • (คลิก 5) ข้อควรระวัง: ถ้าตัวหน้าคืนค่าที่ไม่ใช่ None ตัวหลังใน hook เดียวกันจะไม่ถูกรัน และอย่าลืม wrap I/O ใน try/except เพื่อไม่ให้ระบบ log ล่มแล้วพา agent ล่มไปด้วย • (คลิก 6) จำง่าย ๆ: บล็อกก่อน, แก้ไขกลาง, สังเกตการณ์ท้าย</aside>
+      </section>
+
+      <!-- 14. Section 03 -->
+      <section class="bg-yellow" data-title="03 · Agent Skills">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="ps-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-plugins-skills-slides/sec-03-skills.svg" alt="SKILL.md folder unfolding layered knowledge cards"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Agent<br>Skills</h1>
+            <p class="sub" style="margin-top:28px">Modular domain expertise<br>with progressive disclosure</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • ย้ายมาดูแกนแนวตั้งกันบ้าง: Agent Skills ซึ่งแก้ปัญหาคลาสสิกของคนสร้าง agent คือ system prompt ที่ยาวและบวมขึ้นเรื่อย ๆ</aside>
+      </section>
+
+      <!-- 15. The bloated system-prompt problem -->
+      <section data-title="The bloated system-prompt problem">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · the prompt wall</div>
+            <h2 style="margin-bottom:20px">Stuffing every workflow into one system prompt fails</h2>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc red fragment" data-fragment-index="1" style="padding:18px 20px">
+                <svg class="cb-ico" style="--c:var(--h-red)"><use href="#i-alert"/></svg>
+                <h3 style="color:var(--h-red)">Token bloat</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Paying for 15,000 tokens of SQL, deploy, and HR rules on every "hello" turn slows latency and inflates bills.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2" style="padding:18px 20px">
+                <svg class="cb-ico" style="--c:var(--h-yellow)"><use href="#i-layers"/></svg>
+                <h3 style="color:var(--h-yellow)">Instruction conflict</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub)">When 12 workflows live in one giant prompt, rules contradict each other and tool-calling accuracy drops.</p>
+              </div>
+              <div class="pc blue fragment" data-fragment-index="3" style="padding:18px 20px">
+                <svg class="cb-ico" style="--c:var(--h-blue)"><use href="#i-git"/></svg>
+                <h3 style="color:var(--h-blue)">Hard to share</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Domain experts can't easily update an SOP without editing Python strings across multiple agent repos.</p>
+              </div>
+            </div>
+            <div class="pc fragment" data-fragment-index="4" style="width:1088px; margin-top:18px; padding:14px 20px; font-size:16px">
+              <b>Better model:</b> Give the agent a lightweight <b>table of contents</b>, and let it open the exact manual only when the task calls for it.
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Core idea</b><span>Stop memorizing every manual in the prompt — package expertise as <b>Agent Skills</b>.</span></div>
+        </div>
+        <aside class="notes">เวลาเราอยากให้ agent เก่งหลายเรื่อง เรามักจะยัดทุกอย่างลงไปใน system prompt เดียว จนยาวเป็นหมื่น token • (คลิก 1) ปัญหาแรกคือเปลือง token และช้า แม้ผู้ใช้แค่ทักว่าสวัสดีก็ต้องส่งคู่มือทั้งหมดไปด้วย • (คลิก 2) ปัญหาที่สองคือคำสั่งตีกันเอง ทำให้ความแม่นยำในการเลือก tool ตกลง • (คลิก 3) ปัญหาที่สามคือแชร์ยาก เวลาทีม domain อยากแก้ SOP ต้องมาแก้ string ในโค้ด Python • (คลิก 4-5) ทางออกคือให้ agent มีแค่สารบัญสั้น ๆ แล้วเปิดอ่านคู่มือเฉพาะเรื่องที่ต้องใช้จริง นั่นคือแนวคิดของ Agent Skills</aside>
+      </section>
+
+      <!-- 16. What is an Agent Skill? -->
+      <section data-title="Anatomy of an Agent Skill">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">03 · skill anatomy</div>
+            <h2 style="margin-bottom:14px">What is an Agent Skill? A self-contained folder</h2>
+            <div class="ps-art fragment" data-fragment-index="1" style="--c:var(--h-yellow); margin-bottom:14px">
+              <img src="../images/adk-plugins-skills-slides/skill-folder-anatomy.svg" alt="Visual folder tree and card breakdown of a reusable Agent Skill: SKILL.md, references/, scripts/, assets/">
+            </div>
+            <div class="pc fragment" data-fragment-index="2" style="width:1088px; padding:10px 16px; display:flex; align-items:center; justify-content:space-between; gap:14px; font-size:14.5px">
+              <span><code>--- name: bigquery-optimization | description: Optimize SQL, partitioning &amp; slot usage ---</code></span>
+              <div style="display:flex; gap:8px; flex:none">
+                <span class="ps-lg-sm" style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery">Domain SOP</span>
+                <span class="ps-lg-sm" style="--c:var(--h-green)"><img src="../images/shared/logos/github.svg" alt="GitHub">Git-versioned</span>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Open standard</b><span>Built on the portable <code>agentskills.io</code> format — plain Markdown + folders, versioned in Git.</span></div>
+        </div>
+        <aside class="notes">หน้าตาของ Agent Skill 1 ตัวเป็นโฟลเดอร์ธรรมดาที่อ่านง่ายมากครับ • (คลิก 1) หัวใจคือไฟล์ SKILL.md ด้านข้างมีโฟลเดอร์เสริมได้ 3 แบบ: references สำหรับเอกสารเชิงลึก, scripts สำหรับสคริปต์ช่วยทำงานแบบ deterministic, และ assets สำหรับ template • (คลิก 2) ข้างใน SKILL.md เริ่มด้วย YAML frontmatter ที่มีแค่ name กับ description เพื่อบอกว่าเมื่อไหร่ควรหยิบสกิลนี้มาใช้ ตามด้วยขั้นตอนการทำงานในรูปแบบ Markdown • (คลิก 3) ทั้งหมดเป็นมาตรฐานเปิด agentskills.io เป็นไฟล์ข้อความธรรมดาที่เก็บใน Git และรีวิวผ่าน PR ได้เลย</aside>
+      </section>
+
+      <!-- 17. Progressive / Incremental Disclosure -->
+      <section data-title="Progressive disclosure">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">03 · progressive disclosure</div>
+            <h2 style="margin-bottom:14px">Load context in 3 tiers — pay only for what you use</h2>
+            <div class="ps-art fragment" data-fragment-index="1" style="--c:var(--h-blue); margin-bottom:14px">
+              <img src="../images/adk-plugins-skills-slides/progressive-disclosure.svg" alt="3-tier Agent Skill loading diagram: Tier 1 YAML metadata, Tier 2 SKILL.md instructions on trigger, Tier 3 references and scripts on demand">
+            </div>
+            <div class="fragment" data-fragment-index="2" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+              <span class="ps-lg-sm" style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Tier 1: Always in system prompt</span>
+              <span class="ps-lg-sm" style="--c:var(--h-yellow)"><img src="../images/shared/logos/adk.png" alt="ADK">Tier 2: <code>load_skill(name)</code></span>
+              <span class="ps-lg-sm" style="--c:var(--h-green)"><img src="../images/shared/logos/python.svg" alt="Python">Tier 3: <code>load_skill_resource()</code></span>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Token efficiency</b><span>Equip an agent with 20+ skills while spending only ~1,500 tokens upfront.</span></div>
+        </div>
+        <aside class="notes">กลไกที่ทำให้ Agent Skills ทรงพลังมากคือ Progressive Disclosure หรือการเปิดเผยข้อมูลทีละชั้นครับ • (คลิก 1) ชั้นที่ 1 Metadata: โหลดเข้า prompt ตลอดเวลา แต่มีแค่ชื่อกับคำอธิบายสั้น ๆ ใช้แค่ 50-100 token ต่อสกิล ชั้นที่ 2 Instructions: เมื่อผู้ใช้ถามเรื่องที่ตรงกับสกิลนั้น agent จะเรียก load_skill เพื่อดึงเนื้อหา SKILL.md มาอ่าน ชั้นที่ 3 Resources: ถ้าในขั้นตอนต้องใช้เอกสารเสริมหรือสคริปต์ ค่อยเรียก load_skill_resource ดึงเฉพาะไฟล์ที่ต้องการ • (คลิก 2-3) ผลลัพธ์คือเราติดสกิลให้ agent ได้ 20+ ตัว โดยจ่าย token ตั้งต้นแค่นิดเดียว ประหยัดได้ถึง 90%</aside>
+      </section>
+
+      <!-- 18. Loading Skills in ADK (SkillToolset) -->
+      <section data-title="Loading Skills in ADK">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">03 · adk integration</div>
+            <h2 style="margin-bottom:16px">Attach skills to any <code>LlmAgent</code> with <code>SkillToolset</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:650px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+import pathlib
+from google.adk.agents import LlmAgent
+from google.adk.skills import load_skill_from_dir
+from google.adk.tools import skill_toolset
+
+skills_dir = pathlib.Path(__file__).parent / "skills"
+
+my_skills = [
+    load_skill_from_dir(skills_dir / "bigquery-optimization"),
+    load_skill_from_dir(skills_dir / "incident-triage"),
+]
+
+ops_agent = LlmAgent(
+    name="cloud_ops_agent",
+    model="gemini-2.5-flash",
+    instruction="Assist engineers with GCP operations.",
+    tools=[skill_toolset.SkillToolset(skills=my_skills)],
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc yellow fragment"><div class="ps-hd-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-yellow)">Auto-wired tools</h3></div><code>SkillToolset</code> exposes <code>list_skills</code>, <code>load_skill</code> &amp; <code>load_skill_resource</code> automatically.</div>
+                <div class="pc blue fragment"><div class="ps-hd-row"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><h3 style="color:var(--h-blue)">Clean instructions</h3></div>Keep <code>instruction=</code> short — domain SOPs live inside the skill folders, not Python strings.</div>
+                <div class="pc green fragment"><div class="ps-hd-row"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-green)">Inline or directory</h3></div>Load from local folders with <code>load_skill_from_dir</code> or construct <code>Skill</code> objects dynamically.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">วิธีเอา Skill มาใช้ใน ADK ง่ายมากครับ • ใช้ load_skill_from_dir โหลดโฟลเดอร์สกิลของเรา แล้วส่งเข้า SkillToolset จากนั้นเอาไปใส่ใน tools=[...] ของ LlmAgent • (คลิก 1) SkillToolset จะสร้าง tool สำหรับ list, load_skill และ load_skill_resource พร้อมแนบ Tier 1 metadata ให้โมเดลอัตโนมัติ • (คลิก 2) สังเกตว่า instruction ของ ops_agent สั้นแค่บรรทัดเดียว เพราะความรู้เฉพาะทางถูกย้ายไปอยู่ในโฟลเดอร์ skills หมดแล้ว • (คลิก 3) รองรับทั้งการโหลดจากดิสก์และสร้าง object แบบ dynamic</aside>
+      </section>
+
+      <!-- 19. Skills across ADK & agents-cli -->
+      <section data-title="Skills across the ecosystem">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · one format, two surfaces</div>
+            <h2 style="margin-bottom:20px">Author a Skill once — use it at build time &amp; runtime</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/agents-cli.png" alt="agents-cli"></span>
+                <h3>Build Time · Developer Agents</h3>
+                <p style="font-size:15px; color:var(--dk-sub)">Coding agents &amp; <code>agents-cli</code> load skills to scaffold ADK projects, write evals, and deploy to Cloud Run or Agent Engine.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                <h3>Runtime · Production Agents</h3>
+                <p style="font-size:15px; color:var(--dk-sub)">Your deployed ADK agents mount the same <code>SKILL.md</code> packages via <code>SkillToolset</code> for domain workflows.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="3">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <h3>Cross-Team Portability</h3>
+                <p style="font-size:15px; color:var(--dk-sub)">Data, Security, and Brand teams publish versioned skills that any Gemini-powered agent can adopt immediately.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Leverage</b><span>One <code>SKILL.md</code> standard bridges developer workflows and production agent behavior.</span></div>
+        </div>
+        <aside class="notes">ความเจ๋งของมาตรฐาน SKILL.md คือมันใช้ได้ทั้งสองฝั่งครับ • (คลิก 1) ฝั่ง Build Time: coding agent และ agents-cli ใช้สกิลช่วย scaffold โปรเจกต์ เขียน eval และ deploy ขึ้น Cloud Run หรือ Agent Engine • (คลิก 2) ฝั่ง Runtime: ตัว production agent ของเราก็โหลดสกิลแบบเดียวกันผ่าน SkillToolset เพื่อทำงานตาม SOP ของบริษัท • (คลิก 3) ทีม Data, ทีม Security หรือทีม Brand สามารถเขียนสกิลกลางให้ทุกทีมนำไปใช้ได้ทันทีโดยไม่ต้องเขียนโค้ดซ้ำ</aside>
+      </section>
+
+      <!-- 20. Section 04 -->
+      <section class="bg-red" data-title="04 · Enterprise architecture">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="ps-div-art" style="--c:var(--h-red)"><img src="../images/adk-plugins-skills-slides/sec-04-enterprise.svg" alt="Enterprise multi-agent fleet governed by unified policy ring"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:70px">Enterprise<br>architecture</h1>
+            <p class="sub" style="margin-top:28px">Combining plugins &amp; skills<br>across multi-agent fleets</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้าย • มาดูภาพใหญ่ของการนำ Plugins และ Agent Skills มาประกอบกันในสถาปัตยกรรม Multi-Agent ระดับองค์กร รวมถึงการทำ versioning และ best practices</aside>
+      </section>
+
+      <!-- 21. Multi-Agent Fleet Blueprint -->
+      <section data-title="Multi-agent fleet blueprint">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">04 · reference architecture</div>
+            <h2 style="margin-bottom:14px">Plugins govern the fleet · Skills power each specialist</h2>
+            <div class="ps-art fragment" data-fragment-index="1" style="--c:var(--h-green); margin-bottom:14px">
+              <img src="../images/adk-plugins-skills-slides/enterprise-fleet-blueprint.svg" alt="Platform Team Plugins (Model Armor, BigQuery Analytics, Retry) wrapping Domain Team Agents equipped with modular Skills">
+            </div>
+            <div class="fragment" data-fragment-index="2" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+              <span class="ps-lg-sm" style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor">Model Armor</span>
+              <span class="ps-lg-sm" style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery">BigQuery Analytics</span>
+              <span class="ps-lg-sm" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">ADK Runner &amp; SkillToolset</span>
+              <span class="ps-lg-sm" style="--c:var(--h-yellow)"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud">Cloud Run / Agent Engine</span>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Clean ownership</b><span>Platform teams ship <b>Plugins</b>. Domain teams ship <b>Skills</b>. Zero stepping on toes.</span></div>
+        </div>
+        <aside class="notes">นี่คือสถาปัตยกรรมอ้างอิงที่เห็นใน Codelab อย่าง Creative Studio หรือ Formula E multi-agent fleet ครับ • (คลิก 1) ด้านบนสุดคือชั้น Plugin ที่ทีม Platform ดูแล: Model Armor, Global Instruction, Reflect-and-Retry และ BigQuery Analytics ครอบคลุมทุกอย่าง ตรงกลางคือ Orchestrator และด้านล่างคือ Specialist Agent แต่ละตัวที่ติด SkillToolset เฉพาะทางของทีมตัวเอง • (คลิก 2-3) จุดเด่นคือการแบ่งหน้าที่ชัดเจน ทีม Platform ดูแล Plugin ทีม Domain ดูแล Skill ไม่ต้องแย่งกันแก้โค้ดไฟล์เดียวกัน</aside>
+      </section>
+
+      <!-- 22. Versioning, testing & sharing Skills -->
+      <section data-title="Versioning &amp; testing Skills">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · skill lifecycle</div>
+            <h2 style="margin-bottom:20px">Treat Skills like production software</h2>
+            <div class="flow" style="width:1088px">
+              <div class="pc blue node fragment" data-fragment-index="1" style="text-align:left; padding:20px 22px">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/github.svg" alt="GitHub"></span>
+                <b style="color:var(--h-blue)">1 · Version in Git</b>
+                <p>Keep skills in a shared repo with semantic tags (<code>v1.2.0</code>) and CODEOWNERS review per domain team.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="2" style="text-align:left; padding:20px 22px">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/agents-cli.png" alt="agents-cli"></span>
+                <b style="color:var(--h-yellow)">2 · Eval Triggers</b>
+                <p>Test Tier 1 <code>description</code> recall &amp; precision: does the right skill load on target queries and stay quiet otherwise?</p>
+              </div>
+              <svg class="arr" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6"/></svg>
+              <div class="pc green node fragment" data-fragment-index="3" style="text-align:left; padding:20px 22px">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor"></span>
+                <b style="color:var(--h-green)">3 · Ship Safely</b>
+                <p>Package read-only skill folders into containers/artifacts. Enforce runtime boundaries with ADK Plugins.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Pro tip</b><span>A bad <code>description</code> is the #1 bug in Agent Skills — test triggering in CI just like unit tests.</span></div>
+        </div>
+        <aside class="notes">เมื่อเรามีสกิลเยอะขึ้น ต้องดูแลมันเหมือนซอฟต์แวร์จริงครับ • (คลิก 1) เก็บใน Git repo กลาง ทำ semantic versioning และตั้ง CODEOWNERS ให้เจ้าของโดเมนรีวิว • (คลิก 2) ทำ Evaluation ทดสอบทั้ง trigger accuracy (สกิลถูกโหลดถูกจังหวะไหม ไม่โหลดมั่วใช่ไหม) และคุณภาพคำตอบหลังโหลดสกิล • (คลิก 3) ตอน deploy ให้แพ็กโฟลเดอร์สกิลแบบ read-only เข้า container และใช้ Plugin คุมความปลอดภัยตอนรัน • (คลิก 4) บั๊กอันดับ 1 ของ Agent Skills คือเขียน description ไม่ชัดจน agent ไม่ยอมเรียกใช้ ดังนั้นควรทดสอบ trigger ใน CI ด้วยครับ</aside>
+      </section>
+
+      <!-- 23. Best practices checklist -->
+      <section data-title="Best practices checklist">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">04 · production checklist</div>
+            <h2 style="margin-bottom:18px">Best practices for Plugins &amp; Skills</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div>
+                <div class="ps-hd-row" style="margin-bottom:10px">
+                  <span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                  <h3 style="color:var(--h-green); font-size:19px">ADK Plugins</h3>
+                </div>
+                <ul class="cb-chk">
+                  <li class="ok fragment"><i>✓</i><span><b>Order deliberately:</b> Security first, context next, retries, then telemetry.</span></li>
+                  <li class="ok fragment"><i>✓</i><span><b>Stay async &amp; fast:</b> Hooks run inline — never block the event loop.</span></li>
+                  <li class="ok fragment"><i>✓</i><span><b>Isolate failures:</b> Catch plugin errors so telemetry never crashes agents.</span></li>
+                  <li class="warn fragment"><i>!</i><span><b>Don't hide domain logic</b> in global plugins — move it to Skills or agents.</span></li>
+                </ul>
+              </div>
+              <div>
+                <div class="ps-hd-row" style="margin-bottom:10px">
+                  <span class="ev-lg"><img src="../images/shared/logos/agents-cli.png" alt="Agent Skills"></span>
+                  <h3 style="color:var(--h-yellow); font-size:19px">Agent Skills</h3>
+                </div>
+                <ul class="cb-chk">
+                  <li class="ok fragment"><i>✓</i><span><b>Crisp triggers:</b> State clearly when to use — and when <i>not</i> to use — a skill.</span></li>
+                  <li class="ok fragment"><i>✓</i><span><b>Keep <code>SKILL.md</code> lean:</b> Push deep tables &amp; schemas into <code>references/</code>.</span></li>
+                  <li class="ok fragment"><i>✓</i><span><b>Avoid overlap:</b> Distinct skill scopes prevent agent confusion.</span></li>
+                  <li class="warn fragment"><i>!</i><span><b>Don't trust skill scripts blindly</b> — pair with sandbox &amp; plugin guardrails.</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">สรุปเช็กลิสต์ก่อนขึ้น production ครับ • ฝั่ง Plugins: จัดลำดับให้ถูก (Security ก่อน Telemetry ท้าย), เขียนแบบ async ไม่บล็อกการทำงาน, จับ error เองไม่ให้พังลาม, และอย่าเอา business logic เฉพาะทางไปยัดใน global plugin • ฝั่ง Skills: เขียน description ให้ชัดว่าใช้ตอนไหนและไม่ใช้ตอนไหน, คุมไฟล์ SKILL.md ให้กระชับแล้วแยกเอกสารยาว ๆ ไปไว้ใน references/, อย่าให้สกิลสองตัวมีขอบเขตซ้อนทับกัน, และอย่าลืมรันสคริปต์ภายใต้ sandbox กับ guardrail เสมอ</aside>
+      </section>
+
+      <!-- 24. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:24px">Modularize, Enforce, Reuse</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/agents-cli.png" alt="Agent Skills"></span>
+                <h3>1 · Modularize</h3>
+                <p style="font-size:16px; line-height:1.42">Package domain workflows into <b>Agent Skills</b> (<code>SKILL.md</code>) and load context progressively on demand.</p>
+              </div>
+              <div class="pc green fragment">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor"></span>
+                <h3>2 · Enforce</h3>
+                <p style="font-size:16px; line-height:1.42">Register <b>Plugins</b> once on the <code>Runner</code> / <code>App</code> so Model Armor, retries &amp; audit cover every agent.</p>
+              </div>
+              <div class="pc red fragment">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/github.svg" alt="GitHub"></span>
+                <h3>3 · Reuse</h3>
+                <p style="font-size:16px; line-height:1.42">Version and share vetted plugins &amp; skills across teams — scale to 10+ agents without drift.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Add <code>ReflectAndRetryToolPlugin</code> to your Runner and extract your longest prompt section into a <code>SKILL.md</code>.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำก่อนจบครับ • (คลิก 1) Modularize: แยกความรู้เฉพาะทางออกจาก prompt ยักษ์มาเป็น Agent Skills ที่โหลดทีละชั้น • (คลิก 2) Enforce: ลงทะเบียน Plugins ครั้งเดียวที่ Runner หรือ App ให้ Model Armor, Retry และ BigQuery ครอบคลุมทุก agent • (คลิก 3) Reuse: ทำ versioning และแชร์ทั้ง plugin กับ skill ข้ามทีม ขยายระบบได้อย่างมั่นใจ • (คลิก 4) เริ่มวันนี้ได้เลย: ใส่ ReflectAndRetryToolPlugin ใน Runner แล้วลองดึงส่วนที่ยาวที่สุดใน system prompt ออกมาทำเป็น SKILL.md ตัวแรกดูครับ</aside>
+      </section>
+
+      <!-- 25. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:46px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:22px">Read more and try it</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc green cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK Plugins</h3><a class="mono" style="font-size:14px" href="https://adk.dev/plugins/" target="_blank">adk.dev/plugins/</a></div></div>
+              <div class="pc yellow cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK Agent Skills</h3><a class="mono" style="font-size:14px" href="https://adk.dev/skills/" target="_blank">adk.dev/skills/</a></div></div>
+              <div class="pc blue cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK Callbacks</h3><a class="mono" style="font-size:14px" href="https://adk.dev/callbacks/" target="_blank">adk.dev/callbacks/</a></div></div>
+              <div class="pc red cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-armor.png" alt="Model Armor"></span><div><h3>Safety &amp; Model Armor</h3><a class="mono" style="font-size:14px" href="https://adk.dev/safety/" target="_blank">adk.dev/safety/</a></div></div>
+              <div class="pc blue cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span><div><h3>Google Codelabs · ADK Skills</h3><a class="mono" style="font-size:14px" href="https://codelabs.developers.google.com/" target="_blank">codelabs.developers.google.com</a></div></div>
+              <div class="pc green cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/agents-cli.png" alt="Agent Skills"></span><div><h3>Agent Skills Open Standard</h3><a class="mono" style="font-size:14px" href="https://agentskills.io/" target="_blank">agentskills.io</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลิงก์สำหรับศึกษาต่อครับ: เอกสาร ADK Plugins, ADK Skills, ADK Callbacks, Safety & Model Armor, Google Codelabs สำหรับลองทำแล็บจริง และเว็บไซต์มาตรฐานเปิด agentskills.io • สแกน QR หน้า Agenda เพื่อเปิดสไลด์พร้อมลิงก์ทั้งหมดได้เลยครับ</aside>
+      </section>
+
+      <!-- 26. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="ps-ty-art"><img src="../images/adk-plugins-skills-slides/thank-you-art.svg" alt="Glowing modular puzzle and shield artwork"></div>
+        <div class="dots" style="left:968px; top:526px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณมากครับ/ค่ะ • เปิดช่วง Q &amp; A ครับ ใครมีคำถามเรื่อง ADK Plugins, Model Armor หรือการออกแบบ Agent Skills ถามได้เลยครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

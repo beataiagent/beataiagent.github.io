@@ -1,0 +1,118 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" fill="#202124"/>
+
+  <circle cx="910" cy="58" r="110" fill="url(#amb-r)"/>
+  <circle cx="240" cy="186" r="110" fill="url(#amb-b)"/>
+  <circle cx="840" cy="186" r="110" fill="url(#amb-g)"/>
+
+  <!-- TOP TRACK: Fragile One-Shot Text-to-SQL -->
+  <rect x="14" y="10" width="1060" height="98" rx="16" fill="#17181b" stroke="#ff7daf" stroke-width="1.8" stroke-opacity="0.65"/>
+  <rect x="28" y="18" width="278" height="20" rx="10" fill="#ff7daf" fill-opacity="0.14"/>
+  <text x="40" y="32" class="m" font-size="11" fill="#ff7daf" font-weight="600">FRAGILE ONE-SHOT TEXT-TO-SQL</text>
+
+  <!-- Step 1 -->
+  <rect x="28" y="45" width="218" height="52" rx="12" fill="url(#glass)" stroke="#5f6368" stroke-width="1.6"/>
+  <text x="44" y="67" class="t" font-size="15">User Question</text>
+  <text x="44" y="85" class="m" font-size="11.5" fill="#bdc1c6">"Q3 margin by region?"</text>
+
+  <path d="M246 71 H280" stroke="#ff7daf" stroke-width="2.5" marker-end="url(#arr-r)"/>
+
+  <!-- Step 2 -->
+  <rect x="288" y="45" width="234" height="52" rx="12" fill="url(#glass)" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="304" y="67" class="t" font-size="15" fill="#ffd427">LLM Guesses Column</text>
+  <text x="304" y="85" class="m" font-size="11.5" fill="#bdc1c6">SELECT net_rev_usd...</text>
+
+  <path d="M522 71 H556" stroke="#ff7daf" stroke-width="2.5" marker-end="url(#arr-r)"/>
+
+  <!-- Step 3 -->
+  <rect x="564" y="45" width="216" height="52" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="1.8"/>
+  <text x="580" y="67" class="t" font-size="15" fill="#ff7daf">Blind Execution</text>
+  <text x="580" y="85" class="sub" font-size="12">No schema check or dry-run</text>
+
+  <path d="M780 71 H814" stroke="#ff7daf" stroke-width="2.5" marker-end="url(#arr-r)"/>
+
+  <!-- Step 4: Crash -->
+  <rect x="822" y="45" width="238" height="52" rx="12" fill="url(#glass-hi)" stroke="#ff7daf" stroke-width="2.2"/>
+  <circle cx="848" cy="71" r="14" fill="#ff7daf" fill-opacity="0.2" stroke="#ff7daf" stroke-width="1.8"/>
+  <path d="M843 66 L853 76 M853 66 L843 76" stroke="#ff7daf" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="872" y="67" class="t" font-size="15" fill="#ff7daf">Crash / Wrong KPI</text>
+  <text x="872" y="85" class="m" font-size="11" fill="#bdc1c6">400 Not Found · $400 scan</text>
+
+  <!-- BOTTOM TRACK: ADK Agentic Loop -->
+  <rect x="14" y="120" width="1060" height="120" rx="16" fill="#17181b" stroke="#5cdb6d" stroke-width="2" stroke-opacity="0.75"/>
+  <rect x="28" y="128" width="338" height="20" rx="10" fill="#5cdb6d" fill-opacity="0.14"/>
+  <text x="40" y="142" class="m" font-size="11" fill="#5cdb6d" font-weight="600">ADK AGENTIC LOOP (GROUNDED &amp; SELF-HEALING)</text>
+
+  <!-- Node 1: list_dataset -->
+  <rect x="28" y="156" width="178" height="56" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="117" y="178" text-anchor="middle" class="m" font-size="12.5" fill="#57caff" font-weight="600">1. list_dataset</text>
+  <text x="117" y="198" text-anchor="middle" class="sub" font-size="12">Discover live datasets</text>
+
+  <path d="M206 184 H234" stroke="#57caff" stroke-width="2.5" marker-end="url(#arr-b)"/>
+
+  <!-- Node 2: get_table_info -->
+  <rect x="242" y="156" width="184" height="56" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="334" y="178" text-anchor="middle" class="m" font-size="12.5" fill="#57caff" font-weight="600">2. get_table_info</text>
+  <text x="334" y="198" text-anchor="middle" class="sub" font-size="12">Inspect columns &amp; docs</text>
+
+  <path d="M426 184 H454" stroke="#ffd427" stroke-width="2.5" marker-end="url(#arr-y)"/>
+
+  <!-- Node 3: dry_run -->
+  <rect x="462" y="156" width="176" height="56" rx="12" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="550" y="178" text-anchor="middle" class="m" font-size="12.5" fill="#ffd427" font-weight="600">3. dry_run=True</text>
+  <text x="550" y="198" text-anchor="middle" class="sub" font-size="12">$0 syntax &amp; byte cap</text>
+
+  <path d="M638 184 H666" stroke="#5cdb6d" stroke-width="2.5" marker-end="url(#arr-g)"/>
+
+  <!-- Node 4: execute_sql -->
+  <rect x="674" y="156" width="176" height="56" rx="12" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="762" y="178" text-anchor="middle" class="m" font-size="12.5" fill="#5cdb6d" font-weight="600">4. execute_sql</text>
+  <text x="762" y="198" text-anchor="middle" class="sub" font-size="12">Read-only GoogleSQL</text>
+
+  <path d="M850 184 H878" stroke="#5cdb6d" stroke-width="2.5" marker-end="url(#arr-g)"/>
+
+  <!-- Node 5: Verify -->
+  <rect x="886" y="156" width="174" height="56" rx="12" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+  <text x="973" y="178" text-anchor="middle" class="t" font-size="14.5" fill="#5cdb6d">5. Verify &amp; Cite</text>
+  <text x="973" y="198" text-anchor="middle" class="sub" font-size="12">Grounded KPI + SQL</text>
+
+  <!-- Self-healing feedback loop from execute_sql back to get_table_info -->
+  <path d="M762 212 V229 H334 V216" fill="none" stroke="#ffd427" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arr-y)"/>
+  <rect x="468" y="218" width="166" height="18" rx="9" fill="#202124" stroke="#ffd427" stroke-width="1.3"/>
+  <text x="551" y="230.5" text-anchor="middle" class="m" font-size="10" fill="#ffd427">SELF-HEAL ON ERROR</text>
+</svg>

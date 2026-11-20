@@ -1,0 +1,135 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" fill="#202124"/>
+  <circle cx="260" cy="125" r="150" fill="url(#amb-r)"/>
+  <circle cx="828" cy="125" r="150" fill="url(#amb-g)"/>
+
+  <!-- LEFT PANEL: Per-Agent Callbacks (Drift) -->
+  <rect x="16" y="14" width="496" height="222" rx="18" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+  <text x="36" y="42" class="t" font-size="17" fill="#ff7daf">Per-Agent Callbacks · Copy-Paste Drift</text>
+  <rect x="380" y="23" width="116" height="24" rx="12" fill="#ff7daf" fill-opacity="0.18" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="438" y="39" text-anchor="middle" class="m" font-size="11" fill="#ff7daf" font-weight="600">BLIND SPOTS</text>
+
+  <!-- 6 mini agents on left (2 rows x 3 cols) -->
+  <!-- Row 1 -->
+  <g transform="translate(34,58)">
+    <rect width="146" height="72" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.5"/>
+    <text x="10" y="21" class="m" font-size="11.5" fill="#fff" font-weight="600">router_agent</text>
+    <rect x="10" y="30" width="60" height="17" rx="4" fill="#2a2b2f"/><text x="40" y="42" text-anchor="middle" class="m" font-size="9.5">pii_v2</text>
+    <rect x="76" y="30" width="60" height="17" rx="4" fill="#2a2b2f"/><text x="106" y="42" text-anchor="middle" class="m" font-size="9.5">audit</text>
+    <rect x="10" y="51" width="60" height="15" rx="4" fill="#2a2b2f"/><text x="40" y="62" text-anchor="middle" class="m" font-size="9">cost</text>
+  </g>
+  <g transform="translate(190,58)">
+    <rect width="146" height="72" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.5"/>
+    <text x="10" y="21" class="m" font-size="11.5" fill="#fff" font-weight="600">billing_agent</text>
+    <rect x="10" y="30" width="60" height="17" rx="4" fill="#2a2b2f"/><text x="40" y="42" text-anchor="middle" class="m" font-size="9.5">pii_v1</text>
+    <rect x="76" y="30" width="60" height="17" rx="4" fill="#2a2b2f"/><text x="106" y="42" text-anchor="middle" class="m" font-size="9.5">retry</text>
+    <rect x="10" y="51" width="66" height="15" rx="4" fill="#ffd427" fill-opacity="0.18" stroke="#ffd427" stroke-width="1"/><text x="43" y="62" text-anchor="middle" class="m" font-size="9" fill="#ffd427">v1 drift</text>
+  </g>
+  <g transform="translate(346,58)">
+    <rect width="146" height="72" rx="10" fill="#2b1921" stroke="#ff7daf" stroke-width="2" filter="url(#glow-s)"/>
+    <text x="10" y="21" class="m" font-size="11.5" fill="#fff" font-weight="600">promo_agent</text>
+    <rect x="10" y="30" width="126" height="18" rx="4" fill="#ff7daf" fill-opacity="0.24" stroke="#ff7daf" stroke-dasharray="3 2"/><text x="73" y="43" text-anchor="middle" class="m" font-size="10" fill="#ff7daf" font-weight="600">NO pii_guard!</text>
+    <rect x="10" y="52" width="56" height="14" rx="4" fill="#2a2b2f"/><text x="38" y="62" text-anchor="middle" class="m" font-size="9">audit</text>
+  </g>
+
+  <!-- Row 2 -->
+  <g transform="translate(34,142)">
+    <rect width="146" height="72" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.5"/>
+    <text x="10" y="21" class="m" font-size="11.5" fill="#fff" font-weight="600">sql_agent</text>
+    <rect x="10" y="30" width="60" height="17" rx="4" fill="#2a2b2f"/><text x="40" y="42" text-anchor="middle" class="m" font-size="9.5">pii_v2</text>
+    <rect x="76" y="30" width="60" height="17" rx="4" fill="#2a2b2f"/><text x="106" y="42" text-anchor="middle" class="m" font-size="9.5">retry</text>
+    <rect x="10" y="51" width="60" height="15" rx="4" fill="#2a2b2f"/><text x="40" y="62" text-anchor="middle" class="m" font-size="9">cost</text>
+  </g>
+  <g transform="translate(190,142)">
+    <rect width="146" height="72" rx="10" fill="#2b1921" stroke="#ff7daf" stroke-width="2" filter="url(#glow-s)"/>
+    <text x="10" y="21" class="m" font-size="11.5" fill="#fff" font-weight="600">support_v2</text>
+    <rect x="10" y="30" width="56" height="17" rx="4" fill="#2a2b2f"/><text x="38" y="42" text-anchor="middle" class="m" font-size="9.5">pii_v2</text>
+    <rect x="10" y="51" width="126" height="16" rx="4" fill="#ff7daf" fill-opacity="0.24" stroke="#ff7daf" stroke-dasharray="3 2"/><text x="73" y="63" text-anchor="middle" class="m" font-size="9.5" fill="#ff7daf" font-weight="600">NO audit_log!</text>
+  </g>
+  <g transform="translate(346,142)">
+    <rect width="146" height="72" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text x="73" y="34" text-anchor="middle" class="t" font-size="14" fill="#bdc1c6">+ 8 more agents</text>
+    <text x="73" y="54" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">manual hook sync</text>
+  </g>
+
+  <!-- CENTER VS BADGE -->
+  <circle cx="544" cy="125" r="24" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2.4" filter="url(#glow-s)"/>
+  <text x="544" y="131" text-anchor="middle" class="t" font-size="15" fill="#ffd427">VS</text>
+
+  <!-- RIGHT PANEL: Runner-Level BasePlugin (Unified Shield) -->
+  <rect x="576" y="14" width="496" height="222" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.6" filter="url(#glow-s)"/>
+  <text x="596" y="42" class="t" font-size="17" fill="#5cdb6d">1 Runner · Global BasePlugin Shield</text>
+  <rect x="930" y="23" width="124" height="24" rx="12" fill="#5cdb6d" fill-opacity="0.18" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="992" y="39" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">100% COVERAGE</text>
+
+  <!-- Global Plugin Bar inside Right Panel -->
+  <rect x="596" y="56" width="456" height="38" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="610" y="79" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">plugins=[</text>
+  <rect x="684" y="64" width="84" height="22" rx="6" fill="#ff7daf" fill-opacity="0.18" stroke="#ff7daf" stroke-width="1.2"/><text x="726" y="79" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">ModelArmor</text>
+  <rect x="776" y="64" width="84" height="22" rx="6" fill="#57caff" fill-opacity="0.18" stroke="#57caff" stroke-width="1.2"/><text x="818" y="79" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">BQAnalytics</text>
+  <rect x="868" y="64" width="76" height="22" rx="6" fill="#ffd427" fill-opacity="0.18" stroke="#ffd427" stroke-width="1.2"/><text x="906" y="79" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">RetryTool</text>
+  <rect x="952" y="64" width="78" height="22" rx="6" fill="#5cdb6d" fill-opacity="0.18" stroke="#5cdb6d" stroke-width="1.2"/><text x="991" y="79" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">CostQuota</text>
+  <text x="1038" y="79" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">]</text>
+
+  <!-- Governance cascade lines -->
+  <path d="M668 94 V110 M824 94 V110 M980 94 V110" stroke="#5cdb6d" stroke-width="2" stroke-dasharray="3 3"/>
+
+  <!-- 6 clean agents protected automatically -->
+  <g transform="translate(596,112)">
+    <rect width="144" height="48" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+    <text x="12" y="21" class="m" font-size="11.5" fill="#fff">router_agent</text>
+    <text x="12" y="38" class="m" font-size="10" fill="#5cdb6d">✓ auto-governed</text>
+  </g>
+  <g transform="translate(752,112)">
+    <rect width="144" height="48" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+    <text x="12" y="21" class="m" font-size="11.5" fill="#fff">billing_agent</text>
+    <text x="12" y="38" class="m" font-size="10" fill="#5cdb6d">✓ auto-governed</text>
+  </g>
+  <g transform="translate(908,112)">
+    <rect width="144" height="48" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+    <text x="12" y="21" class="m" font-size="11.5" fill="#fff">promo_agent</text>
+    <text x="12" y="38" class="m" font-size="10" fill="#5cdb6d">✓ auto-governed</text>
+  </g>
+  <g transform="translate(596,170)">
+    <rect width="144" height="48" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+    <text x="12" y="21" class="m" font-size="11.5" fill="#fff">sql_agent</text>
+    <text x="12" y="38" class="m" font-size="10" fill="#5cdb6d">✓ auto-governed</text>
+  </g>
+  <g transform="translate(752,170)">
+    <rect width="144" height="48" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+    <text x="12" y="21" class="m" font-size="11.5" fill="#fff">support_v2</text>
+    <text x="12" y="38" class="m" font-size="10" fill="#5cdb6d">✓ auto-governed</text>
+  </g>
+  <g transform="translate(908,170)">
+    <rect width="144" height="48" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5" stroke-dasharray="5 3"/>
+    <text x="12" y="21" class="m" font-size="11.5" fill="#57caff">new_agent_n</text>
+    <text x="12" y="38" class="m" font-size="10" fill="#5cdb6d">✓ zero boilerplate</text>
+  </g>
+</svg>

@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <circle cx="128" cy="128" r="102" fill="url(#amb-g)"/>
+  <circle cx="64" cy="128" r="68" fill="url(#amb-b)"/>
+  <circle cx="128" cy="128" r="94" fill="none" stroke="#5cdb6d" stroke-width="1.8" stroke-dasharray="6 6" opacity="0.45"/>
+
+  <!-- Top JSON-RPC pill -->
+  <rect x="74" y="34" width="108" height="26" rx="13" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="128" y="51" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">JSON-RPC 2.0</text>
+
+  <!-- Left wire: Agent -> USB-C MCP -->
+  <line x1="68" y1="128" x2="96" y2="128" stroke="#57caff" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Right bus wires: USB-C MCP -> 3 External Tool Nodes -->
+  <path d="M164 120 C178 120 180 86 196 86" fill="none" stroke="#5cdb6d" stroke-width="2.4" stroke-linecap="round"/>
+  <line x1="164" y1="128" x2="196" y2="128" stroke="#5cdb6d" stroke-width="2.4" stroke-linecap="round"/>
+  <path d="M164 136 C178 136 180 170 196 170" fill="none" stroke="#5cdb6d" stroke-width="2.4" stroke-linecap="round"/>
+
+  <!-- Left: Mini ADK Agent Node -->
+  <rect x="22" y="102" width="48" height="52" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <rect x="30" y="112" width="32" height="20" rx="7" fill="#17181b"/>
+  <circle cx="40" cy="122" r="3.2" fill="#57caff" filter="url(#glow-s)"/>
+  <circle cx="52" cy="122" r="3.2" fill="#57caff" filter="url(#glow-s)"/>
+  <text x="46" y="146" text-anchor="middle" class="m" font-size="10" fill="#57caff">ADK</text>
+
+  <!-- Center: Glowing USB-C style MCP Connector -->
+  <rect x="92" y="114" width="10" height="28" rx="4" fill="#303238" stroke="#57caff" stroke-width="1.8"/>
+  <rect x="102" y="98" width="54" height="60" rx="16" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.8" filter="url(#glow-s)"/>
+  <rect x="156" y="114" width="12" height="28" rx="4" fill="#303238" stroke="#5cdb6d" stroke-width="1.8"/>
+  <line x1="160" y1="121" x2="165" y2="121" stroke="#5cdb6d" stroke-width="2" stroke-linecap="round"/>
+  <line x1="160" y1="128" x2="165" y2="128" stroke="#5cdb6d" stroke-width="2" stroke-linecap="round"/>
+  <line x1="160" y1="135" x2="165" y2="135" stroke="#5cdb6d" stroke-width="2" stroke-linecap="round"/>
+  <text x="129" y="133" text-anchor="middle" class="m" font-size="16" fill="#5cdb6d" font-weight="700">MCP</text>
+
+  <!-- Right: 3 External Tool Server Pills -->
+  <rect x="196" y="72" width="42" height="28" rx="9" fill="url(#glass)" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="217" y="90" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">DB</text>
+
+  <rect x="196" y="114" width="42" height="28" rx="9" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="217" y="132" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">API</text>
+
+  <rect x="196" y="156" width="42" height="28" rx="9" fill="url(#glass)" stroke="#ff7daf" stroke-width="1.8"/>
+  <text x="217" y="174" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">Git</text>
+
+  <text x="128" y="228" text-anchor="middle" class="m" font-size="12" fill="#5cdb6d" font-weight="600">USB-C FOR AI</text>
+</svg>

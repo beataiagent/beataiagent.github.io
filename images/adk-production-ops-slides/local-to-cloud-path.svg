@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 240" width="1088" height="240">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="240" rx="18" fill="#202124"/>
+
+  <circle cx="170" cy="120" r="120" fill="url(#amb-b)"/>
+  <circle cx="534" cy="120" r="120" fill="url(#amb-g)"/>
+  <circle cx="910" cy="120" r="130" fill="url(#amb-y)"/>
+
+  <!-- Stage 1: Local adk web -->
+  <rect x="16" y="18" width="296" height="204" rx="18" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <rect x="34" y="34" width="96" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="82" y="50" text-anchor="middle" class="m" font-size="11" fill="#57caff">1 · LOCAL</text>
+  <!-- Mini terminal icon -->
+  <g transform="translate(268, 48)">
+    <rect x="-20" y="-14" width="40" height="28" rx="6" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+    <path d="M-11 -4 L-4 2 L-11 8 M1 8 H11" fill="none" stroke="#57caff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  <text x="34" y="92" class="t" font-size="22" fill="#fff">adk web</text>
+  <rect x="34" y="106" width="260" height="30" rx="8" fill="#17181b" stroke="#3c4043" stroke-width="1.4"/>
+  <text x="48" y="125" class="m" font-size="12.5" fill="#57caff">http://localhost:8000</text>
+  <text x="34" y="160" class="sub" font-size="13.5">• Built-in Dev UI &amp; event inspector</text>
+  <text x="34" y="182" class="sub" font-size="13.5">• Hot reload &amp; InMemory sessions</text>
+  <text x="34" y="204" class="sub" font-size="13.5">• Single developer iteration</text>
+
+  <!-- Arrow 1 -> 2 -->
+  <path d="M312 120 H374" stroke="#57caff" stroke-width="3" marker-end="url(#arr-b)"/>
+  <rect x="316" y="88" width="58" height="22" rx="11" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="345" y="103" text-anchor="middle" class="m" font-size="10" fill="#57caff">Docker</text>
+
+  <!-- Stage 2: Container adk api_server -->
+  <rect x="384" y="18" width="296" height="204" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <rect x="402" y="34" width="120" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="462" y="50" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">2 · CONTAINER</text>
+  <!-- Mini container icon -->
+  <g transform="translate(636, 48)">
+    <rect x="-20" y="-14" width="40" height="28" rx="6" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+    <line x1="-10" y1="-6" x2="-10" y2="6" stroke="#5cdb6d" stroke-width="2" stroke-linecap="round"/>
+    <line x1="0" y1="-6" x2="0" y2="6" stroke="#5cdb6d" stroke-width="2" stroke-linecap="round"/>
+    <line x1="10" y1="-6" x2="10" y2="6" stroke="#5cdb6d" stroke-width="2" stroke-linecap="round"/>
+  </g>
+  <text x="402" y="92" class="t" font-size="22" fill="#fff">adk api_server</text>
+  <rect x="402" y="106" width="260" height="30" rx="8" fill="#17181b" stroke="#3c4043" stroke-width="1.4"/>
+  <text x="416" y="125" class="m" font-size="12.5" fill="#5cdb6d">FastAPI · REST + SSE</text>
+  <text x="402" y="160" class="sub" font-size="13.5">• Headless ASGI app (web=False)</text>
+  <text x="402" y="182" class="sub" font-size="13.5">• Stateless replicas + /healthz</text>
+  <text x="402" y="204" class="sub" font-size="13.5">• Pinned uv deps &amp; non-root user</text>
+
+  <!-- Arrow 2 -> 3 -->
+  <path d="M680 120 H742" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+  <rect x="682" y="88" width="62" height="22" rx="11" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="713" y="103" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">deploy</text>
+
+  <!-- Stage 3: Production Cloud Runtime -->
+  <rect x="752" y="18" width="320" height="204" rx="18" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2.4" filter="url(#glow-s)"/>
+  <rect x="770" y="34" width="132" height="24" rx="12" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="836" y="50" text-anchor="middle" class="m" font-size="11" fill="#ffd427">3 · PRODUCTION</text>
+  <text x="770" y="88" class="t" font-size="22" fill="#fff">Cloud Runtime</text>
+
+  <!-- 3 target runtime cards inside Stage 3 -->
+  <rect x="770" y="102" width="90" height="44" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.6"/>
+  <text x="815" y="122" text-anchor="middle" class="t" font-size="12.5" fill="#57caff">Cloud Run</text>
+  <text x="815" y="138" text-anchor="middle" class="m" font-size="9.5">Serverless</text>
+
+  <rect x="868" y="102" width="76" height="44" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="906" y="122" text-anchor="middle" class="t" font-size="12.5" fill="#5cdb6d">GKE</text>
+  <text x="906" y="138" text-anchor="middle" class="m" font-size="9.5">K8s Fleet</text>
+
+  <rect x="952" y="102" width="102" height="44" rx="10" fill="#17181b" stroke="#ff7daf" stroke-width="1.6"/>
+  <text x="1003" y="122" text-anchor="middle" class="t" font-size="12.5" fill="#ff7daf">Agent Eng</text>
+  <text x="1003" y="138" text-anchor="middle" class="m" font-size="9.5">Managed</text>
+
+  <text x="770" y="172" class="sub" font-size="13.5">• Autoscaling 0 → N + L4 GPUs</text>
+  <text x="770" y="194" class="sub" font-size="13.5">• IAM Auth, Secret Mgr &amp; Cloud Trace</text>
+</svg>

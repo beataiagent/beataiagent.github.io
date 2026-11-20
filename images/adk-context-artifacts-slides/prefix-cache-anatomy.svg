@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" fill="#202124"/>
+
+  <circle cx="330" cy="125" r="145" fill="url(#amb-g)"/>
+  <circle cx="885" cy="125" r="130" fill="url(#amb-b)"/>
+
+  <!-- LEFT CONTAINER: Stable Cached Prefix -->
+  <rect x="16" y="16" width="632" height="218" rx="20" fill="#17181b" stroke="#5cdb6d" stroke-width="2.4" stroke-dasharray="8 5"/>
+  <text x="36" y="46" class="m" font-size="12.5" fill="#5cdb6d" font-weight="600">STABLE CACHED PREFIX</text>
+  <rect x="424" y="27" width="206" height="26" rx="13" fill="#5cdb6d" fill-opacity="0.18" stroke="#5cdb6d" stroke-width="1.6" filter="url(#glow-s)"/>
+  <text x="527" y="44" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">⚡ GREEN CACHE HIT</text>
+
+  <!-- 3 Prefix Cards -->
+  <g transform="translate(34, 68)">
+    <rect x="0" y="0" width="188" height="106" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="94" y="34" text-anchor="middle" class="t" font-size="16" fill="#ffffff">System Prompt</text>
+    <text x="94" y="56" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">static_instruction</text>
+    <text x="94" y="82" text-anchor="middle" class="sub" font-size="12.5">Persona, rules, tone</text>
+    <text x="94" y="98" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">~2K tokens</text>
+
+    <rect x="204" y="0" width="188" height="106" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="298" y="34" text-anchor="middle" class="t" font-size="16" fill="#ffffff">Tool Schemas</text>
+    <text x="298" y="56" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">MCP / OpenAPI</text>
+    <text x="298" y="82" text-anchor="middle" class="sub" font-size="12.5">20–40 tool definitions</text>
+    <text x="298" y="98" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">~6K tokens</text>
+
+    <rect x="408" y="0" width="188" height="106" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="502" y="34" text-anchor="middle" class="t" font-size="16" fill="#ffffff">Static Docs</text>
+    <text x="502" y="56" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">Manuals &amp; Policies</text>
+    <text x="502" y="82" text-anchor="middle" class="sub" font-size="12.5">Shared reference data</text>
+    <text x="502" y="98" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">~12K tokens</text>
+  </g>
+
+  <!-- Prefix footer -->
+  <rect x="34" y="188" width="596" height="32" rx="10" fill="#202124" stroke="#3c4043" stroke-width="1.2"/>
+  <text x="332" y="208" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">Byte-identical prefix → fingerprinted &amp; cached once on Gemini / Vertex AI</text>
+
+  <!-- CENTER PLUS -->
+  <circle cx="678" cy="125" r="20" fill="url(#glass)" stroke="#ffd427" stroke-width="2" filter="url(#glow-s)"/>
+  <text x="678" y="133" text-anchor="middle" class="t" font-size="24" fill="#ffd427">+</text>
+
+  <!-- RIGHT CONTAINER: Dynamic Suffix -->
+  <rect x="708" y="16" width="364" height="218" rx="20" fill="#17181b" stroke="#57caff" stroke-width="2.4" stroke-dasharray="8 5"/>
+  <text x="728" y="46" class="m" font-size="12.5" fill="#57caff" font-weight="600">DYNAMIC SUFFIX</text>
+  <rect x="926" y="27" width="128" height="26" rx="13" fill="#57caff" fill-opacity="0.16" stroke="#57caff" stroke-width="1.5"/>
+  <text x="990" y="44" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="600">EACH TURN</text>
+
+  <!-- 2 Suffix Cards -->
+  <g transform="translate(726, 68)">
+    <rect x="0" y="0" width="158" height="106" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
+    <text x="79" y="34" text-anchor="middle" class="t" font-size="15.5" fill="#ffffff">Recent Turns</text>
+    <text x="79" y="56" text-anchor="middle" class="m" font-size="11" fill="#57caff">Compacted + tail</text>
+    <text x="79" y="82" text-anchor="middle" class="sub" font-size="12.5">Active session log</text>
+    <text x="79" y="98" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">~3K tokens</text>
+
+    <rect x="170" y="0" width="158" height="106" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="1.8"/>
+    <text x="249" y="34" text-anchor="middle" class="t" font-size="15.5" fill="#ffffff">Live Query</text>
+    <text x="249" y="56" text-anchor="middle" class="m" font-size="11" fill="#ffd427">{user:state}</text>
+    <text x="249" y="82" text-anchor="middle" class="sub" font-size="12.5">Current user msg</text>
+    <text x="249" y="98" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">~0.5K tokens</text>
+  </g>
+
+  <!-- Suffix footer -->
+  <rect x="726" y="188" width="328" height="32" rx="10" fill="#202124" stroke="#3c4043" stroke-width="1.2"/>
+  <text x="890" y="208" text-anchor="middle" class="m" font-size="11.5" fill="#57caff">Only these tokens run full prefill</text>
+</svg>

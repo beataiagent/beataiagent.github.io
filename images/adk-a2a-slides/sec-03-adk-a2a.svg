@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="grad-yb" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#57caff"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <circle cx="128" cy="76" r="88" fill="url(#amb-y)"/>
+  <circle cx="128" cy="176" r="84" fill="url(#amb-b)"/>
+
+  <!-- Top box: RemoteA2aAgent Client -->
+  <rect x="26" y="28" width="204" height="68" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <circle cx="56" cy="62" r="16" fill="#17181b" stroke="#ffd427" stroke-width="1.8"/>
+  <circle cx="52" cy="60" r="2.6" fill="#ffd427"/>
+  <circle cx="60" cy="60" r="2.6" fill="#ffd427"/>
+  <path d="M51 67 Q56 71 61 67" fill="none" stroke="#ffd427" stroke-width="1.8" stroke-linecap="round"/>
+  <text x="82" y="57" class="t" font-size="14" fill="#ffd427">RemoteA2aAgent</text>
+  <text x="82" y="76" class="m" font-size="11" fill="#bdc1c6">ADK Client · sub_agent</text>
+
+  <!-- Glowing Plug Connector -->
+  <line x1="128" y1="96" x2="128" y2="140" stroke="#ffd427" stroke-width="3.2" stroke-dasharray="5 4" marker-end="url(#arr-y)" filter="url(#glow-s)"/>
+  <rect x="82" y="106" width="92" height="22" rx="11" fill="#17181b" stroke="url(#grad-yb)" stroke-width="1.8"/>
+  <text x="128" y="121" text-anchor="middle" class="m" font-size="10.5" fill="#ffffff">JSON-RPC</text>
+
+  <!-- Bottom box: to_a2a() Server -->
+  <rect x="26" y="144" width="204" height="68" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.2" filter="url(#glow-s)"/>
+  <circle cx="56" cy="178" r="16" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <circle cx="52" cy="176" r="2.6" fill="#57caff"/>
+  <circle cx="60" cy="176" r="2.6" fill="#57caff"/>
+  <path d="M51 183 Q56 187 61 183" fill="none" stroke="#57caff" stroke-width="1.8" stroke-linecap="round"/>
+  <text x="82" y="173" class="t" font-size="14" fill="#57caff">to_a2a(agent)</text>
+  <text x="82" y="192" class="m" font-size="11" fill="#bdc1c6">ASGI Server · :8001</text>
+
+  <text x="128" y="236" text-anchor="middle" class="m" font-size="12" fill="#ffd427">ADK PLUG &amp; PLAY</text>
+</svg>

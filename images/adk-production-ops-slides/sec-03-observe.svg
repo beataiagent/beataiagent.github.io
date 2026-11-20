@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <circle cx="128" cy="110" r="95" fill="url(#amb-y)"/>
+  <circle cx="164" cy="158" r="78" fill="url(#amb-b)"/>
+  <circle cx="128" cy="128" r="98" fill="none" stroke="#ffd427" stroke-width="1.8" stroke-dasharray="6 6" opacity="0.4"/>
+
+  <!-- Glass Trace Card -->
+  <rect x="42" y="54" width="172" height="106" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <!-- Gridlines -->
+  <line x1="86" y1="68" x2="86" y2="148" stroke="#5f6368" stroke-width="1" stroke-dasharray="3 3" opacity="0.45"/>
+  <line x1="128" y1="68" x2="128" y2="148" stroke="#5f6368" stroke-width="1" stroke-dasharray="3 3" opacity="0.45"/>
+  <line x1="170" y1="68" x2="170" y2="148" stroke="#5f6368" stroke-width="1" stroke-dasharray="3 3" opacity="0.45"/>
+
+  <!-- Waterfall Span Bars -->
+  <rect x="56" y="72" width="144" height="12" rx="6" fill="#57caff" filter="url(#glow-s)"/>
+  <rect x="64" y="92" width="46" height="12" rx="6" fill="#5cdb6d"/>
+  <rect x="112" y="112" width="44" height="12" rx="6" fill="#ffd427" filter="url(#glow-s)"/>
+  <rect x="156" y="132" width="40" height="12" rx="6" fill="#ff7daf"/>
+
+  <!-- Glowing Radar Eye Badge -->
+  <g transform="translate(128, 174)">
+    <circle cx="0" cy="0" r="28" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2.4" filter="url(#glow-s)"/>
+    <path d="M-20 0 C-12 -13 12 -13 20 0 C12 13 -12 13 -20 0 Z" fill="#17181b" stroke="#57caff" stroke-width="2.2"/>
+    <circle cx="0" cy="0" r="6.5" fill="#ffd427"/>
+    <circle cx="0" cy="0" r="2.8" fill="#17181b"/>
+  </g>
+
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="12" fill="#ffd427">OBSERVE · OTEL</text>
+</svg>

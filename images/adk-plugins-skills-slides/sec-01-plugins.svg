@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <circle cx="128" cy="116" r="108" fill="url(#amb-b)"/>
+  <circle cx="128" cy="152" r="80" fill="url(#amb-g)"/>
+
+  <!-- Dashed orbit ring -->
+  <circle cx="128" cy="122" r="96" fill="none" stroke="#57caff" stroke-width="1.8" stroke-dasharray="6 6" opacity="0.4"/>
+
+  <!-- Glowing Runner Shield -->
+  <path d="M128 32 L198 58 V118 C198 164 166 196 128 208 C90 196 58 164 58 118 V58 Z"
+        fill="url(#glass)" stroke="url(#grad-bg)" stroke-width="3.2" filter="url(#glow-s)"/>
+  <path d="M128 42 L188 64 V117 C188 156 161 184 128 195 C95 184 68 156 68 117 V64 Z"
+        fill="none" stroke="#57caff" stroke-width="1.2" opacity="0.4"/>
+
+  <!-- Top Runner Core label -->
+  <rect x="92" y="58" width="72" height="22" rx="11" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="128" y="73" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d" font-weight="600">RUNNER</text>
+
+  <!-- Connector lines from Runner to 3 Agent nodes -->
+  <path d="M128 80 V106 M128 106 L94 134 M128 106 L162 134 M128 106 V154"
+        fill="none" stroke="#57caff" stroke-width="2.2" stroke-linecap="round"/>
+
+  <!-- Agent Node 1 (Left) -->
+  <g transform="translate(92,140)">
+    <rect x="-18" y="-15" width="36" height="30" rx="10" fill="url(#glass-hi)" stroke="#57caff" stroke-width="2"/>
+    <circle cx="-6" cy="-2" r="3" fill="#57caff" filter="url(#glow-s)"/>
+    <circle cx="6" cy="-2" r="3" fill="#57caff" filter="url(#glow-s)"/>
+    <path d="M-5 6 Q0 9 5 6" fill="none" stroke="#57caff" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Agent Node 2 (Right) -->
+  <g transform="translate(164,140)">
+    <rect x="-18" y="-15" width="36" height="30" rx="10" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2"/>
+    <circle cx="-6" cy="-2" r="3" fill="#ffd427" filter="url(#glow-s)"/>
+    <circle cx="6" cy="-2" r="3" fill="#ffd427" filter="url(#glow-s)"/>
+    <path d="M-5 6 Q0 9 5 6" fill="none" stroke="#ffd427" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Agent Node 3 (Bottom Center) -->
+  <g transform="translate(128,164)">
+    <rect x="-18" y="-15" width="36" height="30" rx="10" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2"/>
+    <circle cx="-6" cy="-2" r="3" fill="#5cdb6d" filter="url(#glow-s)"/>
+    <circle cx="6" cy="-2" r="3" fill="#5cdb6d" filter="url(#glow-s)"/>
+    <path d="M-5 6 Q0 9 5 6" fill="none" stroke="#5cdb6d" stroke-width="1.8" stroke-linecap="round"/>
+  </g>
+
+  <!-- Bottom caption -->
+  <rect x="52" y="216" width="152" height="24" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="1.6"/>
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="600">RUNNER SHIELD</text>
+</svg>

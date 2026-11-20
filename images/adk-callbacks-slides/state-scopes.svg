@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 444 290" width="444" height="290" role="img" aria-label="State prefixes as nested scopes: app for all users, user across sessions, no prefix for this session, temp for this turn only">
+<defs>
+  <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#303238"/><stop offset="1" stop-color="#1d1e22"/></linearGradient>
+  <linearGradient id="gem" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4f8df7"/><stop offset=".55" stop-color="#a77bf3"/><stop offset="1" stop-color="#57caff"/></linearGradient>
+  <filter id="glow" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <filter id="glow-s" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="2.4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  <radialGradient id="amb-b" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#57caff" stop-opacity=".26"/><stop offset="1" stop-color="#57caff" stop-opacity="0"/></radialGradient><radialGradient id="amb-g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#5cdb6d" stop-opacity=".26"/><stop offset="1" stop-color="#5cdb6d" stop-opacity="0"/></radialGradient><radialGradient id="amb-y" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd427" stop-opacity=".26"/><stop offset="1" stop-color="#ffd427" stop-opacity="0"/></radialGradient><radialGradient id="amb-r" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ff7daf" stop-opacity=".26"/><stop offset="1" stop-color="#ff7daf" stop-opacity="0"/></radialGradient>
+  <marker id="a-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker><marker id="a-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker><marker id="a-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker><marker id="a-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker><marker id="a-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#e8eaed"/></marker><marker id="a-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 1 L9 5 L0 9 Z" fill="#80868b"/></marker>
+</defs>
+<circle cx="222" cy="150" r="170" fill="url(#amb-y)"/>
+<rect x="4" y="4" width="436" height="282" rx="18" fill="rgba(255,255,255,.02)" stroke="#57caff" stroke-width="1.6"/>
+<text x="18" y="28" font-family='"Roboto Mono", ui-monospace, monospace' font-size="13" font-weight="700" fill="#57caff" text-anchor="start">app:</text>
+<text x="53.2" y="28" font-family='"Google Sans", "Product Sans", system-ui, sans-serif' font-size="12" font-weight="500" fill="#bdc1c6" text-anchor="start">· all users</text>
+<rect x="24" y="48" width="396" height="230" rx="18" fill="rgba(255,255,255,.02)" stroke="#5cdb6d" stroke-width="1.6"/>
+<text x="38" y="72" font-family='"Roboto Mono", ui-monospace, monospace' font-size="13" font-weight="700" fill="#5cdb6d" text-anchor="start">user:</text>
+<text x="81.0" y="72" font-family='"Google Sans", "Product Sans", system-ui, sans-serif' font-size="12" font-weight="500" fill="#bdc1c6" text-anchor="start">· all sessions</text>
+<rect x="44" y="92" width="356" height="178" rx="18" fill="rgba(255,255,255,.02)" stroke="#e8eaed" stroke-width="1.6"/>
+<text x="58" y="116" font-family='"Roboto Mono", ui-monospace, monospace' font-size="13" font-weight="700" fill="#e8eaed" text-anchor="start">(no prefix)</text>
+<text x="147.8" y="116" font-family='"Google Sans", "Product Sans", system-ui, sans-serif' font-size="12" font-weight="500" fill="#bdc1c6" text-anchor="start">· this session</text>
+<rect x="64" y="136" width="316" height="126" rx="18" fill="rgba(255,255,255,.02)" stroke="#ffd427" stroke-width="1.6"/>
+<text x="78" y="160" font-family='"Roboto Mono", ui-monospace, monospace' font-size="13" font-weight="700" fill="#ffd427" text-anchor="start">temp:</text>
+<text x="121.0" y="160" font-family='"Google Sans", "Product Sans", system-ui, sans-serif' font-size="12" font-weight="500" fill="#bdc1c6" text-anchor="start">· this turn only</text>
+<text x="424" y="28" font-family='"Roboto Mono", ui-monospace, monospace' font-size="11" font-weight="400" fill="#bdc1c6" text-anchor="end">app:cache_ttl</text>
+<rect x="288" y="56" width="124" height="27" rx="13.5" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/><text x="350.0" y="73.46" font-family='"Roboto Mono", ui-monospace, monospace' font-size="11" font-weight="600" fill="#5cdb6d" text-anchor="middle">user:last_visit</text>
+<text x="384" y="116" font-family='"Roboto Mono", ui-monospace, monospace' font-size="11" font-weight="400" fill="#bdc1c6" text-anchor="end">cart</text>
+<rect x="84" y="180" width="129.0" height="28.5" rx="14.25" fill="#17181b" stroke="#ffd427" stroke-width="1.8" filter="url(#glow-s)"/><text x="148.5" y="198.75" font-family='"Roboto Mono", ui-monospace, monospace' font-size="12.5" font-weight="600" fill="#ffd427" text-anchor="middle">temp:calls = 3</text>
+<text x="84" y="238" font-family='"Roboto Mono", ui-monospace, monospace' font-size="11.5" font-weight="500" fill="#bdc1c6" text-anchor="start">limit_tool_calls() counts here</text>
+</svg>

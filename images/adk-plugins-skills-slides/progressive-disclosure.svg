@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+  <circle cx="170" cy="105" r="115" fill="url(#amb-b)"/>
+  <circle cx="544" cy="105" r="115" fill="url(#amb-y)"/>
+  <circle cx="918" cy="105" r="115" fill="url(#amb-g)"/>
+
+  <!-- TIER 1: Metadata (Always Loaded) -->
+  <g transform="translate(18,16)">
+    <rect width="298" height="172" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.4"/>
+    <rect x="16" y="14" width="106" height="24" rx="12" fill="#57caff" fill-opacity="0.18" stroke="#57caff" stroke-width="1.4"/>
+    <text x="69" y="30" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="600">TIER 1 · ALWAYS</text>
+    <rect x="192" y="14" width="90" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.2"/>
+    <text x="237" y="30" text-anchor="middle" class="m" font-size="11" fill="#57caff">~100 tok</text>
+
+    <text x="16" y="64" class="t" font-size="20">YAML Metadata</text>
+    <text x="16" y="86" class="sub" font-size="13">Only name &amp; description in prompt</text>
+
+    <rect x="16" y="100" width="266" height="56" rx="10" fill="#17181b" stroke="#3c4043" stroke-width="1.4"/>
+    <text x="28" y="121" class="m" font-size="11.5" fill="#57caff">name: bigquery-optimization</text>
+    <text x="28" y="141" class="m" font-size="11" fill="#bdc1c6">desc: Optimize SQL &amp; partitions...</text>
+  </g>
+
+  <!-- Arrow 1 -> 2 -->
+  <path d="M316 102 H384" stroke="#ffd427" stroke-width="2.8" marker-end="url(#arr-y)"/>
+  <rect x="320" y="66" width="66" height="22" rx="11" fill="#202124" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="353" y="81" text-anchor="middle" class="m" font-size="10" fill="#ffd427">trigger</text>
+  <text x="353" y="124" text-anchor="middle" class="m" font-size="10" fill="#9aa0a6">load_skill()</text>
+
+  <!-- TIER 2: Instructions (On Trigger) -->
+  <g transform="translate(394,16)">
+    <rect width="300" height="172" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.4" filter="url(#glow-s)"/>
+    <rect x="16" y="14" width="124" height="24" rx="12" fill="#ffd427" fill-opacity="0.18" stroke="#ffd427" stroke-width="1.4"/>
+    <text x="78" y="30" text-anchor="middle" class="m" font-size="11" fill="#ffd427" font-weight="600">TIER 2 · ON MATCH</text>
+    <rect x="194" y="14" width="90" height="24" rx="12" fill="#17181b" stroke="#ffd427" stroke-width="1.2"/>
+    <text x="239" y="30" text-anchor="middle" class="m" font-size="11" fill="#ffd427">~500–2k tok</text>
+
+    <text x="16" y="64" class="t" font-size="20">SKILL.md Workflow</text>
+    <text x="16" y="86" class="sub" font-size="13">Full step-by-step SOP loaded on demand</text>
+
+    <rect x="16" y="100" width="268" height="56" rx="10" fill="#17181b" stroke="#3c4043" stroke-width="1.4"/>
+    <text x="28" y="120" class="m" font-size="11" fill="#ffd427">1. Inspect table &amp; partition keys</text>
+    <text x="28" y="137" class="m" font-size="11" fill="#bdc1c6">2. Check references/partitioning.md</text>
+    <text x="28" y="151" class="m" font-size="11" fill="#bdc1c6">3. Run scripts/check_bytes.py</text>
+  </g>
+
+  <!-- Arrow 2 -> 3 -->
+  <path d="M694 102 H762" stroke="#5cdb6d" stroke-width="2.8" marker-end="url(#arr-g)"/>
+  <rect x="698" y="66" width="66" height="22" rx="11" fill="#202124" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="731" y="81" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">on need</text>
+  <text x="731" y="124" text-anchor="middle" class="m" font-size="9.5" fill="#9aa0a6">load_resource()</text>
+
+  <!-- TIER 3: Resources (On Demand) -->
+  <g transform="translate(772,16)">
+    <rect width="298" height="172" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4"/>
+    <rect x="16" y="14" width="128" height="24" rx="12" fill="#5cdb6d" fill-opacity="0.18" stroke="#5cdb6d" stroke-width="1.4"/>
+    <text x="80" y="30" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">TIER 3 · ON DEMAND</text>
+    <rect x="192" y="14" width="90" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.2"/>
+    <text x="237" y="30" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">0 tok idle</text>
+
+    <text x="16" y="64" class="t" font-size="20">Deep Resources</text>
+    <text x="16" y="86" class="sub" font-size="13">Fetched selectively when steps need them</text>
+
+    <rect x="16" y="102" width="126" height="24" rx="7" fill="#17181b" stroke="#57caff" stroke-width="1.3"/>
+    <text x="79" y="118" text-anchor="middle" class="m" font-size="11" fill="#57caff">references/</text>
+
+    <rect x="152" y="102" width="130" height="24" rx="7" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+    <text x="217" y="118" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">scripts/</text>
+
+    <rect x="16" y="132" width="266" height="24" rx="7" fill="#17181b" stroke="#ff7daf" stroke-width="1.3"/>
+    <text x="149" y="148" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">assets/ · templates &amp; schemas</text>
+  </g>
+
+  <!-- Bottom Token Savings Bar -->
+  <rect x="18" y="204" width="1052" height="42" rx="12" fill="#17181b" stroke="#3c4043" stroke-width="1.5"/>
+  <text x="36" y="230" class="m" font-size="12" fill="#bdc1c6">TOKEN COST:</text>
+  <rect x="134" y="213" width="380" height="24" rx="12" fill="#ff7daf" fill-opacity="0.2" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="324" y="229" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">Giant Prompt: ~15,000 tok EVERY turn</text>
+  <text x="536" y="230" text-anchor="middle" class="m" font-size="13" fill="#ffd427">→</text>
+  <rect x="558" y="213" width="496" height="24" rx="12" fill="#5cdb6d" fill-opacity="0.2" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="806" y="229" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">20+ Agent Skills: ~1,500 tok upfront (90% savings on idle turns)</text>
+</svg>

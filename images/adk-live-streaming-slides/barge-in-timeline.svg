@@ -1,0 +1,103 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-w" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#e8eaed"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" fill="#202124"/>
+
+  <circle cx="140" cy="108" r="105" fill="url(#amb-g)"/>
+  <circle cx="412" cy="108" r="105" fill="url(#amb-b)"/>
+  <circle cx="684" cy="108" r="105" fill="url(#amb-y)"/>
+  <circle cx="952" cy="108" r="105" fill="url(#amb-r)"/>
+
+  <!-- Step 1: Agent Speaking -->
+  <rect x="18" y="20" width="236" height="172" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <circle cx="44" cy="46" r="14" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="44" y="51" text-anchor="middle" class="m" font-size="13" fill="#5cdb6d" font-weight="700">1</text>
+  <text x="68" y="51" class="t" font-size="17" fill="#5cdb6d">Agent Speaking</text>
+  <!-- Green active waveform -->
+  <rect x="34" y="72" width="204" height="44" rx="10" fill="#17181b" stroke="#3c4043" stroke-width="1.2"/>
+  <g stroke="#5cdb6d" stroke-width="3.5" stroke-linecap="round">
+    <line x1="56" y1="88" x2="56" y2="100"/><line x1="70" y1="80" x2="70" y2="108"/>
+    <line x1="84" y1="84" x2="84" y2="104"/><line x1="98" y1="78" x2="98" y2="110"/>
+    <line x1="112" y1="86" x2="112" y2="102"/><line x1="126" y1="80" x2="126" y2="108"/>
+    <line x1="140" y1="84" x2="140" y2="104"/><line x1="154" y1="79" x2="154" y2="109"/>
+    <line x1="168" y1="86" x2="168" y2="102"/><line x1="182" y1="82" x2="182" y2="106"/>
+    <line x1="196" y1="88" x2="196" y2="100"/><line x1="210" y1="85" x2="210" y2="103"/>
+  </g>
+  <text x="136" y="142" text-anchor="middle" class="m" font-size="12" fill="#e8eaed">24 kHz PCM → Ring Buffer</text>
+  <text x="136" y="168" text-anchor="middle" class="sub" font-size="12.5">AudioWorklet plays chunks</text>
+
+  <path d="M258 106 H284" stroke="#e8eaed" stroke-width="2.6" marker-end="url(#arr-w)"/>
+
+  <!-- Step 2: User Speaks -->
+  <rect x="290" y="20" width="236" height="172" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <circle cx="316" cy="46" r="14" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <text x="316" y="51" text-anchor="middle" class="m" font-size="13" fill="#57caff" font-weight="700">2</text>
+  <text x="340" y="51" class="t" font-size="17" fill="#57caff">User Interrupts</text>
+  <rect x="306" y="72" width="204" height="44" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="408" y="99" text-anchor="middle" class="t" font-size="14" fill="#57caff">"Wait, less spicy!"</text>
+  <text x="408" y="142" text-anchor="middle" class="m" font-size="12" fill="#e8eaed">Mic PCM streams live</text>
+  <text x="408" y="168" text-anchor="middle" class="sub" font-size="12.5">Full-duplex never mutes mic</text>
+
+  <path d="M530 106 H556" stroke="#e8eaed" stroke-width="2.6" marker-end="url(#arr-w)"/>
+
+  <!-- Step 3: Server VAD emits interrupted -->
+  <rect x="562" y="20" width="236" height="172" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <circle cx="588" cy="46" r="14" fill="#17181b" stroke="#ffd427" stroke-width="1.8"/>
+  <text x="588" y="51" text-anchor="middle" class="m" font-size="13" fill="#ffd427" font-weight="700">3</text>
+  <text x="612" y="51" class="t" font-size="17" fill="#ffd427">Gemini Live VAD</text>
+  <rect x="576" y="72" width="208" height="44" rx="10" fill="#ffd427" fill-opacity="0.14" stroke="#ffd427" stroke-width="1.8" filter="url(#glow-s)"/>
+  <text x="680" y="99" text-anchor="middle" class="m" font-size="12.5" fill="#ffd427" font-weight="700">event.interrupted=True</text>
+  <text x="680" y="142" text-anchor="middle" class="sub" font-size="12.5">Halts model generation</text>
+  <text x="680" y="168" text-anchor="middle" class="m" font-size="11.5" fill="#bdc1c6">Zero custom VAD needed</text>
+
+  <path d="M802 106 H828" stroke="#e8eaed" stroke-width="2.6" marker-end="url(#arr-w)"/>
+
+  <!-- Step 4: AudioWorklet Flushes -->
+  <rect x="834" y="20" width="236" height="172" rx="16" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.4"/>
+  <circle cx="860" cy="46" r="14" fill="#17181b" stroke="#ff7daf" stroke-width="1.8"/>
+  <text x="860" y="51" text-anchor="middle" class="m" font-size="13" fill="#ff7daf" font-weight="700">4</text>
+  <text x="884" y="51" class="t" font-size="17" fill="#ff7daf">Worklet Flushes</text>
+  <rect x="850" y="72" width="204" height="44" rx="10" fill="#ff7daf" fill-opacity="0.16" stroke="#ff7daf" stroke-width="1.8" filter="url(#glow-s)"/>
+  <text x="952" y="92" text-anchor="middle" class="m" font-size="11.5" fill="#ffffff">{ command: "endOfAudio" }</text>
+  <text x="952" y="108" text-anchor="middle" class="m" font-size="11" fill="#ff7daf" font-weight="700">BUFFER CLEARED &lt; 20ms</text>
+  <text x="952" y="142" text-anchor="middle" class="sub" font-size="12.5">No stale audio overlap</text>
+  <text x="952" y="168" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">Ready for next reply</text>
+
+  <!-- Bottom Full-Duplex Timeline Indicator -->
+  <rect x="18" y="206" width="1052" height="28" rx="14" fill="#17181b" stroke="#3c4043" stroke-width="1.4"/>
+  <circle cx="40" cy="220" r="5" fill="#57caff"/>
+  <text x="54" y="224" class="m" font-size="11.5" fill="#57caff">Continuous Mic Stream (16 kHz)</text>
+  <line x1="304" y1="220" x2="720" y2="220" stroke="#57caff" stroke-width="2" stroke-dasharray="6 4"/>
+  <circle cx="744" cy="220" r="5" fill="#ff7daf"/>
+  <text x="758" y="224" class="m" font-size="11.5" fill="#ff7daf">Instant Playback Cut-off (&lt;20ms)</text>
+</svg>

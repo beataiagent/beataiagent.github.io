@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <circle cx="128" cy="82" r="82" fill="url(#amb-y)"/>
+  <circle cx="52" cy="176" r="56" fill="url(#amb-b)"/>
+  <circle cx="128" cy="182" r="56" fill="url(#amb-g)"/>
+  <circle cx="204" cy="176" r="56" fill="url(#amb-r)"/>
+  <circle cx="128" cy="122" r="98" fill="none" stroke="#ffd427" stroke-width="1.8" stroke-dasharray="6 6" opacity="0.38"/>
+
+  <!-- Routing edges -->
+  <path d="M104 102 C78 118 62 126 56 146" fill="none" stroke="#57caff" stroke-width="2.4" marker-end="url(#arr-b)"/>
+  <path d="M128 112 V146" fill="none" stroke="#5cdb6d" stroke-width="2.4" marker-end="url(#arr-g)"/>
+  <path d="M152 102 C178 118 194 126 200 146" fill="none" stroke="#ff7daf" stroke-width="2.4" marker-end="url(#arr-r)"/>
+
+  <!-- Coordinator Robot Hub -->
+  <g transform="translate(128, 72) scale(0.76)">
+    <line x1="0" y1="-40" x2="0" y2="-52" stroke="#ffd427" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="0" cy="-56" r="5.5" fill="#ffd427" filter="url(#glow-s)"/>
+    <rect x="-36" y="-40" width="72" height="52" rx="20" fill="#e8eaed" stroke="#ffd427" stroke-width="3"/>
+    <rect x="-25" y="-30" width="50" height="32" rx="12" fill="#1b1d22"/>
+    <circle cx="-11" cy="-15" r="4.8" fill="#ffd427" filter="url(#glow-s)"/>
+    <circle cx="11" cy="-15" r="4.8" fill="#ffd427" filter="url(#glow-s)"/>
+    <path d="M-7 -5 Q0 0 7 -5" fill="none" stroke="#ffd427" stroke-width="2.6" stroke-linecap="round"/>
+    <rect x="-34" y="18" width="68" height="22" rx="11" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+    <text x="0" y="33" text-anchor="middle" class="m" font-size="12" fill="#ffd427" font-weight="600">HUB</text>
+  </g>
+
+  <!-- 3 Specialist mini robots -->
+  <!-- Blue -->
+  <g transform="translate(52, 174)">
+    <rect x="-26" y="-22" width="52" height="44" rx="13" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+    <rect x="-16" y="-14" width="32" height="17" rx="6" fill="#17181b"/>
+    <circle cx="-6" cy="-5.5" r="2.6" fill="#57caff" filter="url(#glow-s)"/>
+    <circle cx="6" cy="-5.5" r="2.6" fill="#57caff" filter="url(#glow-s)"/>
+    <text x="0" y="15" text-anchor="middle" class="m" font-size="9.5" fill="#57caff">SPEC 1</text>
+  </g>
+  <!-- Green -->
+  <g transform="translate(128, 174)">
+    <rect x="-26" y="-22" width="52" height="44" rx="13" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+    <rect x="-16" y="-14" width="32" height="17" rx="6" fill="#17181b"/>
+    <circle cx="-6" cy="-5.5" r="2.6" fill="#5cdb6d" filter="url(#glow-s)"/>
+    <circle cx="6" cy="-5.5" r="2.6" fill="#5cdb6d" filter="url(#glow-s)"/>
+    <text x="0" y="15" text-anchor="middle" class="m" font-size="9.5" fill="#5cdb6d">SPEC 2</text>
+  </g>
+  <!-- Pink -->
+  <g transform="translate(204, 174)">
+    <rect x="-26" y="-22" width="52" height="44" rx="13" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+    <rect x="-16" y="-14" width="32" height="17" rx="6" fill="#17181b"/>
+    <circle cx="-6" cy="-5.5" r="2.6" fill="#ff7daf" filter="url(#glow-s)"/>
+    <circle cx="6" cy="-5.5" r="2.6" fill="#ff7daf" filter="url(#glow-s)"/>
+    <text x="0" y="15" text-anchor="middle" class="m" font-size="9.5" fill="#ff7daf">SPEC 3</text>
+  </g>
+
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">MULTI-AGENT PATTERNS</text>
+</svg>

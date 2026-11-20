@@ -1,0 +1,144 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+
+  <circle cx="262" cy="140" r="165" fill="url(#amb-r)"/>
+  <circle cx="826" cy="140" r="165" fill="url(#amb-g)"/>
+
+  <!-- LEFT PANEL: Before N x M -->
+  <rect x="12" y="10" width="496" height="240" rx="18" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <text x="32" y="40" class="t" font-size="19" fill="#ff7daf">Before: N × M Custom Glue</text>
+  <rect x="336" y="20" width="154" height="26" rx="13" fill="#17181b" stroke="#ff7daf" stroke-width="1.5"/>
+  <text x="413" y="37" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">12 custom connectors</text>
+
+  <!-- Tangled spaghetti lines (12 connections) -->
+  <g fill="none" stroke="#ff7daf" stroke-opacity="0.58" stroke-width="1.9">
+    <path d="M148 84 C225 84 265 76 352 76"/>
+    <path d="M148 84 C235 84 255 122 352 122"/>
+    <path d="M148 84 C245 96 250 168 352 168"/>
+    <path d="M148 84 C250 115 245 214 352 214"/>
+
+    <path d="M148 144 C220 144 265 76 352 76"/>
+    <path d="M148 144 C235 144 260 122 352 122"/>
+    <path d="M148 144 C235 144 260 168 352 168"/>
+    <path d="M148 144 C220 144 265 214 352 214"/>
+
+    <path d="M148 204 C250 175 245 76 352 76"/>
+    <path d="M148 204 C245 190 250 122 352 122"/>
+    <path d="M148 204 C235 204 255 168 352 168"/>
+    <path d="M148 204 C225 204 265 214 352 214"/>
+  </g>
+  <!-- Chaos knot badge in middle -->
+  <circle cx="250" cy="144" r="16" fill="#202124" stroke="#ff7daf" stroke-width="1.8" opacity="0.92"/>
+  <text x="250" y="149" text-anchor="middle" class="m" font-size="13" fill="#ff7daf" font-weight="700">×</text>
+
+  <!-- Left apps -->
+  <g fill="#17181b" stroke="#5f6368" stroke-width="1.8">
+    <rect x="30" y="64" width="118" height="40" rx="10"/>
+    <rect x="30" y="124" width="118" height="40" rx="10"/>
+    <rect x="30" y="184" width="118" height="40" rx="10"/>
+  </g>
+  <g class="t" font-size="13.5" text-anchor="middle">
+    <text x="89" y="89">ADK Agent</text>
+    <text x="89" y="149">IDE Copilot</text>
+    <text x="89" y="209">Chat App</text>
+  </g>
+
+  <!-- Left panel right tools -->
+  <g fill="#17181b" stroke="#5f6368" stroke-width="1.8">
+    <rect x="352" y="58" width="136" height="36" rx="10"/>
+    <rect x="352" y="104" width="136" height="36" rx="10"/>
+    <rect x="352" y="150" width="136" height="36" rx="10"/>
+    <rect x="352" y="196" width="136" height="36" rx="10"/>
+  </g>
+  <g class="sub" font-size="13" text-anchor="middle">
+    <text x="420" y="81">BigQuery</text>
+    <text x="420" y="127">GitHub</text>
+    <text x="420" y="173">Google Drive</text>
+    <text x="420" y="219">Slack / API</text>
+  </g>
+
+  <!-- CENTER TRANSITION ARROW -->
+  <path d="M518 130 H562" stroke="#ffd427" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arr-y)" filter="url(#glow-s)"/>
+
+  <!-- RIGHT PANEL: With MCP N + M -->
+  <rect x="576" y="10" width="500" height="240" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <text x="596" y="40" class="t" font-size="19" fill="#5cdb6d">With MCP: N + M Standard</text>
+  <rect x="900" y="20" width="158" height="26" rx="13" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+  <text x="979" y="37" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">7 standard endpoints</text>
+
+  <!-- Clean MCP Hub Lines -->
+  <g fill="none" stroke="#57caff" stroke-width="2.4" stroke-linecap="round">
+    <path d="M712 84 C746 84 750 132 780 132"/>
+    <line x1="712" y1="144" x2="780" y2="144"/>
+    <path d="M712 204 C746 204 750 156 780 156"/>
+  </g>
+  <g fill="none" stroke="#5cdb6d" stroke-width="2.4" stroke-linecap="round">
+    <path d="M872 130 C896 130 896 76 920 76"/>
+    <path d="M872 140 C896 140 896 122 920 122"/>
+    <path d="M872 148 C896 148 896 168 920 168"/>
+    <path d="M872 158 C896 158 896 214 920 214"/>
+  </g>
+
+  <!-- Glowing MCP Hub -->
+  <rect x="780" y="96" width="92" height="96" rx="20" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="3" filter="url(#glow-s)"/>
+  <text x="826" y="144" text-anchor="middle" class="m" font-size="22" fill="#5cdb6d" font-weight="700">MCP</text>
+  <text x="826" y="166" text-anchor="middle" class="m" font-size="10.5" fill="#bdc1c6">USB-C Bus</text>
+
+  <!-- Right panel left apps -->
+  <g fill="#17181b" stroke="#57caff" stroke-width="1.8">
+    <rect x="594" y="64" width="118" height="40" rx="10"/>
+    <rect x="594" y="124" width="118" height="40" rx="10"/>
+    <rect x="594" y="184" width="118" height="40" rx="10"/>
+  </g>
+  <g class="t" font-size="13.5" text-anchor="middle">
+    <text x="653" y="89">ADK Agent</text>
+    <text x="653" y="149">IDE Copilot</text>
+    <text x="653" y="209">Chat App</text>
+  </g>
+
+  <!-- Right panel right MCP servers -->
+  <g fill="#17181b" stroke="#5cdb6d" stroke-width="1.8">
+    <rect x="920" y="58" width="138" height="36" rx="10"/>
+    <rect x="920" y="104" width="138" height="36" rx="10"/>
+    <rect x="920" y="150" width="138" height="36" rx="10"/>
+    <rect x="920" y="196" width="138" height="36" rx="10"/>
+  </g>
+  <g class="t" font-size="12.5" text-anchor="middle">
+    <text x="989" y="80" fill="#e8eaed">BigQuery MCP</text>
+    <text x="989" y="126" fill="#e8eaed">GitHub MCP</text>
+    <text x="989" y="172" fill="#e8eaed">Drive MCP</text>
+    <text x="989" y="218" fill="#e8eaed">Slack MCP</text>
+  </g>
+</svg>

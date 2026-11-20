@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" rx="18" fill="#202124"/>
+
+  <circle cx="96" cy="130" r="105" fill="url(#amb-b)"/>
+  <circle cx="370" cy="130" r="145" fill="url(#amb-g)"/>
+  <circle cx="840" cy="130" r="170" fill="url(#amb-y)"/>
+
+  <!-- 1. Clients -->
+  <rect x="16" y="48" width="156" height="164" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="94" y="82" text-anchor="middle" class="t" font-size="18" fill="#57caff">Clients</text>
+  <rect x="30" y="98" width="128" height="26" rx="8" fill="#17181b" stroke="#3c4043"/>
+  <text x="94" y="115" text-anchor="middle" class="m" font-size="11">Web / Mobile</text>
+  <rect x="30" y="132" width="128" height="26" rx="8" fill="#17181b" stroke="#3c4043"/>
+  <text x="94" y="149" text-anchor="middle" class="m" font-size="11">LINE / Slack</text>
+  <rect x="30" y="166" width="128" height="26" rx="8" fill="#17181b" stroke="#3c4043"/>
+  <text x="94" y="183" text-anchor="middle" class="m" font-size="11">A2A Peers</text>
+
+  <!-- Arrow Clients -> Cloud Run -->
+  <path d="M172 130 H226" stroke="#57caff" stroke-width="3" marker-end="url(#arr-b)"/>
+  <text x="199" y="118" text-anchor="middle" class="m" font-size="10" fill="#57caff">HTTPS</text>
+
+  <!-- 2. Cloud Run Stateless Compute -->
+  <rect x="234" y="20" width="268" height="220" rx="18" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+  <rect x="252" y="34" width="156" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="330" y="50" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">CLOUD RUN · 1 → N</text>
+  <text x="252" y="82" class="t" font-size="18" fill="#fff">Stateless ADK Fleet</text>
+
+  <rect x="252" y="96" width="232" height="36" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <circle cx="270" cy="114" r="5" fill="#5cdb6d"/>
+  <text x="284" y="119" class="m" font-size="12" fill="#fff">Replica 1 · ADK Runner</text>
+
+  <rect x="252" y="140" width="232" height="36" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <circle cx="270" cy="158" r="5" fill="#5cdb6d"/>
+  <text x="284" y="163" class="m" font-size="12" fill="#fff">Replica 2 · ADK Runner</text>
+
+  <rect x="252" y="184" width="232" height="36" rx="10" fill="#17181b" stroke="#5f6368" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <circle cx="270" cy="202" r="5" fill="#57caff"/>
+  <text x="284" y="207" class="m" font-size="12" fill="#bdc1c6">Replica N · OTel + IAM</text>
+
+  <!-- Routing Curves from Cloud Run to 4 External Stores -->
+  <path d="M502 88 C544 88 548 44 584 44" fill="none" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+  <path d="M502 118 C544 118 548 102 584 102" fill="none" stroke="#ffd427" stroke-width="2.6" marker-end="url(#arr-y)"/>
+  <path d="M502 146 C544 146 548 160 584 160" fill="none" stroke="#ff7daf" stroke-width="2.6" marker-end="url(#arr-r)"/>
+  <path d="M502 178 C544 178 548 218 584 218" fill="none" stroke="#5cdb6d" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#arr-g)"/>
+
+  <!-- 3. Four Production Backends -->
+  <!-- Cloud SQL -->
+  <rect x="594" y="18" width="478" height="50" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <rect x="608" y="29" width="112" height="28" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.2"/>
+  <text x="664" y="47" text-anchor="middle" class="m" font-size="11.5" fill="#57caff">Cloud SQL</text>
+  <text x="734" y="40" class="t" font-size="15" fill="#fff">DatabaseSessionService</text>
+  <text x="734" y="58" class="m" font-size="11">Turn events &amp; scoped state (session, user:, app:)</text>
+
+  <!-- GCS -->
+  <rect x="594" y="76" width="478" height="50" rx="12" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <rect x="608" y="87" width="112" height="28" rx="8" fill="#17181b" stroke="#ffd427" stroke-width="1.2"/>
+  <text x="664" y="105" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">GCS Bucket</text>
+  <text x="734" y="98" class="t" font-size="15" fill="#fff">GcsArtifactService</text>
+  <text x="734" y="116" class="m" font-size="11">Versioned binary files: PDFs, charts, audio, images</text>
+
+  <!-- Vertex AI Memory Bank -->
+  <rect x="594" y="134" width="478" height="50" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <rect x="608" y="145" width="112" height="28" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.2"/>
+  <text x="664" y="163" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">Vertex AI</text>
+  <text x="734" y="156" class="t" font-size="15" fill="#fff">Memory Bank (Long-term)</text>
+  <text x="734" y="174" class="m" font-size="11">Extracted preferences &amp; semantic recall across sessions</text>
+
+  <!-- Cloud Trace & BigQuery -->
+  <rect x="594" y="192" width="478" height="50" rx="12" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <rect x="608" y="203" width="112" height="28" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.2"/>
+  <text x="664" y="221" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">Trace + BQ</text>
+  <text x="734" y="214" class="t" font-size="15" fill="#fff">OpenTelemetry &amp; BigQuery Analytics</text>
+  <text x="734" y="232" class="m" font-size="11">Span waterfalls, token cost, P95 latency &amp; SLO alerts</text>
+</svg>

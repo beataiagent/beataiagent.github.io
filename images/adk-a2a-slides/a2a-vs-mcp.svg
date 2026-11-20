@@ -1,0 +1,129 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.20"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-b-l" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10 1 L1 5 L10 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-y-l" viewBox="0 0 10 10" refX="2" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10 1 L1 5 L10 9 Z" fill="#ffd427"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+
+  <circle cx="195" cy="95" r="110" fill="url(#amb-b)"/>
+  <circle cx="544" cy="95" r="110" fill="url(#amb-g)"/>
+  <circle cx="893" cy="95" r="110" fill="url(#amb-r)"/>
+  <circle cx="544" cy="215" r="120" fill="url(#amb-y)"/>
+
+  <!-- Top Horizontal Axis Banner -->
+  <rect x="26" y="12" width="1036" height="26" rx="13" fill="#17181b" stroke="#57caff" stroke-width="1.4" opacity="0.9"/>
+  <text x="544" y="29" text-anchor="middle" class="m" font-size="12" fill="#57caff" font-weight="600">HORIZONTAL AXIS · A2A PROTOCOL (AGENT ↔ AGENT COLLABORATION &amp; DELEGATION)</text>
+
+  <!-- Agent 1: Coordinator -->
+  <rect x="40" y="50" width="268" height="84" rx="16" fill="url(#glass-hi)" stroke="#57caff" stroke-width="2.2"/>
+  <g transform="translate(82, 93) scale(0.5)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#57caff" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="6" fill="#57caff" filter="url(#glow-s)"/>
+    <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#57caff" stroke-width="3"/>
+    <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+    <circle cx="-11" cy="-18" r="5" fill="#57caff"/><circle cx="11" cy="-18" r="5" fill="#57caff"/>
+    <path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#57caff" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M-24 14 H24 C28 14 26 40 0 44 C-26 40 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#57caff" stroke-width="2.2"/>
+  </g>
+  <text x="118" y="84" class="t" font-size="17">Coordinator Agent</text>
+  <text x="118" y="106" class="m" font-size="12" fill="#57caff">ADK · RemoteA2aAgent</text>
+
+  <!-- A2A Link 1 -->
+  <line x1="316" y1="92" x2="402" y2="92" stroke="#57caff" stroke-width="3" marker-start="url(#arr-b-l)" marker-end="url(#arr-b)" filter="url(#glow-s)"/>
+  <rect x="334" y="64" width="50" height="20" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="359" y="78" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="600">A2A</text>
+
+  <!-- Agent 2: Flight Specialist -->
+  <rect x="410" y="50" width="268" height="84" rx="16" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <g transform="translate(452, 93) scale(0.5)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#5cdb6d" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="6" fill="#5cdb6d" filter="url(#glow-s)"/>
+    <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#5cdb6d" stroke-width="3"/>
+    <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+    <circle cx="-11" cy="-18" r="5" fill="#5cdb6d"/><circle cx="11" cy="-18" r="5" fill="#5cdb6d"/>
+    <path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#5cdb6d" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M-24 14 H24 C28 14 26 40 0 44 C-26 40 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#5cdb6d" stroke-width="2.2"/>
+  </g>
+  <text x="488" y="84" class="t" font-size="17">Flight Specialist</text>
+  <text x="488" y="106" class="m" font-size="12" fill="#5cdb6d">Cloud Run · to_a2a()</text>
+
+  <!-- A2A Link 2 -->
+  <line x1="686" y1="92" x2="772" y2="92" stroke="#57caff" stroke-width="3" marker-start="url(#arr-b-l)" marker-end="url(#arr-b)" filter="url(#glow-s)"/>
+  <rect x="704" y="64" width="50" height="20" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="729" y="78" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="600">A2A</text>
+
+  <!-- Agent 3: Partner Agent -->
+  <rect x="780" y="50" width="268" height="84" rx="16" fill="url(#glass-hi)" stroke="#ff7daf" stroke-width="2.2"/>
+  <g transform="translate(822, 93) scale(0.5)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#ff7daf" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="6" fill="#ff7daf" filter="url(#glow-s)"/>
+    <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#ff7daf" stroke-width="3"/>
+    <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+    <circle cx="-11" cy="-18" r="5" fill="#ff7daf"/><circle cx="11" cy="-18" r="5" fill="#ff7daf"/>
+    <path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#ff7daf" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M-24 14 H24 C28 14 26 40 0 44 C-26 40 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#ff7daf" stroke-width="2.2"/>
+  </g>
+  <text x="858" y="84" class="t" font-size="17">Partner Agent</text>
+  <text x="858" y="106" class="m" font-size="12" fill="#ff7daf">External · LangGraph</text>
+
+  <!-- Vertical MCP Connectors -->
+  <line x1="174" y1="140" x2="174" y2="176" stroke="#ffd427" stroke-width="2.6" stroke-dasharray="4 3" marker-start="url(#arr-y-l)" marker-end="url(#arr-y)"/>
+  <rect x="184" y="148" width="48" height="20" rx="10" fill="#17181b" stroke="#ffd427" stroke-width="1.3"/>
+  <text x="208" y="162" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">MCP</text>
+
+  <line x1="544" y1="140" x2="544" y2="176" stroke="#ffd427" stroke-width="2.6" stroke-dasharray="4 3" marker-start="url(#arr-y-l)" marker-end="url(#arr-y)"/>
+  <rect x="554" y="148" width="48" height="20" rx="10" fill="#17181b" stroke="#ffd427" stroke-width="1.3"/>
+  <text x="578" y="162" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">MCP</text>
+
+  <line x1="914" y1="140" x2="914" y2="176" stroke="#ffd427" stroke-width="2.6" stroke-dasharray="4 3" marker-start="url(#arr-y-l)" marker-end="url(#arr-y)"/>
+  <rect x="924" y="148" width="48" height="20" rx="10" fill="#17181b" stroke="#ffd427" stroke-width="1.3"/>
+  <text x="948" y="162" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">MCP</text>
+
+  <!-- MCP Tool Boxes -->
+  <rect x="54" y="182" width="240" height="44" rx="12" fill="url(#glass)" stroke="#ffd427" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <text x="174" y="209" text-anchor="middle" class="m" font-size="13" fill="#ffffff">Calendar · Docs · Profile</text>
+
+  <rect x="424" y="182" width="240" height="44" rx="12" fill="url(#glass)" stroke="#ffd427" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <text x="544" y="209" text-anchor="middle" class="m" font-size="13" fill="#ffffff">Airline API · BigQuery</text>
+
+  <rect x="794" y="182" width="240" height="44" rx="12" fill="url(#glass)" stroke="#ffd427" stroke-width="1.6" stroke-dasharray="5 3"/>
+  <text x="914" y="209" text-anchor="middle" class="m" font-size="13" fill="#ffffff">ERP · CRM · Booking DB</text>
+
+  <!-- Bottom Vertical Axis Label -->
+  <text x="544" y="248" text-anchor="middle" class="m" font-size="12" fill="#ffd427" font-weight="600">VERTICAL AXIS · MCP PROTOCOL (AGENT ↕ TOOLS, APIS &amp; DATABASES)</text>
+</svg>

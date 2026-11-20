@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADK Callbacks — Observe, Customize, Control</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- ADK Callbacks deck extras ---------- */
+
+    .cb-hook { flex: none; font: 500 14px/1.2 var(--mono); padding: 8px 14px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; box-sizing: border-box; }
+
+    /* key/value rows */
+    .cb-kv { display: grid; gap: 8px; margin-top: 12px; }
+    .cb-kv > div { display: grid; grid-template-columns: 190px minmax(0, 1fr); gap: 10px; font-size: 15px; line-height: 1.35; padding: 7px 10px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
+    .cb-kv > div > b { font: 500 13px/1.45 var(--mono); color: var(--c, var(--h-blue)) !important; }
+    .cb-kv > div > span { color: var(--dk-text); }
+
+    /* checklist */
+    .reveal ul.cb-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .cb-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 16.5px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .cb-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .cb-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .cb-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* side cards next to code */
+    .cb-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .cb-side .pc { padding: 12px 16px; font-size: 15px; line-height: 1.4; }
+    .cb-side .pc h3 { font-size: 18px; margin-bottom: 4px; }
+
+    /* pattern cards */
+    .cb-pat .pc { padding: 14px 16px; }
+    .cb-pat .pc b { display: block; font-size: 21px; line-height: 1.2; margin-bottom: 6px; }
+    .cb-pat .pc p { font-size: 15.5px; line-height: 1.38; color: var(--dk-sub); }
+    .cb-pat .pc code { font-size: 12.5px; }
+    .cb-pat .pc.blue { --c: var(--h-blue); } .cb-pat .pc.green { --c: var(--h-green); } .cb-pat .pc.yellow { --c: var(--h-yellow); } .cb-pat .pc.red { --c: var(--h-red); }
+
+    /* resources */
+    .cb-recap-hooks .cb-hook { font-size: 13px; padding: 7px 11px; }
+
+    /* illustrations */
+    .cb-art { border: 2px solid var(--c, var(--dk-line)); border-radius: 18px; overflow: hidden; background: #202124; box-sizing: border-box; }
+    .reveal .slides .cb-art img { width: 100%; height: 100%; object-fit: contain; display: block; }
+    .cb-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c); background: #17181b; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .cb-div-art img { width: 100%; height: 100%; display: block; }
+    .reveal .slides .cb-pat .pc img { display: block; width: 100%; height: auto; margin: 0 0 10px; }
+    .reveal .slides img.cb-rc-art { display: block; width: 100%; height: auto; margin: 0 0 10px; }
+    .reveal .slides img.cb-ty-art { position: absolute; left: 860px; top: 170px; width: 380px; height: 380px; }
+    .reveal .zt-tbl.cb-tight th, .reveal .zt-tbl.cb-tight td { padding: 7px 12px; }
+    .cb-ctx .cb-kv { gap: 6px; margin-top: 10px; }
+    .cb-ctx .cb-kv > div { padding: 5px 10px; }
+    .cb-ctx .pc { padding: 14px 18px !important; }
+    .cb-res-row { display: flex; align-items: center; gap: 14px; }
+    .cb-res-row h3 { margin: 0 0 4px; font-size: 21px; }
+    .reveal table.zt-tbl td.no { color: var(--h-green); }
+  </style>
+</head>
+<body data-deck="ADK Callbacks">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M19 9h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v3l-4-3h-3"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4a3.5 3.5 0 0 0-3.3 4.7A3.5 3.5 0 0 0 5 15a3.5 3.5 0 0 0 4.5 5V4Z"/><path d="M14.5 4a3.5 3.5 0 0 1 3.3 4.7A3.5 3.5 0 0 1 19 15a3.5 3.5 0 0 1-4.5 5V4Z"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2Z"/></symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20a8 8 0 0 1 16 0"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="ADK Callbacks">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Observe</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Customize</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Control</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Callbacks in ADK</b><span>Hook into every step of your agent: before and after the agent, the model and each tool</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-blue)"><img src="../images/shared/logos/python.svg" alt="">Python</i><i style="--c:var(--h-red)"><img src="../images/shared/logos/gemini.svg" alt="">Gemini</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • วันนี้คุยเรื่อง Callbacks ใน ADK (Agent Development Kit) • 3 คำสำคัญ: Observe ดูว่า agent ทำอะไร, Customize ปรับข้อมูลระหว่างทาง, Control ตัดสินใจว่าจะให้ทำต่อหรือหยุด • ทั้งหมดทำได้ด้วยฟังก์ชัน Python ธรรมดา โดยไม่ต้องแก้โค้ดของ framework</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Why callbacks</strong><span>Hooks at fixed checkpoints in the agent run</span></div></li>
+          <li class="c2"><b>02</b><div><strong>The callback types</strong><span>Agent, model, tool and error hooks</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Context &amp; state</strong><span>What each callback can read and write</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Patterns &amp; best practices</strong><span>Guardrails, caching, plugins</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-callbacks-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">4 ช่วงครับ: (1) ทำไมต้องมี callback และมันทำงานตรงไหนของ agent (2) callback แต่ละชนิด ทั้งฝั่ง agent, model, tool และ error (3) context object และ state ที่ callback อ่านเขียนได้ (4) pattern ที่ใช้จริง เช่น guardrail, caching และเมื่อไหร่ควรใช้ Plugin แทน • สแกน QR ด้านขวาเพื่อเปิดสไลด์ดูตามได้ครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · Why callbacks">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="cb-div-art" style="--c:var(--h-blue)"><img src="../images/adk-callbacks-slides/sec-01-why.svg" alt=""></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Why<br>callbacks</h1>
+            <p class="sub" style="margin-top:28px">Hooks at fixed checkpoints<br>in the agent run</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • ปูพื้นว่า callback คืออะไร ทำไมต้องใช้ และมันถูกเรียกตอนไหนบ้างระหว่างที่ agent ทำงาน</aside>
+      </section>
+
+      <!-- 4. Black box -->
+      <section data-title="Open the black box">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the problem</div>
+            <h2 style="margin-bottom:16px">An agent run is a black box, until you hook in</h2>
+            <div class="cb-art" style="width:1088px; height:200px; margin-bottom:14px"><img src="../images/adk-callbacks-slides/black-box.svg" alt="Without callbacks the agent is a black box; with callbacks you observe, customize and control the agent, model and tool steps"></div>
+            <div class="grid g3" style="width:1088px; gap:16px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:14px 18px"><h3 style="color:var(--h-blue); font-size:20px">Observe</h3><p style="font-size:15.5px; color:var(--dk-sub)">Log every model request, tool call and result. Trace a whole invocation.</p></div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:14px 18px"><h3 style="color:var(--h-green); font-size:20px">Customize</h3><p style="font-size:15.5px; color:var(--dk-sub)">Edit the prompt, fix tool arguments, reshape a response.</p></div>
+              <div class="pc red fragment" data-fragment-index="3" style="padding:14px 18px"><h3 style="color:var(--h-red); font-size:20px">Control</h3><p style="font-size:15.5px; color:var(--dk-sub)">Block unsafe input, skip a tool, serve a cached answer, recover from errors.</p></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Callback</b><span>A plain function ADK calls at a checkpoint. None = watch, object = take over.</span></div>
+        </div>
+        <aside class="notes">ปกติเราส่ง prompt เข้าไปแล้วได้คำตอบออกมา ตรงกลางเป็นกล่องดำ (ภาพซ้าย) • ภาพขวา: callback เปิดกล่องให้เห็นขั้น agent, model, tool และเสียบ hook ได้ทุกขั้น • (คลิก 1) Observe: log ว่าโมเดลได้ prompt อะไร เรียก tool อะไร ได้ผลอะไร • (คลิก 2) Customize: แก้ prompt ก่อนส่ง หรือแก้ argument ของ tool • (คลิก 3) Control: บล็อก input ที่ไม่ปลอดภัย ข้าม tool หรือคืนคำตอบจาก cache • (คลิก 4) callback คือฟังก์ชันธรรมดาที่ ADK เรียกให้ตาม checkpoint คืน None คือแค่ดู คืน object คือเข้าไปแทนขั้นนั้น</aside>
+      </section>
+
+      <!-- 5. Where callbacks fire -->
+      <section data-title="Where callbacks fire">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the checkpoints</div>
+            <h2 style="margin-bottom:18px">Where callbacks fire in one agent run</h2>
+            <div class="cb-art" style="width:1088px; height:372px; border:0; background:transparent"><img src="../images/adk-callbacks-slides/lifecycle.svg" alt="One agent run: before_agent and after_agent wrap a reasoning loop where model and tool hooks wrap each Gemini and tool call"></div>
+          </div>
+          <div class="ask fragment"><b>Scope</b><span>Agent hooks work on every agent type. Model, tool and error hooks are LlmAgent only.</span></div>
+        </div>
+        <aside class="notes">นี่คือแผนที่ของ callback ทั้ง 8 จุดใน 1 รอบการทำงาน • ผู้ใช้ส่งข้อความเข้ามา before_agent ทำงานก่อน agent เริ่ม • ข้างในคือ reasoning loop: ทุกครั้งที่จะเรียก Gemini มี before_model และ after_model ถ้าโมเดล error จะเข้า on_model_error • พอโมเดลสั่ง function call ทุกครั้งที่เรียก tool มี before_tool และ after_tool ถ้า tool error เข้า on_tool_error ผลของ tool วนกลับไปให้โมเดลคิดต่อ • ลูปนี้วนหลายรอบได้ callback ก็ถูกเรียกทุกรอบ • สุดท้าย after_agent ก่อนส่งคำตอบกลับ • (คลิก) before/after agent ใช้ได้กับ agent ทุกแบบ ส่วน model, tool และ error hook ใช้ได้เฉพาะ LlmAgent</aside>
+      </section>
+
+      <!-- 6. Register callbacks -->
+      <section data-title="Register a callback">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · wiring</div>
+            <h2 style="margin-bottom:18px">Register callbacks on the agent</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from google.adk.agents import LlmAgent
+
+root_agent = LlmAgent(
+    name="travel_agent",
+    model="gemini-flash-latest",
+    instruction="Help users plan trips.",
+    tools=[search_flights],
+    before_agent_callback=check_quota,
+    before_model_callback=[block_pii, log_request],
+    after_model_callback=add_disclaimer,
+    before_tool_callback=validate_args,
+    after_tool_callback=redact_result,
+    on_tool_error_callback=tool_fallback,
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-blue); height:294px"><img src="../images/adk-callbacks-slides/register.svg" alt="LlmAgent with six callbacks plugged in by keyword"></div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Names must match</h3>ADK passes arguments by keyword. Rename <code>callback_context</code> to <code>ctx</code> and you get a <code>TypeError</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ใส่ callback ตอนสร้าง LlmAgent โดยส่งฟังก์ชันเข้า keyword ของแต่ละ hook • ดูภาพขวา: agent อยู่ตรงกลาง แต่ละ hook เสียบฟังก์ชันของตัวเอง เช่น before_agent ใช้ check_quota, before_tool ใช้ validate_args • before_model ส่งเป็น list ได้ จะรันตามลำดับ และหยุดทันทีเมื่อตัวไหนคืนค่าที่ไม่ใช่ None • เขียนเป็น def หรือ async def ก็ได้ • (คลิก) ข้อควรระวัง: ADK ส่ง argument แบบ keyword ชื่อพารามิเตอร์ต้องตรงกับเอกสารเป๊ะ ถ้าเปลี่ยน callback_context เป็น ctx จะเจอ TypeError ตอนรัน</aside>
+      </section>
+
+      <!-- 7. Section 02 -->
+      <section class="bg-green" data-title="02 · The callback types">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="cb-div-art" style="--c:var(--h-green)"><img src="../images/adk-callbacks-slides/sec-02-types.svg" alt=""></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">The callback<br>types</h1>
+            <p class="sub" style="margin-top:28px">Agent, model, tool<br>and error hooks</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • ไล่ดู callback ทีละคู่ พร้อมโค้ดตัวอย่าง และดูว่าคืนค่าอะไรแล้วเกิดอะไรขึ้น</aside>
+      </section>
+
+      <!-- 8. Return value rule -->
+      <section data-title="Return None or take over">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · the golden rule</div>
+            <h2 style="margin-bottom:12px">Return <code style="font-size:.8em">None</code> to continue, return an object to take over</h2>
+            <div class="cb-art" style="width:1088px; height:96px; border:0; background:transparent; margin-bottom:8px"><img src="../images/adk-callbacks-slides/golden-rule.svg" alt="Return None and ADK runs its default step; return an object and ADK uses your value"></div>
+            <table class="zt-tbl cb-tight" style="width:1088px">
+              <colgroup><col style="width:270px"><col style="width:180px"><col style="width:220px"><col></colgroup>
+              <thead><tr><th>Callback</th><th>Return None</th><th>Or return</th><th>Effect</th></tr></thead>
+              <tbody>
+                <tr><td><code>before_agent</code></td><td class="no">Agent runs</td><td><code>types.Content</code></td><td>Skip the agent. Content is the turn's output.</td></tr>
+                <tr><td><code>after_agent</code></td><td class="no">Nothing added</td><td><code>types.Content</code></td><td>Appended as one extra event after the output.</td></tr>
+                <tr><td><code>before_model</code></td><td class="no">Gemini is called</td><td><code>LlmResponse</code></td><td>Skip the model call. Used as the model's reply.</td></tr>
+                <tr><td><code>after_model</code></td><td class="no">Keep the reply</td><td><code>LlmResponse</code></td><td>Replaces the model's reply.</td></tr>
+                <tr><td><code>before_tool</code></td><td class="no">Tool runs</td><td><code>dict</code></td><td>Skip the tool. The dict is the tool result.</td></tr>
+                <tr><td><code>after_tool</code></td><td class="no">Keep the result</td><td><code>dict</code></td><td>Replaces the tool result.</td></tr>
+                <tr><td><code>on_model_error</code></td><td class="no">Error is raised</td><td><code>LlmResponse</code></td><td>Swallow the error, use this reply.</td></tr>
+                <tr><td><code>on_tool_error</code></td><td class="no">Error is raised</td><td><code>dict</code></td><td>Swallow the error, use this as the result.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <aside class="notes">นี่คือตารางที่สำคัญที่สุดของวันนี้ • ทุก callback ใช้กฎเดียวกัน: คืน None = ปล่อยให้ ADK ทำตามปกติ, คืน object = เราเข้าไปแทนขั้นนั้น • before_* คืน object = ข้ามขั้นนั้นไปเลย เช่น ไม่เรียกโมเดล ไม่เรียก tool • after_* คืน object = แทนผลลัพธ์เดิม • ข้อยกเว้นคือ after_agent: คืน Content จะต่อท้ายเป็น event ใหม่ ไม่ได้แทนของเดิม ถ้าอยากแก้คำตอบให้ใช้ after_model • ระวัง: ใน before_tool และ after_tool ถ้าคืน dict ว่าง {} ADK ถือว่าเป็นการ override ด้วย ถ้าอยากให้ทำต่อต้องคืน None เท่านั้น</aside>
+      </section>
+
+      <!-- 9. Agent callbacks -->
+      <section data-title="before / after agent">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · agent lifecycle</div>
+            <h2 style="margin-bottom:18px">before_agent / after_agent: gate the whole run</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from typing import Optional
+from google.genai import types
+from google.adk.agents.callback_context import (
+    CallbackContext,
+)
+
+def skip_if_paused(
+    callback_context: CallbackContext,
+) -> Optional[types.Content]:
+    if callback_context.state.get("paused"):
+        return types.Content(
+            role="model",
+            parts=[types.Part(text="Agent is paused.")],
+        )
+    return None  # run the agent normally
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-blue); height:294px"><img src="../images/adk-callbacks-slides/agent-gate.svg" alt="before_agent reads state and either answers Agent is paused or lets the agent run; after_agent appends a note"></div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">after_agent appends</h3>Returned <code>Content</code> is added <b>after</b> the agent output, never instead of it. Works on every agent type.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">before_agent และ after_agent ครอบการทำงานของ agent ทั้งตัว • ดูภาพขวา: ข้อความผู้ใช้เข้ามา before_agent อ่าน state • ถ้า paused เป็น true คืน Content "Agent is paused." กลับไปเลย agent ไม่ทำงาน (หุ่นยนต์หลับ) • ถ้า false agent ทำงานตามปกติ และ after_agent เติมข้อความปิดท้ายได้ • ใช้เช็ก quota สิทธิ์ หรือ feature flag • (คลิก) after_agent คืน Content จะต่อท้ายเป็น event ใหม่ ไม่ได้แทนคำตอบเดิม และคู่นี้ใช้ได้กับ Sequential, Parallel, Loop agent ด้วย</aside>
+      </section>
+
+      <!-- 10. before_model -->
+      <section data-title="before_model · guardrail">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · model · before</div>
+            <h2 style="margin-bottom:18px">before_model: inspect or block the prompt</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from google.adk.models import LlmRequest, LlmResponse
+
+def block_secrets(
+    callback_context: CallbackContext,
+    llm_request: LlmRequest,
+) -> Optional[LlmResponse]:
+    last = llm_request.contents[-1]
+    text = last.parts[0].text or "" if last.parts else ""
+    if "password" in text.lower():
+        return LlmResponse(content=types.Content(
+            role="model",
+            parts=[types.Part(text="I can't help with that.")],
+        ))
+    return None  # call Gemini as usual
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-red); height:294px"><img src="../images/adk-callbacks-slides/model-guard.svg" alt="before_model blocks a password question so Gemini is never called and lets a travel question through"></div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Every LLM call</h3>Runs before each model call in the loop, not once per turn. Or edit <code>llm_request</code> in place and return <code>None</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">before_model ถูกเรียกก่อนส่ง request ไป Gemini ทุกครั้ง • ดูภาพขวา แถวบน: ผู้ใช้ถาม password โล่ตรวจเจอ คืน LlmResponse สำเร็จรูป "I can't help with that." Gemini ไม่ถูกเรียกเลย เสีย token 0 • แถวล่าง: คำถามปกติผ่านโล่ไปถึง Gemini แล้วตอบตามปกติ • โค้ดซ้ายทำแบบเดียวกัน • (คลิก) จำไว้ว่า agent อาจเรียกโมเดลหลายรอบใน 1 คำถาม callback นี้จึงถูกเรียกหลายครั้ง และจะแก้ llm_request ตรง ๆ แล้วคืน None ก็ได้ เช่น เติม system instruction</aside>
+      </section>
+
+      <!-- 11. after_model -->
+      <section data-title="after_model · rewrite">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · model · after</div>
+            <h2 style="margin-bottom:18px">after_model: check or rewrite the reply</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+def add_disclaimer(
+    callback_context: CallbackContext,
+    llm_response: LlmResponse,
+) -> Optional[LlmResponse]:
+    c = llm_response.content
+    if not c or not c.parts or not c.parts[0].text:
+        return None  # tool call or empty: keep it
+    if "price" not in c.parts[0].text.lower():
+        return None
+    c.parts[0].text += "\n\nPrices may change."
+    return llm_response  # replaces the original
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-green); height:294px"><img src="../images/adk-callbacks-slides/model-after.svg" alt="after_model appends Prices may change to the reply while a function call passes through unchanged"></div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Check the shape</h3>A function-call reply has no text: return <code>None</code>. To change what users see, use after_model, not after_agent.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">after_model ถูกเรียกหลังได้คำตอบจาก Gemini • ดูภาพขวา: Gemini ตอบราคาตั๋ว after_model เติม "Prices may change." ต่อท้าย ผู้ใช้เห็นบรรทัดที่ไฮไลต์เพิ่มมา • ด้านขวาของภาพ: ถ้าโมเดลตอบเป็น function_call ไม่มี text เราคืน None ปล่อยผ่านไปเรียก tool ตามปกติ • (คลิก) ต้องเช็ก shape ก่อนแก้เสมอ และถ้าอยากเปลี่ยนสิ่งที่ผู้ใช้เห็น ใช้ after_model ไม่ใช่ after_agent</aside>
+      </section>
+
+      <!-- 12. before_tool -->
+      <section data-title="before_tool · validate args">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · tool · before</div>
+            <h2 style="margin-bottom:18px">before_tool: validate, fix or block a call</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from typing import Any
+from google.adk.tools.base_tool import BaseTool
+from google.adk.tools.tool_context import ToolContext
+
+def validate_args(
+    tool: BaseTool,
+    args: dict[str, Any],
+    tool_context: ToolContext,
+) -> Optional[dict]:
+    if tool.name != "transfer_money":
+        return None
+    if args.get("amount", 0) > 10_000:
+        return {"error": "Over the limit. Ask a human."}
+    args["currency"] = args.get("currency", "THB").upper()
+    return None  # run the tool with the edited args
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-yellow); height:294px"><img src="../images/adk-callbacks-slides/tool-before.svg" alt="before_tool blocks a 50,000 transfer with an error dict and fixes currency thb to THB before the tool runs"></div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">Never return <code>{}</code></h3>An empty dict still counts as a result and skips the tool. Return <code>None</code> to run it.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">before_tool ถูกเรียกก่อนรัน tool ทุกครั้ง • ดูภาพขวา แถวบน: โมเดลเรียก transfer_money 50,000 เกินลิมิต callback คืน dict error tool ไม่ถูกรัน โมเดลอ่าน error นี้แล้วอธิบายผู้ใช้เอง • แถวล่าง: ยอด 800 ผ่าน แต่ currency เป็นตัวพิมพ์เล็ก callback แก้ args เป็น "THB" แล้วคืน None tool จึงรันด้วยค่าใหม่ • (คลิก) กับดักที่เจอบ่อย: คืน {} ถือว่า override และ tool ไม่ถูกรัน ต้องคืน None เท่านั้น</aside>
+      </section>
+
+      <!-- 13. after_tool -->
+      <section data-title="after_tool · post-process">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · tool · after</div>
+            <h2 style="margin-bottom:18px">after_tool: clean the result before the model sees it</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+def redact_result(
+    tool: BaseTool,
+    args: dict[str, Any],
+    tool_context: ToolContext,
+    tool_response: Any,
+) -> Optional[dict]:
+    if tool.name != "get_customer":
+        return None
+    if not isinstance(tool_response, dict):
+        return None  # non-dict results are wrapped later
+    clean = dict(tool_response)
+    clean.pop("national_id", None)
+    return clean  # replaces the tool result
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-green); height:294px"><img src="../images/adk-callbacks-slides/tool-after.svg" alt="after_tool removes national_id from the get_customer result before the model sees it"></div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Check the type</h3>ADK wraps a non-dict as <code>{"result": ...}</code> only <b>after</b> this callback runs.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">after_tool ถูกเรียกหลัง tool ทำงานเสร็จ ได้ tool_response เพิ่มมา • ดูภาพขวา: get_customer คืนข้อมูลลูกค้าที่มีเลขบัตรประชาชน after_tool ตัดฟิลด์นั้นทิ้ง โมเดลเห็นแค่ชื่อกับ tier จึงไม่มีทางเผยข้อมูลนี้ • ใช้ย่อ payload ใหญ่ หรือเก็บผลลง state ไว้ใช้ต่อได้ด้วย • (คลิก) tool ที่คืนค่าไม่ใช่ dict ADK จะห่อเป็น {"result": ...} หลัง callback นี้ เราจึงต้องเช็ก type ก่อน</aside>
+      </section>
+
+      <!-- 14. Error hooks -->
+      <section data-title="Error callbacks">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · errors</div>
+            <h2 style="margin-bottom:18px">on_model_error / on_tool_error: fail gracefully</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+async def model_fallback(
+    callback_context: CallbackContext,
+    llm_request: LlmRequest,
+    error: Exception,
+) -> Optional[LlmResponse]:
+    logger.warning("model failed: %s", error)
+    return LlmResponse(content=types.Content(
+        role="model",
+        parts=[types.Part(text="Busy now. Try again soon.")],
+    ))
+
+def tool_fallback(tool, args, tool_context, error):
+    return {"status": "error", "message": str(error)}
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-red); height:294px"><img src="../images/adk-callbacks-slides/errors.svg" alt="on_model_error turns a 429 into a friendly reply; on_tool_error turns a timeout into an error dict"></div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Return None</h3>The exception is raised as usual. <code>on_tool_error</code> does not cover streaming tools.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">อีก 2 hook ที่หลายคนไม่รู้จัก • ดูภาพขวา แถวบน: เรียก Gemini แล้วเจอ 429 quota on_model_error คืนข้อความสุภาพแทน ผู้ใช้ได้คำตอบ ระบบไม่ crash • แถวล่าง: tool timeout on_tool_error คืน dict status error โมเดลอ่านแล้วตัดสินใจเองว่าจะลองใหม่หรืออธิบายผู้ใช้ • (คลิก) ถ้าคืน None exception จะถูก raise ตามปกติ และ on_tool_error ไม่ครอบคลุม streaming tool</aside>
+      </section>
+
+      <!-- 15. Section 03 -->
+      <section class="bg-yellow" data-title="03 · Context &amp; state">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="cb-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-callbacks-slides/sec-03-state.svg" alt=""></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Context<br>&amp; state</h1>
+            <p class="sub" style="margin-top:28px">What each callback can<br>read and write</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • callback ไม่ได้ได้แค่ request กับ response แต่ได้ context object ที่เข้าถึง state, artifact และข้อมูลของ invocation ได้ด้วย</aside>
+      </section>
+
+      <!-- 16. Context objects -->
+      <section data-title="Context objects">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · context objects · Python: a unified Context type replaces both</div>
+            <h2 style="margin-bottom:14px">What the context gives you</h2>
+            <div class="cb-art" style="width:1088px; height:112px; border:0; background:transparent; margin-bottom:14px"><img src="../images/adk-callbacks-slides/context-map.svg" alt="CallbackContext goes to agent and model callbacks, ToolContext to tool callbacks; both share state and artifacts"></div>
+            <div class="grid g2 cb-ctx" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" style="--c:var(--h-blue); padding:18px 20px">
+                <h3 style="color:var(--h-blue)">CallbackContext</h3>
+                <p style="font-size:15px; color:var(--dk-sub)">Agent and model callbacks</p>
+                <div class="cb-kv">
+                  <div><b>agent_name</b><span>Which agent is running</span></div>
+                  <div><b>invocation_id</b><span>One id per user turn, for tracing</span></div>
+                  <div><b>state</b><span>Read and write session state</span></div>
+                  <div><b>save_artifact()</b><span>Store files (await it)</span></div>
+                  <div><b>load_artifact()</b><span>Read stored files (await it)</span></div>
+                </div>
+              </div>
+              <div class="pc yellow fragment" style="--c:var(--h-yellow); padding:18px 20px">
+                <h3 style="color:var(--h-yellow)">ToolContext</h3>
+                <p style="font-size:15px; color:var(--dk-sub)">Tool callbacks: everything on the left, plus</p>
+                <div class="cb-kv">
+                  <div><b>actions</b><span>e.g. <code>skip_summarization = True</code></span></div>
+                  <div><b>request_credential()</b><span>Ask the user for auth</span></div>
+                  <div><b>get_auth_response()</b><span>Read the returned credential</span></div>
+                  <div><b>function_call_id</b><span>Which tool call this is</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ADK ส่ง context object ให้ callback ทุกตัว • ดูภาพบน: CallbackContext ไปที่ agent และ model callback, ToolContext ไปที่ tool callback ทั้งสองอ่านเขียน state และ artifact ชุดเดียวกัน • (คลิก) CallbackContext: รู้ชื่อ agent, invocation_id ไว้ trace, อ่านเขียน state และบันทึก/โหลด artifact • (คลิก) ToolContext: มีทุกอย่างทางซ้าย บวก actions เช่น skip_summarization เพื่อส่งผล tool ให้ผู้ใช้ตรง ๆ และขอ credential จากผู้ใช้ได้ • ADK Python เวอร์ชันใหม่รวมเป็น Context ตัวเดียว ชื่อเดิมยังใช้ได้</aside>
+      </section>
+
+      <!-- 17. State in callbacks -->
+      <section data-title="State in callbacks">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · state</div>
+            <h2 style="margin-bottom:18px">Callbacks share data through state</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from datetime import date
+
+def limit_tool_calls(tool, args, tool_context):
+    n = tool_context.state.get("temp:calls", 0) + 1
+    tool_context.state["temp:calls"] = n
+    if n > 5:
+        return {"error": "Too many tool calls this turn."}
+    return None
+
+def mark_visit(callback_context: CallbackContext):
+    today = str(date.today())
+    callback_context.state["user:last_visit"] = today
+    return None
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-yellow); height:294px"><img src="../images/adk-callbacks-slides/state-scopes.svg" alt="State prefixes as nested scopes: app, user, session and temp"></div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Tracked for you</h3>Writes land in <code>Event.actions.state_delta</code>. The SessionService saves them.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">state คือช่องทางที่ callback คุยกันเองและคุยกับ tool • ดูภาพขวา: prefix คือขอบเขต วงนอกสุด app: ใช้ร่วมทุกผู้ใช้, user: ข้ามทุก session ของผู้ใช้คนนั้น, ไม่มี prefix คือ session นี้, temp: แค่รอบนี้ • โค้ดบน: นับจำนวนครั้งที่เรียก tool ด้วย temp:calls รีเซ็ตทุกคำถาม เกิน 5 ครั้งบล็อก กันลูปไม่รู้จบ • โค้ดล่าง: บันทึก user:last_visit จำข้าม session • (คลิก) การเขียน state ผ่าน context ถูกติดตามเป็น state_delta และบันทึกโดย SessionService ให้อัตโนมัติ</aside>
+      </section>
+
+      <!-- 18. Section 04 -->
+      <section class="bg-red" data-title="04 · Patterns &amp; best practices">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="cb-div-art" style="--c:var(--h-red)"><img src="../images/adk-callbacks-slides/sec-04-patterns.svg" alt=""></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Patterns &amp;<br>best practices</h1>
+            <p class="sub" style="margin-top:28px">Guardrails, caching,<br>plugins</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้าย • รวม pattern ที่ใช้บ่อย วิธีเขียนให้ปลอดภัยใน production และเมื่อไหร่ควรย้ายไปใช้ Plugin</aside>
+      </section>
+
+      <!-- 19. Eight patterns -->
+      <section data-title="Eight design patterns">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · design patterns</div>
+            <h2 style="margin-bottom:20px">Eight things teams build with callbacks</h2>
+            <div class="grid g4 cb-pat" style="width:1088px; gap:14px">
+              <div class="pc red fragment" data-fragment-index="1"><img src="../images/adk-callbacks-slides/pat-guardrails.svg" alt=""><b>01 · Guardrails</b><p>Block bad input in <code>before_model</code> or bad args in <code>before_tool</code>.</p></div>
+              <div class="pc yellow fragment" data-fragment-index="1"><img src="../images/adk-callbacks-slides/pat-state.svg" alt=""><b>02 · Dynamic state</b><p>Read and write <code>context.state</code> across steps.</p></div>
+              <div class="pc blue fragment" data-fragment-index="1"><img src="../images/adk-callbacks-slides/pat-logging.svg" alt=""><b>03 · Logging</b><p>Agent, tool, invocation id and args at each checkpoint.</p></div>
+              <div class="pc green fragment" data-fragment-index="1"><img src="../images/adk-callbacks-slides/pat-caching.svg" alt=""><b>04 · Caching</b><p>Return a stored result, skip the model or tool.</p></div>
+              <div class="pc green fragment" data-fragment-index="2"><img src="../images/adk-callbacks-slides/pat-modify.svg" alt=""><b>05 · Modify I/O</b><p>Edit request, response, args or tool result.</p></div>
+              <div class="pc red fragment" data-fragment-index="2"><img src="../images/adk-callbacks-slides/pat-skip.svg" alt=""><b>06 · Skip steps</b><p>Return an object from any <code>before_*</code> hook.</p></div>
+              <div class="pc yellow fragment" data-fragment-index="2"><img src="../images/adk-callbacks-slides/pat-tool-actions.svg" alt=""><b>07 · Tool actions</b><p>Request auth, or <code>skip_summarization</code>.</p></div>
+              <div class="pc blue fragment" data-fragment-index="2"><img src="../images/adk-callbacks-slides/pat-artifacts.svg" alt=""><b>08 · Artifacts</b><p>Save or load files from any context.</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ADK docs รวม pattern ไว้ 8 แบบ แต่ละการ์ดมีภาพสั้น ๆ ของกลไก • (คลิก 1) แถวแรก: Guardrail บล็อก input ก่อนถึงโมเดล, Dynamic state ให้ before/after เขียน state ร่วมกัน, Logging บันทึกทุก checkpoint, Caching คืนผลที่เก็บไว้แทนการเรียกจริง • (คลิก 2) แถวสอง: แก้ request/response/args/result ตรง ๆ, ข้ามขั้นด้วยการคืน object จาก before_*, tool action เช่นขอ credential หรือ skip summarization, และบันทึกไฟล์เป็น artifact • ทุก pattern ใช้กฎเดียวกัน คืน None คือดู คืน object คือลงมือ</aside>
+      </section>
+
+      <!-- 20. Caching -->
+      <section data-title="Pattern · caching">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · pattern in practice</div>
+            <h2 style="margin-bottom:18px">Cache a tool with a before / after pair</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+def _key(tool, args):
+    return f"cache:{tool.name}:{args.get('symbol')}"
+
+def cache_lookup(tool, args, tool_context):
+    hit = tool_context.state.get(_key(tool, args))
+    return hit  # dict: skip the tool. None: run it
+
+def cache_store(tool, args, tool_context, tool_response):
+    tool_context.state[_key(tool, args)] = tool_response
+    return None  # keep the original result
+
+stock_agent = LlmAgent(
+    ...,
+    tools=[get_stock_price],
+    before_tool_callback=cache_lookup,
+    after_tool_callback=cache_store,
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-blue); height:294px"><img src="../images/adk-callbacks-slides/cache.svg" alt="Call 1 misses and stores the result in state; call 2 hits in before_tool and skips the tool"></div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Production</h3>Use Memorystore or another external cache with a TTL instead of session state.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่าง pattern caching ด้วย callback คู่ before/after • ดูภาพขวา ครั้งแรก: before_tool หาไม่เจอ (miss) tool เรียก API จริง 800 ms แล้ว after_tool เก็บผลลง state • ครั้งที่สอง: before_tool เจอ (hit) คืน dict จาก state ทันที tool ถูกข้าม แทบ 0 ms • (คลิก) ของจริงควรใช้ cache ภายนอกอย่าง Memorystore และกำหนด TTL เพราะราคาหุ้นเปลี่ยนตลอด</aside>
+      </section>
+
+      <!-- 21. Best practices -->
+      <section data-title="Best practices">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · best practices</div>
+            <h2 style="margin-bottom:20px">Write callbacks that are safe in production</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <div class="cb-art" style="width:320px; height:404px; flex:none; border:0; background:transparent"><img src="../images/adk-callbacks-slides/practices.svg" alt="Six habits: one job each, stay fast, catch errors, idempotent, scoped state, tested"></div>
+              <ul class="cb-chk" style="flex:1; min-width:0">
+                <li class="ok fragment"><i>✓</i><span><b>One job per callback.</b> Chain small functions in a list instead of one big one.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Stay fast.</b> Callbacks run inline and the agent waits. Use <code>async def</code> for I/O.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Catch your own errors.</b> Wrap in try/except and log, so a callback bug never crashes the run.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Be idempotent.</b> Steps can be retried. Side effects must be safe to repeat.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Scope state keys.</b> Pick <code>temp:</code>, <code>user:</code> or <code>app:</code> on purpose.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Test with mock contexts,</b> then test inside the full agent flow.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Return None, not <code>{}</code></b>, when you want the tool to run.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Keep parameter names</b> exactly as documented, or you get a <code>TypeError</code>.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แนวทางเขียน callback สำหรับ production • ภาพซ้ายสรุป 6 นิสัย • หนึ่ง callback ทำงานเดียว ถ้าหลายงานส่งเป็น list • callback รันแบบ inline agent รอเรา ห้ามทำงานหนัก ถ้าต้อง I/O ใช้ async • จับ exception เองและ log อย่าให้ bug ใน callback ทำ agent ล่ม • side effect ต้องทำซ้ำได้ปลอดภัยเพราะอาจ retry • เลือก prefix ของ state ให้ตั้งใจ • ทดสอบด้วย mock context แล้วทดสอบใน flow จริง • กับดัก 2 ข้อ: คืน {} แทน None และเปลี่ยนชื่อพารามิเตอร์</aside>
+      </section>
+
+      <!-- 22. Callbacks vs Plugins -->
+      <section data-title="Callbacks vs Plugins">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · scale up</div>
+            <h2 style="margin-bottom:18px">One agent: callbacks. Every agent: plugins.</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from google.adk.plugins.base_plugin import BasePlugin
+from google.adk.runners import Runner
+
+class AuditPlugin(BasePlugin):
+    def __init__(self):
+        super().__init__(name="audit")
+
+    async def before_tool_callback(
+        self, *, tool, tool_args, tool_context
+    ):
+        logger.info("tool=%s", tool.name)
+        return None
+
+runner = Runner(
+    agent=root_agent,
+    app_name="shop",
+    session_service=session_service,
+    plugins=[AuditPlugin()],
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="cb-art" style="--c:var(--h-green); height:294px"><img src="../images/adk-callbacks-slides/plugins.svg" alt="Per-agent callbacks can be forgotten on one agent; a plugin on the Runner covers every agent"></div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">Security policy</h3>The ADK docs recommend plugins for guardrails, so no agent can miss them.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ถ้ามีหลาย agent การใส่ callback ซ้ำทุกตัวเริ่มยุ่ง • ดูภาพขวาด้านบน: callback ต้องใส่ทีละ agent และวันหนึ่งจะมีตัวที่ลืมใส่ • ด้านล่าง: Plugin เขียนเป็น class สืบทอด BasePlugin ลงทะเบียนครั้งเดียวที่ Runner แล้วครอบทุก agent ทุก model ทุก tool ใน app • โค้ดซ้ายคือ AuditPlugin ที่ log ทุกการเรียก tool • (คลิก) เอกสาร ADK แนะนำให้ใช้ Plugin สำหรับ security guardrail และ policy เพราะไม่มี agent ไหนหลุด • ดูต่อได้ที่ adk.dev/plugins</aside>
+      </section>
+
+      <!-- 23. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:24px">Observe, Customize, Control</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <img class="cb-rc-art" src="../images/adk-callbacks-slides/recap-observe.svg" alt="">
+                <h3>1 · Observe</h3>
+                <p style="font-size:16px; line-height:1.42">Hook in at 8 checkpoints. Return <b>None</b> to log, trace and measure without changing anything.</p>
+              </div>
+              <div class="pc green fragment">
+                <img class="cb-rc-art" src="../images/adk-callbacks-slides/recap-customize.svg" alt="">
+                <h3>2 · Customize</h3>
+                <p style="font-size:16px; line-height:1.42">Edit <b>llm_request</b>, <b>args</b> or results in place. Share data through scoped <b>state</b>.</p>
+              </div>
+              <div class="pc red fragment">
+                <img class="cb-rc-art" src="../images/adk-callbacks-slides/recap-control.svg" alt="">
+                <h3>3 · Control</h3>
+                <p style="font-size:16px; line-height:1.42">Return an <b>object</b> to block, skip, cache or recover. Move shared policy to <b>plugins</b>.</p>
+              </div>
+            </div>
+            <div class="fragment cb-recap-hooks" style="width:1088px; margin-top:26px; display:flex; flex-wrap:wrap; gap:8px">
+              <span class="cb-hook" style="--c:var(--h-blue)">before_agent</span><span class="cb-hook" style="--c:var(--h-blue)">after_agent</span>
+              <span class="cb-hook" style="--c:var(--h-green)">before_model</span><span class="cb-hook" style="--c:var(--h-green)">after_model</span>
+              <span class="cb-hook" style="--c:var(--h-yellow)">before_tool</span><span class="cb-hook" style="--c:var(--h-yellow)">after_tool</span>
+              <span class="cb-hook" style="--c:var(--h-red); border-style:dashed">on_model_error</span><span class="cb-hook" style="--c:var(--h-red); border-style:dashed">on_tool_error</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Add one <code>before_tool_callback</code> that logs every tool call in your agent.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำ • (คลิก) Observe: มี 8 จุดให้ hook คืน None เพื่อ log และ trace โดยไม่เปลี่ยนพฤติกรรม • (คลิก) Customize: แก้ request, args หรือผลลัพธ์ได้ตรง ๆ และส่งข้อมูลระหว่างกันผ่าน state ที่มี prefix กำหนดขอบเขต • (คลิก) Control: คืน object เพื่อบล็อก ข้าม cache หรือกู้คืนจาก error และย้าย policy ที่ใช้ร่วมกันไปเป็น plugin • (คลิก) ทวน hook ทั้ง 8 ตัวอีกครั้ง • (คลิก) เริ่มวันนี้ได้เลย ใส่ before_tool_callback ตัวเดียวที่ log ทุกการเรียก tool แล้วจะเห็น agent ของคุณชัดขึ้นทันที</aside>
+      </section>
+
+      <!-- 24. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:24px">Read more and try it</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Callbacks overview</h3><a class="mono" style="font-size:14px" href="https://adk.dev/callbacks/" target="_blank">adk.dev/callbacks</a></div></div>
+              <div class="pc blue cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Types of callbacks</h3><a class="mono" style="font-size:14px" href="https://adk.dev/callbacks/types-of-callbacks/" target="_blank">adk.dev/callbacks/types-of-callbacks</a></div></div>
+              <div class="pc green cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Patterns &amp; best practices</h3><a class="mono" style="font-size:14px" href="https://adk.dev/callbacks/design-patterns-and-best-practices/" target="_blank">Callback design patterns</a></div></div>
+              <div class="pc green cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Plugins</h3><a class="mono" style="font-size:14px" href="https://adk.dev/plugins/" target="_blank">adk.dev/plugins</a></div></div>
+              <div class="pc yellow cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span><div><h3>Session state</h3><a class="mono" style="font-size:14px" href="https://adk.dev/sessions/state/" target="_blank">adk.dev/sessions/state</a></div></div>
+              <div class="pc red cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span><div><h3>Safety &amp; security</h3><a class="mono" style="font-size:14px" href="https://adk.dev/safety/" target="_blank">adk.dev/safety</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลิงก์อ่านต่อ: หน้า Callbacks หลัก, Types of callbacks ที่มีโค้ดครบทุกภาษา, Design patterns and best practices, Plugins สำหรับ hook ระดับ app, Session state เรื่อง prefix และ Safety สำหรับ guardrail • สแกน QR หน้า Agenda เพื่อเปิดสไลด์นี้ได้ครับ</aside>
+      </section>
+
+      <!-- 25. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <img class="cb-ty-art" src="../images/adk-callbacks-slides/thank-you.svg" alt="ADK robot waving with observe, customize and control hooks">
+        <aside class="notes">ขอบคุณครับ/ค่ะ • เปิดช่วง Q &amp; A • ชวนลองใส่ callback ตัวแรกให้ agent ของตัวเองดูครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

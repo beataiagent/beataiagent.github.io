@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+  <circle cx="240" cy="130" r="150" fill="url(#amb-r)"/>
+  <circle cx="720" cy="130" r="140" fill="url(#amb-b)"/>
+  <circle cx="930" cy="130" r="140" fill="url(#amb-g)"/>
+
+  <!-- LEFT: Overloaded Mega-Agent -->
+  <rect x="14" y="14" width="446" height="232" rx="18" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+  <rect x="30" y="26" width="218" height="24" rx="12" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="139" y="42" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf" font-weight="600">1 MEGA-AGENT · OVERLOADED</text>
+
+  <!-- Tangled lines to chaotic tools -->
+  <g stroke="#ff7daf" stroke-width="1.5" stroke-dasharray="4 3" opacity="0.55">
+    <line x1="158" y1="126" x2="72" y2="82"/>
+    <line x1="158" y1="134" x2="66" y2="146"/>
+    <line x1="158" y1="146" x2="76" y2="196"/>
+    <line x1="214" y1="118" x2="296" y2="82"/>
+    <line x1="214" y1="132" x2="314" y2="128"/>
+    <line x1="214" y1="148" x2="300" y2="178"/>
+  </g>
+
+  <!-- Stressed Robot -->
+  <g transform="translate(186, 134) scale(0.76)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#ff7daf" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="5.5" fill="#ff7daf" filter="url(#glow-s)"/>
+    <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#ff7daf" stroke-width="3"/>
+    <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+    <!-- Dizzy X eyes -->
+    <path d="M-15 -22 L-7 -14 M-7 -22 L-15 -14" stroke="#ff7daf" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M7 -22 L15 -14 M15 -22 L7 -14" stroke="#ff7daf" stroke-width="2.6" stroke-linecap="round"/>
+    <!-- Wavy stressed mouth -->
+    <path d="M-10 -7 Q-5 -11 0 -7 Q5 -3 10 -7" fill="none" stroke="#ffd427" stroke-width="2.4" stroke-linecap="round"/>
+    <!-- Sweat drop -->
+    <path d="M36 -38 C42 -28 42 -22 36 -22 C30 -22 30 -28 36 -38 Z" fill="#57caff"/>
+    <path d="M-24 14 H24 C28 14 26 42 0 46 C-26 42 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#ff7daf" stroke-width="2.2"/>
+    <text x="0" y="34" text-anchor="middle" class="m" font-size="13" fill="#ff7daf" font-weight="700">!</text>
+  </g>
+
+  <!-- Chaotic tool pills -->
+  <g font-size="11" class="m">
+    <rect x="28" y="68" width="84" height="24" rx="8" fill="#17181b" stroke="#5f6368"/><text x="70" y="84" text-anchor="middle" fill="#e8eaed">search_web</text>
+    <rect x="24" y="132" width="78" height="24" rx="8" fill="#17181b" stroke="#5f6368"/><text x="63" y="148" text-anchor="middle" fill="#e8eaed">sql_query</text>
+    <rect x="30" y="182" width="82" height="24" rx="8" fill="#17181b" stroke="#5f6368"/><text x="71" y="198" text-anchor="middle" fill="#e8eaed">refund_api</text>
+
+    <rect x="278" y="66" width="164" height="26" rx="8" fill="#17181b" stroke="#ffd427"/><text x="360" y="83" text-anchor="middle" fill="#ffd427">4-page mega prompt</text>
+    <rect x="292" y="114" width="150" height="26" rx="8" fill="#17181b" stroke="#ff7daf"/><text x="367" y="131" text-anchor="middle" fill="#ff7daf">20+ mixed tools</text>
+    <rect x="282" y="164" width="160" height="26" rx="8" fill="#17181b" stroke="#5f6368"/><text x="362" y="181" text-anchor="middle" fill="#e8eaed">email · book · auth</text>
+  </g>
+  <text x="237" y="232" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">Wrong tool · Skips steps · Slow &amp; expensive</text>
+
+  <!-- CENTER SPLIT ARROW -->
+  <path d="M468 130 H538" stroke="#5cdb6d" stroke-width="3.2" marker-end="url(#arr-g)"/>
+  <rect x="474" y="96" width="60" height="22" rx="11" fill="#202124" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="504" y="111" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">SPLIT</text>
+
+  <!-- RIGHT: Calm Multi-Agent Team -->
+  <rect x="550" y="14" width="524" height="232" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <rect x="568" y="26" width="268" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="702" y="42" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">SPECIALIZED MULTI-AGENT TEAM</text>
+
+  <!-- 3 Specialist Cards -->
+  <!-- Researcher -->
+  <g transform="translate(568, 66)">
+    <rect width="146" height="130" rx="14" fill="#1b1d22" stroke="#57caff" stroke-width="2"/>
+    <g transform="translate(73, 44) scale(0.48)">
+      <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#57caff" stroke-width="3"/>
+      <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+      <circle cx="-11" cy="-18" r="5" fill="#57caff" filter="url(#glow-s)"/><circle cx="11" cy="-18" r="5" fill="#57caff" filter="url(#glow-s)"/>
+      <path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#57caff" stroke-width="2.6" stroke-linecap="round"/>
+    </g>
+    <text x="73" y="84" text-anchor="middle" class="t" font-size="15.5" fill="#57caff">Researcher</text>
+    <text x="73" y="103" text-anchor="middle" class="m" font-size="11.5" fill="#e8eaed">2 tools · Flash</text>
+    <text x="73" y="120" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">→ state["notes"]</text>
+  </g>
+  <path d="M714 131 H736" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+
+  <!-- Writer -->
+  <g transform="translate(740, 66)">
+    <rect width="146" height="130" rx="14" fill="#1b1d22" stroke="#5cdb6d" stroke-width="2"/>
+    <g transform="translate(73, 44) scale(0.48)">
+      <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#5cdb6d" stroke-width="3"/>
+      <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+      <circle cx="-11" cy="-18" r="5" fill="#5cdb6d" filter="url(#glow-s)"/><circle cx="11" cy="-18" r="5" fill="#5cdb6d" filter="url(#glow-s)"/>
+      <path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#5cdb6d" stroke-width="2.6" stroke-linecap="round"/>
+    </g>
+    <text x="73" y="84" text-anchor="middle" class="t" font-size="15.5" fill="#5cdb6d">Writer</text>
+    <text x="73" y="103" text-anchor="middle" class="m" font-size="11.5" fill="#e8eaed">0 tools · Pro</text>
+    <text x="73" y="120" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">→ state["draft"]</text>
+  </g>
+  <path d="M886 131 H908" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+
+  <!-- Critic -->
+  <g transform="translate(912, 66)">
+    <rect width="146" height="130" rx="14" fill="#1b1d22" stroke="#ffd427" stroke-width="2"/>
+    <g transform="translate(73, 44) scale(0.48)">
+      <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#ffd427" stroke-width="3"/>
+      <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+      <circle cx="-11" cy="-18" r="5" fill="#ffd427" filter="url(#glow-s)"/><circle cx="11" cy="-18" r="5" fill="#ffd427" filter="url(#glow-s)"/>
+      <path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#ffd427" stroke-width="2.6" stroke-linecap="round"/>
+    </g>
+    <text x="73" y="84" text-anchor="middle" class="t" font-size="15.5" fill="#ffd427">Critic</text>
+    <text x="73" y="103" text-anchor="middle" class="m" font-size="11.5" fill="#e8eaed">Rubric · Flash</text>
+    <text x="73" y="120" text-anchor="middle" class="m" font-size="10.5" fill="#9aa0a6">approve / retry</text>
+  </g>
+
+  <text x="812" y="232" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">Deterministic Workflow Rails · Focused Prompts · Right-Sized Models</text>
+</svg>

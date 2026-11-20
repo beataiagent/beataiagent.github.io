@@ -1,0 +1,92 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+
+  <circle cx="120" cy="130" r="110" fill="url(#amb-b)"/>
+  <circle cx="660" cy="130" r="160" fill="url(#amb-y)"/>
+
+  <!-- LEFT: ADK Agent Hub -->
+  <rect x="18" y="34" width="200" height="192" rx="18" fill="url(#glass-hi)" stroke="#57caff" stroke-width="2.2" filter="url(#glow-s)"/>
+  <polygon points="118,58 122,70 134,74 122,78 118,90 114,78 102,74 114,70" fill="#57caff"/>
+  <text x="118" y="116" text-anchor="middle" class="t" font-size="18">ADK Agent</text>
+  <text x="118" y="138" text-anchor="middle" class="sub" font-size="12.5">Reads &amp; writes</text>
+  <text x="118" y="155" text-anchor="middle" class="sub" font-size="12.5">memory per turn</text>
+  <rect x="44" y="176" width="148" height="28" rx="14" fill="#17181b" stroke="#ffd427" stroke-width="1.5"/>
+  <text x="118" y="194" text-anchor="middle" class="m" font-size="11" fill="#ffd427">before_model RAG</text>
+
+  <!-- Connector lines from ADK Agent to all 4 tiers -->
+  <path d="M218 82 C252 82 252 46 286 46" fill="none" stroke="#57caff" stroke-width="2.4" marker-end="url(#arr-b)"/>
+  <path d="M218 112 C252 112 252 102 286 102" fill="none" stroke="#5cdb6d" stroke-width="2.4" marker-end="url(#arr-g)"/>
+  <path d="M218 148 C252 148 252 158 286 158" fill="none" stroke="#ffd427" stroke-width="2.4" marker-end="url(#arr-y)"/>
+  <path d="M218 178 C252 178 252 214 286 214" fill="none" stroke="#ff7daf" stroke-width="2.4" marker-end="url(#arr-r)"/>
+
+  <!-- RIGHT: BigQuery Lakehouse Outer Container -->
+  <rect x="294" y="10" width="776" height="240" rx="18" fill="#17181b" stroke="#5f6368" stroke-width="1.6"/>
+  <text x="1054" y="25" text-anchor="end" class="m" font-size="10" fill="#9aa0a6">BIGQUERY LAKEHOUSE ENGINE</text>
+
+  <!-- Tier 1: Working (Session) -->
+  <rect x="308" y="22" width="748" height="48" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <rect x="308" y="22" width="10" height="48" rx="5" fill="#57caff"/>
+  <text x="332" y="44" class="t" font-size="15.5" fill="#57caff">1 · Working</text>
+  <text x="332" y="61" class="m" font-size="10.5" fill="#9aa0a6">Seconds – mins</text>
+  <rect x="464" y="32" width="176" height="28" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="552" y="50" text-anchor="middle" class="m" font-size="12" fill="#fff">ADK Session State</text>
+  <text x="656" y="50" class="sub" font-size="13">Active turns, SQL drafts &amp; temp: results</text>
+
+  <!-- Tier 2: Episodic (Past Runs) -->
+  <rect x="308" y="78" width="748" height="48" rx="12" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <rect x="308" y="78" width="10" height="48" rx="5" fill="#5cdb6d"/>
+  <text x="332" y="100" class="t" font-size="15.5" fill="#5cdb6d">2 · Episodic</text>
+  <text x="332" y="117" class="m" font-size="10.5" fill="#9aa0a6">Days – months</text>
+  <rect x="464" y="88" width="176" height="28" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="552" y="106" text-anchor="middle" class="m" font-size="12" fill="#fff">Past Run Logs</text>
+  <text x="656" y="106" class="sub" font-size="13">Prior queries, analyst corrections &amp; prefs</text>
+
+  <!-- Tier 3: Semantic (VECTOR_SEARCH) -->
+  <rect x="308" y="134" width="748" height="48" rx="12" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <rect x="308" y="134" width="10" height="48" rx="5" fill="#ffd427"/>
+  <text x="332" y="156" class="t" font-size="15.5" fill="#ffd427">3 · Semantic</text>
+  <text x="332" y="173" class="m" font-size="10.5" fill="#9aa0a6">Persistent</text>
+  <rect x="464" y="144" width="176" height="28" rx="8" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="552" y="162" text-anchor="middle" class="m" font-size="12" fill="#ffd427">VECTOR_SEARCH</text>
+  <text x="656" y="162" class="sub" font-size="13">Embedded KPI glossary, business rules &amp; docs</text>
+
+  <!-- Tier 4: Procedural (Verified Golden SQL Bank) -->
+  <rect x="308" y="190" width="748" height="48" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <rect x="308" y="190" width="10" height="48" rx="5" fill="#ff7daf"/>
+  <text x="332" y="212" class="t" font-size="15.5" fill="#ff7daf">4 · Procedural</text>
+  <text x="332" y="229" class="m" font-size="10.5" fill="#9aa0a6">Continuously refined</text>
+  <rect x="464" y="200" width="176" height="28" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="552" y="218" text-anchor="middle" class="m" font-size="12" fill="#ff7daf">Golden SQL Bank</text>
+  <text x="656" y="218" class="sub" font-size="13">Verified JOIN templates &amp; (Q, SQL) playbooks</text>
+</svg>

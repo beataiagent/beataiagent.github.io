@@ -1,0 +1,829 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Production Ops for ADK — Deploy, Persist, Observe</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- ADK Production Ops deck extras ---------- */
+    .ops-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; border: 2.5px solid var(--c); background: #202124; overflow: hidden; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .ops-div-art img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .ops-ty-art { position: absolute; left: 880px; top: 182px; width: 320px; height: 320px; border-radius: 28px; border: 3px solid var(--ink); background: #202124; overflow: hidden; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.35); }
+    .ops-ty-art img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .ops-svg { display: block; width: 1088px; height: auto; border-radius: 18px; border: 2px solid var(--dk-line); background: #202124; box-shadow: 0 10px 28px rgba(0,0,0,.38); box-sizing: border-box; }
+    .ops-lg-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ops-lg-badge { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 6px; border-radius: 999px; background: #17181b; border: 1.5px solid var(--c, var(--dk-line)); font: 500 12.5px/1 var(--mono); color: #e8eaed; }
+    .ops-lg-badge img { width: 18px; height: 18px; object-fit: contain; background: #fff; border-radius: 4px; padding: 1.5px; box-sizing: border-box; display: block; }
+    .ops-ico-sm { width: 20px; height: 20px; object-fit: contain; background: #fff; border-radius: 5px; padding: 2px; box-sizing: border-box; display: inline-block; vertical-align: -4px; margin-right: 6px; }
+    .cb-ico { display: block; width: 40px; height: 40px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+
+    /* side cards next to code */
+    .cb-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .cb-side .pc { padding: 12px 16px; font-size: 15px; line-height: 1.4; }
+    .cb-side .pc h3 { font-size: 18px; margin-bottom: 4px; }
+
+    /* checklist */
+    .reveal ul.cb-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .cb-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .cb-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .cb-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .cb-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* pill tags & resources */
+    .ops-pill { flex: none; font: 500 13px/1.2 var(--mono); padding: 7px 12px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; box-sizing: border-box; }
+    .cb-res-row { display: flex; align-items: center; gap: 14px; }
+    .cb-res-row h3 { margin: 0 0 4px; font-size: 19px; }
+
+    /* logo inline inside table cells */
+    .ops-cell-lg { display: flex; align-items: center; gap: 10px; }
+    .ops-cell-lg img { width: 24px; height: 24px; object-fit: contain; flex: none; background: #fff; border-radius: 6px; padding: 2px; box-sizing: border-box; }
+
+    /* architecture diagrams */
+    .ops-arch { width: 1088px; display: grid; grid-template-columns: 180px 36px 280px 44px minmax(0, 1fr); align-items: center; gap: 0; }
+    .ops-box { padding: 14px 16px; border-radius: 14px; background: var(--dk-card); border: 2px solid var(--c, var(--dk-line)); }
+    .ops-box b { display: block; font-size: 17px; color: #fff; margin-bottom: 4px; }
+    .ops-box small { display: block; font: 400 13px/1.35 var(--mono); color: var(--dk-sub); }
+    .ops-stack { display: grid; gap: 12px; }
+    .ops-store { display: flex; align-items: center; gap: 14px; padding: 13px 16px; border-radius: 14px; background: var(--dk-card); border: 2px solid var(--c, var(--dk-line)); }
+    .ops-store b { display: block; font-size: 17px; color: var(--c, #fff); margin-bottom: 2px; }
+    .ops-store span { display: block; font-size: 14px; line-height: 1.35; color: var(--dk-sub); }
+
+    /* broken memory diagram */
+    .ops-fail { width: 1088px; display: grid; grid-template-columns: 170px 36px 210px 44px minmax(0, 1fr); align-items: center; }
+    .ops-inst { padding: 14px 16px; border-radius: 14px; background: #17181b; border: 2px solid var(--c); }
+    .ops-inst b { display: block; font: 600 15px/1.2 var(--mono); color: var(--c); margin-bottom: 6px; }
+    .ops-inst .ram { font: 400 13px/1.35 var(--mono); padding: 6px 10px; border-radius: 8px; background: #2a2b2f; color: var(--dk-text); border: 1px dashed var(--c); }
+
+    /* Cloud Trace waterfall */
+    .wf { width: 1088px; background: #17181b; border: 2px solid var(--dk-line); border-radius: 16px; padding: 14px 18px 16px; box-sizing: border-box; }
+    .wf-head { display: grid; grid-template-columns: 310px minmax(0, 1fr) 170px; gap: 14px; padding-bottom: 8px; margin-bottom: 8px; border-bottom: 1.5px solid #3c4043; font: 700 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--dk-sub); }
+    .wf-ruler { display: flex; justify-content: space-between; }
+    .wf-row { display: grid; grid-template-columns: 310px minmax(0, 1fr) 170px; gap: 14px; align-items: center; padding: 7px 0; border-bottom: 1px solid rgba(95,99,104,.35); }
+    .wf-row:last-child { border-bottom: 0; }
+    .wf-name { font: 500 13.5px/1.25 var(--mono); color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wf-name.i1 { padding-left: 16px; }
+    .wf-name.i2 { padding-left: 34px; }
+    .wf-name small { color: var(--dk-sub); font-weight: 400; }
+    .wf-track { position: relative; height: 22px; background: rgba(255,255,255,.04); border-radius: 6px; }
+    .wf-bar { position: absolute; top: 3px; height: 16px; border-radius: 4px; background: var(--c); }
+    .wf-meta { font: 400 12.5px/1.2 var(--mono); color: var(--dk-sub); text-align: right; }
+    .wf-meta b { color: var(--c); font-weight: 600; }
+
+    /* traffic split bar */
+    .ts-bar { display: flex; height: 38px; border-radius: 10px; overflow: hidden; border: 2px solid var(--dk-line); margin: 10px 0 8px; }
+    .ts-bar > div { display: flex; align-items: center; justify-content: center; font: 700 13px/1 var(--mono); color: #202124; }
+    .ts-a { width: 90%; background: var(--h-blue); }
+    .ts-b { width: 10%; background: var(--h-yellow); }
+
+    /* metric mini cards */
+    .ops-kpi .pc { padding: 14px 16px; border-top: 5px solid var(--c); }
+    .ops-kpi .pc b { display: block; font-size: 17px; color: var(--c); margin-bottom: 4px; }
+    .ops-kpi .pc p { font-size: 14px; line-height: 1.35; color: var(--dk-sub); }
+
+    /* tuning cards */
+    .ops-tune .pc { padding: 16px 18px; }
+    .ops-tune .pc .flag { display: inline-block; font: 600 13px/1 var(--mono); color: #202124; background: var(--c); padding: 4px 10px; border-radius: 999px; margin-bottom: 8px; }
+    .ops-tune .pc h3 { font-size: 19px; margin-bottom: 5px; }
+    .ops-tune .pc p { font-size: 14.5px; line-height: 1.38; color: var(--dk-sub); }
+
+    .reveal table.zt-tbl td.ok { color: var(--h-green); font-weight: 500; }
+    .reveal table.zt-tbl td.warn { color: var(--h-yellow); }
+    .reveal table.zt-tbl td.bad { color: var(--h-red); }
+  </style>
+</head>
+<body data-deck="ADK Production Ops">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .8-7.9A5.5 5.5 0 0 0 7.2 8.4 3.8 3.8 0 0 0 7 18Z"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-server" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="6" rx="2"/><rect x="3" y="14" width="18" height="6" rx="2"/><circle cx="7" cy="7" r=".8"/><circle cx="7" cy="17" r=".8"/></symbol>
+    <symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="m7 9 3 3-3 3M13 15h4"/></symbol>
+    <symbol id="i-activity" viewBox="0 0 24 24"><path d="M3 12h4l3-7 4 14 3-7h4"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2.5 20h19L12 3Z"/><path d="M12 9v5M12 17.5v.5"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Production Ops for ADK">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Deploy</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Persist</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Observe</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Production Ops for ADK</b><span>Take ADK agents from local dev to observable, resilient production</span></div>
+        <div class="hx-chips">
+          <i style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-run.png" alt="">Cloud Run</i>
+          <i style="--c:var(--h-green)"><img src="../images/shared/logos/opentelemetry.svg" alt="">OpenTelemetry</i>
+          <i style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-sql.png" alt="">Cloud SQL</i>
+        </div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ • วันนี้เราจะพา ADK agent จากเครื่อง dev ของเราขึ้นสู่ production จริง • โฟกัส 3 แกนหลัก: Deploy เลือกรันไทม์และเอาขึ้นคลาวด์, Persist เก็บ session และ state ไม่ให้หายเมื่อ scale, Observe ดู trace, log และต้นทุน token แบบเห็นทุกขั้นตอน</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Choosing a runtime</strong><span>Cloud Run, GKE, or Vertex AI Agent Engine</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Persistent sessions &amp; state</strong><span>Cloud SQL, AlloyDB, and Vertex AI sessions</span></div></li>
+          <li class="c3"><b>03</b><div><strong>OpenTelemetry &amp; observability</strong><span>Traces, logs, and BigQuery analytics</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Ship safely at scale</strong><span>Canaries, tuning, and launch checklist</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-production-ops-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">เนื้อหาแบ่งเป็น 4 ช่วงครับ: (1) เลือกรันไทม์ระหว่าง Cloud Run, GKE และ Vertex AI Agent Engine รวมถึงการใช้ GPU รัน Gemma (2) ทำ session และ state ให้ถาวรด้วย Cloud SQL หรือ Vertex AI (3) เปิด OpenTelemetry, Cloud Trace และ BigQuery Agent Analytics (4) วิธีปล่อยของอย่างปลอดภัยด้วย canary, tuning และ checklist • สแกน QR ด้านขวาเปิดสไลด์ดูตามได้ครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · Choosing a runtime">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="ops-div-art" style="--c:var(--h-blue)"><img src="../images/adk-production-ops-slides/sec-01-runtime.svg" alt="Choosing a runtime illustration"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Choosing a<br>runtime</h1>
+            <p class="sub" style="margin-top:28px">From local dev to Cloud Run,<br>GKE, or Agent Engine</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • เริ่มจากการย้าย agent จากเครื่องเราขึ้นคลาวด์ และดูว่าควรเลือกรันไทม์ไหนให้เหมาะกับทีมและโหลดงาน</aside>
+      </section>
+
+      <!-- 4. Local to Cloud -->
+      <section data-title="Local dev to cloud">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">01 · the graduation path</div>
+            <h2 style="margin-bottom:14px">From local laptop to production runtime</h2>
+            <img class="ops-svg fragment" data-fragment-index="1" src="../images/adk-production-ops-slides/local-to-cloud-path.svg" alt="Promotion pipeline from adk web to container to Cloud Run, GKE, or Vertex AI Agent Engine">
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:14px">
+              <div class="pc" style="padding:12px 15px; font-size:14.5px"><img class="ops-ico-sm" src="../images/shared/logos/docker.svg" alt=""><b>Ephemeral containers</b><br><span class="muted">Replicas start, restart, and scale to zero at any time.</span></div>
+              <div class="pc" style="padding:12px 15px; font-size:14.5px"><img class="ops-ico-sm" src="../images/shared/logos/gcp-run.png" alt=""><b>Concurrent traffic</b><br><span class="muted">Hundreds of overlapping user turns and streaming SSE.</span></div>
+              <div class="pc" style="padding:12px 15px; font-size:14.5px"><img class="ops-ico-sm" src="../images/shared/logos/gcp-secret-manager.png" alt=""><b>Zero local secrets</b><br><span class="muted">No <code>.env</code> files — use IAM &amp; Secret Manager.</span></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Key shift</b><span><code>adk web</code> is for fast iteration. Production needs stateless compute, durable state, and telemetry.</span></div>
+        </div>
+        <aside class="notes">เส้นทางของ ADK agent ปกติมี 3 ขั้น • (คลิก 1) เริ่มที่ adk web บนเครื่อง มี UI ดู event และแก้โค้ดได้เร็ว • (คลิก 2) พอเริ่มต่อกับ frontend ใช้ adk api_server ซึ่งเป็น FastAPI ที่รองรับ REST และ SSE • (คลิก 3) พอขึ้น production จริงต้องย้ายเข้า Cloud Runtime ที่ scale อัตโนมัติ มี IAM และ HTTPS • (คลิก 4) สิ่งที่เปลี่ยนไปทันทีใน production คือ container หายได้ตลอด มีผู้ใช้พร้อมกันหลายคน และห้ามเอาไฟล์ .env ขึ้นไป • (คลิก 5) นั่นคือเหตุผลที่ต้องแยก compute, state และ telemetry ออกจากกัน</aside>
+      </section>
+
+      <!-- 5. Runtime Comparison -->
+      <section data-title="Runtime comparison">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">01 · decision matrix</div>
+            <h2 style="margin-bottom:16px">Cloud Run vs GKE vs Vertex AI Agent Engine</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <colgroup><col style="width:235px"><col style="width:230px"><col style="width:210px"><col style="width:205px"><col></colgroup>
+              <thead><tr><th>Runtime</th><th>Best for</th><th>Scaling &amp; GPU</th><th>Ops overhead</th><th>ADK CLI</th></tr></thead>
+              <tbody>
+                <tr class="fragment">
+                  <td><div class="ops-cell-lg"><img src="../images/shared/logos/gcp-run.png" alt=""><span>Cloud Run</span></div></td>
+                  <td>Most teams: fast APIs, custom FastAPI, webhooks</td>
+                  <td class="ok">0 → N in seconds, L4 GPU support</td>
+                  <td class="ok">Very low (serverless)</td>
+                  <td><code>adk deploy cloud_run</code></td>
+                </tr>
+                <tr class="fragment">
+                  <td><div class="ops-cell-lg"><img src="../images/shared/logos/gcp-kubernetes-engine.png" alt=""><span>GKE</span></div></td>
+                  <td>Existing K8s platform, custom sidecars, multi-GPU</td>
+                  <td class="ok">Full node pools, GPU / TPU slices</td>
+                  <td class="warn">Medium–High (cluster ops)</td>
+                  <td><code>adk deploy gke</code></td>
+                </tr>
+                <tr class="fragment">
+                  <td><div class="ops-cell-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt=""><span>Vertex AI Agent Engine</span></div></td>
+                  <td>Managed agents + built-in Sessions &amp; Memory Bank</td>
+                  <td class="ok">Fully managed autoscaling</td>
+                  <td class="ok">Lowest (no container mgmt)</td>
+                  <td><code>adk deploy agent_engine</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Rule of thumb</b><span>Pick <b>Cloud Run</b> for container freedom with zero cluster ops, or <b>Agent Engine</b> for turnkey sessions &amp; memory.</span></div>
+        </div>
+        <aside class="notes">ตารางนี้ช่วยตัดสินใจเลือกรันไทม์ทั้ง 3 ตัวของ Google Cloud • (คลิก) Cloud Run เหมาะกับทีมส่วนใหญ่ ได้อิสระเต็มที่กับ FastAPI และ container, scale จาก 0 ได้ รองรับ GPU L4 ด้วย และ deploy ด้วย adk deploy cloud_run • (คลิก) GKE เหมาะกับองค์กรที่มี Kubernetes platform อยู่แล้ว หรือต้องใช้ sidecar/GPU หลายใบ แต่ต้องดูแล cluster • (คลิก) Vertex AI Agent Engine เป็น managed runtime เต็มรูปแบบ ไม่ต้องจัดการ container เอง และได้ Sessions กับ Memory Bank ในตัว • (คลิก) ถ้ายังไม่แน่ใจ เริ่มที่ Cloud Run หรือ Agent Engine ได้เลย โค้ด ADK ตัวเดียวกันย้ายไปมาได้ง่ายมาก</aside>
+      </section>
+
+      <!-- 6. adk deploy cloud_run -->
+      <section data-title="Deploy with adk deploy cloud_run">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · fast path</div>
+            <h2 style="margin-bottom:18px">Ship to Cloud Run in one command</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:13.5px"><code class="language-bash" data-trim>
+# 1. Deploy directly from your agent folder
+adk deploy cloud_run \
+  --project=my-gcp-project \
+  --region=asia-southeast1 \
+  --service_name=travel-agent \
+  --app_name=travel_app \
+  --trace_to_cloud \
+  --session_service_uri="postgresql+asyncpg://..." \
+  ./travel_agent
+
+# Add --with_ui ONLY for staging / internal demos
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-run.png" alt="">Zero boilerplate</h3>ADK generates the <code>Dockerfile</code>, builds via Cloud Build, and deploys to Cloud Run.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-iam.png" alt="">Skip <code>--with_ui</code> in prod</h3>Keep the dev UI for staging. In production, expose only the API behind IAM or API Gateway.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)"><img class="ops-ico-sm" src="../images/shared/logos/opentelemetry.svg" alt="">Flags wire ops</h3>Pass <code>--trace_to_cloud</code> and <code>--session_service_uri</code> right from the CLI.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Tip</b><span>Run <code>adk deploy cloud_run</code> to bootstrap fast, then eject to a custom FastAPI server when you need middleware.</span></div>
+        </div>
+        <aside class="notes">วิธีที่เร็วที่สุดในการขึ้น Cloud Run คือคำสั่ง adk deploy cloud_run • แค่ชี้ไปที่โฟลเดอร์ agent ระบุ project, region, service_name พร้อมเปิด --trace_to_cloud และส่ง URI ของฐานข้อมูล session • (คลิก) ADK สร้าง Dockerfile, สั่ง Cloud Build และ deploy ให้เสร็จในคำสั่งเดียว • (คลิก) ข้อควรระวัง: --with_ui เอาไว้ใช้เฉพาะ staging หรือ demo ภายใน ขึ้น production จริงให้ปิดไว้ • (คลิก) flag เดียวเชื่อมทั้ง tracing และ persistent session • (คลิก) เหมาะมากสำหรับเริ่มเร็ว และถ้าภายหลังต้องการ middleware พิเศษ ค่อยย้ายมาเขียน FastAPI เองในสไลด์ถัดไป</aside>
+      </section>
+
+      <!-- 7. Custom FastAPI server -->
+      <section data-title="Custom FastAPI server">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · full control</div>
+            <h2 style="margin-bottom:18px">Wrap ADK in your own FastAPI server</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+import os
+from google.adk.cli.fast_api import get_fast_api_app
+
+app = get_fast_api_app(
+    agents_dir=os.path.dirname(__file__),
+    session_service_uri=os.environ["DATABASE_URL"],
+    artifact_service_uri=os.environ["GCS_BUCKET_URI"],
+    allow_origins=["https://app.example.com"],
+    trace_to_cloud=True,
+    web=False,  # disable dev UI in production
+)
+
+@app.get("/healthz")
+async def healthz():
+    return {"status": "ok"}
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)"><img class="ops-ico-sm" src="../images/shared/logos/adk.png" alt="">Custom endpoints</h3>Add <code>/healthz</code>, Slack/LINE webhooks, or auth middleware on the same ASGI app.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)"><img class="ops-ico-sm" src="../images/shared/logos/docker.svg" alt="">Own your Dockerfile</h3>Pin Python &amp; <code>uv</code> dependencies, run non-root, and deploy with your CI/CD pipeline.</div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-iam.png" alt="">Lock down CORS</h3>Set explicit <code>allow_origins</code> and verify JWT / Identity-Aware Proxy headers.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">พอทีมต้องการคุมเองมากขึ้น เช่น ใส่ auth middleware, health check, หรือรับ webhook จาก LINE/Slack ให้ใช้ get_fast_api_app() จาก ADK • โค้ดสั้นมาก แค่ส่ง agents_dir, URI ของ database กับ GCS bucket, ปิด web=False และเปิด trace_to_cloud=True • (คลิก) จากนั้นเติม route /healthz หรือ webhook ของเราเพิ่มลงบน app ตัวเดียวกันได้ทันที • (คลิก) เขียน Dockerfile เองด้วย uv, รันเป็น non-root user และปล่อยผ่าน CI/CD ของทีม • (คลิก) อย่าลืมล็อก allow_origins ให้เหลือเฉพาะโดเมนของเราเท่านั้น</aside>
+      </section>
+
+      <!-- 8. Bonus: Cloud Run with GPU + Gemma -->
+      <section data-title="Bonus · Cloud Run GPU + Gemma">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">01 · bonus pattern</div>
+            <h2 style="margin-bottom:18px">Self-hosted Gemma on Cloud Run with GPU</h2>
+            <div class="flow" style="width:1088px">
+              <div class="pc blue node fragment" data-fragment-index="1">
+                <div style="display:flex; justify-content:center; gap:8px; margin-bottom:8px">
+                  <span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>
+                </div>
+                <b style="color:var(--h-blue)">ADK Agent Service</b>
+                <p>CPU-only Cloud Run · calls model via <code>LiteLlm(model="ollama_chat/gemma3")</code></p>
+              </div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc green node fragment" data-fragment-index="2">
+                <div style="display:flex; justify-content:center; gap:8px; margin-bottom:8px">
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run GPU"></span>
+                  <span class="ev-lg"><img src="../images/shared/logos/docker.svg" alt="Container"></span>
+                </div>
+                <b style="color:var(--h-green)">Ollama / vLLM + Gemma</b>
+                <p>Cloud Run with <code>--gpu=1 --gpu-type=nvidia-l4</code> · internal ingress only</p>
+              </div>
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="3" style="width:1088px; gap:16px; margin-top:18px">
+              <div class="pc yellow" style="padding:14px 16px; font-size:15px"><b style="color:var(--h-yellow)">Scale to zero GPUs</b><br><span class="muted">Pay per second only while serving inference — no idle GPU clusters.</span></div>
+              <div class="pc blue" style="padding:14px 16px; font-size:15px"><b style="color:var(--h-blue)">Data residency</b><br><span class="muted">Keep sensitive prompts inside your VPC &amp; chosen GCP region.</span></div>
+              <div class="pc green" style="padding:14px 16px; font-size:15px"><b style="color:var(--h-green)">Hybrid routing</b><br><span class="muted">Use Gemma for fast local tasks and Gemini for complex reasoning.</span></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Decouple compute</b><span>Run the ADK agent on cheap CPU instances and isolate the L4 GPU service behind IAM.</span></div>
+        </div>
+        <aside class="notes">แถม pattern ที่กำลังฮิตมาก: รัน open model อย่าง Gemma 3 เองบน Cloud Run with GPU • (คลิก 1) แยกตัว ADK agent ไว้บน Cloud Run แบบ CPU ปกติ แล้วชี้โมเดลผ่าน LiteLlm • (คลิก 2) ตัวโมเดลรัน Ollama หรือ vLLM + Gemma บน Cloud Run ที่ติดการ์ดจอ NVIDIA L4 และเปิดเฉพาะ internal ingress • (คลิก 3) ข้อดีคือ scale ลง 0 ได้ไม่ต้องจ่ายค่า GPU ตอนไม่มีคนใช้, ข้อมูลอยู่ใน VPC/region ของเรา และทำ hybrid routing ใช้ Gemma งานเร็ว + Gemini งานยากได้ • (คลิก 4) อย่าเอา agent กับ GPU มัดรวมใน container เดียว ให้แยก service เพื่อ scale อิสระต่อกัน</aside>
+      </section>
+
+      <!-- 9. Section 02 -->
+      <section class="bg-green" data-title="02 · Persistent sessions &amp; state">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="ops-div-art" style="--c:var(--h-green)"><img src="../images/adk-production-ops-slides/sec-02-persist.svg" alt="Persistent sessions and state illustration"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Persistent<br>sessions &amp; state</h1>
+            <p class="sub" style="margin-top:28px">Keep memory across restarts<br>and horizontally scaled replicas</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • ปัญหาอันดับหนึ่งเวลาเอา agent ขึ้น Cloud Run คือคุยอยู่ดี ๆ แล้ว agent ความจำเสื่อม มาดูสาเหตุและวิธีแก้ให้ถาวรครับ</aside>
+      </section>
+
+      <!-- 10. Why InMemorySessionService fails -->
+      <section data-title="Why InMemorySessionService fails">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">02 · the amnesia bug</div>
+            <h2 style="margin-bottom:14px">Why <code>InMemorySessionService</code> breaks at scale</h2>
+            <img class="ops-svg fragment" data-fragment-index="1" src="../images/adk-production-ops-slides/inmemory-replica-bug.svg" alt="Multi-replica InMemorySessionService failure versus shared Cloud SQL">
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:14px">
+              <div class="pc red" style="padding:11px 15px; font-size:14.5px"><b style="color:var(--h-red)">Horizontal scaling</b><br><span class="muted">2+ replicas do not share Python process memory.</span></div>
+              <div class="pc yellow" style="padding:11px 15px; font-size:14.5px"><b style="color:var(--h-yellow)">Deploys &amp; scale-to-zero</b><br><span class="muted">Every new revision or idle timeout wipes RAM clean.</span></div>
+              <div class="pc blue" style="padding:11px 15px; font-size:14.5px"><b style="color:var(--h-blue)">No audit trail</b><br><span class="muted">You cannot replay conversations or debug past turns.</span></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Production rule</b><span>Treat every ADK container as stateless. Externalize sessions, artifacts, and memory.</span></div>
+        </div>
+        <aside class="notes">ภาพนี้อธิบายชัดเลยว่าทำไม InMemorySessionService ถึงพังบน production • (คลิก 1) ผู้ใช้ส่งข้อความรอบแรก Load Balancer ส่งเข้า Replica A ซึ่งเก็บประวัติไว้ใน RAM • พอผู้ใช้ส่งรอบสอง "Confirm it" Load Balancer ส่งไป Replica B ที่ RAM ว่างเปล่า ผลคือ SessionNotFound หรือ agent ลืมหมดเลย • (คลิก 2) นอกจากนี้ทุกครั้งที่ deploy เวอร์ชันใหม่หรือ scale ลง 0 ข้อมูลใน RAM ก็หายหมด และไม่มีประวัติให้ย้อนตรวจสอบ • (คลิก 3) กฎเหล็กคือทำ container ให้ stateless เสมอ แล้วย้าย session ออกไปเก็บข้างนอก</aside>
+      </section>
+
+      <!-- 11. Session Service Comparison -->
+      <section data-title="Session service options">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · choosing storage</div>
+            <h2 style="margin-bottom:16px">Compare ADK <code>SessionService</code> backends</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <colgroup><col style="width:270px"><col style="width:220px"><col style="width:140px"><col style="width:210px"><col></colgroup>
+              <thead><tr><th>Service</th><th>Backing store</th><th>Multi-replica</th><th>Strength</th><th>Best fit</th></tr></thead>
+              <tbody>
+                <tr class="fragment">
+                  <td><div class="ops-cell-lg"><img src="../images/shared/logos/adk.png" alt=""><code>InMemorySessionService</code></div></td>
+                  <td>Python dict (RAM)</td>
+                  <td class="bad">No</td>
+                  <td>Zero setup, fastest locally</td>
+                  <td><code>adk web</code>, unit tests</td>
+                </tr>
+                <tr class="fragment">
+                  <td><div class="ops-cell-lg"><img src="../images/shared/logos/gcp-sql.png" alt=""><code>DatabaseSessionService</code></div></td>
+                  <td>Cloud SQL / AlloyDB (Postgres, MySQL)</td>
+                  <td class="ok">Yes</td>
+                  <td>Full SQL control, VPC private, portable</td>
+                  <td>Cloud Run &amp; GKE apps</td>
+                </tr>
+                <tr class="fragment">
+                  <td><div class="ops-cell-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt=""><code>VertexAiSessionService</code></div></td>
+                  <td>Managed Vertex AI Agent Engine</td>
+                  <td class="ok">Yes</td>
+                  <td>Zero DB ops + native Memory Bank</td>
+                  <td>Managed AI teams</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Drop-in swap</b><span>Your agent code does not change — only the <code>SessionService</code> passed to the <code>Runner</code>.</span></div>
+        </div>
+        <aside class="notes">ADK มี SessionService ให้เลือก 3 แบบหลัก ๆ • (คลิก) InMemorySessionService เอาไว้รันบนเครื่องและ unit test เท่านั้น • (คลิก) DatabaseSessionService ต่อกับ Cloud SQL หรือ AlloyDB ผ่าน SQLAlchemy เหมาะกับ Cloud Run และ GKE ที่อยากคุมฐานข้อมูลเองและอยู่ใน VPC • (คลิก) VertexAiSessionService เป็นแบบ managed เต็มตัว ไม่ต้องดูแล DB และต่อกับ Vertex AI Memory Bank ได้เลย • (คลิก) จุดเด่นของ ADK คือโค้ด agent ไม่ต้องแก้สักบรรทัด แค่สลับ SessionService ตอนสร้าง Runner</aside>
+      </section>
+
+      <!-- 12. Wiring DatabaseSessionService & VertexAiSessionService -->
+      <section data-title="Wire persistent sessions">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · implementation</div>
+            <h2 style="margin-bottom:18px">Wire Cloud SQL or Vertex AI sessions in code</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.runners import Runner
+from google.adk.sessions import (
+    DatabaseSessionService,
+    VertexAiSessionService,
+)
+from google.adk.artifacts import GcsArtifactService
+
+# Option A: Cloud SQL / AlloyDB (asyncpg)
+session_svc = DatabaseSessionService(
+    db_url="postgresql+asyncpg://app:pwd@/adk"
+           "?host=/cloudsql/proj:asia-southeast1:adk-db"
+)
+
+# Option B: Fully managed Vertex AI Sessions
+# session_svc = VertexAiSessionService(
+#     project="my-gcp-project", location="us-central1"
+# )
+
+runner = Runner(
+    agent=root_agent,
+    app_name="travel_app",
+    session_service=session_svc,
+    artifact_service=GcsArtifactService("my-agent-artifacts"),
+)
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc green fragment"><h3 style="color:var(--h-green)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-sql.png" alt="">Built-in Cloud SQL Proxy</h3>Attach <code>--add-cloudsql-instances</code> on Cloud Run to connect over a Unix socket with IAM.</div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-vertex-ai.png" alt="">Use async drivers</h3>Use <code>postgresql+asyncpg</code> or managed <code>VertexAiSessionService</code> so queries never block FastAPI.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-storage.png" alt="">Artifacts in GCS</h3>Store PDFs, images, and reports in <code>GcsArtifactService</code>, not in SQL rows.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่างการต่อใช้งานจริงครับ • Option A ใช้ DatabaseSessionService ชี้ไปที่ Cloud SQL Postgres ผ่าน Unix socket ของ Cloud Run • Option B ถ้าไม่อยากดูแล DB เลย ก็เปลี่ยนเป็น VertexAiSessionService • แล้วส่งเข้า Runner พร้อม GcsArtifactService สำหรับเก็บไฟล์ • (คลิก) Cloud Run มี Cloud SQL Auth Proxy ให้ในตัว แค่ใส่ flag --add-cloudsql-instances ก็เชื่อมต่อปลอดภัยได้ทันที • (คลิก) แนะนำใช้ driver asyncpg เพื่อไม่ให้ query ไปบล็อก event loop ของ FastAPI • (คลิก) ไฟล์ใหญ่ ๆ อย่าง PDF หรือรูปภาพให้เก็บใน GCS อย่าอัดลงคอลัมน์ใน SQL</aside>
+      </section>
+
+      <!-- 13. Production persistence architecture -->
+      <section data-title="Persistence architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">02 · reference architecture</div>
+            <h2 style="margin-bottom:14px">Stateless compute + durable stores &amp; telemetry</h2>
+            <img class="ops-svg fragment" data-fragment-index="1" src="../images/adk-production-ops-slides/prod-reference-arch.svg" alt="Production ADK architecture connecting Cloud Run to Cloud SQL, GCS, Vertex AI Memory Bank, Cloud Trace, and BigQuery">
+            <div class="ops-lg-row fragment" data-fragment-index="2" style="width:1088px; margin-top:14px; gap:10px">
+              <span class="ops-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/gcp-run.png" alt="">Cloud Run</span>
+              <span class="ops-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-sql.png" alt="">Cloud SQL</span>
+              <span class="ops-lg-badge" style="--c:var(--h-yellow)"><img src="../images/shared/logos/gcp-storage.png" alt="">Cloud Storage</span>
+              <span class="ops-lg-badge" style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="">Vertex AI Memory Bank</span>
+              <span class="ops-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/opentelemetry.svg" alt="">OpenTelemetry</span>
+              <span class="ops-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-bigquery.png" alt="">BigQuery</span>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Right store, right data</b><span>Events &amp; state in SQL · Binary files in GCS · Cross-session knowledge in Memory Bank · Telemetry in Trace &amp; BigQuery.</span></div>
+        </div>
+        <aside class="notes">นี่คือสถาปัตยกรรมอ้างอิงที่แนะนำสำหรับ production • (คลิก 1) ผู้ใช้เข้ามาจากเว็บ มือถือ หรือแชท • (คลิก 2) Cloud Run scale กี่ replica ก็ได้เพราะทุกตัว stateless • (คลิก 3) ด้านหลังแยกเก็บ 3 ที่ตามชนิดข้อมูล: Cloud SQL/AlloyDB เก็บ event และ session state, GCS เก็บไฟล์ binary อย่าง PDF/รูปภาพ, และ Vertex AI Memory Bank เก็บความจำระยะยาวข้าม session เช่น ความชอบของผู้ใช้ • (คลิก 4) แยกเก็บให้ถูกที่ ระบบจะ scale ง่ายและคุมต้นทุนได้ชัด</aside>
+      </section>
+
+      <!-- 14. Section 03 -->
+      <section class="bg-yellow" data-title="03 · OpenTelemetry &amp; observability">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="ops-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-production-ops-slides/sec-03-observe.svg" alt="OpenTelemetry and observability illustration"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:68px">OpenTelemetry &amp;<br>observability</h1>
+            <p class="sub" style="margin-top:28px">See every LLM call, tool latency,<br>token count, and failure</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • เมื่อ agent รันอยู่บน production แล้ว เราจะรู้ได้ยังไงว่ามันคิดอะไรอยู่ ช้าตรงไหน และกิน token ไปเท่าไหร่ มาดู OpenTelemetry และ observability ใน ADK ครับ</aside>
+      </section>
+
+      <!-- 15. Why HTTP logs aren't enough -->
+      <section data-title="Why HTTP logs aren't enough">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · the visibility gap</div>
+            <h2 style="margin-bottom:20px">Why standard HTTP logs fail for AI agents</h2>
+            <div class="grid g2" style="width:1088px; gap:22px">
+              <div class="pc red fragment" data-fragment-index="1" style="padding:20px 22px">
+                <h3 style="color:var(--h-red)">Traditional HTTP access log</h3>
+                <pre style="font-size:13px; margin:12px 0; border-color:#5f6368"><code class="language-text" data-trim>
+POST /run  200 OK  6,420ms  user=u_91
+                </code></pre>
+                <p style="font-size:16px; color:var(--dk-sub)">Looks healthy, right? But you have <b>no idea</b> why it took 6.4s, which tool retried, how many tokens it burned, or if it hallucinated.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:20px 22px">
+                <h3 style="color:var(--h-green)">Agent-native observability</h3>
+                <ul class="cb-chk" style="margin-top:10px; gap:8px">
+                  <li class="ok"><i>✓</i><span><b>Span tree:</b> every <code>call_llm</code> &amp; <code>execute_tool</code> step</span></li>
+                  <li class="ok"><i>✓</i><span><b>Token accounting:</b> input, output &amp; cached tokens</span></li>
+                  <li class="ok"><i>✓</i><span><b>Decision audit:</b> tool args, retries &amp; handoffs</span></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Key shift</b><span>One HTTP <code>200 OK</code> can hide 4 LLM calls, 2 failed tools, and a 10x token spike.</span></div>
+        </div>
+        <aside class="notes">ทำไม access log ปกติของเว็บถึงไม่พอสำหรับ AI agent • (คลิก 1) ดูฝั่งซ้ายครับ: POST /run 200 OK ใช้เวลา 6.4 วินาที มองเผิน ๆ เหมือนไม่มี error แต่เราไม่รู้เลยว่าช้าที่โมเดลหรือที่ tool, มีการ retry ไหม, หรือเสีย token ไปกี่หมื่น • (คลิก 2) Agent observability ต้องเห็นเป็นต้นไม้ของ span ตั้งแต่ invocation ยัน tool call เห็นจำนวน token และเห็นการตัดสินใจทุกขั้น • (คลิก 3) จำไว้ว่า HTTP 200 หนึ่งครั้งอาจซ่อนการเรียก LLM 4 รอบและ tool error ไว้ข้างใน</aside>
+      </section>
+
+      <!-- 16. Built-in OpenTelemetry Auto-Tracing -->
+      <section data-title="OpenTelemetry auto-tracing">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · zero-code instrumentation</div>
+            <h2 style="margin-bottom:18px">ADK emits OpenTelemetry spans out of the box</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:13.5px"><code class="language-bash" data-trim>
+# Option 1: Export straight to Google Cloud Trace
+adk deploy cloud_run --trace_to_cloud ./travel_agent
+
+# Option 2: Any OTLP backend (Grafana, Datadog, Arize)
+export OTEL_EXPORTER_OTLP_ENDPOINT="https://otlp.example.com"
+export OTEL_SERVICE_NAME="travel-agent-prod"
+
+# Privacy guard: strip raw prompt/response text in prod
+export ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)"><img class="ops-ico-sm" src="../images/shared/logos/adk.png" alt="">Built into ADK</h3>No manual decorators needed. Every agent run, LLM call, and tool execution creates OTel spans.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)"><img class="ops-ico-sm" src="../images/shared/logos/opentelemetry.svg" alt="">GenAI conventions</h3>Standard attributes: <code>gen_ai.request.model</code>, <code>gen_ai.usage.input_tokens</code>, <code>gen_ai.tool.name</code>.</div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-monitoring.png" alt="">PII safety switch</h3>Set <code>ADK_CAPTURE_MESSAGE_CONTENT_IN_SPANS=false</code> when prompts contain customer data.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Vendor neutral</b><span>Built on OpenTelemetry — send the exact same spans to Cloud Trace, Arize, Phoenix, or Datadog.</span></div>
+        </div>
+        <aside class="notes">ข่าวดีคือ ADK ใส่ OpenTelemetry auto-tracing มาให้ในตัวเลย ไม่ต้องเขียน decorator เอง • Option 1 แค่เปิด --trace_to_cloud มันส่งเข้า Google Cloud Trace ทันที • Option 2 ถ้าทีมใช้ Grafana, Datadog หรือ Arize อยู่แล้ว ก็แค่ตั้ง env OTEL_EXPORTER_OTLP_ENDPOINT • (คลิก) ทุกขั้นตั้งแต่ agent, LLM ยัน tool ถูกสร้างเป็น span อัตโนมัติ • (คลิก) ใช้มาตรฐาน GenAI semantic conventions ของ OpenTelemetry • (คลิก) และมีสวิตช์ความปลอดภัยสำหรับปิดไม่ให้ส่งข้อความ prompt จริงขึ้น trace เพื่อกัน PII รั่วไหลใน production • (คลิก) ไม่ lock-in ครับ</aside>
+      </section>
+
+      <!-- 17. Cloud Trace Waterfall -->
+      <section data-title="Cloud Trace waterfall">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">03 · anatomy of a trace</div>
+            <h2 style="margin-bottom:14px">Reading a Cloud Trace span waterfall</h2>
+            <img class="ops-svg fragment" data-fragment-index="1" src="../images/adk-production-ops-slides/otel-trace-waterfall.svg" alt="OpenTelemetry Cloud Trace waterfall showing invocation, agent_run, call_llm, and execute_tool spans">
+            <div class="ops-lg-row fragment" data-fragment-index="2" style="width:1088px; margin-top:14px; gap:10px">
+              <span class="ops-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/opentelemetry.svg" alt="">OpenTelemetry GenAI Spans</span>
+              <span class="ops-lg-badge" style="--c:var(--h-yellow)"><img src="../images/shared/logos/gcp-monitoring.png" alt="">Cloud Trace &amp; Monitoring</span>
+              <span class="ops-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/gcp-logging.png" alt="">Correlated Trace IDs in Cloud Logging</span>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Instant diagnosis</b><span>See exact latency per step (<code>640ms</code> LLM → <code>420ms</code> tool → <code>510ms</code> LLM) and why input tokens tripled.</span></div>
+        </div>
+        <aside class="notes">พอเปิด Cloud Trace เราจะเห็นกราฟ waterfall แบบนี้เลยครับ • (คลิก 1) ด้านบนสุดคือ invocation และ agent_run ครอบรอบคำถามทั้งหมด 3.4 วินาที • (คลิก 2) ข้างในเริ่มด้วย call_llm รอบแรก ใช้ 860ms เพื่อตัดสินใจว่าจะเรียก tool ไหน • (คลิก 3) ถัดมา execute_tool search_flights กินเวลาไปถึง 1,370ms เกือบ 40% ของทั้งหมด • (คลิก 4) แล้ว call_llm รอบสองใช้ 1,010ms โดย input token พุ่งจาก 412 เป็น 1,240 เพราะ payload จาก tool ใหญ่ • (คลิก 5) ดูปุ๊บรู้เลยว่าต้องไป optimize อะไร: cache ผล search_flights และตัด field ที่ไม่จำเป็นออกใน after_tool</aside>
+      </section>
+
+      <!-- 18. Cloud Logging + BigQuery Agent Analytics -->
+      <section data-title="Logging &amp; BigQuery Analytics">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">03 · fleet-wide analytics</div>
+            <h2 style="margin-bottom:18px">From single traces to BigQuery Agent Analytics</h2>
+            <div class="flow tight" style="width:1088px">
+              <div class="pc blue node fragment" data-fragment-index="1">
+                <div style="display:flex; justify-content:center; margin-bottom:8px"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span></div>
+                <b style="color:var(--h-blue)">ADK Plugin</b>
+                <p><code>BigQueryAgentAnalyticsPlugin</code> streams events asynchronously.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc green node fragment" data-fragment-index="2">
+                <div style="display:flex; justify-content:center; gap:8px; margin-bottom:8px">
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-logging.png" alt="Cloud Logging"></span>
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                </div>
+                <b style="color:var(--h-green)">Logging &amp; BigQuery</b>
+                <p>Structured JSON logs + partitioned analytics table at scale.</p>
+              </div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M23 4l9 8-9 8"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="3">
+                <div style="display:flex; justify-content:center; margin-bottom:8px"><span class="ev-lg"><img src="../images/shared/logos/gcp-monitoring.png" alt="Cloud Monitoring"></span></div>
+                <b style="color:var(--h-yellow)">Dashboards &amp; Alerts</b>
+                <p>Looker Studio cost dashboards + Cloud Monitoring SLO alerts.</p>
+              </div>
+            </div>
+            <div class="grid g4 ops-kpi fragment" data-fragment-index="4" style="width:1088px; gap:14px; margin-top:18px">
+              <div class="pc" style="--c:var(--h-blue)"><b>Token cost / session</b><p>Track spend per agent, model, and tenant.</p></div>
+              <div class="pc" style="--c:var(--h-green)"><b>P50 / P95 latency</b><p>Split time spent in Gemini vs external tools.</p></div>
+              <div class="pc" style="--c:var(--h-yellow)"><b>Tool error rate</b><p>Catch flaky APIs and retry loops early.</p></div>
+              <div class="pc" style="--c:var(--h-red)"><b>Guardrail triggers</b><p>Measure blocked prompts and policy hits.</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Cloud Trace เอาไว้ส่องทีละ request แต่ถ้าอยากดูภาพรวมทั้งระบบเป็นพันเป็นหมื่น session เราใช้ BigQuery Agent Analytics • (คลิก 1) ADK มี BigQueryAgentAnalyticsPlugin ที่ stream event ออกไปแบบ async ไม่ทำให้ agent ช้าลง • (คลิก 2) ข้อมูลไหลเข้า Cloud Logging และตาราง BigQuery ที่มี schema พร้อมใช้ • (คลิก 3) ต่อ Looker Studio ทำ dashboard หรือตั้ง alert ใน Cloud Monitoring • (คลิก 4) 4 ตัวเลขที่ทีม production ควรดูทุกวัน: ค่า token ต่อ session, latency P50/P95, error rate ของแต่ละ tool และอัตราการถูก guardrail บล็อก</aside>
+      </section>
+
+      <!-- 19. Querying Agent Analytics in BigQuery -->
+      <section data-title="BigQuery telemetry SQL">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · actionable metrics</div>
+            <h2 style="margin-bottom:18px">Spot slow tools and token spikes with SQL</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:650px; flex:none; font-size:13px"><code class="language-sql" data-trim>
+SELECT
+  agent,
+  event_type,
+  COUNT(*) AS calls,
+  APPROX_QUANTILES(latency_ms.total_ms, 100)[OFFSET(95)]
+    AS p95_ms,
+  SUM(CAST(JSON_VALUE(content, '$.usage.total_tokens')
+    AS INT64)) AS total_tokens,
+  COUNTIF(status = 'ERROR') AS errors
+FROM `my_proj.agent_analytics.agent_events`
+WHERE timestamp >= TIMESTAMP_SUB(
+  CURRENT_TIMESTAMP(), INTERVAL 24 HOUR
+)
+GROUP BY 1, 2
+ORDER BY total_tokens DESC;
+              </code></pre>
+              <div class="cb-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-bigquery.png" alt="">Cost attribution</h3>Find which agent or tool drives 80% of your monthly Gemini bill.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)"><img class="ops-ico-sm" src="../images/shared/logos/gcp-monitoring.png" alt="">Release diffs</h3>Compare P95 latency and token usage before vs after a prompt change.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)"><img class="ops-ico-sm" src="../images/shared/logos/adk.png" alt="">Eval flywheel</h3>Export real production failures straight into your <code>adk eval</code> test set.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">พอข้อมูลอยู่ใน BigQuery แล้ว เราใช้ SQL ธรรมดาวิเคราะห์ได้ทันที • query ซ้ายมือสรุปย้อนหลัง 24 ชั่วโมง แยกตาม agent และ event_type เพื่อดูจำนวนครั้ง, P95 latency, ยอดรวม token และจำนวน error • (คลิก) ช่วยหาว่า agent หรือ tool ไหนกินงบมากที่สุด • (คลิก) เทียบก่อน-หลังแก้ prompt หรือเปลี่ยนรุ่นโมเดลได้เป็นตัวเลข • (คลิก) และที่เจ๋งสุดคือดึงเคสที่พังจริงใน production ออกมาทำเป็นชุดทดสอบใน adk eval เพื่อไม่ให้พังซ้ำ</aside>
+      </section>
+
+      <!-- 20. Section 04 -->
+      <section class="bg-red" data-title="04 · Ship safely at scale">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="ops-div-art" style="--c:var(--h-red)"><img src="../images/adk-production-ops-slides/sec-04-ship.svg" alt="Ship safely at scale illustration"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Ship safely<br>at scale</h1>
+            <p class="sub" style="margin-top:28px">Canary rollouts, concurrency tuning,<br>and production readiness</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้ายครับ • Deploy ได้แล้ว เก็บ state ได้แล้ว มี trace แล้ว มาดูวิธีปล่อยเวอร์ชันใหม่อย่างปลอดภัย จูน Cloud Run ให้เหมาะกับ LLM agent และ checklist ก่อนเปิดรับผู้ใช้จริง</aside>
+      </section>
+
+      <!-- 21. Canary rollouts & traffic splitting -->
+      <section data-title="Canary rollouts on Cloud Run">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:32px 56px">
+            <div class="eyebrow">04 · progressive delivery</div>
+            <h2 style="margin-bottom:12px">Canary rollouts &amp; instant rollback on Cloud Run</h2>
+            <img class="ops-svg fragment" data-fragment-index="1" style="height:224px; object-fit:contain" src="../images/adk-production-ops-slides/canary-rollout-flow.svg" alt="Canary 90/10 traffic splitting flow with eval gate, rollout, and instant rollback">
+            <div class="fragment" data-fragment-index="2" style="display:flex; gap:18px; width:1088px; margin-top:12px; align-items:stretch">
+              <pre style="width:650px; flex:none; font-size:12.5px"><code class="language-bash" data-trim>
+# 1. Deploy v2 with 0% traffic + canary URL
+gcloud run deploy travel-agent --image=gcr.io/proj/agent:v2 --no-traffic --tag=canary
+# 2. Split 90% Stable / 10% Canary
+gcloud run services update-traffic travel-agent --to-revisions=rev-02=10,rev-01=90
+# 3. Promote to 100% or instant 5s rollback
+gcloud run services update-traffic travel-agent --to-revisions=rev-01=100
+              </code></pre>
+              <div class="cb-side" style="gap:10px">
+                <div class="pc yellow" style="padding:10px 14px; font-size:14px"><h3 style="color:var(--h-yellow); font-size:16px"><img class="ops-ico-sm" src="../images/shared/logos/gcp-run.png" alt="">Prompts are releases</h3>Treat prompt, tool, and model upgrades like production deploys.</div>
+                <div class="pc red" style="padding:10px 14px; font-size:14px"><h3 style="color:var(--h-red); font-size:16px"><img class="ops-ico-sm" src="../images/shared/logos/gcp-monitoring.png" alt="">5-second rollback</h3>If Cloud Trace or error rate spikes, revert to 100% Rev-01 immediately.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ในโลกของ AI agent การแก้ prompt แค่ประโยคเดียวหรืออัปเกรดรุ่นโมเดลอาจเปลี่ยนพฤติกรรมทั้งระบบ • เราจึงควรใช้ traffic splitting ของ Cloud Run • ขั้น 1 deploy เวอร์ชันใหม่ด้วย --no-traffic และติด tag canary จะได้ URL แยกไว้ทดสอบก่อน • ขั้น 2 ค่อยแบ่ง traffic จริงมา 10% แล้วดู Cloud Trace กับ BigQuery เทียบกับ v1 • ขั้น 3 ถ้า error หรือค่า token พุ่ง สั่ง rollback กลับ 100% ได้ภายในไม่กี่วินาที • (คลิก) (คลิก) (คลิก) จำไว้ว่า prompt และรุ่นโมเดลคือ production release เสมอ</aside>
+      </section>
+
+      <!-- 22. Concurrency & timeout tuning -->
+      <section data-title="Concurrency &amp; timeout tuning">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">04 · cloud run tuning</div>
+            <h2 style="margin-bottom:18px; display:flex; align-items:center; gap:12px"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>Tune Cloud Run for I/O-bound agent workloads</h2>
+            <div class="grid g2 ops-tune" style="width:1088px; gap:16px">
+              <div class="pc blue fragment" style="--c:var(--h-blue)">
+                <span class="flag">--timeout=300</span>
+                <h3>Extend request timeout</h3>
+                <p>Multi-step tool loops and SSE streams often exceed default timeouts. Give complex agents 180–300s.</p>
+              </div>
+              <div class="pc green fragment" style="--c:var(--h-green)">
+                <span class="flag">--concurrency=20..40</span>
+                <h3>Leverage async I/O</h3>
+                <p>Agents spend 90%+ of time waiting on Gemini &amp; tool APIs. Async Python handles dozens of turns per container.</p>
+              </div>
+              <div class="pc yellow fragment" style="--c:var(--h-yellow)">
+                <span class="flag">--min-instances=1 · --max-instances=50</span>
+                <h3>Kill cold starts &amp; cap blast radius</h3>
+                <p>Keep 1 warm instance for snappy chat; cap max instances to protect downstream APIs and token budgets.</p>
+              </div>
+              <div class="pc red fragment" style="--c:var(--h-red)">
+                <span class="flag">--no-cpu-throttling</span>
+                <h3>Keep CPU for background exporters</h3>
+                <p>Prevents Cloud Run from freezing OpenTelemetry batch exporters or async analytics flushes after a reply.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>DB math</b><span>Always check <code>max_instances × SQL pool_size &lt; Cloud SQL max_connections</code> before load testing.</span></div>
+        </div>
+        <aside class="notes">4 ค่าที่ควรจูนบน Cloud Run สำหรับ ADK agent โดยเฉพาะ • (คลิก) 1. เพิ่ม --timeout เป็น 180-300 วินาที เพราะ agent ที่เรียกหลาย tool หรือ stream SSE อาจเกินค่า default • (คลิก) 2. ตั้ง --concurrency 20-40 ได้เลย เพราะ agent เป็นงาน I/O-bound รอ Gemini กับ API เป็นหลัก ไม่ได้กิน CPU หนัก • (คลิก) 3. ตั้ง --min-instances=1 กัน cold start และตั้ง --max-instances เพื่อคุมงบ token และไม่ให้ถล่ม API หลังบ้าน • (คลิก) 4. ใส่ --no-cpu-throttling เพื่อให้ตัวส่ง OTel trace และ BigQuery analytics flush ข้อมูลเสร็จหลังตอบผู้ใช้ • (คลิก) อย่าลืมคำนวณจำนวน connection ของ Cloud SQL ให้พอรับ max_instances คูณ pool_size ด้วย</aside>
+      </section>
+
+      <!-- 23. Production readiness checklist -->
+      <section data-title="Production readiness checklist">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">04 · before you launch</div>
+            <h2 style="margin-bottom:18px">Production readiness checklist</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <ul class="cb-chk">
+                <li class="ok fragment"><i>✓</i><span><img class="ops-ico-sm" src="../images/shared/logos/gcp-secret-manager.png" alt=""><b>Secrets in Secret Manager.</b> Mount via Cloud Run env/volumes, never bake into images.</span></li>
+                <li class="ok fragment"><i>✓</i><span><img class="ops-ico-sm" src="../images/shared/logos/gcp-iam.png" alt=""><b>Least-privilege IAM.</b> Dedicated service account with only Vertex AI, Cloud SQL &amp; Trace roles.</span></li>
+                <li class="ok fragment"><i>✓</i><span><img class="ops-ico-sm" src="../images/shared/logos/gcp-sql.png" alt=""><img class="ops-ico-sm" src="../images/shared/logos/gcp-storage.png" alt=""><b>Persistent state &amp; artifacts.</b> <code>DatabaseSessionService</code> + <code>GcsArtifactService</code>.</span></li>
+                <li class="ok fragment"><i>✓</i><span><img class="ops-ico-sm" src="../images/shared/logos/opentelemetry.svg" alt=""><img class="ops-ico-sm" src="../images/shared/logos/gcp-bigquery.png" alt=""><b>Telemetry + PII guard.</b> <code>--trace_to_cloud</code>, BigQuery plugin, content capture off.</span></li>
+              </ul>
+              <ul class="cb-chk">
+                <li class="ok fragment"><i>✓</i><span><img class="ops-ico-sm" src="../images/shared/logos/adk.png" alt=""><b>Guardrails &amp; rate limits.</b> Enforce token budgets and tool caps via ADK Plugins.</span></li>
+                <li class="ok fragment"><i>✓</i><span><img class="ops-ico-sm" src="../images/shared/logos/gcp-monitoring.png" alt=""><b>SLO alerts wired.</b> Cloud Monitoring alerts on 5xx rate, P95 latency, and daily token burn.</span></li>
+                <li class="ok fragment"><i>✓</i><span><img class="ops-ico-sm" src="../images/shared/logos/gcp-run.png" alt=""><b>Eval gate in CI/CD.</b> Run <code>adk eval</code> on golden cases before promoting canary to 100%.</span></li>
+                <li class="warn fragment"><i>!</i><span><img class="ops-ico-sm" src="../images/shared/logos/gcp-iam.png" alt=""><b>Harden public APIs.</b> Disable <code>--with_ui</code>, lock CORS origins, and require auth.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">Checklist 8 ข้อก่อนเปิดให้ผู้ใช้จริงเข้าใช้งานครับ • ฝั่งซ้ายเรื่องโครงสร้าง: เก็บ secret ใน Secret Manager, ใช้ service account สิทธิ์เท่าที่จำเป็น, ต่อ persistent session กับ GCS artifact, เปิด tracing และปิดการเก็บข้อความ PII ใน span • ฝั่งขวาเรื่องความปลอดภัยและคุณภาพ: ใส่ guardrail และ rate limit ผ่าน ADK Plugin, ตั้ง alert บน Cloud Monitoring, รัน adk eval เป็นด่านใน CI/CD ก่อนดัน canary ขึ้น 100%, และอย่าลืมปิด dev UI กับล็อก CORS</aside>
+      </section>
+
+      <!-- 24. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:24px">Deploy, Persist, Observe</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <div style="display:flex; gap:8px; margin-bottom:12px">
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>
+                </div>
+                <h3>1 · Deploy</h3>
+                <p style="font-size:16px; line-height:1.42">Ship fast with <b>Cloud Run</b> (<code>adk deploy cloud_run</code>), add GPUs for Gemma, or use <b>Agent Engine</b>.</p>
+              </div>
+              <div class="pc green fragment">
+                <div style="display:flex; gap:8px; margin-bottom:12px">
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-sql.png" alt="Cloud SQL"></span>
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-storage.png" alt="GCS"></span>
+                </div>
+                <h3>2 · Persist</h3>
+                <p style="font-size:16px; line-height:1.42">Keep containers stateless. Store sessions in <b>Cloud SQL</b> or <b>Vertex AI</b>, and files in <b>GCS</b>.</p>
+              </div>
+              <div class="pc red fragment">
+                <div style="display:flex; gap:8px; margin-bottom:12px">
+                  <span class="ev-lg"><img src="../images/shared/logos/opentelemetry.svg" alt="OpenTelemetry"></span>
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                </div>
+                <h3>3 · Observe</h3>
+                <p style="font-size:16px; line-height:1.42">Turn on <b>OpenTelemetry</b>, debug spans in <b>Cloud Trace</b>, and track cost &amp; quality in <b>BigQuery</b>.</p>
+              </div>
+            </div>
+            <div class="fragment" style="width:1088px; margin-top:24px; display:flex; flex-wrap:wrap; gap:8px">
+              <span class="ops-pill" style="--c:var(--h-blue)">adk deploy cloud_run</span>
+              <span class="ops-pill" style="--c:var(--h-green)">DatabaseSessionService</span>
+              <span class="ops-pill" style="--c:var(--h-green)">GcsArtifactService</span>
+              <span class="ops-pill" style="--c:var(--h-yellow)">--trace_to_cloud</span>
+              <span class="ops-pill" style="--c:var(--h-yellow)">BigQuery Analytics</span>
+              <span class="ops-pill" style="--c:var(--h-red)">update-traffic canary</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Deploy one ADK agent to Cloud Run with <code>--trace_to_cloud</code> and inspect your first waterfall in Cloud Trace.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำเดิมครับ • (คลิก) Deploy: เริ่มง่ายสุดบน Cloud Run หรือ Vertex AI Agent Engine และแยก GPU service ถ้ารัน Gemma เอง • (คลิก) Persist: ทำ container ให้ stateless แล้วย้าย session ลง Cloud SQL/Vertex AI และเก็บไฟล์ใน GCS • (คลิก) Observe: เปิด OpenTelemetry ดู waterfall ใน Cloud Trace และวิเคราะห์ต้นทุนกับ latency ใน BigQuery • (คลิก) (คลิก) กลับไปวันนี้ลอง deploy agent สักตัวขึ้น Cloud Run พร้อม --trace_to_cloud แล้วเปิดดู waterfall แรกใน Cloud Trace ครับ</aside>
+      </section>
+
+      <!-- 25. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:24px">Docs &amp; hands-on codelabs</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Deploy ADK agents</h3><a class="mono" style="font-size:14px" href="https://adk.dev/deploy/" target="_blank">adk.dev/deploy/</a></div></div>
+              <div class="pc yellow cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/opentelemetry.svg" alt="OpenTelemetry"></span><div><h3>Observability &amp; tracing</h3><a class="mono" style="font-size:14px" href="https://adk.dev/observability/" target="_blank">adk.dev/observability/</a></div></div>
+              <div class="pc green cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-sql.png" alt="Cloud SQL"></span><div><h3>Sessions, state &amp; memory</h3><a class="mono" style="font-size:14px" href="https://adk.dev/sessions/" target="_blank">adk.dev/sessions/</a></div></div>
+              <div class="pc blue cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><div><h3>Codelab: Deploy, Manage &amp; Observe</h3><a class="mono" style="font-size:13.5px" href="https://codelabs.developers.google.com/deploy-manage-observe-adk-cloud-run" target="_blank">ADK Agent on Cloud Run</a></div></div>
+              <div class="pc red cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run GPU"></span><div><h3>Codelab: ADK on Cloud Run GPU</h3><a class="mono" style="font-size:13.5px" href="https://codelabs.developers.google.com/codelabs/adk-cloud-run-gpu" target="_blank">Deploy ADK + Gemma with GPU</a></div></div>
+              <div class="pc green cb-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><div><h3>Vertex AI Agent Engine</h3><a class="mono" style="font-size:13.5px" href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview" target="_blank">cloud.google.com/vertex-ai/agent-engine</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รวมลิงก์เอกสารและ Codelab ให้ลองทำตามได้จริง: หน้า Deploy, Observability และ Sessions ของ ADK, Codelab Deploy, Manage and Observe ADK Agent on Cloud Run, Codelab รัน ADK กับ GPU บน Cloud Run และเอกสาร Vertex AI Agent Engine ครับ</aside>
+      </section>
+
+      <!-- 26. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="ops-ty-art"><img src="../images/adk-production-ops-slides/thank-you-art.svg" alt="ADK Production Ops dashboard and cloud constellation"></div>
+        <div class="dots" style="left:970px; top:522px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณมากครับ • เปิดช่วง Q &amp; A สอบถามเรื่องการ deploy, session หรือ observability ได้เลยครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

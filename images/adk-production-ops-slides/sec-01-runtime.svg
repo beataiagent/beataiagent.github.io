@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffd427"/>
+      <stop offset="55%" stop-color="#ff7daf"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <!-- Ambient glows & orbit -->
+  <circle cx="128" cy="116" r="102" fill="url(#amb-b)"/>
+  <circle cx="182" cy="76" r="70" fill="url(#amb-g)"/>
+  <circle cx="128" cy="126" r="98" fill="none" stroke="#57caff" stroke-width="1.8" stroke-dasharray="6 6" opacity="0.4"/>
+
+  <!-- 3 target runtime pills in upper arc -->
+  <g transform="translate(52, 54)">
+    <rect x="-34" y="-14" width="68" height="28" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
+    <text x="0" y="4" text-anchor="middle" class="m" font-size="10" fill="#57caff">Cloud Run</text>
+  </g>
+  <g transform="translate(128, 36)">
+    <rect x="-26" y="-13" width="52" height="26" rx="13" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="0" y="4" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d">GKE</text>
+  </g>
+  <g transform="translate(204, 54)">
+    <rect x="-36" y="-14" width="72" height="28" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="1.8"/>
+    <text x="0" y="4" text-anchor="middle" class="m" font-size="10" fill="#ffd427">Agent Eng</text>
+  </g>
+
+  <!-- Trajectory arcs -->
+  <path d="M108 118 C92 98 72 82 58 68" fill="none" stroke="#57caff" stroke-width="1.8" stroke-dasharray="4 4" opacity="0.7"/>
+  <path d="M128 84 V50" fill="none" stroke="#5cdb6d" stroke-width="1.8" stroke-dasharray="4 4" opacity="0.7"/>
+  <path d="M148 118 C164 98 184 82 198 68" fill="none" stroke="#ffd427" stroke-width="1.8" stroke-dasharray="4 4" opacity="0.7"/>
+
+  <!-- Rocket Container -->
+  <g transform="translate(128, 134)">
+    <!-- Exhaust glow -->
+    <path d="M-12 42 L0 74 L12 42 Z" fill="url(#flame)" filter="url(#glow-s)"/>
+    <!-- Fins -->
+    <path d="M-24 18 L-40 38 L-22 36 Z" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+    <path d="M24 18 L40 38 L22 36 Z" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+    <!-- Main fuselage / container body -->
+    <path d="M0 -48 C18 -36 26 -14 26 24 L20 38 H-20 L-26 24 C-26 -14 -18 -36 0 -48 Z" fill="url(#glass-hi)" stroke="#57caff" stroke-width="2.6" filter="url(#glow-s)"/>
+    <!-- Container stripes inside fuselage -->
+    <rect x="-15" y="-6" width="30" height="28" rx="6" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+    <line x1="-6" y1="0" x2="-6" y2="16" stroke="#5cdb6d" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="0" y1="0" x2="0" y2="16" stroke="#57caff" stroke-width="1.8" stroke-linecap="round"/>
+    <line x1="6" y1="0" x2="6" y2="16" stroke="#5cdb6d" stroke-width="1.8" stroke-linecap="round"/>
+    <!-- Window -->
+    <circle cx="0" cy="-22" r="8" fill="#17181b" stroke="#57caff" stroke-width="2"/>
+    <circle cx="0" cy="-22" r="3.5" fill="#57caff" filter="url(#glow-s)"/>
+  </g>
+
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="12" fill="#57caff">DEPLOY · RUNTIME</text>
+</svg>

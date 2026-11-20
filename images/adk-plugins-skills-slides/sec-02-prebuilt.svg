@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <circle cx="84" cy="84" r="82" fill="url(#amb-r)"/>
+  <circle cx="176" cy="154" r="88" fill="url(#amb-g)"/>
+  <circle cx="84" cy="166" r="76" fill="url(#amb-b)"/>
+
+  <!-- Central vertical plugin bus -->
+  <line x1="128" y1="36" x2="128" y2="196" stroke="#5cdb6d" stroke-width="3" stroke-dasharray="4 4" opacity="0.65"/>
+  <circle cx="128" cy="118" r="14" fill="#17181b" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+  <path d="M123 118 H133 M128 113 V123" stroke="#5cdb6d" stroke-width="2.4" stroke-linecap="round"/>
+
+  <!-- Brick 1: Armor (Top-Left, Red) -->
+  <g transform="translate(26,44)">
+    <rect x="0" y="0" width="90" height="62" rx="14" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+    <path d="M45 12 L56 16 V25 C56 32 51 37 45 39 C39 37 34 32 34 25 V16 Z" fill="#ff7daf" fill-opacity="0.2" stroke="#ff7daf" stroke-width="1.8"/>
+    <text x="45" y="54" text-anchor="middle" class="m" font-size="11" fill="#ff7daf" font-weight="600">ARMOR</text>
+  </g>
+
+  <!-- Brick 2: Retry (Top-Right, Yellow) -->
+  <g transform="translate(140,44)">
+    <rect x="0" y="0" width="90" height="62" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+    <path d="M35 25 A10 10 0 1 1 54 29" fill="none" stroke="#ffd427" stroke-width="2.2" stroke-linecap="round"/>
+    <path d="M51 23 L56 29 L49 32" fill="none" stroke="#ffd427" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="45" y="54" text-anchor="middle" class="m" font-size="11" fill="#ffd427" font-weight="600">RETRY</text>
+  </g>
+
+  <!-- Brick 3: BigQuery (Bottom-Left, Blue) -->
+  <g transform="translate(26,130)">
+    <rect x="0" y="0" width="90" height="62" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+    <rect x="33" y="26" width="6" height="12" rx="2" fill="#57caff"/>
+    <rect x="42" y="19" width="6" height="19" rx="2" fill="#57caff"/>
+    <rect x="51" y="13" width="6" height="25" rx="2" fill="#57caff"/>
+    <text x="45" y="54" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="600">BIGQUERY</text>
+  </g>
+
+  <!-- Brick 4: Filter (Bottom-Right, Green) -->
+  <g transform="translate(140,130)">
+    <rect x="0" y="0" width="90" height="62" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+    <path d="M32 16 H58 L48 27 V37 L42 34 V27 Z" fill="#5cdb6d" fill-opacity="0.2" stroke="#5cdb6d" stroke-width="1.8" stroke-linejoin="round"/>
+    <text x="45" y="54" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">FILTER</text>
+  </g>
+
+  <!-- Bottom pill -->
+  <rect x="48" y="216" width="160" height="24" rx="12" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">PREBUILT PLUGINS</text>
+</svg>

@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" fill="#202124"/>
+
+  <circle cx="145" cy="125" r="110" fill="url(#amb-b)"/>
+  <circle cx="430" cy="125" r="105" fill="url(#amb-g)"/>
+  <circle cx="715" cy="125" r="105" fill="url(#amb-y)"/>
+  <circle cx="965" cy="125" r="105" fill="url(#amb-r)"/>
+
+  <!-- Step 1: Client Agent -->
+  <rect x="20" y="34" width="218" height="182" rx="18" fill="url(#glass-hi)" stroke="#57caff" stroke-width="2.2"/>
+  <rect x="34" y="46" width="84" height="22" rx="11" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="76" y="61" text-anchor="middle" class="m" font-size="11" fill="#57caff">1 · CLIENT</text>
+  <g transform="translate(129, 118) scale(0.56)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#57caff" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="6" fill="#57caff" filter="url(#glow-s)"/>
+    <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#57caff" stroke-width="3"/>
+    <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+    <circle cx="-11" cy="-18" r="5" fill="#57caff"/><circle cx="11" cy="-18" r="5" fill="#57caff"/>
+    <path d="M-7 -8 Q0 -3 7 -8" fill="none" stroke="#57caff" stroke-width="2.6" stroke-linecap="round"/>
+    <path d="M-24 14 H24 C28 14 26 40 0 44 C-26 40 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#57caff" stroke-width="2.2"/>
+  </g>
+  <text x="129" y="176" text-anchor="middle" class="t" font-size="16">ADK Coordinator</text>
+  <text x="129" y="198" text-anchor="middle" class="m" font-size="11.5" fill="#57caff">RemoteA2aAgent</text>
+
+  <!-- Arrow 1 -> 2 -->
+  <line x1="238" y1="125" x2="292" y2="125" stroke="#57caff" stroke-width="3" marker-end="url(#arr-b)"/>
+  <text x="265" y="114" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">GET</text>
+
+  <!-- Step 2: Fetch Agent Card -->
+  <rect x="300" y="34" width="236" height="182" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <rect x="314" y="46" width="110" height="22" rx="11" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="369" y="61" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">2 · DISCOVER</text>
+  <rect x="316" y="80" width="204" height="30" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="418" y="100" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">/.well-known/agent.json</text>
+  <text x="320" y="132" class="m" font-size="11.5" fill="#e8eaed">• skills: [search_flights]</text>
+  <text x="320" y="152" class="m" font-size="11.5" fill="#e8eaed">• streaming: true</text>
+  <text x="320" y="172" class="m" font-size="11.5" fill="#ffd427">• auth: openIdConnect</text>
+  <text x="320" y="198" class="sub" font-size="12.5">Inspects skills &amp; auth scheme</text>
+
+  <!-- Arrow 2 -> 3 -->
+  <line x1="536" y1="125" x2="590" y2="125" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+  <text x="563" y="114" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">POST</text>
+
+  <!-- Step 3: Send JSON-RPC Task -->
+  <rect x="598" y="34" width="222" height="182" rx="18" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <rect x="612" y="46" width="102" height="22" rx="11" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="663" y="61" text-anchor="middle" class="m" font-size="11" fill="#ffd427">3 · EXECUTE</text>
+  <rect x="614" y="80" width="190" height="30" rx="8" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="709" y="100" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">JSON-RPC tasks/send</text>
+  <text x="618" y="132" class="m" font-size="11.5" fill="#e8eaed">Bearer OIDC Token</text>
+  <text x="618" y="152" class="m" font-size="11.5" fill="#e8eaed">contextId + taskId</text>
+  <text x="618" y="172" class="m" font-size="11.5" fill="#57caff">Remote LLM + MCP</text>
+  <text x="618" y="198" class="sub" font-size="12.5">Runs opaquely on server</text>
+
+  <!-- Arrow 3 -> 4 -->
+  <line x1="820" y1="125" x2="874" y2="125" stroke="#ff7daf" stroke-width="3" marker-end="url(#arr-r)"/>
+  <text x="847" y="114" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">SSE</text>
+
+  <!-- Step 4: Return Artifacts -->
+  <rect x="882" y="34" width="186" height="182" rx="18" fill="url(#glass-hi)" stroke="#ff7daf" stroke-width="2.2" filter="url(#glow-s)"/>
+  <rect x="896" y="46" width="96" height="22" rx="11" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="944" y="61" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">4 · RESULT</text>
+  <rect x="898" y="82" width="154" height="34" rx="9" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+  <text x="975" y="104" text-anchor="middle" class="m" font-size="12" fill="#5cdb6d">state: completed</text>
+  <rect x="898" y="126" width="154" height="44" rx="9" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="975" y="145" text-anchor="middle" class="t" font-size="13.5" fill="#ffffff">Artifacts[]</text>
+  <text x="975" y="162" text-anchor="middle" class="m" font-size="10.5" fill="#bdc1c6">Text · File · DataPart</text>
+  <text x="975" y="198" text-anchor="middle" class="sub" font-size="12.5">Typed deliverables</text>
+</svg>

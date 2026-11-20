@@ -1,0 +1,873 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A2A Protocol with ADK — Discover, Delegate, Interoperate</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- A2A Protocol with ADK deck extras ---------- */
+    .a2a-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .a2a-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .a2a-art { border: 2px solid var(--dk-line); border-radius: 16px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; }
+    .a2a-art.blue { border-color: var(--h-blue); } .a2a-art.green { border-color: var(--h-green); }
+    .a2a-art.yellow { border-color: var(--h-yellow); } .a2a-art.red { border-color: var(--h-red); }
+    .reveal .slides .a2a-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .a2a-ty-art { position: absolute; left: 880px; top: 168px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+    .reveal .slides .a2a-ty-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .a2a-ico { display: block; width: 38px; height: 38px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+
+    /* compact product logo badges */
+    .ev-lg.sm { width: 30px; height: 30px; border-radius: 8px; }
+    .reveal .slides .ev-lg.sm img { width: 19px; height: 19px; }
+    .lg-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .lg-row h3 { margin: 0; }
+    .lg-strip { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+    .lg-chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 12px 5px 6px; border-radius: 999px; border: 1.5px solid var(--c, #5f6368); background: #17181b; font: 500 13px/1 var(--mono); color: #e8eaed; }
+    .lg-chip i { display: inline-grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: #fff; flex: none; }
+    .reveal .slides .lg-chip i img { width: 14px; height: 14px; object-fit: contain; display: block; margin: 0; }
+    .th-lg { display: inline-flex; align-items: center; gap: 8px; vertical-align: middle; }
+
+    /* pills / badges */
+    .a2a-pill { flex: none; display: inline-block; font: 500 13.5px/1.2 var(--mono); padding: 7px 13px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; box-sizing: border-box; }
+
+    /* side cards next to code */
+    .a2a-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .a2a-side .pc { padding: 13px 16px; font-size: 15px; line-height: 1.4; }
+    .a2a-side .pc h3 { font-size: 18px; margin-bottom: 4px; }
+
+    /* checklist */
+    .reveal ul.a2a-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .a2a-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .a2a-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .a2a-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .a2a-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* silo vs A2A diagram */
+    .silo-grid { display: grid; grid-template-columns: 1fr 56px 1fr; gap: 14px; width: 1088px; align-items: stretch; }
+    .silo-box { border: 2px solid var(--dk-line); border-radius: 18px; background: #17181b; padding: 18px 20px; display: flex; flex-direction: column; gap: 12px; }
+    .silo-box.good { border-color: var(--h-green); }
+    .silo-box.bad { border-color: var(--h-red); }
+    .silo-hd { display: flex; align-items: center; justify-content: space-between; font: 500 18px/1.2 var(--sans); color: #fff; }
+    .silo-nodes { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; }
+    .silo-node { background: var(--dk-card); border: 1.5px solid var(--c, var(--dk-line)); border-radius: 12px; padding: 12px 10px; text-align: center; }
+    .silo-node b { display: block; font-size: 15px; color: #fff; margin-bottom: 3px; }
+    .silo-node small { display: block; font: 400 12px/1.3 var(--mono); color: var(--dk-sub); }
+    .silo-bus { border-radius: 12px; padding: 11px 14px; text-align: center; font: 500 14px/1.3 var(--mono); }
+    .silo-bus.bad { border: 1.5px dashed var(--h-red); color: var(--h-red); background: rgba(255,125,175,.08); }
+    .silo-bus.good { border: 2px solid var(--h-blue); color: var(--h-blue); background: rgba(87,202,255,.10); }
+
+    /* A2A vs MCP 2-axis visual */
+    .axis-wrap { display: flex; gap: 22px; width: 1088px; align-items: stretch; }
+    .axis-diag { flex: 1.35; border: 2px solid var(--dk-line); border-radius: 18px; background: #17181b; padding: 20px 22px; display: flex; flex-direction: column; justify-content: space-between; gap: 14px; }
+    .axis-row { display: grid; grid-template-columns: 1fr 54px 1fr 54px 1fr; align-items: center; gap: 6px; }
+    .axis-agent { border: 2px solid var(--c); background: var(--dk-card); border-radius: 14px; padding: 12px 10px; text-align: center; }
+    .axis-agent b { display: block; font-size: 16px; color: #fff; }
+    .axis-agent small { display: block; font: 400 12px/1.3 var(--mono); color: var(--c); margin-top: 3px; }
+    .axis-link { text-align: center; font: 700 11.5px/1.2 var(--mono); color: var(--h-blue); }
+    .axis-link svg { width: 46px; height: 18px; display: block; margin: 2px auto 0; fill: none; stroke: var(--h-blue); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .axis-vert { display: grid; grid-template-columns: 1fr 54px 1fr 54px 1fr; align-items: start; gap: 6px; }
+    .axis-mcp-col { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+    .axis-mcp-line { font: 700 11.5px/1 var(--mono); color: var(--h-yellow); display: flex; align-items: center; gap: 5px; }
+    .axis-tools { width: 100%; border: 1.5px dashed var(--h-yellow); background: rgba(255,212,39,.07); border-radius: 10px; padding: 8px 6px; text-align: center; font: 400 12.5px/1.35 var(--mono); color: var(--dk-text); }
+
+    /* state machine */
+    .sm-wrap { width: 1088px; border: 2px solid var(--dk-line); border-radius: 18px; background: #17181b; padding: 20px 24px; box-sizing: border-box; }
+    .sm-grid { display: grid; grid-template-columns: 170px 44px 190px 44px 210px 44px 1fr; align-items: center; gap: 4px; }
+    .sm-node { border: 2px solid var(--c); background: var(--dk-card); border-radius: 14px; padding: 13px 12px; text-align: center; }
+    .sm-node b { display: block; font: 500 16px/1.2 var(--mono); color: var(--c); }
+    .sm-node small { display: block; font: 400 12.5px/1.3 var(--sans); color: var(--dk-sub); margin-top: 4px; }
+    .sm-term { display: grid; gap: 10px; }
+    .sm-term .sm-node { padding: 9px 12px; display: flex; align-items: center; justify-content: space-between; text-align: left; }
+    .sm-term .sm-node small { margin-top: 0; }
+    .sm-arr { width: 42px; height: 20px; fill: none; stroke: var(--dk-text); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; display: block; margin: 0 auto; }
+    .sm-loop-bar { margin-top: 14px; display: flex; align-items: center; justify-content: center; gap: 14px; padding: 9px 16px; border-radius: 10px; border: 1.5px dashed var(--h-yellow); background: rgba(255,212,39,.07); font: 400 14px/1.3 var(--mono); color: var(--dk-text); }
+
+    /* topology / architecture cards */
+    .topo-box { border: 2px solid var(--dk-line); border-radius: 18px; background: #17181b; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; }
+    .topo-node { border: 2px solid var(--c); background: var(--dk-card); border-radius: 12px; padding: 10px 14px; display: flex; align-items: center; gap: 12px; }
+    .topo-node b { display: block; font-size: 16px; color: #fff; }
+    .topo-node small { display: block; font: 400 12.5px/1.3 var(--mono); color: var(--dk-sub); }
+
+    /* cross-framework mesh */
+    .mesh-grid { display: grid; grid-template-columns: 300px 64px 1fr; gap: 10px; width: 1088px; align-items: center; }
+    .mesh-hub { border: 2.5px solid var(--h-blue); background: #17181b; border-radius: 20px; padding: 22px 18px; text-align: center; }
+    .mesh-spokes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .mesh-spoke { border: 2px solid var(--c); background: var(--dk-card); border-radius: 14px; padding: 14px 16px; }
+    .mesh-spoke .sp-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+    .mesh-spoke b { font-size: 18px; color: #fff; }
+    .mesh-spoke p { font-size: 14px; line-height: 1.35; color: var(--dk-sub); }
+
+    /* Cloud Run architecture diagram */
+    .arch-wrap { width: 1088px; border: 2px solid var(--dk-line); border-radius: 18px; background: #17181b; padding: 18px 20px; box-sizing: border-box; display: grid; gap: 14px; }
+    .arch-top { display: grid; grid-template-columns: 200px 44px 1fr; align-items: center; gap: 8px; }
+    .arch-bot { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 14px; }
+    .arch-svc { border: 2px solid var(--c); background: var(--dk-card); border-radius: 14px; padding: 13px 15px; }
+    .arch-svc b { display: block; font-size: 17px; color: #fff; margin-bottom: 4px; }
+    .arch-svc p { font-size: 13.5px; line-height: 1.35; color: var(--dk-sub); margin-bottom: 8px; }
+    .arch-meta { display: flex; gap: 6px; flex-wrap: wrap; }
+    .arch-meta span { font: 400 11.5px/1.2 var(--mono); padding: 3px 8px; border-radius: 6px; background: #202124; border: 1px solid #5f6368; color: var(--dk-text); }
+
+    /* resources */
+    .a2a-res-row { display: flex; align-items: center; gap: 14px; }
+    .a2a-res-row h3 { margin: 0 0 4px; font-size: 20px; }
+    .reveal table.zt-tbl td.hi { color: var(--h-blue); font-weight: 500; }
+    .reveal table.zt-tbl td.hi-y { color: var(--h-yellow); font-weight: 500; }
+  </style>
+</head>
+<body data-deck="A2A Protocol with ADK">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-network" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><path d="M7.3 11 16.7 7M7.3 13 16.7 17M19 8.5v7"/></symbol>
+    <symbol id="i-card" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="9" cy="10" r="2"/><path d="M6.5 16c.6-1.5 1.7-2 2.5-2s1.9.5 2.5 2M14 9h4M14 13h4M14 16h2.5"/></symbol>
+    <symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5M15 3v5M6 8h12v4a6 6 0 0 1-12 0V8ZM12 18v3"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><path d="M21 3 10 14"/><path d="M21 3 14 21l-4-7-7-4 18-7Z"/></symbol>
+    <symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a13 13 0 0 1 0 18M12 3a13 13 0 0 0 0 18"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+    <symbol id="i-stream" viewBox="0 0 24 24"><path d="M4 18a2 2 0 1 0 0 4 2 2 0 0 0 0-4ZM4 11a9 9 0 0 1 9 9M4 4a16 16 0 0 1 16 16"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M10.3 21a2 2 0 0 0 3.4 0"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="12" r="4"/><path d="M12 12h9M18 12v3M21 12v2"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="A2A Protocol with ADK">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Discover</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Delegate</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Interoperate</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>A2A Protocol with ADK</b><span>Connect autonomous agents across services, clouds and frameworks</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-blue)"><img src="../images/shared/logos/a2a.svg" alt="">A2A</i><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-run.png" alt="">Cloud Run</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ • วันนี้มาคุยกันเรื่อง A2A Protocol (Agent2Agent) กับ ADK (Agent Development Kit) • 3 คำสำคัญของวันนี้คือ Discover ค้นหาว่า agent อื่นทำอะไรได้บ้าง, Delegate ส่งต่องานข้ามระบบ, และ Interoperate ทำงานร่วมกันได้ข้าม framework และข้าม cloud • มาดูกันว่าเราเปลี่ยน agent เดี่ยว ๆ ให้คุยกันเป็นระบบ microservices ได้อย่างไร</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Why A2A</strong><span>Silos, A2A vs MCP &amp; core principles</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Agent Cards &amp; Tasks</strong><span>Discovery, lifecycle, artifacts &amp; streaming</span></div></li>
+          <li class="c3"><b>03</b><div><strong>A2A in ADK</strong><span>Expose with <code>to_a2a()</code> &amp; call via <code>RemoteA2aAgent</code></span></div></li>
+          <li class="c4"><b>04</b><div><strong>Scale &amp; Security</strong><span>Auth, Cloud Run architecture &amp; best practices</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-a2a-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">วันนี้แบ่งเป็น 4 ช่วงครับ: (1) ทำไมต้องมี A2A และมันต่างจาก MCP ยังไง (2) กลไกหลักของโปรโตคอล ตั้งแต่ Agent Card, Task Lifecycle, Artifacts ไปจนถึง Streaming (3) โค้ดจริงใน ADK แค่ไม่กี่บรรทัดก็เปิด agent เป็น A2A server และเรียกใช้ข้ามเครื่องได้ (4) การเอาขึ้น production บน Cloud Run เรื่อง auth และ best practices • สแกน QR ด้านขวาเปิดสไลด์ตามได้เลยครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · Why A2A">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="a2a-div-art" style="--c:var(--h-blue)"><img src="../images/adk-a2a-slides/sec-01-why-a2a.svg" alt="Two glowing agents bridging across cloud silos via A2A"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Why<br>A2A</h1>
+            <p class="sub" style="margin-top:28px">Breaking silos across frameworks,<br>teams and clouds</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • เริ่มจากปัญหาที่ทีม AI กำลังเจอตอนนี้ ทำไมแค่มี multi-agent ในโปรเจกต์เดียวถึงยังไม่พอ และทำไม A2A ถึงเกิดขึ้นมา</aside>
+      </section>
+
+      <!-- 4. The multi-framework silo problem -->
+      <section data-title="The multi-framework silo problem">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the problem</div>
+            <h2 style="margin-bottom:22px">Enterprise agents live in isolated silos</h2>
+            <div class="silo-grid">
+              <div class="silo-box bad fragment" data-fragment-index="1">
+                <div class="silo-hd"><span>Without A2A</span><span class="tag red">N × M glue</span></div>
+                <div class="silo-nodes">
+                  <div class="silo-node" style="--c:var(--h-blue)"><span class="ev-lg sm" style="margin-bottom:6px"><img src="../images/shared/logos/adk.png" alt="ADK"></span><b>Travel</b><small>ADK · Cloud Run</small></div>
+                  <div class="silo-node" style="--c:var(--h-yellow)"><span class="ev-lg sm" style="margin-bottom:6px"><img src="../images/shared/logos/gcp-kubernetes-engine.png" alt="GKE"></span><b>Billing</b><small>LangGraph · GKE</small></div>
+                  <div class="silo-node" style="--c:var(--h-red)"><span class="ev-lg sm" style="margin-bottom:6px"><img src="../images/shared/logos/googlecloud.svg" alt="Cloud"></span><b>HR / IT</b><small>CrewAI · SaaS</small></div>
+                </div>
+                <div class="silo-bus bad">Custom REST wrappers · brittle schemas · no shared discovery or task state</div>
+                <p style="font-size:15px; color:var(--dk-sub); line-height:1.4">Every new pair of agents needs custom HTTP glue, auth plumbing, polling logic and error handling.</p>
+              </div>
+              <div style="display:grid; place-items:center">
+                <svg style="width:42px; height:42px; fill:none; stroke:var(--h-green); stroke-width:3; stroke-linecap:round; stroke-linejoin:round" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </div>
+              <div class="silo-box good fragment" data-fragment-index="2">
+                <div class="silo-hd"><span class="th-lg"><span class="ev-lg sm"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span>With A2A</span><span class="tag green">1 open protocol</span></div>
+                <div class="silo-nodes">
+                  <div class="silo-node" style="--c:var(--h-blue)"><span class="ev-lg sm" style="margin-bottom:6px"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><b>Travel</b><small>ADK · Cloud Run</small></div>
+                  <div class="silo-node" style="--c:var(--h-yellow)"><span class="ev-lg sm" style="margin-bottom:6px"><img src="../images/shared/logos/gcp-kubernetes-engine.png" alt="GKE"></span><b>Billing</b><small>LangGraph · GKE</small></div>
+                  <div class="silo-node" style="--c:var(--h-red)"><span class="ev-lg sm" style="margin-bottom:6px"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><b>HR / IT</b><small>CrewAI · SaaS</small></div>
+                </div>
+                <div class="silo-bus good">A2A Protocol · Agent Cards · JSON-RPC 2.0 · SSE Streaming</div>
+                <p style="font-size:15px; color:var(--dk-sub); line-height:1.4">Each team builds, deploys and scales its own agent — any other agent can discover and delegate to it.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>The shift</b><span>Agents are becoming microservices. A2A is the standard contract between them.</span></div>
+        </div>
+        <aside class="notes">ในองค์กรจริง ไม่มีทางที่ทุกทีมจะเขียน agent ใน repo เดียวหรือใช้ framework เดียวกัน • (คลิก 1) ทีม Travel ใช้ ADK บน Cloud Run, ทีม Billing ใช้ LangGraph, ทีม HR ใช้ CrewAI หรือ SaaS • ถ้าไม่มีมาตรฐานกลาง ทุกคู่ต้องเขียน REST wrapper เอง เป็นปัญหา N × M • (คลิก 2) A2A มาเป็นภาษากลางให้ agent ค้นหากัน สั่งงานกัน และติดตามสถานะงานแบบเดียวกันหมด • (คลิก 3) มองง่าย ๆ คือ agent กำลังกลายเป็น microservices และ A2A คือมาตรฐานการสื่อสารระหว่างกัน</aside>
+      </section>
+
+      <!-- 5. A2A + MCP complementary -->
+      <section data-title="A2A + MCP: complementary protocols">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">01 · the full stack</div>
+            <h2 style="margin-bottom:14px">A2A and MCP solve two different axes</h2>
+            <div class="a2a-art blue fragment" data-fragment-index="1" style="width:1088px; height:260px">
+              <img src="../images/adk-a2a-slides/a2a-vs-mcp.svg" alt="Two-axis diagram showing horizontal A2A agent-to-agent collaboration and vertical MCP agent-to-tool connections">
+            </div>
+            <div class="grid g3" style="width:1088px; gap:14px; margin-top:14px">
+              <div class="pc blue fragment" data-fragment-index="2" style="padding:12px 16px; font-size:14.5px; line-height:1.35">
+                <div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span><h3 style="color:var(--h-blue); font-size:17px">A2A · Horizontal</h3></div>
+                Autonomous agents delegate goals, negotiate multi-turn tasks &amp; exchange artifacts.
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2" style="padding:12px 16px; font-size:14.5px; line-height:1.35">
+                <div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><h3 style="color:var(--h-yellow); font-size:17px">MCP · Vertical</h3></div>
+                One agent connects to structured tools, APIs, databases &amp; local resources.
+              </div>
+              <div class="pc green fragment" data-fragment-index="3" style="padding:12px 16px; font-size:14.5px; line-height:1.35">
+                <div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-green); font-size:17px">Use both together</h3></div>
+                An A2A specialist often uses MCP internally to reach its own databases &amp; APIs.
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Mental model</b><span>MCP gives an agent hands (tools). A2A gives an agent teammates.</span></div>
+        </div>
+        <aside class="notes">คำถามที่คนถามบ่อยที่สุดคือ A2A มาแทน MCP หรือเปล่า? คำตอบคือไม่ใช่ครับ มันทำงานคนละแกนกัน • (คลิก 1) แนวนอนคือ A2A: agent คุยกับ agent เพื่อมอบหมายงานระดับเป้าหมาย ส่วนแนวตั้งคือ MCP: agent ตัวเดียวเชื่อมกับ tool, database หรือ API ของตัวเอง • (คลิก 2) ทั้งสองโปรโตคอลออกแบบมาเสริมกัน • (คลิก 3) ในระบบจริงเราใช้ทั้งคู่พร้อมกัน เช่น Flight Agent รับงานผ่าน A2A แล้วข้างในใช้ MCP ไปดึงข้อมูลจาก Airline API กับ BigQuery • (คลิก 4) จำง่าย ๆ: MCP คือมือให้ agent หยิบจับเครื่องมือ ส่วน A2A คือเพื่อนร่วมทีมให้ agent ทำงานร่วมกัน</aside>
+      </section>
+
+      <!-- 6. A2A vs MCP comparison table -->
+      <section data-title="A2A vs MCP at a glance">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · comparison</div>
+            <h2 style="margin-bottom:18px">A2A vs MCP at a glance</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <colgroup><col style="width:200px"><col style="width:444px"><col style="width:444px"></colgroup>
+              <thead><tr><th>Dimension</th><th><span class="th-lg"><span class="ev-lg sm"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span>A2A (Agent2Agent)</span></th><th><span class="th-lg"><span class="ev-lg sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>MCP (Model Context Protocol)</span></th></tr></thead>
+              <tbody>
+                <tr><td>Direction</td><td class="hi">Agent ↔ Agent (horizontal)</td><td class="hi-y">Agent ↕ Tool / Data (vertical)</td></tr>
+                <tr><td>Interaction</td><td>Goal-driven tasks, multi-turn collaboration</td><td>Deterministic function &amp; resource calls</td></tr>
+                <tr><td>Visibility</td><td>Opaque — internals, prompt &amp; tools stay private</td><td>Explicit JSON schema for every tool parameter</td></tr>
+                <tr><td>Duration</td><td>Instant to long-running (SSE &amp; push webhooks)</td><td>Short request/response tool invocations</td></tr>
+                <tr><td>Discovery</td><td><code>/.well-known/agent.json</code> (Agent Card)</td><td><code>tools/list</code>, <code>resources/list</code></td></tr>
+                <tr><td>Best for</td><td>Cross-team, cross-framework, cross-org delegation</td><td>Giving an LLM structured access to APIs &amp; DBs</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Rule of thumb</b><span>If it's a stateless function, expose it via MCP. If it reasons and plans, expose it via A2A.</span></div>
+        </div>
+        <aside class="notes">สรุปเปรียบเทียบชัด ๆ ในตารางเดียว • A2A คุยกันระดับเป้าหมาย ทำงานหลายรอบได้ ซ่อนเบื้องหลังไว้ทั้งหมด และรองรับงานที่ใช้เวลานานผ่าน SSE หรือ webhook • MCP เรียก tool แบบมี JSON schema ชัดเจน เหมาะกับการเรียกฟังก์ชันหรืออ่านข้อมูลสั้น ๆ • กฎง่าย ๆ: ถ้าเป็นฟังก์ชันที่ทำงานตรงไปตรงมา ใช้ MCP แต่ถ้าเป็นระบบที่คิดเอง วางแผนเอง และเรียก tool หลายขั้นเองได้ ให้เปิดเป็น A2A</aside>
+      </section>
+
+      <!-- 7. Core A2A design principles -->
+      <section data-title="Core A2A design principles">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · design principles</div>
+            <h2 style="margin-bottom:20px">Built for real-world, enterprise agents</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <svg class="a2a-ico" style="--c:var(--h-blue)"><use href="#i-lock"/></svg>
+                <h3 style="color:var(--h-blue)">Opaque by default</h3>
+                <p style="font-size:16px; color:var(--dk-sub); line-height:1.42">Agents collaborate through messages and artifacts without leaking prompts, memory, proprietary logic or internal tools.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2">
+                <svg class="a2a-ico" style="--c:var(--h-green)"><use href="#i-globe"/></svg>
+                <h3 style="color:var(--h-green)">Built on open web standards</h3>
+                <p style="font-size:16px; color:var(--dk-sub); line-height:1.42">HTTP, JSON-RPC 2.0, Server-Sent Events (SSE) and OpenAPI-style auth — works cleanly with existing API gateways and proxies.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3">
+                <svg class="a2a-ico" style="--c:var(--h-yellow)"><use href="#i-bolt"/></svg>
+                <h3 style="color:var(--h-yellow)">Async &amp; long-running native</h3>
+                <p style="font-size:16px; color:var(--dk-sub); line-height:1.42">Handles sub-second answers, multi-minute research and human-in-the-loop approvals with stateful tasks and webhooks.</p>
+              </div>
+              <div class="pc red fragment" data-fragment-index="4">
+                <svg class="a2a-ico" style="--c:var(--h-red)"><use href="#i-layers"/></svg>
+                <h3 style="color:var(--h-red)">Vendor-neutral &amp; multimodal</h3>
+                <p style="font-size:16px; color:var(--dk-sub); line-height:1.42">Apache 2.0 protocol under the Linux Foundation. Exchanges text, files, images, audio and structured JSON across any framework.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">หลักการออกแบบ 4 ข้อของ A2A • (คลิก 1) Opaque by default: ต่างฝ่ายต่างซ่อน prompt, memory และ tool ข้างในได้ ปกป้อง IP และความปลอดภัย • (คลิก 2) ใช้มาตรฐานเว็บที่มีอยู่แล้ว ทั้ง HTTP, JSON-RPC 2.0, SSE และ OAuth ทำให้ต่อเข้ากับ API gateway หรือ load balancer เดิมได้ทันที • (คลิก 3) รองรับงานที่ใช้เวลานานและต้องรอคนอนุมัติ (human-in-the-loop) • (คลิก 4) เป็นมาตรฐานเปิด Apache 2.0 ภายใต้ Linux Foundation ไม่ผูกติดเจ้าใดเจ้าหนึ่ง และส่งข้อมูลได้ทั้งข้อความ ไฟล์ รูปภาพ และ JSON</aside>
+      </section>
+
+      <!-- 8. Section 02 -->
+      <section class="bg-green" data-title="02 · Agent Cards & Tasks">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="a2a-div-art" style="--c:var(--h-green)"><img src="../images/adk-a2a-slides/sec-02-cards-tasks.svg" alt="Glowing Agent Card badge paired with a task state wheel"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Agent Cards<br>&amp; Tasks</h1>
+            <p class="sub" style="margin-top:28px">Discovery, lifecycle,<br>artifacts and streaming</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • มาดูข้างในโปรโตคอล A2A กันว่ามันทำงานยังไง ตั้งแต่การค้นหาผ่าน Agent Card, วงจรชีวิตของ Task, โครงสร้าง Message/Artifact ไปจนถึงโหมดการสื่อสาร 3 แบบ</aside>
+      </section>
+
+      <!-- 9. Agent Card anatomy -->
+      <section data-title="Discovery via Agent Card">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · discovery</div>
+            <h2 style="margin-bottom:16px">Every A2A agent publishes an <code style="font-size:.78em">/.well-known/agent.json</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:630px; flex:none; font-size:13.5px"><code class="language-json" data-trim>
+{
+  "name": "flight_specialist",
+  "description": "Searches flights and compares fares.",
+  "url": "https://flights.example.run.app/",
+  "version": "1.0.0",
+  "capabilities": {
+    "streaming": true,
+    "pushNotifications": false
+  },
+  "defaultInputModes": ["text/plain"],
+  "defaultOutputModes": ["text/plain", "application/json"],
+  "skills": [{
+    "id": "search_flights",
+    "name": "Flight Search",
+    "tags": ["travel", "flights", "pricing"],
+    "examples": ["Find non-stop flights BKK to NRT"]
+  }],
+  "securitySchemes": { "google_oidc": { "type": "openIdConnect" } }
+}
+              </code></pre>
+              <div class="a2a-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">1 · Digital business card</h3>Published at a predictable well-known URI so any client or registry can inspect it with one <code>GET</code>.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">2 · Skills drive routing</h3><code>description</code>, <code>skills</code> and <code>examples</code> tell an orchestrator LLM when to delegate here.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">3 · Capabilities &amp; auth</h3>Declares streaming, MIME types and required auth schemes before the first task is sent.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">จุดเริ่มต้นของ A2A คือ Agent Card ที่เปิดไว้ที่ path /.well-known/agent.json • (คลิก) มันคือนามบัตรดิจิทัลของ agent มีชื่อ, URL ปลายทาง, เวอร์ชัน • (คลิก) ส่วน skills, tags และ examples สำคัญมาก เพราะ agent ฝั่งเรียกจะเอาข้อมูลนี้ให้ LLM ตัดสินใจว่าควรส่งงานนี้ให้ใคร • (คลิก) และยังมี capabilities บอกว่ารองรับ streaming หรือ push ไหม รับส่งไฟล์แบบไหน และต้อง auth แบบไหนก่อนเริ่มคุย</aside>
+      </section>
+
+      <!-- 10. End-to-end call flow -->
+      <section data-title="How client and remote agent talk">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">02 · request flow</div>
+            <h2 style="margin-bottom:14px">From discovery to deliverable in 4 steps</h2>
+            <div class="a2a-art blue fragment" data-fragment-index="1" style="width:1088px; height:250px">
+              <img src="../images/adk-a2a-slides/agent-card-discovery.svg" alt="Visual discovery flow from GET /.well-known/agent.json to JSON-RPC tasks/send and SSE artifacts">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:16px">
+              <div class="pc" style="padding:12px 16px; font-size:14.5px"><b style="color:var(--h-blue)">contextId</b><br><span style="color:var(--dk-sub)">Groups related turns across a multi-turn session.</span></div>
+              <div class="pc" style="padding:12px 16px; font-size:14.5px"><b style="color:var(--h-green)">taskId</b><br><span style="color:var(--dk-sub)">Tracks one unit of work; supports <code>tasks/get</code> &amp; <code>cancel</code>.</span></div>
+              <div class="pc" style="padding:12px 16px; font-size:14.5px">
+                <div class="lg-strip" style="margin-bottom:4px">
+                  <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/gemini.svg" alt="Gemini"></i>Gemini</span>
+                  <span class="lg-chip" style="--c:var(--h-yellow)"><i><img src="../images/shared/logos/claude.png" alt="Claude"></i>Claude</span>
+                </div>
+                <span style="color:var(--dk-sub)">Remote LLM &amp; MCP tools stay opaque.</span>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Clean boundary</b><span>The client only sees the Agent Card, the task state and the returned artifacts.</span></div>
+        </div>
+        <aside class="notes">ภาพรวมการทำงาน 4 ขั้นตอน • (คลิก 1) Client ไป GET Agent Card เพื่อดูว่าปลายทางทำอะไรได้และอยู่ที่ไหน แล้วส่งคำสั่งผ่าน HTTP POST แบบ JSON-RPC 2.0 ฝั่ง Remote Agent ทำงานภายในของตัวเอง แล้วส่ง Task พร้อม Artifacts กลับมาผ่าน SSE • (คลิก 2) มี contextId เชื่อมบทสนทนา และ taskId ติดตามงานแต่ละชิ้น ฝั่งปลายทางจะใช้ Gemini, Claude หรือเรียก MCP กี่รอบก็ได้ • (คลิก 3) Client เห็นแค่ Agent Card, สถานะงาน และผลลัพธ์</aside>
+      </section>
+
+      <!-- 11. Task lifecycle state machine -->
+      <section data-title="Task lifecycle state machine">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">02 · task lifecycle</div>
+            <h2 style="margin-bottom:14px">Tasks move through a clear state machine</h2>
+            <div class="a2a-art green fragment" data-fragment-index="1" style="width:1088px; height:240px">
+              <img src="../images/adk-a2a-slides/task-state-machine.svg" alt="A2A Task state machine from submitted to working, input-required, and terminal states completed, failed, canceled">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:16px">
+              <div class="pc blue" style="padding:12px 16px; font-size:14.5px"><b style="color:var(--h-blue)">Active States</b><br><span style="color:var(--dk-sub)"><code>submitted</code> → <code>working</code> streams live progress events via SSE.</span></div>
+              <div class="pc yellow" style="padding:12px 16px; font-size:14.5px"><b style="color:#c58af9">Pause &amp; Resume</b><br><span style="color:var(--dk-sub)"><code>input-required</code> or <code>auth-required</code> waits for follow-up on same <code>taskId</code>.</span></div>
+              <div class="pc green" style="padding:12px 16px; font-size:14.5px"><b style="color:var(--h-green)">Terminal States</b><br><span style="color:var(--dk-sub)"><code>completed</code> (artifacts), <code>failed</code> (error), or <code>canceled</code>.</span></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Why it matters</b><span>Long tasks don't block HTTP connections — clients can stream progress, ask the user, or cancel cleanly.</span></div>
+        </div>
+        <aside class="notes">Task ใน A2A มี state machine ที่ชัดเจน • (คลิก 1) เริ่มที่ submitted เมื่อ server รับงาน เปลี่ยนเป็น working ระหว่างที่ agent กำลังคิดและเรียก tool ถ้าข้อมูลไม่พอหรือต้องขออนุญาตผู้ใช้ จะพักที่ input-required หรือ auth-required แล้วจบที่ completed, failed หรือ canceled • (คลิก 2) ตอนติด input-required ฝั่ง client แค่ส่งข้อความเพิ่มพร้อม taskId เดิม งานก็เดินต่อได้เลย • (คลิก 3) ช่วยให้งานที่ใช้เวลานานไม่ค้าง HTTP connection</aside>
+      </section>
+
+      <!-- 12. Messages, Parts & Artifacts -->
+      <section data-title="Messages, Parts and Artifacts">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · data model</div>
+            <h2 style="margin-bottom:20px">Messages carry turns; Artifacts carry deliverables</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:20px 22px">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                  <h3 style="color:var(--h-blue); margin:0">Message &amp; Parts</h3>
+                  <span class="tag blue">In-flight turns</span>
+                </div>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:14px">Every turn (<code>role: "user" | "agent"</code>) holds an array of typed <b>Parts</b>:</p>
+                <div class="zt-stack" style="gap:9px">
+                  <div class="pc" style="background:#17181b; padding:10px 14px; font-size:14.5px"><b style="color:var(--h-blue)">TextPart</b> — Natural language prompts, status notes &amp; replies.</div>
+                  <div class="pc" style="background:#17181b; padding:10px 14px; font-size:14.5px"><b style="color:var(--h-green)">FilePart</b> — Images, PDFs, audio via base64 <code>bytes</code> or signed <code>uri</code>.</div>
+                  <div class="pc" style="background:#17181b; padding:10px 14px; font-size:14.5px"><b style="color:var(--h-yellow)">DataPart</b> — Structured JSON payloads, forms &amp; typed records.</div>
+                </div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:20px 22px">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px">
+                  <h3 style="color:var(--h-green); margin:0">Artifacts</h3>
+                  <span class="tag green">Task outputs</span>
+                </div>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:14px">Immutable or streamed deliverables produced by a completed task:</p>
+                <pre style="font-size:13px; border-radius:14px"><code class="language-json" data-trim>
+"artifacts": [{
+  "artifactId": "itinerary-01",
+  "name": "tokyo_trip.json",
+  "parts": [
+    { "kind": "text", "text": "3-day Tokyo plan" },
+    { "kind": "data", "data": { "flights": [...], "total_thb": 18500 } }
+  ]
+}]
+                </code></pre>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Tip</b><span>Use <code>DataPart</code> for machine-readable handoffs so downstream agents don't have to parse prose.</span></div>
+        </div>
+        <aside class="notes">ข้อมูลที่ส่งกันใน A2A แบ่งเป็น 2 ระดับ • (คลิก 1) Message คือข้อความที่คุยโต้ตอบกันระหว่างทาง ข้างในประกอบไปด้วย Parts 3 ชนิด: TextPart สำหรับข้อความ, FilePart สำหรับไฟล์หรือรูปภาพผ่าน bytes หรือ URI, และ DataPart สำหรับ JSON ที่เป็นโครงสร้าง • (คลิก 2) Artifact คือชิ้นงานผลลัพธ์สุดท้ายของ Task เช่น แผนการเดินทาง รายงาน PDF หรือรูปที่เจนเสร็จแล้ว • (คลิก 3) แนะนำให้ส่ง JSON ผ่าน DataPart เวลา agent คุยกัน จะได้ไม่ต้องเอา regex มาแกะข้อความ</aside>
+      </section>
+
+      <!-- 13. Sync vs SSE vs Push -->
+      <section data-title="Sync, SSE Streaming and Push">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · transport modes</div>
+            <h2 style="margin-bottom:22px">Three ways to receive results</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <svg class="a2a-ico" style="--c:var(--h-blue)"><use href="#i-bolt"/></svg>
+                <h3>1 · Sync Request</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:14px">Single <code>message/send</code> call. Server holds the request and returns the finished <code>Task</code>.</p>
+                <div class="chips"><span class="chip">Fast (&lt; 5s)</span><span class="chip">Simplest</span></div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2">
+                <svg class="a2a-ico" style="--c:var(--h-green)"><use href="#i-stream"/></svg>
+                <h3>2 · SSE Streaming</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:14px"><code>message/stream</code> pushes live <code>status-update</code> and partial <code>artifact-update</code> events.</p>
+                <div class="chips"><span class="chip">Real-time UX</span><span class="chip">Multi-step</span></div>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3">
+                <svg class="a2a-ico" style="--c:var(--h-yellow)"><use href="#i-bell"/></svg>
+                <h3>3 · Push Webhooks</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:14px">Client registers a callback URL. Server POSTs updates asynchronously when state changes.</p>
+                <div class="chips"><span class="chip">Minutes–hours</span><span class="chip">Disconnected</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Selection guide</b><span>Start with Sync, enable SSE for interactive multi-step agents, use Push for async batch jobs.</span></div>
+        </div>
+        <aside class="notes">A2A รองรับการรับส่งผลลัพธ์ 3 โหมดตามความช้าเร็วของงาน • (คลิก 1) Sync: ยิง message/send ทีเดียวแล้วรอคำตอบ เหมาะกับงานที่จบในไม่กี่วินาที • (คลิก 2) SSE Streaming: ยิง message/stream แล้ว server ทยอยส่ง status และชิ้นงานบางส่วนกลับมาเรื่อย ๆ เหมาะกับหน้าแชตที่ต้องโชว์ความคืบหน้า • (คลิก 3) Push Notifications: ฝาก webhook URL ไว้ เมื่อไรงานเสร็จ server ค่อยยิงกลับมา เหมาะกับงานที่ใช้เวลาหลายนาทีหรือรอคนอนุมัติ</aside>
+      </section>
+
+      <!-- 14. Section 03 -->
+      <section class="bg-yellow" data-title="03 · A2A in ADK">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="a2a-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-a2a-slides/sec-03-adk-a2a.svg" alt="to_a2a() server plugged into RemoteA2aAgent client"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">A2A in<br>ADK</h1>
+            <p class="sub" style="margin-top:28px">Expose any agent with to_a2a()<br>and call it via RemoteA2aAgent</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • มาดูโค้ดจริงใน ADK กันครับ จุดเด่นของ ADK คือทำ A2A ให้ง่ายมาก ทั้งฝั่งเปิดให้คนอื่นเรียก และฝั่งไปเรียก agent คนอื่น</aside>
+      </section>
+
+      <!-- 15. Expose with to_a2a() -->
+      <section data-title="Expose an agent with to_a2a()">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · server side</div>
+            <h2 style="margin-bottom:18px">Expose any ADK agent in 3 lines with <code style="font-size:.82em">to_a2a()</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from google.adk.agents import LlmAgent
+from google.adk.a2a.utils.agent_to_a2a import to_a2a
+
+flight_agent = LlmAgent(
+    name="flight_agent",
+    model="gemini-2.5-flash",
+    description="Searches flights and compares fares.",
+    instruction="Find the best flights for the user.",
+    tools=[search_flights],
+)
+
+# Turn any ADK agent into an A2A ASGI app
+a2a_app = to_a2a(flight_agent, port=8001)
+              </code></pre>
+              <div class="a2a-side">
+                <div class="pc blue fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-blue)">1 · Install extra</h3></div><code>pip install "google-adk[a2a]"</code><br>Adds the official <code>a2a-sdk</code> and ASGI server helpers.</div>
+                <div class="pc green fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-green)">2 · Run with uvicorn</h3></div><code>uvicorn flight_agent.agent:a2a_app --host 0.0.0.0 --port 8001</code></div>
+                <div class="pc yellow fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span><h3 style="color:var(--h-yellow)">3 · Auto-generated card</h3></div>ADK builds <code>/.well-known/agent.json</code> from your agent's <code>name</code>, <code>description</code> and tools.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ฝั่ง Server ง่ายมากครับ มี LlmAgent เดิมอยู่แล้ว แค่ import to_a2a แล้วส่ง agent เข้าไปบรรทัดเดียว • (คลิก) ลงแพ็กเกจ google-adk[a2a] • (คลิก) สั่งรันด้วย uvicorn เหมือนแอป FastAPI/Starlette ทั่วไป • (คลิก) ADK จะสร้าง endpoint /.well-known/agent.json และ JSON-RPC server ให้ครบอัตโนมัติ โดยดึง name, description และ tools ของ agent มาสร้างเป็น Agent Card ให้เลย</aside>
+      </section>
+
+      <!-- 16. Customizing Agent Card & Cloud Run URL -->
+      <section data-title="Custom Agent Card & public URL">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · customizing the card</div>
+            <h2 style="margin-bottom:18px">Customize the Agent Card for production</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:630px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from a2a.types import AgentCard, AgentSkill, AgentCapabilities
+from google.adk.a2a.utils.agent_to_a2a import to_a2a
+
+custom_card = AgentCard(
+    name="flight_agent",
+    url="https://flight-agent-xyz.run.app/",
+    version="1.2.0",
+    description="Real-time flight search and fare comparison.",
+    capabilities=AgentCapabilities(streaming=True),
+    default_input_modes=["text/plain"],
+    default_output_modes=["text/plain"],
+    skills=[AgentSkill(
+        id="flight_search", name="Flight Search",
+        description="Find routes and prices by date.",
+        tags=["travel", "flights"],
+    )],
+)
+
+a2a_app = to_a2a(flight_agent, agent_card=custom_card)
+              </code></pre>
+              <div class="a2a-side">
+                <div class="pc blue fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><h3 style="color:var(--h-blue)">Public HTTPS URL</h3></div>Behind Cloud Run or a load balancer, set <code>url</code> (or <code>host</code> &amp; <code>protocol="https"</code>) so clients don't get <code>localhost</code>.</div>
+                <div class="pc green fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><h3 style="color:var(--h-green)">Rich skills metadata</h3></div>Explicit <code>AgentSkill</code> descriptions &amp; examples boost routing accuracy in parent coordinators.</div>
+                <div class="pc yellow fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span><h3 style="color:var(--h-yellow)">Verify with curl</h3></div><code>curl https://.../&#46;well-known/agent.json</code></div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Shortcut</b><span><code>adk api_server --a2a</code> can also serve multiple agents in one directory with A2A enabled.</span></div>
+        </div>
+        <aside class="notes">พอจะขึ้น production เราสามารถส่ง AgentCard ที่กำหนดเองเข้า to_a2a() ได้ • (คลิก) จุดที่พลาดกันบ่อยคือ URL ในการ์ด: บน Cloud Run ต้องระบุ public HTTPS URL หรือส่ง host กับ protocol="https" ไม่อย่างนั้นการ์ดจะชี้กลับไปที่ localhost • (คลิก) การเขียน skills และ description ให้ชัดเจนช่วยให้ coordinator ฝั่งเรียกเลือก agent ได้แม่นขึ้น • (คลิก) และตอนพัฒนาในเครื่อง ใช้คำสั่ง adk api_server --a2a เปิดทีเดียวหลาย agent ได้เลย</aside>
+      </section>
+
+      <!-- 17. Consume with RemoteA2aAgent -->
+      <section data-title="Consume with RemoteA2aAgent">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · client side</div>
+            <h2 style="margin-bottom:18px">Consume any remote agent with <code style="font-size:.82em">RemoteA2aAgent</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:14px"><code class="language-python" data-trim>
+from google.adk.agents.remote_a2a_agent import (
+    RemoteA2aAgent,
+    AGENT_CARD_WELL_KNOWN_PATH,
+)
+
+remote_flight = RemoteA2aAgent(
+    name="flight_agent",
+    description="Remote specialist for searching flights.",
+    agent_card=(
+        "https://flight-agent-xyz.run.app"
+        f"{AGENT_CARD_WELL_KNOWN_PATH}"
+    ),
+    # Optional: custom httpx_client for auth & timeouts
+)
+              </code></pre>
+              <div class="a2a-side">
+                <div class="pc blue fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3 style="color:var(--h-blue)">1 · Drop-in BaseAgent</h3></div><code>RemoteA2aAgent</code> behaves just like a local ADK sub-agent — plug it into <code>sub_agents</code>, <code>SequentialAgent</code> or <code>ParallelAgent</code>.</div>
+                <div class="pc green fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span><h3 style="color:var(--h-green)">2 · Automatic translation</h3></div>ADK converts local <code>Event</code>s into A2A <code>Message</code>s and streams remote <code>Task</code>s back as ADK events.</div>
+                <div class="pc red fragment"><div class="lg-row"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><h3 style="color:var(--h-red)">3 · Zero boilerplate</h3></div>No hand-written JSON-RPC envelopes, SSE parsers or polling loops.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">มาดูฝั่ง Client บ้าง • แค่สร้าง RemoteA2aAgent แล้วชี้ agent_card ไปที่ /.well-known/agent.json ของปลายทาง • (คลิก) RemoteA2aAgent สืบทอดมาจาก BaseAgent ของ ADK โดยตรง ทำให้เอาไปใส่ใน sub_agents, SequentialAgent หรือ ParallelAgent ได้เหมือน agent ในเครื่องเป๊ะ • (คลิก) ADK แปลง Event ภายในเป็น A2A Message ให้อัตโนมัติ และแปลงผลลัพธ์กลับมาเป็น Event ให้ด้วย • (คลิก) ไม่ต้องมานั่งเขียน HTTP client หรือ parse SSE เองเลย</aside>
+      </section>
+
+      <!-- 18. Composing local + remote agents -->
+      <section data-title="Compose local & remote agents">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · composition</div>
+            <h2 style="margin-bottom:18px">Mix local and remote agents in one Coordinator</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:stretch">
+              <pre style="width:570px; flex:none; font-size:13.8px"><code class="language-python" data-trim>
+from google.adk.agents import LlmAgent
+
+root_agent = LlmAgent(
+    name="travel_coordinator",
+    model="gemini-2.5-flash",
+    instruction=(
+        "Plan complete trips. Delegate flight "
+        "search to flight_agent, hotels to "
+        "hotel_agent, and check budget locally."
+    ),
+    sub_agents=[
+        local_budget_agent,  # in-process Python
+        remote_flight,       # RemoteA2aAgent :8001
+        remote_hotel,        # RemoteA2aAgent :8002
+    ],
+)
+              </code></pre>
+              <div class="topo-box" style="flex:1">
+                <div class="topo-node" style="--c:var(--h-blue)">
+                  <span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                  <div><b>travel_coordinator</b><small>LlmAgent · routes by description</small></div>
+                </div>
+                <div style="text-align:center; font:500 12.5px/1 var(--mono); color:var(--dk-sub)">↓ delegates seamlessly ↓</div>
+                <div class="topo-node fragment" data-fragment-index="1" style="--c:var(--h-green)">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span>
+                  <div><b>budget_agent</b><small>Local in-process · shared session state</small></div>
+                </div>
+                <div class="topo-node fragment" data-fragment-index="2" style="--c:var(--h-yellow)">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>
+                  <div><b>flight_agent</b><small>A2A HTTPS · Cloud Run service A</small></div>
+                </div>
+                <div class="topo-node fragment" data-fragment-index="2" style="--c:var(--h-red)">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span>
+                  <div><b>hotel_agent</b><small>A2A HTTPS · Partner or LangGraph</small></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Transparent delegation</b><span>The coordinator LLM doesn't know — or care — whether a sub-agent runs locally or across the internet.</span></div>
+        </div>
+        <aside class="notes">พอมี RemoteA2aAgent แล้ว เราเอามาผสมกับ agent ในเครื่องใน Coordinator เดียวกันได้เลย • (คลิก 1) budget_agent รันอยู่ใน process เดียวกัน แชร์ session state ได้เร็ว ๆ • (คลิก 2) flight_agent กับ hotel_agent เป็น RemoteA2aAgent ที่รันอยู่คนละ service หรือคนละองค์กรก็ได้ • (คลิก 3) ตัว LLM ของ Coordinator เห็นแค่ชื่อกับคำอธิบายของ sub_agents มันไม่รู้และไม่จำเป็นต้องรู้ว่า agent นั้นรันในเครื่องหรืออยู่คนละซีกโลก</aside>
+      </section>
+
+      <!-- 19. Cross-framework interop -->
+      <section data-title="Cross-framework interoperability">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">03 · interoperability</div>
+            <h2 style="margin-bottom:14px">One ADK coordinator, any framework behind A2A</h2>
+            <div class="a2a-art blue fragment" data-fragment-index="1" style="width:1088px; height:260px">
+              <img src="../images/adk-a2a-slides/local-and-remote-mesh.svg" alt="ADK Coordinator mixing local LlmAgent and remote RemoteA2aAgent services across ADK, LangGraph, CrewAI, and Vertex AI">
+            </div>
+            <div class="pc fragment" data-fragment-index="2" style="width:1088px; margin-top:16px; padding:14px 18px; background:#17181b">
+              <div class="lg-strip" style="justify-content:space-between">
+                <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/adk.png" alt="ADK"></i>ADK</span>
+                <span class="lg-chip" style="--c:var(--h-green)"><i><img src="../images/shared/logos/a2a.svg" alt="A2A"></i>A2A SDK</span>
+                <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/python.svg" alt="Python"></i>Python / Go / Java</span>
+                <span class="lg-chip" style="--c:var(--h-yellow)"><i><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></i>Cloud Run</span>
+                <span class="lg-chip" style="--c:var(--h-red)"><i><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></i>Vertex AI</span>
+                <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/gemini.svg" alt="Gemini"></i>Gemini</span>
+                <span class="lg-chip" style="--c:var(--h-yellow)"><i><img src="../images/shared/logos/claude.png" alt="Claude"></i>Claude</span>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Freedom of choice</b><span>Teams pick the best framework, model and release cadence for their domain — A2A connects them all.</span></div>
+        </div>
+        <aside class="notes">ความสวยงามของ A2A คือเราไม่ต้องบังคับให้ทั้งบริษัทใช้ framework เดียวกัน • (คลิก 1) ฝั่งหน้าบ้านใช้ ADK เป็น Coordinator ผสมทั้ง local LlmAgent กับ remote services ที่เขียนด้วย ADK, LangGraph, CrewAI หรือ Vertex AI Agent Engine • (คลิก 2) ทุกตัวใช้ภาษา, โมเดล (Gemini, Claude) และ runtime ของตัวเองได้อย่างอิสระ • (คลิก 3) ตราบใดที่ทุกตัวพูดภาษา A2A ก็ทำงานร่วมกันได้ทันที</aside>
+      </section>
+
+      <!-- 20. Section 04 -->
+      <section class="bg-red" data-title="04 · Scale & Security">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="a2a-div-art" style="--c:var(--h-red)"><img src="../images/adk-a2a-slides/sec-04-scale-sec.svg" alt="OIDC and OAuth2 lock shield protecting a distributed agent mesh"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Scale &amp;<br>Security</h1>
+            <p class="sub" style="margin-top:28px">Authentication, Cloud Run microservices<br>and production best practices</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 4 • เมื่อเราเอา agent ที่คุยกันข้าม network ขึ้น production จริง ต้องจัดการเรื่อง Security, Authentication และสถาปัตยกรรมบน Cloud Run ยังไงบ้าง</aside>
+      </section>
+
+      <!-- 21. Authentication & Trust -->
+      <section data-title="Authentication & Trust">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · security</div>
+            <h2 style="margin-bottom:20px">Authenticate every hop across agent boundaries</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <div class="lg-row"><span class="ev-lg"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span><h3 style="color:var(--h-blue)">1 · Card-declared schemes</h3></div>
+                <p style="font-size:15.5px; color:var(--dk-sub); line-height:1.4"><code>securitySchemes</code> in the Agent Card follows OpenAPI: <b>OAuth2</b>, <b>OIDC</b>, <b>Bearer JWT</b> or <b>API Key</b>. Credentials are never inside the card.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2">
+                <div class="lg-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-iam.png" alt="Cloud IAM"></span><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><h3 style="color:var(--h-green)">2 · Service-to-service IAM</h3></div>
+                <p style="font-size:15.5px; color:var(--dk-sub); line-height:1.4">On Cloud Run, disable public access and attach a GCP <b>OIDC Identity Token</b> via a custom <code>httpx.AsyncClient</code> in <code>RemoteA2aAgent</code>.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3">
+                <svg class="a2a-ico" style="--c:var(--h-yellow)"><use href="#i-shield"/></svg>
+                <h3 style="color:var(--h-yellow)">3 · User identity &amp; least privilege</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); line-height:1.4">Use <code>auth-required</code> task state to request user-scoped OAuth tokens when a remote agent acts on private user data.</p>
+              </div>
+              <div class="pc red fragment" data-fragment-index="4">
+                <svg class="a2a-ico" style="--c:var(--h-red)"><use href="#i-lock"/></svg>
+                <h3 style="color:var(--h-red)">4 · Transport &amp; allow-lists</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); line-height:1.4">Enforce HTTPS/mTLS, verify Agent Card origins against an allow-list, and guard against prompt injection in remote replies.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Zero trust</b><span>Treat every remote agent like an external microservice: verify identity, scope permissions, validate outputs.</span></div>
+        </div>
+        <aside class="notes">ความปลอดภัยใน A2A แบ่งเป็น 4 ชั้น • (คลิก 1) Agent Card ประกาศว่าต้องการ auth แบบไหนตามมาตรฐาน OpenAPI แต่ไม่เคยใส่ secret ไว้ในการ์ด • (คลิก 2) บน Cloud Run แนะนำให้ปิด public access แล้วให้ service account ของ Coordinator ขอ OIDC Identity Token แนบใน header ผ่าน httpx_client ของ RemoteA2aAgent • (คลิก 3) ถ้าต้องเข้าถึงข้อมูลส่วนตัวของ user ใช้ flow auth-required เพื่อส่ง token ตามสิทธิ์ของ user จริง • (คลิก 4) บังคับ HTTPS, ทำ allow-list ของ URL ที่อนุญาต และระวัง prompt injection จากผลลัพธ์ของ agent ภายนอก</aside>
+      </section>
+
+      <!-- 22. Real-world Cloud Run Architecture -->
+      <section data-title="Microservice architecture on Cloud Run">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">04 · reference architecture</div>
+            <h2 style="margin-bottom:14px">Distributed agents on Cloud Run &amp; Agent Engine</h2>
+            <div class="a2a-art blue fragment" data-fragment-index="1" style="width:1088px; height:260px">
+              <img src="../images/adk-a2a-slides/creative-studio-arch.svg" alt="Distributed Creative Studio and Formula E microservices architecture on Cloud Run and Vertex AI Agent Engine communicating over A2A and MCP">
+            </div>
+            <div class="pc fragment" data-fragment-index="2" style="width:1088px; margin-top:16px; padding:14px 18px; background:#17181b">
+              <div class="lg-strip" style="justify-content:space-between">
+                <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></i>Google Cloud</span>
+                <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></i>Cloud Run</span>
+                <span class="lg-chip" style="--c:var(--h-yellow)"><i><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></i>Agent Engine</span>
+                <span class="lg-chip" style="--c:var(--h-red)"><i><img src="../images/shared/logos/gcp-iam.png" alt="Cloud IAM"></i>Per-agent IAM</span>
+                <span class="lg-chip" style="--c:var(--h-green)"><i><img src="../images/shared/logos/mcp.svg" alt="MCP"></i>MCP Tools</span>
+                <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/gemini.svg" alt="Gemini"></i>Gemini</span>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Independent scale</b><span>Each agent scales to zero, deploys independently, and has its own minimal IAM service account.</span></div>
+        </div>
+        <aside class="notes">นี่คือสถาปัตยกรรมจริงแบบที่ใช้ใน Google Codelabs (เช่น Multi-Agent Creative Studio หรือ Formula E Track Planner) • (คลิก 1) ด้านบนเป็น Orchestrator Agent บน Cloud Run รับคำขอจากผู้ใช้แล้วส่งต่อผ่าน HTTPS + OIDC ไปยัง 3 specialist services อิสระ: Telemetry &amp; Weather ดึงข้อมูลผ่าน MCP, Strategy &amp; Data วิเคราะห์ BigQuery บน Agent Engine, และ Creative Studio สร้างสื่อคืนเป็น FilePart artifact • (คลิก 2) ทั้งหมดรันบน Google Cloud ด้วย Cloud Run, Vertex AI, per-agent IAM, MCP และ Gemini • (คลิก 3) แต่ละตัว scale แยกกันได้, deploy แยกทีมได้ และจำกัดสิทธิ์ IAM เฉพาะที่ต้องใช้จริง ๆ</aside>
+      </section>
+
+      <!-- 23. Best practices & pitfalls -->
+      <section data-title="Best practices & pitfalls">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · best practices</div>
+            <h2 style="margin-bottom:20px">Production checklist for A2A systems</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <ul class="a2a-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Write sharp descriptions &amp; skills.</b> Coordinators route purely on Agent Card metadata.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Set explicit timeouts &amp; retries</b> on the <code>httpx_client</code> passed to <code>RemoteA2aAgent</code>.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Enable SSE streaming</b> for multi-step remote agents so proxies never time out.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Propagate trace &amp; context IDs</b> across hops for end-to-end Cloud Trace debugging.</span></li>
+              </ul>
+              <ul class="a2a-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Version your Agent Cards</b> and keep output <code>DataPart</code> schemas backward-compatible.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Don't over-split into A2A.</b> Simple stateless functions belong in local tools or MCP.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Don't ship <code>localhost</code> URLs</b> in your Agent Card or leave Cloud Run unauthenticated.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Don't leak secrets or raw stack traces</b> in task errors or returned artifacts.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เช็กลิสต์ก่อนเอา A2A ขึ้น production • เขียน description และ skills ใน Agent Card ให้ชัด เพราะ coordinator ใช้ตรงนี้ตัดสินใจ • ตั้ง timeout กับ retry บน httpx_client เผื่อปลายทางช้า • เปิด SSE streaming สำหรับงานหลายขั้นเพื่อไม่ให้ proxy ตัดการเชื่อมต่อ • ส่ง trace ID และ contextId ข้ามบริการเพื่อไล่ดูใน Cloud Trace ได้ • กับดักที่ต้องระวัง: อย่าแตกทุกฟังก์ชันเป็น A2A เพราะเพิ่ม network latency ให้ใช้ MCP แทน, อย่าลืมเปลี่ยน URL จาก localhost เป็น HTTPS จริง, และอย่าให้ error message รั่วข้อมูลภายใน</aside>
+      </section>
+
+      <!-- 24. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:24px">Discover, Delegate, Interoperate</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <svg class="a2a-ico" style="--c:var(--h-blue)"><use href="#i-search"/></svg>
+                <h3>1 · Discover</h3>
+                <p style="font-size:15.5px; line-height:1.42">Publish skills, capabilities and auth at <code>/.well-known/agent.json</code> — no hardcoded glue.</p>
+              </div>
+              <div class="pc green fragment">
+                <svg class="a2a-ico" style="--c:var(--h-green)"><use href="#i-send"/></svg>
+                <h3>2 · Delegate</h3>
+                <p style="font-size:15.5px; line-height:1.42">Send stateful tasks with Sync, SSE or Push. Exchange text, files and JSON <b>Artifacts</b>.</p>
+              </div>
+              <div class="pc red fragment">
+                <svg class="a2a-ico" style="--c:var(--h-red)"><use href="#i-network"/></svg>
+                <h3>3 · Interoperate</h3>
+                <p style="font-size:15.5px; line-height:1.42">Expose with <code>to_a2a()</code>, call with <code>RemoteA2aAgent</code>, connect ADK to any framework on Cloud Run.</p>
+              </div>
+            </div>
+            <div class="fragment lg-strip" style="width:1088px; margin-top:22px">
+              <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/a2a.svg" alt="A2A"></i>/.well-known/agent.json</span>
+              <span class="lg-chip" style="--c:var(--h-green)"><i><img src="../images/shared/logos/adk.png" alt="ADK"></i>to_a2a() &amp; RemoteA2aAgent</span>
+              <span class="lg-chip" style="--c:var(--h-yellow)"><i><img src="../images/shared/logos/mcp.svg" alt="MCP"></i>A2A + MCP</span>
+              <span class="lg-chip" style="--c:var(--h-red)"><i><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></i>Cloud Run + OIDC</span>
+              <span class="lg-chip" style="--c:var(--h-blue)"><i><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></i>Zero-Trust IAM</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Wrap one existing ADK agent with <code>to_a2a(root_agent, port=8001)</code> and inspect its Agent Card.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำสำคัญของวันนี้ • (คลิก) Discover: เปิด Agent Card ที่ /.well-known/agent.json ให้ agent อื่นค้นหาได้ • (คลิก) Delegate: ส่งต่องานเป็น Task ที่มีสถานะชัดเจน รองรับทั้ง Sync, SSE และ Push พร้อมส่งไฟล์และ JSON ผ่าน Artifacts • (คลิก) Interoperate: ใน ADK ใช้แค่ to_a2a() กับ RemoteA2aAgent ก็เชื่อมกับทีมอื่นหรือ framework อื่นบน Cloud Run ได้แล้ว • เริ่มลองวันนี้ได้เลยครับ หยิบ agent ที่มีอยู่แล้วมาครอบด้วย to_a2a แล้วลอง curl ดู Agent Card ของตัวเอง</aside>
+      </section>
+
+      <!-- 25. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:24px">Read more and try it</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue a2a-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK A2A Guide</h3><a class="mono" style="font-size:14px" href="https://adk.dev/a2a/" target="_blank">adk.dev/a2a/</a></div></div>
+              <div class="pc blue a2a-res-row"><span class="ev-lg"><img src="../images/shared/logos/a2a.svg" alt="A2A"></span><div><h3>A2A Protocol Specification</h3><a class="mono" style="font-size:14px" href="https://a2a-protocol.org/" target="_blank">a2a-protocol.org</a></div></div>
+              <div class="pc green a2a-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><div><h3>Codelab: Multi-Agent A2A on Cloud Run</h3><a class="mono" style="font-size:14px" href="https://codelabs.developers.google.com/" target="_blank">codelabs.developers.google.com</a></div></div>
+              <div class="pc green a2a-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><div><h3>Vertex AI Agent Engine &amp; A2A</h3><a class="mono" style="font-size:14px" href="https://cloud.google.com/vertex-ai/generative-ai/docs/agent-engine/overview" target="_blank">Vertex AI Agent Engine docs</a></div></div>
+              <div class="pc yellow a2a-res-row"><span class="ev-lg"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><div><h3>ADK + MCP Tools</h3><a class="mono" style="font-size:14px" href="https://adk.dev/tools/mcp-tools/" target="_blank">adk.dev/tools/mcp-tools/</a></div></div>
+              <div class="pc red a2a-res-row"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span><div><h3>A2A Official Samples &amp; SDK</h3><a class="mono" style="font-size:14px" href="https://github.com/a2aproject/A2A" target="_blank">github.com/a2aproject/A2A</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รวมลิงก์สำหรับไปลองทำต่อครับ: เอกสาร ADK A2A ที่ adk.dev/a2a, สเปกอย่างเป็นทางการที่ a2a-protocol.org, Google Codelab สำหรับ deploy multi-agent A2A บน Cloud Run, เอกสาร Vertex AI Agent Engine, การใช้คู่กับ MCP และ repo ตัวอย่างโค้ดบน GitHub</aside>
+      </section>
+
+      <!-- 26. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="a2a-ty-art"><img src="../images/adk-a2a-slides/thank-you-art.svg" alt="Glowing connected A2A agent constellation"></div>
+        <div class="dots" style="left:946px; top:514px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณมากครับ • เปิดช่วง Q &amp; A ถ้ามีคำถามเรื่อง A2A, MCP หรือ ADK ถามได้เลยครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

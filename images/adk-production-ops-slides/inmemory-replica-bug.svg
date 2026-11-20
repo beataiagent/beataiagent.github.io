@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" rx="18" fill="#202124"/>
+
+  <circle cx="340" cy="140" r="160" fill="url(#amb-r)"/>
+  <circle cx="860" cy="130" r="145" fill="url(#amb-g)"/>
+
+  <!-- LEFT PANEL: Broken InMemorySessionService -->
+  <rect x="14" y="14" width="626" height="222" rx="16" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <rect x="28" y="26" width="230" height="24" rx="12" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="143" y="42" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">✕ BROKEN · InMemorySessionService</text>
+
+  <!-- User box -->
+  <rect x="28" y="72" width="132" height="144" rx="14" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <text x="94" y="96" text-anchor="middle" class="t" font-size="15" fill="#57caff">User</text>
+  <rect x="38" y="108" width="112" height="40" rx="8" fill="#24272d" stroke="#5cdb6d" stroke-width="1.2"/>
+  <text x="94" y="124" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">Turn 1</text>
+  <text x="94" y="140" text-anchor="middle" class="m" font-size="10" fill="#e8eaed">"Book BKK→NRT"</text>
+  <rect x="38" y="158" width="112" height="40" rx="8" fill="#24272d" stroke="#ff7daf" stroke-width="1.2"/>
+  <text x="94" y="174" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">Turn 2</text>
+  <text x="94" y="190" text-anchor="middle" class="m" font-size="10" fill="#e8eaed">"Confirm it"</text>
+
+  <!-- LB -->
+  <path d="M160 144 H198" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+  <rect x="204" y="98" width="102" height="92" rx="14" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2"/>
+  <text x="255" y="132" text-anchor="middle" class="t" font-size="14" fill="#ffd427">Cloud Run</text>
+  <text x="255" y="150" text-anchor="middle" class="t" font-size="14" fill="#ffd427">LB</text>
+  <text x="255" y="170" text-anchor="middle" class="m" font-size="10">round-robin</text>
+
+  <!-- Split Arrows to Replicas -->
+  <path d="M306 126 C328 126 332 104 358 104" fill="none" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+  <path d="M306 162 C328 162 332 184 358 184" fill="none" stroke="#ff7daf" stroke-width="2.6" stroke-dasharray="6 4" marker-end="url(#arr-r)"/>
+
+  <!-- Replica A -->
+  <rect x="366" y="66" width="258" height="72" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="380" y="88" class="m" font-size="12" fill="#5cdb6d">Replica A · gets Turn 1</text>
+  <rect x="380" y="98" width="230" height="28" rx="6" fill="#262930" stroke="#5cdb6d" stroke-width="1" stroke-dasharray="3 3"/>
+  <text x="390" y="116" class="m" font-size="11" fill="#e8eaed">RAM: {s42: "BKK→NRT"}</text>
+
+  <!-- Replica B -->
+  <rect x="366" y="150" width="258" height="72" rx="12" fill="#17181b" stroke="#ff7daf" stroke-width="2" filter="url(#glow-s)"/>
+  <text x="380" y="172" class="m" font-size="12" fill="#ff7daf">Replica B · gets Turn 2</text>
+  <rect x="380" y="182" width="230" height="28" rx="6" fill="#311d26" stroke="#ff7daf" stroke-width="1.2"/>
+  <text x="390" y="200" class="m" font-size="11" fill="#ff7daf">RAM: {} → Forgot user!</text>
+
+  <!-- VS Badge -->
+  <circle cx="658" cy="125" r="20" fill="#17181b" stroke="#ffd427" stroke-width="2"/>
+  <text x="658" y="130" text-anchor="middle" class="t" font-size="13" fill="#ffd427">VS</text>
+
+  <!-- RIGHT PANEL: Fixed Shared Cloud SQL -->
+  <rect x="676" y="14" width="398" height="222" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <rect x="690" y="26" width="248" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="814" y="42" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">✓ FIXED · DatabaseSessionService</text>
+
+  <!-- Stateless Replicas A & B -->
+  <rect x="694" y="72" width="134" height="58" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <text x="761" y="96" text-anchor="middle" class="m" font-size="12" fill="#57caff">Replica A</text>
+  <text x="761" y="116" text-anchor="middle" class="m" font-size="10.5">stateless</text>
+
+  <rect x="694" y="152" width="134" height="58" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.8"/>
+  <text x="761" y="176" text-anchor="middle" class="m" font-size="12" fill="#57caff">Replica B</text>
+  <text x="761" y="196" text-anchor="middle" class="m" font-size="10.5">stateless</text>
+
+  <!-- Sync arrows to shared Cloud SQL -->
+  <path d="M828 101 C858 101 862 128 892 128" fill="none" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+  <path d="M828 181 C858 181 862 154 892 154" fill="none" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+
+  <!-- Shared Cloud SQL Cylinder -->
+  <g transform="translate(976, 134)">
+    <path d="M-76 -44 V42 C-76 54 -42 64 0 64 C42 64 76 54 76 42 V-44 Z" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+    <ellipse cx="0" cy="-44" rx="76" ry="18" fill="#262930" stroke="#5cdb6d" stroke-width="2.4"/>
+    <text x="0" y="-4" text-anchor="middle" class="t" font-size="15" fill="#5cdb6d">Cloud SQL</text>
+    <text x="0" y="16" text-anchor="middle" class="m" font-size="10.5" fill="#e8eaed">session_42 synced</text>
+    <text x="0" y="36" text-anchor="middle" class="m" font-size="10" fill="#57caff">✓ survives scale</text>
+  </g>
+</svg>

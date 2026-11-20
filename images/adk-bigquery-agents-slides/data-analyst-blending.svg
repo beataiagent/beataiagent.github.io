@@ -1,0 +1,113 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+
+  <circle cx="170" cy="130" r="130" fill="url(#amb-y)"/>
+  <circle cx="536" cy="130" r="125" fill="url(#amb-g)"/>
+  <circle cx="910" cy="130" r="125" fill="url(#amb-b)"/>
+
+  <!-- LEFT: 3 Multi-Source Inputs -->
+  <!-- Source 1: BigQuery Tables -->
+  <rect x="18" y="16" width="318" height="68" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <rect x="32" y="30" width="40" height="40" rx="10" fill="#57caff" fill-opacity="0.16" stroke="#57caff" stroke-width="1.6"/>
+  <rect x="40" y="49" width="6" height="12" rx="1.5" fill="#57caff"/>
+  <rect x="49" y="42" width="6" height="19" rx="1.5" fill="#57caff"/>
+  <rect x="58" y="46" width="6" height="15" rx="1.5" fill="#5cdb6d"/>
+  <text x="84" y="44" class="t" font-size="16" fill="#57caff">BigQuery Tables</text>
+  <text x="84" y="65" class="sub" font-size="12.5">Structured sales &amp; time-series SQL</text>
+
+  <!-- Source 2: Unstructured PDFs -->
+  <rect x="18" y="96" width="318" height="68" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <rect x="32" y="110" width="40" height="40" rx="10" fill="#ffd427" fill-opacity="0.16" stroke="#ffd427" stroke-width="1.6"/>
+  <path d="M44 118 H56 L62 124 V142 H44 Z" fill="none" stroke="#ffd427" stroke-width="1.8" stroke-linejoin="round"/>
+  <line x1="48" y1="130" x2="58" y2="130" stroke="#ffd427" stroke-width="1.6"/>
+  <line x1="48" y1="136" x2="55" y2="136" stroke="#ffd427" stroke-width="1.6"/>
+  <text x="84" y="124" class="t" font-size="16" fill="#ffd427">Unstructured PDFs</text>
+  <text x="84" y="145" class="sub" font-size="12.5">Earnings reports &amp; policy docs (GCS)</text>
+
+  <!-- Source 3: Live Google Search -->
+  <rect x="18" y="176" width="318" height="68" rx="14" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <rect x="32" y="190" width="40" height="40" rx="10" fill="#5cdb6d" fill-opacity="0.16" stroke="#5cdb6d" stroke-width="1.6"/>
+  <circle cx="50" cy="208" r="8" fill="none" stroke="#5cdb6d" stroke-width="2"/>
+  <line x1="56" y1="214" x2="62" y2="220" stroke="#5cdb6d" stroke-width="2.2" stroke-linecap="round"/>
+  <text x="84" y="204" class="t" font-size="16" fill="#5cdb6d">Live Google Search</text>
+  <text x="84" y="225" class="sub" font-size="12.5">Market news, tariffs &amp; port delays</text>
+
+  <!-- Converging Curved Arrows into ADK Synthesizer -->
+  <path d="M336 50 C374 50 374 106 404 114" fill="none" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+  <path d="M336 130 H404" fill="none" stroke="#ffd427" stroke-width="2.6" marker-end="url(#arr-y)"/>
+  <path d="M336 210 C374 210 374 154 404 146" fill="none" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+
+  <!-- CENTER: ADK Synthesizer Hub -->
+  <rect x="412" y="34" width="256" height="192" rx="20" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.6" filter="url(#glow-s)"/>
+  <polygon points="540,52 544,64 556,68 544,72 540,84 536,72 524,68 536,64" fill="#ffd427" filter="url(#glow-s)"/>
+  <text x="540" y="108" text-anchor="middle" class="t" font-size="18.5">ADK Synthesizer</text>
+  <text x="540" y="128" text-anchor="middle" class="sub" font-size="12.5">Correlates SQL + Docs + Web</text>
+
+  <!-- 3 internal pills -->
+  <rect x="434" y="142" width="100" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="484" y="158" text-anchor="middle" class="m" font-size="11" fill="#57caff">Decompose</text>
+  <rect x="546" y="142" width="100" height="24" rx="12" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="596" y="158" text-anchor="middle" class="m" font-size="11" fill="#ffd427">Correlate</text>
+  <rect x="466" y="176" width="148" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="540" y="192" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">Verify Numbers</text>
+
+  <!-- Arrow to Cited Executive Brief -->
+  <path d="M668 130 H728" stroke="#57caff" stroke-width="3" marker-end="url(#arr-b)"/>
+
+  <!-- RIGHT: Cited Executive Brief -->
+  <rect x="736" y="22" width="334" height="216" rx="18" fill="url(#glass)" stroke="#57caff" stroke-width="2.4"/>
+  <rect x="754" y="38" width="174" height="22" rx="11" fill="#57caff" fill-opacity="0.16"/>
+  <text x="841" y="53" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="600">CITED EXECUTIVE BRIEF</text>
+
+  <!-- Evidence lines with source badges -->
+  <rect x="754" y="72" width="298" height="36" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="766" y="95" class="t" font-size="13.5" fill="#fff">APAC Q3 revenue fell 14%</text>
+  <rect x="990" y="80" width="52" height="20" rx="6" fill="#57caff" fill-opacity="0.22"/>
+  <text x="1016" y="94" text-anchor="middle" class="m" font-size="10.5" fill="#57caff" font-weight="600">BQ SQL</text>
+
+  <rect x="754" y="116" width="298" height="36" rx="10" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="766" y="139" class="t" font-size="13.5" fill="#fff">Aug tariff hike (+8.5%)</text>
+  <rect x="990" y="124" width="52" height="20" rx="6" fill="#ffd427" fill-opacity="0.22"/>
+  <text x="1016" y="138" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427" font-weight="600">PDF p12</text>
+
+  <rect x="754" y="160" width="298" height="36" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="766" y="183" class="t" font-size="13.5" fill="#fff">Regional port congestion</text>
+  <rect x="990" y="168" width="52" height="20" rx="6" fill="#5cdb6d" fill-opacity="0.22"/>
+  <text x="1016" y="182" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d" font-weight="600">SEARCH</text>
+
+  <text x="903" y="222" text-anchor="middle" class="m" font-size="11" fill="#bdc1c6">WHAT MOVED (BQ) + WHY (DOCS &amp; WEB)</text>
+</svg>

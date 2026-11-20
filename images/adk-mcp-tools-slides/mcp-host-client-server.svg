@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" fill="#202124"/>
+
+  <circle cx="155" cy="125" r="120" fill="url(#amb-b)"/>
+  <circle cx="520" cy="125" r="115" fill="url(#amb-g)"/>
+  <circle cx="915" cy="125" r="125" fill="url(#amb-y)"/>
+
+  <!-- CARD 1: ADK Host -->
+  <rect x="14" y="18" width="286" height="214" rx="18" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <rect x="30" y="34" width="110" height="26" rx="13" fill="#17181b" stroke="#57caff" stroke-width="1.5"/>
+  <text x="85" y="51" text-anchor="middle" class="m" font-size="11.5" fill="#57caff" font-weight="600">MCP HOST</text>
+  <text x="30" y="92" class="t" font-size="22">ADK LlmAgent</text>
+  <text x="30" y="116" class="sub" font-size="13.5">Runs Gemini reasoning loop,</text>
+  <text x="30" y="135" class="sub" font-size="13.5">session state &amp; safety callbacks</text>
+  <rect x="30" y="156" width="254" height="58" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.4" stroke-dasharray="5 4"/>
+  <text x="46" y="180" class="m" font-size="12" fill="#57caff">tools=[McpToolset(...)]</text>
+  <text x="46" y="201" class="sub" font-size="12.5">Holds 1 or more MCP Clients</text>
+
+  <!-- Bidirectional Arrow 1: Host <-> Client -->
+  <path d="M306 112 H376" stroke="#57caff" stroke-width="2.6" marker-end="url(#arr-b)"/>
+  <path d="M380 138 H310" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+  <rect x="310" y="74" width="68" height="22" rx="11" fill="#17181b" stroke="#57caff" stroke-width="1.3"/>
+  <text x="344" y="89" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">in-proc</text>
+
+  <!-- CARD 2: MCP Client -->
+  <rect x="386" y="18" width="276" height="214" rx="18" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+  <rect x="402" y="34" width="122" height="26" rx="13" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+  <text x="463" y="51" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">MCP CLIENT</text>
+  <text x="402" y="92" class="t" font-size="22">Inside McpToolset</text>
+  <text x="402" y="116" class="sub" font-size="13.5">1:1 JSON-RPC 2.0 session</text>
+
+  <rect x="402" y="132" width="244" height="26" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.2"/>
+  <text x="414" y="149" class="m" font-size="11.5" fill="#5cdb6d">1. initialize</text>
+  <text x="634" y="149" text-anchor="end" class="m" font-size="10.5" fill="#9aa0a6">handshake</text>
+
+  <rect x="402" y="164" width="244" height="26" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.2"/>
+  <text x="414" y="181" class="m" font-size="11.5" fill="#57caff">2. tools/list</text>
+  <text x="634" y="181" text-anchor="end" class="m" font-size="10.5" fill="#9aa0a6">discover</text>
+
+  <rect x="402" y="196" width="244" height="26" rx="8" fill="#17181b" stroke="#ffd427" stroke-width="1.2"/>
+  <text x="414" y="213" class="m" font-size="11.5" fill="#ffd427">3. tools/call</text>
+  <text x="634" y="213" text-anchor="end" class="m" font-size="10.5" fill="#9aa0a6">execute</text>
+
+  <!-- Bidirectional Arrow 2: Client <-> Server (Transports) -->
+  <path d="M668 112 H764" stroke="#5cdb6d" stroke-width="2.6" marker-end="url(#arr-g)"/>
+  <path d="M768 138 H672" stroke="#ffd427" stroke-width="2.6" marker-end="url(#arr-y)"/>
+  <rect x="670" y="64" width="96" height="36" rx="10" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="718" y="79" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">Stdio /</text>
+  <text x="718" y="93" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">HTTP MCP</text>
+  <text x="718" y="160" text-anchor="middle" class="m" font-size="10" fill="#bdc1c6">JSON-RPC 2.0</text>
+
+  <!-- CARD 3: MCP Servers -->
+  <rect x="774" y="18" width="300" height="214" rx="18" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <rect x="790" y="34" width="128" height="26" rx="13" fill="#17181b" stroke="#ffd427" stroke-width="1.5"/>
+  <text x="854" y="51" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427" font-weight="600">MCP SERVERS</text>
+  <text x="790" y="88" class="t" font-size="21">Local or Cloud</text>
+
+  <!-- 3 Primitives -->
+  <rect x="790" y="102" width="268" height="36" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.6"/>
+  <circle cx="808" cy="120" r="5" fill="#57caff"/>
+  <text x="822" y="124" class="t" font-size="13.5" fill="#57caff">Tools</text>
+  <text x="1046" y="124" text-anchor="end" class="m" font-size="11" fill="#bdc1c6">Model-controlled</text>
+
+  <rect x="790" y="144" width="268" height="36" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <circle cx="808" cy="162" r="5" fill="#5cdb6d"/>
+  <text x="822" y="166" class="t" font-size="13.5" fill="#5cdb6d">Resources</text>
+  <text x="1046" y="166" text-anchor="end" class="m" font-size="11" fill="#bdc1c6">App-controlled</text>
+
+  <rect x="790" y="186" width="268" height="36" rx="10" fill="#17181b" stroke="#ffd427" stroke-width="1.6"/>
+  <circle cx="808" cy="204" r="5" fill="#ffd427"/>
+  <text x="822" y="208" class="t" font-size="13.5" fill="#ffd427">Prompts</text>
+  <text x="1046" y="208" text-anchor="end" class="m" font-size="11" fill="#bdc1c6">User-controlled</text>
+</svg>

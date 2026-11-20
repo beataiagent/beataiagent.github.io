@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <circle cx="128" cy="118" r="95" fill="url(#amb-g)"/>
+  <circle cx="64" cy="70" r="65" fill="url(#amb-b)"/>
+  <circle cx="192" cy="154" r="65" fill="url(#amb-y)"/>
+  <circle cx="128" cy="118" r="98" fill="none" stroke="#5cdb6d" stroke-width="1.8" stroke-dasharray="6 6" opacity="0.38"/>
+
+  <!-- Directed edges -->
+  <path d="M128 56 V76" stroke="#57caff" stroke-width="2.4" marker-end="url(#arr-b)"/>
+  <path d="M104 98 C72 98 66 112 66 124" fill="none" stroke="#5cdb6d" stroke-width="2.4" marker-end="url(#arr-g)"/>
+  <path d="M152 98 C184 98 190 112 190 124" fill="none" stroke="#ffd427" stroke-width="2.4" marker-end="url(#arr-y)"/>
+  <path d="M66 158 C66 176 92 184 106 184" fill="none" stroke="#5cdb6d" stroke-width="2.4" marker-end="url(#arr-g)"/>
+  <path d="M190 158 C190 176 164 184 150 184" fill="none" stroke="#5cdb6d" stroke-width="2.4" marker-end="url(#arr-g)"/>
+  <!-- Retry cycle arc -->
+  <path d="M214 142 C234 128 226 84 162 88" fill="none" stroke="#ff7daf" stroke-width="2.2" stroke-dasharray="5 4"/>
+  <polygon points="158,88 166,83 166,93" fill="#ff7daf"/>
+
+  <!-- START Node -->
+  <rect x="92" y="24" width="72" height="32" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <text x="128" y="44" text-anchor="middle" class="m" font-size="11.5" fill="#57caff" font-weight="600">START</text>
+
+  <!-- Router Diamond -->
+  <g transform="translate(128, 98)">
+    <polygon points="0,-22 30,0 0,22 -30,0" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+    <text x="0" y="4" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d" font-weight="600">IF?</text>
+  </g>
+
+  <!-- Left Branch Node -->
+  <rect x="30" y="128" width="72" height="32" rx="10" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <text x="66" y="148" text-anchor="middle" class="m" font-size="11" fill="#fff">FAST</text>
+
+  <!-- Right Branch Node -->
+  <rect x="154" y="128" width="72" height="32" rx="10" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <text x="190" y="148" text-anchor="middle" class="m" font-size="11" fill="#ffd427">DEEP</text>
+
+  <!-- END Node -->
+  <rect x="108" y="168" width="40" height="32" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+  <text x="128" y="188" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">END</text>
+
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">ADK 2.0 GRAPH RUNTIME</text>
+</svg>

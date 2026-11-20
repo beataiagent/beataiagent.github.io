@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" fill="#202124"/>
+
+  <circle cx="96" cy="108" r="90" fill="url(#amb-b)"/>
+  <circle cx="316" cy="108" r="95" fill="url(#amb-y)"/>
+  <circle cx="552" cy="108" r="100" fill="url(#amb-r)"/>
+  <circle cx="788" cy="108" r="95" fill="url(#amb-g)"/>
+  <circle cx="994" cy="108" r="90" fill="url(#amb-b)"/>
+
+  <!-- STEP 1: Signed-in User -->
+  <rect x="14" y="18" width="164" height="172" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <g transform="translate(96, 64) scale(0.7)">
+    <circle cx="0" cy="-14" r="17" fill="#ffe0b2" stroke="#57caff" stroke-width="2.5"/>
+    <path d="M-24 28 C-24 8 -14 2 0 2 C14 2 24 8 24 28 Z" fill="url(#glass)" stroke="#57caff" stroke-width="2.5"/>
+  </g>
+  <text x="96" y="122" text-anchor="middle" class="t" font-size="16">Signed-in User</text>
+  <rect x="28" y="138" width="136" height="32" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.3"/>
+  <text x="96" y="158" text-anchor="middle" class="m" font-size="11" fill="#57caff">OAuth 2.0 JWT</text>
+
+  <path d="M180 104 H210" stroke="#57caff" stroke-width="2.8" marker-end="url(#arr-b)"/>
+
+  <!-- STEP 2: ADK ToolContext -->
+  <rect x="216" y="18" width="200" height="172" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <rect x="234" y="34" width="164" height="24" rx="12" fill="#17181b" stroke="#ffd427" stroke-width="1.4"/>
+  <text x="316" y="50" text-anchor="middle" class="m" font-size="11" fill="#ffd427">ADK ToolContext</text>
+  <text x="316" y="88" text-anchor="middle" class="t" font-size="16">Ephemeral State</text>
+  <rect x="230" y="104" width="172" height="34" rx="8" fill="#17181b" stroke="#ffd427" stroke-width="1.3"/>
+  <text x="316" y="125" text-anchor="middle" class="m" font-size="11" fill="#ffd427">temp:access_token</text>
+  <text x="316" y="164" text-anchor="middle" class="sub" font-size="12">Hidden from LLM prompt</text>
+
+  <path d="M418 104 H448" stroke="#ffd427" stroke-width="2.8" marker-end="url(#arr-y)"/>
+
+  <!-- STEP 3: header_provider -->
+  <rect x="454" y="18" width="206" height="172" rx="16" fill="url(#glass-hi)" stroke="#ff7daf" stroke-width="2.4" filter="url(#glow-s)"/>
+  <rect x="476" y="34" width="162" height="24" rx="12" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="557" y="50" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">header_provider</text>
+  <text x="557" y="88" text-anchor="middle" class="t" font-size="16">Per-Call Header</text>
+  <rect x="468" y="104" width="178" height="36" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="557" y="120" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">Authorization:</text>
+  <text x="557" y="134" text-anchor="middle" class="m" font-size="10.5" fill="#ffffff">Bearer &lt;user_jwt&gt;</text>
+  <text x="557" y="166" text-anchor="middle" class="sub" font-size="12">Injected on every MCP call</text>
+
+  <path d="M662 104 H692" stroke="#ff7daf" stroke-width="2.8" marker-end="url(#arr-r)"/>
+
+  <!-- STEP 4: Remote MCP Server -->
+  <rect x="698" y="18" width="184" height="172" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2"/>
+  <rect x="716" y="34" width="148" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="790" y="50" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">MCP Server</text>
+  <text x="790" y="88" text-anchor="middle" class="t" font-size="16">Verify Identity</text>
+  <rect x="712" y="104" width="156" height="34" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+  <text x="790" y="125" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">✓ Validate JWT</text>
+  <text x="790" y="164" text-anchor="middle" class="sub" font-size="12">Extracts user claims</text>
+
+  <path d="M884 104 H914" stroke="#5cdb6d" stroke-width="2.8" marker-end="url(#arr-g)"/>
+
+  <!-- STEP 5: User-Scoped Data -->
+  <rect x="920" y="18" width="154" height="172" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <rect x="936" y="34" width="122" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="997" y="50" text-anchor="middle" class="m" font-size="11" fill="#57caff">RBAC Data</text>
+  <text x="997" y="90" text-anchor="middle" class="t" font-size="16">Scoped Access</text>
+  <text x="997" y="120" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">✓ Own rows only</text>
+  <text x="997" y="142" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">✓ Full audit log</text>
+  <text x="997" y="166" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">✕ No cross-leak</text>
+
+  <!-- Bottom ribbon -->
+  <rect x="14" y="204" width="1060" height="32" rx="16" fill="#17181b" stroke="#3c4043" stroke-width="1.4"/>
+  <text x="544" y="225" text-anchor="middle" class="m" font-size="12" fill="#e8eaed">ZERO GOD-MODE KEYS · Downstream APIs enforce the signed-in caller's real RBAC &amp; audit trail</text>
+</svg>

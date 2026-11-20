@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2c2e34" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#17181b" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" rx="18" fill="#202124"/>
+  <circle cx="520" cy="70" r="220" fill="url(#amb-b)"/>
+  <circle cx="640" cy="180" r="190" fill="url(#amb-y)"/>
+
+  <!-- Main Waterfall Panel -->
+  <rect x="12" y="10" width="1064" height="240" rx="16" fill="url(#glass)" stroke="#3c4043" stroke-width="2"/>
+
+  <!-- Header Row -->
+  <text x="30" y="34" class="m" font-size="11.5" fill="#9aa0a6">SPAN HIERARCHY</text>
+  <text x="346" y="34" class="m" font-size="11" fill="#9aa0a6">0ms</text>
+  <text x="478" y="34" class="m" font-size="11" fill="#9aa0a6">455ms</text>
+  <text x="610" y="34" class="m" font-size="11" fill="#9aa0a6">910ms</text>
+  <text x="742" y="34" class="m" font-size="11" fill="#9aa0a6">1,365ms</text>
+  <text x="840" y="34" class="m" font-size="11" fill="#57caff">1,820ms</text>
+  <text x="1056" y="34" text-anchor="end" class="m" font-size="11.5" fill="#9aa0a6">DURATION · TOKENS</text>
+  <line x1="28" y1="44" x2="1060" y2="44" stroke="#3c4043" stroke-width="1.5"/>
+
+  <!-- Vertical Gridlines across track (x=346..876, width=530px = 1820ms) -->
+  <line x1="346" y1="46" x2="346" y2="210" stroke="#3c4043" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="478.5" y1="46" x2="478.5" y2="210" stroke="#3c4043" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="611" y1="46" x2="611" y2="210" stroke="#3c4043" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="743.5" y1="46" x2="743.5" y2="210" stroke="#3c4043" stroke-width="1" stroke-dasharray="3 4"/>
+  <line x1="876" y1="46" x2="876" y2="210" stroke="#3c4043" stroke-width="1" stroke-dasharray="3 4"/>
+
+  <!-- Row 1: invocation (0..1820ms -> 346..876, w=530) -->
+  <text x="30" y="68" class="m" font-size="13" fill="#57caff">invocation</text>
+  <text x="118" y="68" class="m" font-size="11.5" fill="#9aa0a6">inv_8f3a</text>
+  <rect x="346" y="55" width="530" height="18" rx="5" fill="#57caff" filter="url(#glow-s)"/>
+  <text x="1056" y="68" text-anchor="end" class="m" font-size="12" fill="#57caff">1,820ms · total</text>
+  <line x1="28" y1="80" x2="1060" y2="80" stroke="#3c4043" stroke-width="1" opacity="0.45"/>
+
+  <!-- Row 2: agent_run (30..1790ms -> 355..867, w=512) -->
+  <text x="46" y="100" class="m" font-size="13" fill="#e8eaed">└ agent_run</text>
+  <text x="148" y="100" class="m" font-size="11.5" fill="#9aa0a6">[travel_agent]</text>
+  <rect x="355" y="87" width="512" height="18" rx="5" fill="#8ab4f8"/>
+  <text x="1056" y="100" text-anchor="end" class="m" font-size="12" fill="#8ab4f8">1,760ms · 1 agent</text>
+  <line x1="28" y1="112" x2="1060" y2="112" stroke="#3c4043" stroke-width="1" opacity="0.45"/>
+
+  <!-- Row 3: call_llm #1 (50..690ms = 640ms -> x=361, w=186) -->
+  <text x="66" y="132" class="m" font-size="13" fill="#5cdb6d">└ call_llm</text>
+  <text x="158" y="132" class="m" font-size="11.5" fill="#9aa0a6">[gemini-2.5-flash]</text>
+  <rect x="361" y="119" width="186" height="18" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/>
+  <text x="1056" y="132" text-anchor="end" class="m" font-size="12" fill="#5cdb6d">640ms · 412 / 68 tok</text>
+  <line x1="28" y1="144" x2="1060" y2="144" stroke="#3c4043" stroke-width="1" opacity="0.45"/>
+
+  <!-- Row 4: execute_tool (710..1130ms = 420ms -> x=553, w=122) -->
+  <text x="66" y="164" class="m" font-size="13" fill="#ffd427">└ execute_tool</text>
+  <text x="190" y="164" class="m" font-size="11.5" fill="#9aa0a6">[search_flights]</text>
+  <rect x="553" y="151" width="122" height="18" rx="5" fill="#ffd427" filter="url(#glow-s)"/>
+  <text x="1056" y="164" text-anchor="end" class="m" font-size="12" fill="#ffd427">420ms · API OK</text>
+  <line x1="28" y1="176" x2="1060" y2="176" stroke="#3c4043" stroke-width="1" opacity="0.45"/>
+
+  <!-- Row 5: call_llm #2 (1160..1670ms = 510ms -> x=684, w=149) -->
+  <text x="66" y="196" class="m" font-size="13" fill="#5cdb6d">└ call_llm</text>
+  <text x="158" y="196" class="m" font-size="11.5" fill="#9aa0a6">[gemini-2.5-flash]</text>
+  <rect x="684" y="183" width="149" height="18" rx="5" fill="#5cdb6d" filter="url(#glow-s)"/>
+  <text x="1056" y="196" text-anchor="end" class="m" font-size="12" fill="#5cdb6d">510ms · 1,240 / 210 tok</text>
+
+  <!-- Bottom GenAI Semantic Attributes Bar -->
+  <rect x="28" y="216" width="1032" height="24" rx="7" fill="#141518" stroke="#3c4043" stroke-width="1"/>
+  <text x="42" y="232" class="m" font-size="11" fill="#57caff">gen_ai.request.model="gemini-2.5-flash"</text>
+  <text x="358" y="232" class="m" font-size="11" fill="#5cdb6d">gen_ai.usage.input_tokens=1652</text>
+  <text x="614" y="232" class="m" font-size="11" fill="#ffd427">gen_ai.usage.output_tokens=278</text>
+  <text x="862" y="232" class="m" font-size="11" fill="#ff7daf">gen_ai.tool.name="search_flights"</text>
+</svg>

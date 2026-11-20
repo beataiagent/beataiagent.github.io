@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <circle cx="128" cy="120" r="96" fill="url(#amb-g)"/>
+  <circle cx="72" cy="156" r="70" fill="url(#amb-b)"/>
+  <circle cx="190" cy="156" r="70" fill="url(#amb-r)"/>
+  <circle cx="128" cy="128" r="100" fill="none" stroke="#5cdb6d" stroke-width="2" stroke-dasharray="6 6" opacity="0.45"/>
+
+  <!-- Connector cables from ADK (left) and MCP (right) into lens -->
+  <path d="M72 172 C72 140 84 128 96 120" fill="none" stroke="#57caff" stroke-width="3" stroke-linecap="round"/>
+  <path d="M184 172 C184 140 172 128 160 120" fill="none" stroke="#ff7daf" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="92" cy="123" r="4" fill="#57caff" filter="url(#glow-s)"/>
+  <circle cx="164" cy="123" r="4" fill="#ff7daf" filter="url(#glow-s)"/>
+
+  <!-- BigQuery Analytics Lens -->
+  <g transform="translate(128, 102)">
+    <!-- Handle -->
+    <line x1="30" y1="30" x2="52" y2="52" stroke="#5cdb6d" stroke-width="8" stroke-linecap="round"/>
+    <line x1="30" y1="30" x2="52" y2="52" stroke="#1d1e22" stroke-width="3" stroke-linecap="round"/>
+    <!-- Outer Ring -->
+    <circle cx="0" cy="0" r="44" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="3" filter="url(#glow-s)"/>
+    <circle cx="0" cy="0" r="35" fill="#17181b" stroke="#57caff" stroke-width="1.2" opacity="0.6"/>
+    <!-- Analytics bars inside lens -->
+    <rect x="-20" y="2" width="10" height="18" rx="3" fill="#57caff"/>
+    <rect x="-5" y="-12" width="10" height="32" rx="3" fill="#5cdb6d"/>
+    <rect x="10" y="-4" width="10" height="24" rx="3" fill="#ffd427"/>
+    <line x1="-24" y1="22" x2="24" y2="22" stroke="#5f6368" stroke-width="1.6" stroke-linecap="round"/>
+  </g>
+
+  <!-- Left ADK Connector Pill -->
+  <g transform="translate(72, 178)">
+    <rect x="-34" y="-16" width="68" height="32" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+    <circle cx="-18" cy="0" r="4" fill="#57caff"/>
+    <text x="6" y="4.5" text-anchor="middle" class="m" font-size="12" fill="#57caff" font-weight="600">ADK</text>
+  </g>
+
+  <!-- Right MCP Connector Pill -->
+  <g transform="translate(184, 178)">
+    <rect x="-34" y="-16" width="68" height="32" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+    <circle cx="-18" cy="0" r="4" fill="#ff7daf"/>
+    <text x="6" y="4.5" text-anchor="middle" class="m" font-size="12" fill="#ff7daf" font-weight="600">MCP</text>
+  </g>
+
+  <!-- Bridge line between ADK and MCP -->
+  <line x1="106" y1="178" x2="150" y2="178" stroke="#ffd427" stroke-width="2" stroke-dasharray="4 4"/>
+  <circle cx="128" cy="178" r="4" fill="#ffd427"/>
+
+  <text x="128" y="226" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">TOOLSET + MCP</text>
+</svg>

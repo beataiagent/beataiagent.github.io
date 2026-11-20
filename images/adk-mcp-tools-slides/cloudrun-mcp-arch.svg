@@ -1,0 +1,102 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 250" width="1088" height="250">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="250" fill="#202124"/>
+
+  <circle cx="310" cy="125" r="125" fill="url(#amb-b)"/>
+  <circle cx="676" cy="125" r="130" fill="url(#amb-g)"/>
+  <circle cx="965" cy="125" r="110" fill="url(#amb-y)"/>
+
+  <!-- 1. User / App -->
+  <rect x="14" y="34" width="138" height="182" rx="16" fill="url(#glass)" stroke="#5f6368" stroke-width="2"/>
+  <rect x="41" y="52" width="84" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="83" y="68" text-anchor="middle" class="m" font-size="11" fill="#57caff">HTTPS</text>
+  <text x="83" y="114" text-anchor="middle" class="t" font-size="18">User / App</text>
+  <text x="83" y="142" text-anchor="middle" class="sub" font-size="12.5">Web UI, mobile</text>
+  <text x="83" y="160" text-anchor="middle" class="sub" font-size="12.5">or chat client</text>
+
+  <path d="M154 125 H188" stroke="#57caff" stroke-width="2.8" marker-end="url(#arr-b)"/>
+
+  <!-- 2. Cloud Run: ADK Agent -->
+  <rect x="196" y="18" width="246" height="214" rx="18" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <rect x="212" y="34" width="142" height="24" rx="12" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="283" y="50" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="600">CLOUD RUN SERVICE</text>
+  <text x="212" y="88" class="t" font-size="20">ADK Agent</text>
+  <rect x="212" y="102" width="214" height="28" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.2"/>
+  <text x="319" y="120" text-anchor="middle" class="m" font-size="11.5" fill="#57caff">adk deploy cloud_run</text>
+  <text x="212" y="156" class="sub" font-size="13">• Calls Gemini API</text>
+  <text x="212" y="178" class="sub" font-size="13">• Holds McpToolset</text>
+  <text x="212" y="200" class="m" font-size="11.5" fill="#ffd427">SA: agent-sa@proj</text>
+
+  <!-- Arrow with IAM ID Token Pill -->
+  <path d="M444 125 H536" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+  <rect x="448" y="76" width="88" height="36" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5" filter="url(#glow-s)"/>
+  <text x="492" y="92" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d" font-weight="600">IAM Token</text>
+  <text x="492" y="106" text-anchor="middle" class="m" font-size="10" fill="#e8eaed">HTTP /mcp</text>
+
+  <!-- 3. Cloud Run: Private MCP Server -->
+  <rect x="544" y="18" width="268" height="214" rx="18" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+  <rect x="560" y="34" width="144" height="24" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="632" y="50" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d" font-weight="600">PRIVATE CLOUD RUN</text>
+  <!-- Mini lock icon -->
+  <rect x="772" y="38" width="20" height="16" rx="4" fill="none" stroke="#5cdb6d" stroke-width="2"/>
+  <path d="M776 38 V33 C776 29 788 29 788 33 V38" fill="none" stroke="#5cdb6d" stroke-width="2"/>
+
+  <text x="560" y="88" class="t" font-size="20">MCP Server</text>
+  <rect x="560" y="102" width="236" height="28" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.4"/>
+  <text x="678" y="120" text-anchor="middle" class="m" font-size="11" fill="#ff7daf">--no-allow-unauthenticated</text>
+  <text x="560" y="156" class="sub" font-size="13">• Streamable HTTP endpoint</text>
+  <text x="560" y="178" class="sub" font-size="13">• Only agent-sa@ has invoker</text>
+  <text x="560" y="200" class="m" font-size="11.5" fill="#5cdb6d">✓ Scales to zero · Independent</text>
+
+  <!-- Arrow to Enterprise Systems -->
+  <path d="M814 125 H850" stroke="#ffd427" stroke-width="2.8" marker-end="url(#arr-y)"/>
+
+  <!-- 4. Enterprise Backends -->
+  <rect x="858" y="18" width="216" height="214" rx="18" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <text x="876" y="48" class="t" font-size="17" fill="#ffd427">Enterprise Data</text>
+
+  <rect x="876" y="64" width="180" height="42" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.5"/>
+  <circle cx="896" cy="85" r="6" fill="#57caff"/>
+  <text x="912" y="90" class="t" font-size="14.5">BigQuery</text>
+
+  <rect x="876" y="116" width="180" height="42" rx="10" fill="#17181b" stroke="#e8eaed" stroke-width="1.5"/>
+  <circle cx="896" cy="137" r="6" fill="#e8eaed"/>
+  <text x="912" y="142" class="t" font-size="14.5">GitHub</text>
+
+  <rect x="876" y="168" width="180" height="42" rx="10" fill="#17181b" stroke="#ff7daf" stroke-width="1.5"/>
+  <circle cx="896" cy="189" r="6" fill="#ff7daf"/>
+  <text x="912" y="194" class="t" font-size="14.5">Slack / APIs</text>
+</svg>

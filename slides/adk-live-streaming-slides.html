@@ -1,0 +1,928 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Live Voice &amp; Streaming with ADK — Listen, Think, Speak</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- Live Voice & Streaming deck extras ---------- */
+    .ls-art { border: 2px solid var(--dk-line); border-radius: 16px; overflow: hidden; background: #202124; box-sizing: border-box; flex: none; }
+    .ls-art.blue { border-color: var(--h-blue); } .ls-art.green { border-color: var(--h-green); }
+    .ls-art.yellow { border-color: var(--h-yellow); } .ls-art.red { border-color: var(--h-red); }
+    .reveal .slides .ls-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .ls-div-art { position: absolute; left: 57px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .ls-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .ls-ty-art { position: absolute; left: 880px; top: 186px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+    .reveal .slides .ls-ty-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .ls-hdr { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 14px; }
+    .ls-hdr h2 { margin: 0 !important; }
+    .ls-logos { display: flex; align-items: center; gap: 8px; flex: none; }
+    .ls-lg-chip { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 7px; border-radius: 999px; background: #17181b; border: 1.5px solid var(--c, var(--dk-line)); font: 500 12.5px/1 var(--mono); color: var(--dk-text); }
+    .ls-lg-chip .lg-bg { width: 22px; height: 22px; border-radius: 50%; background: #fff; display: grid; place-items: center; flex: none; }
+    .reveal .slides .ls-lg-chip img { width: 15px; height: 15px; object-fit: contain; display: block; }
+    .ls-card-hd { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .ls-card-hd h3 { margin: 0 !important; }
+    .ev-lg.sm { width: 34px; height: 34px; border-radius: 8px; }
+    .reveal .slides .ev-lg.sm img { width: 22px; height: 22px; }
+    .lv-ico { display: block; width: 40px; height: 40px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+
+    /* pills & badges */
+    .lv-pill { display: inline-block; font: 500 13px/1.2 var(--mono); padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--c, var(--h-blue)); color: var(--c, var(--h-blue)); background: #17181b; box-sizing: border-box; }
+    .lv-badge { display: inline-block; font: 700 12.5px/1 var(--mono); padding: 5px 10px; border-radius: 8px; background: rgba(92,219,109,.16); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .lv-badge.warn { background: rgba(255,125,175,.16); color: var(--h-red); border-color: var(--h-red); }
+    .lv-badge.blue { background: rgba(138,180,248,.16); color: var(--h-blue); border-color: var(--h-blue); }
+    .lv-badge.yellow { background: rgba(253,214,99,.16); color: var(--h-yellow); border-color: var(--h-yellow); }
+
+    /* side cards next to code */
+    .lv-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .lv-side .pc { padding: 12px 16px; font-size: 15px; line-height: 1.4; }
+    .lv-side .pc h3 { font-size: 18px; margin-bottom: 4px; }
+
+    /* cascade vs native lanes */
+    .lv-lanes { width: 1088px; display: grid; gap: 18px; }
+    .lv-lane { border-radius: 16px; padding: 18px 22px; background: var(--dk-card); border: 2px solid var(--c, var(--dk-line)); }
+    .lv-lane-hdr { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .lv-lane-hdr b { font: 500 20px/1.2 var(--sans); color: #fff; }
+    .lv-pipe { display: flex; align-items: center; gap: 10px; }
+    .lv-box { flex: 1; text-align: center; padding: 12px 10px; border-radius: 12px; background: #17181b; border: 1.5px solid var(--bc, var(--dk-line)); font: 500 15.5px/1.2 var(--sans); color: #fff; }
+    .lv-box small { display: block; font: 400 12px/1.3 var(--mono); color: var(--dk-sub); margin-top: 4px; }
+    .lv-arr { width: 24px; height: 18px; flex: none; fill: none; stroke: var(--dk-sub); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* bidirectional architecture diagram */
+    .lv-arch { width: 1088px; display: grid; gap: 14px; }
+    .lv-nodes { display: grid; grid-template-columns: 1fr 26px 1fr 26px 1fr 26px 1fr; align-items: stretch; gap: 6px; }
+    .lv-node { padding: 16px 14px; border-radius: 14px; background: var(--dk-card); border: 2px solid var(--c, var(--dk-line)); text-align: center; display: flex; flex-direction: column; justify-content: center; }
+    .lv-node b { font: 500 18px/1.2 var(--sans); color: #fff; margin-bottom: 6px; }
+    .lv-node span { font: 400 13.5px/1.35 var(--mono); color: var(--dk-sub); }
+    .lv-bi { align-self: center; width: 26px; height: 28px; fill: none; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+    .lv-stream { display: grid; grid-template-columns: 140px 1fr; align-items: center; gap: 14px; padding: 11px 16px; border-radius: 12px; background: #17181b; border: 1.5px solid var(--c); font-size: 15px; }
+    .lv-stream > b { font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--c); }
+    .lv-stream > span { color: var(--dk-text); }
+
+    /* barge-in timeline */
+    .lv-seq { width: 1088px; display: grid; gap: 11px; }
+    .lv-step { display: grid; grid-template-columns: 44px 190px 1fr; align-items: center; gap: 14px; padding: 12px 16px; border-radius: 12px; background: var(--dk-card); border-left: 5px solid var(--c); }
+    .lv-step .num { width: 32px; height: 32px; border-radius: 50%; background: #17181b; border: 1.5px solid var(--c); color: var(--c); display: grid; place-items: center; font: 700 14px/1 var(--mono); }
+    .lv-step .who { font: 500 15px/1.2 var(--mono); color: var(--c); }
+    .lv-step .desc { font-size: 15.5px; line-height: 1.35; color: var(--dk-text); }
+
+    /* pattern cards */
+    .lv-pat .pc { padding: 18px 20px; }
+    .lv-pat .pc .n { display: block; font: 700 13px/1 var(--mono); color: var(--c); margin-bottom: 8px; }
+    .lv-pat .pc b { display: block; font-size: 20px; line-height: 1.2; margin-bottom: 6px; }
+    .lv-pat .pc p { font-size: 15.5px; line-height: 1.38; color: var(--dk-sub); margin: 0; }
+    .lv-pat .pc.blue { --c: var(--h-blue); } .lv-pat .pc.green { --c: var(--h-green); } .lv-pat .pc.yellow { --c: var(--h-yellow); } .lv-pat .pc.red { --c: var(--h-red); }
+
+    /* key/value rows */
+    .lv-kv { display: grid; gap: 8px; margin-top: 12px; }
+    .lv-kv > div { display: grid; grid-template-columns: 165px minmax(0, 1fr); gap: 10px; font-size: 15px; line-height: 1.35; padding: 7px 10px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
+    .lv-kv > div > b { font: 500 13px/1.45 var(--mono); color: var(--c, var(--h-blue)) !important; }
+    .lv-kv > div > span { color: var(--dk-text); }
+
+    /* checklist */
+    .reveal ul.lv-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .lv-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .lv-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .lv-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .lv-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* resources & table accents */
+    .lv-res-row { display: flex; align-items: center; gap: 14px; }
+    .lv-res-row h3 { margin: 0 0 4px; font-size: 20px; }
+    .reveal table.zt-tbl td.no { color: var(--h-green); font-weight: 500; }
+    .reveal table.zt-tbl td.bad { color: var(--h-red); }
+  </style>
+</head>
+<body data-deck="Live Voice & Streaming">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mic" viewBox="0 0 24 24"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/></symbol>
+    <symbol id="i-wave" viewBox="0 0 24 24"><path d="M3 12h2M7 8v8M11 4v16M15 7v10M19 10v4M21 12h0"/></symbol>
+    <symbol id="i-video" viewBox="0 0 24 24"><rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3Z"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h11a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2H9l-4 3v-3H4a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/><path d="M19 9h1a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-1v3l-4-3h-3"/></symbol>
+    <symbol id="i-arrows" viewBox="0 0 24 24"><path d="M4 8h15M15 4l4 4-4 4M20 16H5M9 12l-4 4 4 4"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-stop" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9h6v6H9Z"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .9-7.9A5.5 5.5 0 0 0 7.2 8.5 3.8 3.8 0 0 0 7 18Z"/></symbol>
+    <symbol id="i-speaker" viewBox="0 0 24 24"><path d="M11 5 6 9H3v6h3l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M18.5 6a8.5 8.5 0 0 1 0 12"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4a3.5 3.5 0 0 0-3.3 4.7A3.5 3.5 0 0 0 5 15a3.5 3.5 0 0 0 4.5 5V4Z"/><path d="M14.5 4a3.5 3.5 0 0 1 3.3 4.7A3.5 3.5 0 0 1 19 15a3.5 3.5 0 0 1-4.5 5V4Z"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Live Voice &amp; Streaming with ADK">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Listen</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Think</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Speak</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Live Voice &amp; Streaming with ADK</b><span>Build real-time, full-duplex voice and video agents with Gemini Live API</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-red)"><img src="../images/shared/logos/gemini.svg" alt="">Gemini Live</i><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-blue)"><img src="../images/shared/logos/python.svg" alt="">Python</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับทุกคน • วันนี้เรามาคุยเรื่องการสร้าง AI Agent ที่คุยด้วยเสียงและวิดีโอแบบเรียลไทม์ด้วย ADK และ Gemini Live API • 3 คำหัวใจของวันนี้: Listen ฟังเสียงและเห็นภาพตลอดเวลา, Think คิดและเรียก tool ระหว่างคุยได้ทันที, Speak ตอบกลับเป็นเสียงธรรมชาติและหยุดฟังเมื่อโดนพูดแทรกได้</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Real-time vs Turn-based</strong><span>Why native speech-to-speech changes voice UX</span></div></li>
+          <li class="c2"><b>02</b><div><strong>ADK Bidi-streaming</strong><span>LiveRequestQueue, RunConfig &amp; async WebSockets</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Voice UX &amp; Live Tools</strong><span>Barge-in, live tools, streaming generators &amp; sessions</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Production Live Agents</strong><span>Backpressure, Night Market codelab &amp; Cloud Run</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-live-streaming-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">วันนี้แบ่งเป็น 4 ช่วงครับ: (1) ทำไมระบบแชทแบบถาม-ตอบถึงไม่เวิร์กกับเสียง และ Gemini Live API เปลี่ยนเกมยังไง (2) สถาปัตยกรรมและโค้ด ADK Bidi-streaming ด้วย WebSocket และ asyncio (3) ฟีเจอร์ที่ทำให้คุยลื่นเหมือนคนจริง ทั้ง barge-in, tool calling กลางวงสนทนา, streaming tool และ session (4) การเอาขึ้น production บน Cloud Run พร้อมตัวอย่าง Codelab "The Night Market" • สแกน QR ด้านขวาเพื่อดูสไลด์ตามได้เลยครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · Real-time vs Turn-based">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="ls-div-art" style="--c:var(--h-blue)"><img src="../images/adk-live-streaming-slides/sec-01-realtime.svg" alt="Glowing live soundwave with microphone and speaker rings"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:68px">Real-time vs<br>Turn-based</h1>
+            <p class="sub" style="margin-top:28px">Why native speech-to-speech<br>changes voice UX</p>
+          </div>
+        </div>
+        <aside class="notes">เริ่มช่วงที่ 1 ครับ • มาดูกันก่อนว่าทำไมการเอาแชทบอทปกติมาติดไมโครโฟนถึงยังรู้สึกแข็งเหมือนหุ่นยนต์ และแนวคิดแบบ native speech-to-speech แก้ปัญหานี้ได้ยังไง</aside>
+      </section>
+
+      <!-- 4. Why turn-based feels robotic -->
+      <section data-title="Why turn-based feels robotic">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the problem</div>
+            <h2 style="margin-bottom:22px">Why request-response chat feels robotic for voice</h2>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc red fragment" data-fragment-index="1" style="--c:var(--h-red)">
+                <svg class="lv-ico"><use href="#i-clock"/></svg>
+                <h3 style="color:var(--h-red)">Awkward silence</h3>
+                <p style="font-size:16px; color:var(--dk-sub)">2–4 seconds of dead air every turn. Humans expect a reply in ~300ms.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2" style="--c:var(--h-yellow)">
+                <svg class="lv-ico"><use href="#i-stop"/></svg>
+                <h3 style="color:var(--h-yellow)">Walkie-talkie turns</h3>
+                <p style="font-size:16px; color:var(--dk-sub)">Half-duplex: you cannot interrupt the bot while it finishes a 20-second monologue.</p>
+              </div>
+              <div class="pc blue fragment" data-fragment-index="3" style="--c:var(--h-blue)">
+                <svg class="lv-ico"><use href="#i-wave"/></svg>
+                <h3 style="color:var(--h-blue)">Lost audio nuance</h3>
+                <p style="font-size:16px; color:var(--dk-sub)">Converting speech to text throws away tone, hesitation, urgency and background cues.</p>
+              </div>
+            </div>
+            <div class="pc fragment" data-fragment-index="4" style="width:1088px; margin-top:18px; padding:15px 22px; font-size:16.5px; display:flex; align-items:center; justify-content:space-between; gap:16px">
+              <span><b>Human conversation</b> is continuous &amp; overlapping: we listen <em>while</em> we speak.</span>
+              <span class="lv-pill" style="--c:var(--h-green)">Full-duplex · ~300ms</span>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Key shift</b><span>Voice is not text with a microphone. It requires persistent, bidirectional streaming.</span></div>
+        </div>
+        <aside class="notes">เวลาเราคุยกับคนจริง จังหวะรับส่งคำพูดอยู่ที่ประมาณ 300 มิลลิวินาที • (คลิก 1) แต่ถ้าใช้แชทแบบ request-response กว่าจะรอพูดจบ แปลงเป็นข้อความ คิดคำตอบ แล้วอ่านออกเสียง เงียบไป 2-4 วินาที รู้สึกเหมือนคุยข้ามดาว • (คลิก 2) ที่แย่กว่าคือพูดแทรกไม่ได้ เหมือนใช้วิทยุสื่อสาร ต้องรออีกฝ่ายพูดจนจบ • (คลิก 3) แถมการแปลงเสียงเป็นตัวอักษรทำให้น้ำเสียง อารมณ์ ความเร่งรีบหายหมด • (คลิก 4-5) ดังนั้นระบบเสียงที่ดีต้องเป็น full-duplex ฟังและพูดพร้อมกันได้ตลอดเวลา</aside>
+      </section>
+
+      <!-- 5. Cascade vs Native S2S diagram -->
+      <section data-title="Cascade vs Native Speech-to-Speech">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">01 · architecture shift</div>
+            <div class="ls-hdr">
+              <h2>Cascade pipeline vs Native Speech-to-Speech</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-green)"><span class="lg-bg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Gemini Live</span>
+              </div>
+            </div>
+            <div class="ls-art green fragment" data-fragment-index="1" style="width:1088px; height:260px">
+              <img src="../images/adk-live-streaming-slides/cascade-vs-live.svg" alt="Latency timeline comparing 2.0s Cascade pipeline against 350ms Gemini Live native speech-to-speech">
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="2" style="width:1088px; gap:16px; margin-top:16px">
+              <div class="pc red" style="padding:14px 18px; font-size:15px">
+                <b style="color:var(--h-red)">Cascade (STT → LLM → TTS):</b> 3 models &amp; 3 network hops stack ~2.0s of silence and strip vocal tone at STT.
+              </div>
+              <div class="pc green" style="padding:14px 18px; font-size:15px; display:flex; align-items:center; gap:12px">
+                <span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <span><b style="color:var(--h-green)">Gemini Live Native S2S:</b> 1 multimodal WebSocket streams audio in &amp; out in ~350ms while preserving prosody &amp; tools.</span>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>One model</b><span>Gemini understands raw audio directly and generates expressive speech in one pass.</span></div>
+        </div>
+        <aside class="notes">ภาพนี้เทียบสถาปัตยกรรมสองแบบชัด ๆ ครับ • (คลิก 1) แบบเดิมเรียกว่า Cascade: เอาเสียงเข้า STT แปลงเป็นข้อความ ส่งให้ LLM คิดข้อความ แล้วส่งไป TTS อ่านออกเสียง • มี 3 โมเดลต่อกัน 3 network hop และแต่ละขั้นต้องรออีกขั้นเริ่มก่อน ทำให้ดีเลย์รวม 1.5 ถึง 3.5 วินาที • (คลิก 2) แบบใหม่ Gemini Live API เป็น Native Speech-to-Speech: โมเดลเดียวรับเสียงและภาพดิบ ๆ ผ่าน WebSocket เส้นเดียว แล้วตอบเป็นเสียงดิบออกมาเลย เหลือดีเลย์แค่ 300-500 มิลลิวินาที • (คลิก 3) แถมยังเข้าใจน้ำเสียงและเรียก tool ระหว่างคุยได้ในตัวเดียว</aside>
+      </section>
+
+      <!-- 6. Cascade vs Live API comparison table -->
+      <section data-title="Cascade vs Gemini Live table">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · latency &amp; capability</div>
+            <div class="ls-hdr" style="margin-bottom:18px">
+              <h2>Cascade vs Gemini Live API at a glance</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Gemini Live API</span>
+              </div>
+            </div>
+            <table class="zt-tbl" style="width:1088px">
+              <colgroup><col style="width:230px"><col style="width:410px"><col></colgroup>
+              <thead><tr><th>Dimension</th><th>Cascade (STT → LLM → TTS)</th><th>Gemini Live API (Native S2S)</th></tr></thead>
+              <tbody>
+                <tr><td>Time to first audio</td><td class="bad">1.5 – 3.5 seconds (3 serial hops)</td><td class="no">~300 – 500ms (single streaming pass)</td></tr>
+                <tr><td>Barge-in / Interrupt</td><td>Hard: custom VAD + cancel 3 pipelines</td><td class="no">Built-in: server VAD emits <code>interrupted</code></td></tr>
+                <tr><td>Tone &amp; emotion</td><td>Lost at STT; robotic TTS inflection</td><td class="no">Preserves prosody, pace &amp; emotional cues</td></tr>
+                <tr><td>Live video + audio</td><td>Separate frame uploads &amp; sync glue</td><td class="no">Interleaved audio + JPEG frames on 1 socket</td></tr>
+                <tr><td>Tool calling</td><td>Blocks whole turn before TTS starts</td><td class="no">Native async tools + streaming generators</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>When to use Cascade?</b><span>Only if you need strict word-for-word scripted TTS or a non-live text model.</span></div>
+        </div>
+        <aside class="notes">สรุปเทียบเป็นตาราง 5 มิติครับ • Time to first audio ลดจากหลายวินาทีเหลือไม่ถึงครึ่งวินาที • การพูดแทรก (Barge-in) แบบเดิมต้องเขียน VAD เองแล้วยกเลิก 3 ระบบพร้อมกัน แต่ Gemini Live มีให้ในตัว • เรื่องน้ำเสียงและอารมณ์ โมเดลได้ยินเสียงจริงจึงตอบกลับด้วยโทนที่เหมาะสม เช่น น้ำเสียงเห็นใจหรือตื่นเต้น • วิดีโอกับเสียงวิ่งมาพร้อมกันในซ็อกเก็ตเดียว • แล้วเมื่อไหร่ยังควรใช้ Cascade? เช่น งานที่ต้องอ่านสคริปต์กฎหมายเป๊ะ ๆ ห้ามเพี้ยนแม้แต่คำเดียว</aside>
+      </section>
+
+      <!-- 7. Multimodal live input & output -->
+      <section data-title="Multimodal live streams">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · multimodal wire format</div>
+            <h2 style="margin-bottom:20px">Stream audio, video and text on one connection</h2>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" data-fragment-index="1" style="--c:var(--h-blue)">
+                <svg class="lv-ico"><use href="#i-mic"/></svg>
+                <h3 style="color:var(--h-blue)">Audio In</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:10px">Raw microphone PCM streamed continuously in 50–150ms chunks.</p>
+                <span class="lv-pill" style="--c:var(--h-blue)">audio/pcm;rate=16000</span>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="--c:var(--h-green)">
+                <svg class="lv-ico"><use href="#i-video"/></svg>
+                <h3 style="color:var(--h-green)">Video In</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:10px">Webcam or screen-share frames sampled at ~1 fps (768×768).</p>
+                <span class="lv-pill" style="--c:var(--h-green)">image/jpeg · ~1 fps</span>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3" style="--c:var(--h-yellow)">
+                <svg class="lv-ico"><use href="#i-chat"/></svg>
+                <h3 style="color:var(--h-yellow)">Text &amp; Events</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:10px">Typed messages, button clicks, or silent UI state updates mid-call.</p>
+                <span class="lv-pill" style="--c:var(--h-yellow)">types.Content</span>
+              </div>
+            </div>
+            <div class="pc fragment" data-fragment-index="4" style="width:1088px; margin-top:18px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:14px; border-color:var(--h-red)">
+              <div style="font-size:16px"><b style="color:var(--h-red)">Downstream Output:</b> Native speech audio + live transcripts for both user &amp; model</div>
+              <div style="display:flex; gap:8px; flex:none">
+                <span class="lv-pill" style="--c:var(--h-red)">24 kHz 16-bit PCM</span>
+                <span class="lv-pill" style="--c:var(--dk-sub)">input / output transcription</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ก่อนไปดูโค้ด มาจำสเปกของข้อมูลที่วิ่งบนสาย WebSocket กันครับ • (คลิก 1) ขาเข้าเสียง: 16 kHz, 16-bit PCM แบบ mono ส่งเป็นชิ้นเล็ก ๆ ทุก 50 ถึง 150 มิลลิวินาที • (คลิก 2) ขาเข้าวิดีโอ: ส่งเป็นภาพ JPEG ประมาณ 1 เฟรมต่อวินาที แค่นี้โมเดลก็เห็นกล้องหรือหน้าจอเราแบบเรียลไทม์แล้ว • (คลิก 3) ขาเข้าข้อความ: ส่ง text หรือบริบทจากหน้าจอแทรกไประหว่างคุยได้ด้วย • (คลิก 4) ขาออก: โมเดลตอบเป็นเสียง 24 kHz PCM พร้อมข้อความ transcript ทั้งฝั่งผู้ใช้และฝั่งโมเดล เอาไปโชว์เป็นซับไตเติลบน UI ได้เลย</aside>
+      </section>
+
+      <!-- 8. Section 02 -->
+      <section class="bg-green" data-title="02 · ADK Bidi-streaming">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="ls-div-art" style="--c:var(--h-green)"><img src="../images/adk-live-streaming-slides/sec-02-bidi.svg" alt="Full-duplex bidirectional WebSocket arrows"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:68px">ADK<br>Bidi-streaming</h1>
+            <p class="sub" style="margin-top:28px">LiveRequestQueue, RunConfig<br>&amp; async WebSockets</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • มาดูสถาปัตยกรรมและโค้ดจริงใน ADK Python ว่าเราจะเชื่อม Browser, FastAPI และ Gemini Live API เข้าด้วยกันได้ยังไง</aside>
+      </section>
+
+      <!-- 9. End-to-end Architecture Diagram -->
+      <section data-title="ADK Bidi-streaming architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">02 · system architecture</div>
+            <div class="ls-hdr">
+              <h2>How ADK bridges your WebSocket to Gemini Live</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/googlechrome.svg" alt="Chrome"></span>Browser</span>
+                <span class="ls-lg-chip" style="--c:var(--h-green)"><span class="lg-bg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+                <span class="ls-lg-chip" style="--c:var(--h-red)"><span class="lg-bg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Live API</span>
+              </div>
+            </div>
+            <div class="ls-art blue fragment" data-fragment-index="1" style="width:1088px; height:270px">
+              <img src="../images/adk-live-streaming-slides/bidi-architecture.svg" alt="End-to-end duplex pipeline connecting Browser AudioWorklet, FastAPI WebSocket, ADK LiveRequestQueue and Runner.run_live(), and Gemini Live API">
+            </div>
+            <div class="grid g4 fragment" data-fragment-index="2" style="width:1088px; gap:12px; margin-top:14px">
+              <div class="pc blue" style="padding:10px 14px; display:flex; align-items:center; gap:10px; font-size:13.5px"><span class="ev-lg sm"><img src="../images/shared/logos/googlechrome.svg" alt="Chrome"></span><span><b>AudioWorklet</b><br>PCM + WS Client</span></div>
+              <div class="pc yellow" style="padding:10px 14px; display:flex; align-items:center; gap:10px; font-size:13.5px"><span class="ev-lg sm"><img src="../images/shared/logos/python.svg" alt="Python"></span><span><b>FastAPI WS</b><br>asyncio.gather()</span></div>
+              <div class="pc green" style="padding:10px 14px; display:flex; align-items:center; gap:10px; font-size:13.5px"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><span><b>ADK Runtime</b><br>Queue + run_live()</span></div>
+              <div class="pc red" style="padding:10px 14px; display:flex; align-items:center; gap:10px; font-size:13.5px"><span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><span><b>Gemini Live</b><br>Native Audio + VAD</span></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Clean boundary</b><span>Your FastAPI code only shuffles bytes. ADK owns tools, sessions, agents and reconnection.</span></div>
+        </div>
+        <aside class="notes">นี่คือภาพรวมสถาปัตยกรรมทั้งหมดของ ADK Bidi-streaming ครับ • (คลิก 1) ฝั่งซ้ายคือ Browser ใช้ AudioWorklet อัดเสียงและเล่นเสียง คุยกับ backend ผ่าน WebSocket • (คลิก 2) FastAPI รับ WebSocket แล้วแตกเป็น 2 task: upstream กับ downstream • ตรงกลางคือ ADK Runtime มีสองพระเอกคือ LiveRequestQueue ไว้รับข้อมูลขาเข้า และ Runner.run_live() ไว้ส่ง event ขาออก เชื่อมกับ Gemini Live API • (คลิก 3) ข้อดีคือฝั่ง FastAPI แทบไม่ต้องเขียน logic AI เลย ADK จัดการ tool, session และ multi-agent ให้หมด</aside>
+      </section>
+
+      <!-- 10. Agent & RunConfig -->
+      <section data-title="RunConfig for BIDI">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · configuration</div>
+            <div class="ls-hdr" style="margin-bottom:18px">
+              <h2>Configure a live voice agent with RunConfig</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-green)"><span class="lg-bg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/python.svg" alt="Python"></span>Python</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:630px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents import Agent
+from google.adk.agents.run_config import RunConfig, StreamingMode
+from google.genai import types
+
+agent = Agent(
+    name="voice_concierge",
+    model="gemini-2.5-flash-native-audio-preview",
+    instruction="Be warm, brief, and natural in speech.",
+    tools=[check_menu, place_order],
+)
+
+run_config = RunConfig(
+    streaming_mode=StreamingMode.BIDI,
+    response_modalities=["AUDIO"],
+    speech_config=types.SpeechConfig(
+        voice_config=types.VoiceConfig(
+            prebuilt_voice_config=types.PrebuiltVoiceConfig(
+                voice_name="Aoede"
+            )
+        )
+    ),
+    input_audio_transcription=types.AudioTranscriptionConfig(),
+    output_audio_transcription=types.AudioTranscriptionConfig(),
+)
+              </code></pre>
+              <div class="lv-side">
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">StreamingMode.BIDI</h3>Switches ADK from turn-based HTTP to a persistent Gemini Live WebSocket.</div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Native Audio Voice</h3>Set <code>response_modalities=["AUDIO"]</code> and pick a built-in voice (e.g. <code>Aoede</code>, <code>Puck</code>, <code>Kore</code>).</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Live Captions</h3>Enable both transcription configs to stream text captions alongside audio for UI &amp; logs.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">มาดูโค้ดการตั้งค่ากันครับ • ตัว Agent เหมือน ADK ปกติเลย แค่เปลี่ยน model เป็นรุ่น native audio ของ Gemini Live และเขียน instruction ให้กระชับเหมาะกับการพูด • สิ่งที่เพิ่มมาคือ RunConfig • (คลิก) ตั้ง streaming_mode เป็น StreamingMode.BIDI เพื่อเปิดโหมด bidirectional • (คลิก) ตั้ง response_modalities เป็น AUDIO และเลือกเสียงพูดได้ เช่น Aoede, Puck หรือ Kore • (คลิก) แนะนำให้เปิดทั้ง input และ output audio transcription ด้วย เพื่อให้ได้ข้อความซับไตเติลไปแสดงบนหน้าจอและเก็บ log</aside>
+      </section>
+
+      <!-- 11. Upstream & Downstream asyncio.gather -->
+      <section data-title="Upstream &amp; downstream tasks">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · full-duplex loop</div>
+            <h2 style="margin-bottom:18px">Run upstream &amp; downstream concurrently</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:630px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents.live_request_queue import LiveRequestQueue
+
+@app.websocket("/ws/{user_id}/{session_id}")
+async def live_ws(ws: WebSocket, user_id: str, session_id: str):
+    await ws.accept()
+    queue = LiveRequestQueue()
+
+    async def upstream():
+        while True:
+            msg = await ws.receive()
+            if "bytes" in msg:
+                queue.send_realtime(types.Blob(
+                    mime_type="audio/pcm;rate=16000", data=msg["bytes"]
+                ))
+
+    async def downstream():
+        async for event in runner.run_live(
+            user_id=user_id, session_id=session_id,
+            live_request_queue=queue, run_config=run_config,
+        ):
+            await forward_event(ws, event)
+
+    try:
+        await asyncio.gather(upstream(), downstream())
+    finally:
+        queue.close()  # always release Gemini Live session
+              </code></pre>
+              <div class="lv-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Two async loops</h3><code>upstream()</code> pushes mic &amp; camera into ADK while <code>downstream()</code> streams replies out simultaneously.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">LiveRequestQueue</h3>One queue per WebSocket connection. Safe to push audio, video and text in any order.</div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">Always close()</h3>Put <code>queue.close()</code> in <code>finally:</code> so disconnects immediately shut down the upstream Live session.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">หัวใจของฝั่ง FastAPI คือ pattern นี้ครับ • เมื่อผู้ใช้ต่อ WebSocket เข้ามา เราสร้าง LiveRequestQueue 1 ตัวสำหรับ connection นั้น • (คลิก) แยกเป็น 2 coroutine: upstream คอยรับเสียง/ภาพจาก client ยัดเข้า queue ส่วน downstream คอยวน async for รับ event จาก runner.run_live() แล้วส่งกลับให้ client • รันคู่กันด้วย asyncio.gather ทำให้ฟังและพูดพร้อมกันได้จริง • (คลิก) LiveRequestQueue รับได้ทั้งเสียง ภาพ และข้อความสลับกันได้หมด • (คลิก) สำคัญมาก: ต้องเรียก queue.close() ใน finally เสมอ ไม่งั้น connection ฝั่ง Gemini Live จะค้างและกินโควตาครับ</aside>
+      </section>
+
+      <!-- 12. Streaming Audio & Video Blobs -->
+      <section data-title="Audio &amp; video Blob streaming">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · upstream payloads</div>
+            <h2 style="margin-bottom:18px">Stream audio PCM, video frames, or text</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:630px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+# 1. Continuous microphone audio (binary WS frame)
+if "bytes" in msg:
+    queue.send_realtime(
+        types.Blob(
+            mime_type="audio/pcm;rate=16000",
+            data=msg["bytes"],
+        )
+    )
+
+# 2. Camera / screen JPEG frame (~1 fps)
+elif data["type"] == "image":
+    queue.send_realtime(
+        types.Blob(
+            mime_type="image/jpeg",
+            data=base64.b64decode(data["data"]),
+        )
+    )
+
+# 3. Discrete text turn or UI context
+elif data["type"] == "text":
+    queue.send_content(
+        types.Content(parts=[types.Part(text=data["text"])])
+    )
+              </code></pre>
+              <div class="lv-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">send_realtime()</h3>For continuous media streams (PCM audio, JPEG frames). Server VAD decides when the user finished speaking.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">send_content()</h3>For discrete text turns or injecting app events (e.g. "User clicked Checkout").</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Binary > Base64</h3>Send mic PCM as raw WebSocket binary frames to cut bandwidth by ~33% and save CPU.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ฝั่ง upstream มี 2 เมธอดหลักที่ต้องแยกให้ชัดครับ • (คลิก) send_realtime(Blob) ใช้กับข้อมูลแบบสตรีมต่อเนื่อง ทั้งเสียง PCM 16kHz และภาพ JPEG จากกล้อง โมเดลจะใช้ VAD ตัดสินใจเองว่าผู้ใช้พูดจบเมื่อไหร่ • (คลิก) send_content(Content) ใช้กับข้อความที่เป็นรอบชัดเจน เช่น ผู้ใช้พิมพ์แชทสลับกับพูด หรือแอปแอบส่งบริบทว่าผู้ใช้กดปุ่มอะไรบนหน้าจอ • (คลิก) ทริคเล็ก ๆ: เสียงไมโครโฟนควรส่งเป็น binary frame ตรง ๆ ไม่ต้องแปลง base64 ช่วยลดขนาดข้อมูลลง 33% และลดภาระ CPU</aside>
+      </section>
+
+      <!-- 13. Handling Downstream Events -->
+      <section data-title="Handling downstream events">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · downstream events</div>
+            <h2 style="margin-bottom:18px">Route audio bytes, captions and signals to the client</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:630px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+async def forward_event(ws: WebSocket, event):
+    # 1. User interrupted the model -> flush client audio!
+    if event.interrupted:
+        await ws.send_json({"type": "interrupted"})
+        return
+
+    # 2. Stream raw 24kHz PCM audio chunks as binary
+    if event.content and event.content.parts:
+        for part in event.content.parts:
+            if part.inline_data and part.inline_data.mime_type.startswith("audio/pcm"):
+                await ws.send_bytes(part.inline_data.data)
+
+    # 3. Live captions & turn completion
+    if event.output_transcription:
+        await ws.send_json({"type": "caption", "text": event.output_transcription.text})
+    if event.turn_complete:
+        await ws.send_json({"type": "turn_complete"})
+              </code></pre>
+              <div class="lv-side">
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">event.interrupted</h3>Highest priority signal. Tell the browser to clear its audio playback buffer immediately.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Binary audio out</h3>Forward <code>part.inline_data.data</code> directly via <code>ws.send_bytes()</code> for zero-copy playback.</div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Standard ADK Event</h3>Same <code>Event</code> object as text agents — works seamlessly with ADK logging and state tracking.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">มาดูฝั่ง downstream ที่รับ event จาก runner.run_live() กันบ้าง • (คลิก) เช็กแรกที่สำคัญที่สุดคือ event.interrupted ถ้าเป็น True ต้องรีบบอก Browser ให้ล้างคิวเสียงที่กำลังเล่นอยู่ทันที • (คลิก) ถ้าใน event มี inline_data ที่เป็น audio/pcm เราส่งเป็น binary กลับไปที่ Browser ด้วย ws.send_bytes() เลย • (คลิก) นอกจากนี้ยังมี output_transcription สำหรับโชว์ซับไตเติล และ turn_complete เพื่อบอก UI ว่าเอเจนต์พูดจบรอบนี้แล้ว ทั้งหมดใช้คลาส Event ตัวเดียวกับ ADK ปกติ</aside>
+      </section>
+
+      <!-- 14. Section 03 -->
+      <section class="bg-yellow" data-title="03 · Voice UX &amp; Live Tools">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="ls-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-live-streaming-slides/sec-03-voice-ux.svg" alt="Barge-in interruption wave and live tool gear"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:68px">Voice UX &amp;<br>Live Tools</h1>
+            <p class="sub" style="margin-top:28px">Barge-in, live tools,<br>streaming generators &amp; sessions</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • เราเชื่อมต่อเสียงได้แล้ว แต่สิ่งที่แยก demo ออกจากแอปเสียงที่คนอยากใช้จริงคือ Voice UX และความสามารถในการใช้ tool ระหว่างคุยครับ</aside>
+      </section>
+
+      <!-- 15. Natural Barge-in -->
+      <section data-title="Natural barge-in handling">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">03 · natural interruption</div>
+            <div class="ls-hdr">
+              <h2>Barge-in: stop speaking the instant the user talks</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-yellow)"><span class="lg-bg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Server VAD</span>
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/googlechrome.svg" alt="Chrome"></span>AudioWorklet</span>
+              </div>
+            </div>
+            <div class="ls-art yellow fragment" data-fragment-index="1" style="width:1088px; height:250px">
+              <img src="../images/adk-live-streaming-slides/barge-in-timeline.svg" alt="4-step barge-in sequence: Agent speaking, User speaks, Gemini Live emits event.interrupted=True, AudioWorklet flushes playback buffer">
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="2" style="width:1088px; gap:16px; margin-top:16px">
+              <div class="pc yellow" style="padding:14px 18px; font-size:15px; display:flex; align-items:center; gap:12px">
+                <span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <span><b style="color:var(--h-yellow)">Server-side VAD:</b> Gemini detects speech mid-reply, stops generating audio, and emits <code>event.interrupted = True</code>.</span>
+              </div>
+              <div class="pc red" style="padding:14px 18px; font-size:15px; display:flex; align-items:center; gap:12px">
+                <span class="ev-lg sm"><img src="../images/shared/logos/googlechrome.svg" alt="Chrome"></span>
+                <span><b style="color:var(--h-red)">Client-side flush:</b> Post <code>{ command: "endOfAudio" }</code> to AudioWorklet to drop buffered audio in <b>&lt;20ms</b>.</span>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Golden rule</b><span>If you forget step 4, the browser keeps playing 1–2 seconds of stale buffered audio over the user.</span></div>
+        </div>
+        <aside class="notes">Barge-in คือการพูดแทรกกลางประโยค ซึ่งเป็นจุดที่ทำให้ผู้ใช้รู้สึกว่ากำลังคุยกับคนจริง • (คลิก 1) ขณะที่เอเจนต์กำลังพูด เสียง 24kHz จะถูกเก็บใน ring buffer ของ AudioWorklet พอผู้ใช้พูดแทรกขึ้นมาว่า "เดี๋ยว ขอเผ็ดน้อยนะ" ไมค์ยังส่งเสียงขึ้นไปตลอดเวลา • (คลิก 2) VAD บนฝั่ง Gemini Live จับได้ทันที หยุดสร้างเสียงใหม่ และส่งสัญญาณ event.interrupted = True ลงมา แล้วฝั่ง Browser ต้องล้าง buffer เสียงที่ค้างอยู่ภายใน 20 มิลลิวินาที • (คลิก 3) ถ้าลืมขั้นที่ 4 บอทจะยังพ่นเสียงที่ค้างใน buffer ต่อไปอีก 1-2 วินาที ทับเสียงผู้ใช้ครับ</aside>
+      </section>
+
+      <!-- 16. Automatic Live Tool Calling -->
+      <section data-title="Automatic live tool calling">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:32px 56px">
+            <div class="eyebrow">03 · live function calling</div>
+            <div class="ls-hdr" style="margin-bottom:12px">
+              <h2>Call Python tools mid-conversation without freezing audio</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-green)"><span class="lg-bg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK Tools</span>
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/python.svg" alt="Python"></span>Python</span>
+              </div>
+            </div>
+            <div class="ls-art yellow fragment" data-fragment-index="1" style="width:1088px; height:228px; margin-bottom:14px">
+              <img src="../images/adk-live-streaming-slides/live-tool-calling.svg" alt="Async live tool execution running check_menu and place_order in a non-blocking ADK tool lane while the voice stream stays active">
+            </div>
+            <div style="display:flex; gap:20px; width:1088px; align-items:stretch">
+              <pre class="fragment" data-fragment-index="2" style="width:620px; flex:none; font-size:12px; line-height:1.35"><code class="language-python" data-trim>
+def check_menu(stall: str) -> dict:
+    """Return dishes & prices for a night market stall."""
+    return {"stall": stall, "items": [{"name": "Pad Thai", "thb": 60}]}
+
+def place_order(item: str, qty: int, tool_context: ToolContext) -> dict:
+    """Add an item to the user's basket in session state."""
+    basket = tool_context.state.get("basket", [])
+    basket.append({"item": item, "qty": qty})
+    tool_context.state["basket"] = basket
+    return {"status": "added", "total_items": len(basket)}
+
+agent = Agent(name="market_guide", model="gemini-2.5-flash-native-audio-preview",
+              tools=[check_menu, place_order])
+              </code></pre>
+              <div class="lv-side fragment" data-fragment-index="3" style="gap:10px">
+                <div class="pc green" style="padding:11px 15px; font-size:14.5px"><h3 style="font-size:16.5px; color:var(--h-green)">Zero extra wiring</h3>Write normal Python functions with type hints &amp; docstrings — identical to text ADK agents.</div>
+                <div class="pc blue" style="padding:11px 15px; font-size:14.5px"><h3 style="font-size:16.5px; color:var(--h-blue)">Automatic execution</h3>ADK intercepts the live tool call, updates <code>tool_context.state</code>, and feeds JSON back to Gemini.</div>
+                <div class="pc yellow" style="padding:11px 15px; font-size:14.5px"><h3 style="font-size:16.5px; color:var(--h-yellow)">Voice UX tip</h3>Prompt the agent to say <em>"Let me check..."</em> before slow APIs so silence feels natural.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ความเจ๋งของ ADK คือเราไม่ต้องเขียนโค้ดจัดการ tool call เองเลยแม้จะอยู่ในโหมด Live Voice • (คลิก 1) ดูจากแผนภาพด้านบน: ขณะที่เสียงคุยยังไหลต่อเนื่อง ADK จะรัน tool แบบ async ข้างล่าง อัปเดต state แล้วส่งผลลัพธ์กลับเข้า session โดยไม่ทำให้เสียงค้าง • (คลิก 2) เราเขียนฟังก์ชัน Python ธรรมดาพร้อม type hint และ docstring แล้วใส่ใน tools=[...] เหมือน text agent ทุกประการ • (คลิก 3) ทิปสำหรับ Voice UX: ถ้า tool ต้องยิง API ช้า ๆ ให้บอกใน instruction ว่าพูดเกริ่นสั้น ๆ เช่น "รอสักครู่นะคะ เดี๋ยวเช็กให้" ก่อนเรียก tool จะได้ไม่เงียบแปลก ๆ</aside>
+      </section>
+
+      <!-- 17. Streaming Tools (AsyncGenerator) -->
+      <section data-title="Streaming tools with AsyncGenerator">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · streaming tools</div>
+            <h2 style="margin-bottom:18px">Streaming tools: yield live updates while chatting</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:630px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+import asyncio
+from typing import AsyncGenerator
+
+async def watch_order_status(
+    order_id: str,
+) -> AsyncGenerator[dict, None]:
+    """Stream kitchen updates until the order is ready."""
+    for step in ["received", "cooking", "ready_for_pickup"]:
+        yield {"order_id": order_id, "status": step}
+        await asyncio.sleep(15)
+
+async def stop_watching(function_name: str):
+    """ADK built-in pattern to cancel a running stream."""
+    ...
+
+agent = Agent(
+    name="market_guide",
+    model="gemini-2.5-flash-native-audio-preview",
+    tools=[watch_order_status, stop_watching],
+)
+              </code></pre>
+              <div class="lv-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Long-lived tools</h3>Use <code>AsyncGenerator</code> instead of <code>return</code>. Each <code>yield</code> sends a fresh update into the active Live session.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Proactive voice</h3>The user keeps chatting about other stalls; when <code>"ready_for_pickup"</code> yields, the agent speaks up automatically.</div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">Clean cancellation</h3>ADK cancels open streaming tools when the model calls a stop tool or the live session closes.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">นี่คือฟีเจอร์พิเศษที่มีใน ADK Bidi-streaming โดยเฉพาะ: Streaming Tools ครับ • (คลิก) แทนที่ tool จะทำงานจบแล้ว return ครั้งเดียว เราเขียนเป็น AsyncGenerator ที่คอย yield อัปเดตออกมาเรื่อย ๆ เช่น เฝ้าดูสถานะอาหารในครัว หรือเฝ้าดูราคาหุ้น • (คลิก) ผู้ใช้ยังคุยเรื่องอื่นกับเอเจนต์ต่อได้ตามปกติ พอครัว yield สถานะว่า "ready_for_pickup" โมเดลจะพูดแจ้งเตือนขึ้นมาเองเลย • (คลิก) และเมื่อผู้ใช้บอกให้หยุดดู หรือปิด session ADK จะช่วย cancel generator ให้สะอาดเรียบร้อย</aside>
+      </section>
+
+      <!-- 18. Session persistence & reconnection -->
+      <section data-title="Session persistence &amp; reconnection">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · resilience</div>
+            <div class="ls-hdr" style="margin-bottom:20px">
+              <h2>Keep memory across disconnects and long calls</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-green)"><span class="lg-bg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>SessionService</span>
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>Vertex AI</span>
+              </div>
+            </div>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div class="pc red fragment" data-fragment-index="1" style="--c:var(--h-red); padding:18px 20px">
+                <h3 style="color:var(--h-red)">Why live sockets drop</h3>
+                <p style="font-size:15px; color:var(--dk-sub)">Real-world networks are never permanent</p>
+                <div class="lv-kv">
+                  <div><b>Mobile handoff</b><span>Wi-Fi → 5G drops the TCP socket</span></div>
+                  <div><b>Session limits</b><span>Live API connections cap at ~10–15 min</span></div>
+                  <div><b>Audio tokens</b><span>Raw audio fills the context window fast</span></div>
+                </div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="--c:var(--h-green); padding:18px 20px">
+                <h3 style="color:var(--h-green)">How ADK keeps continuity</h3>
+                <p style="font-size:15px; color:var(--dk-sub)">Built into RunConfig &amp; SessionService</p>
+                <div class="lv-kv">
+                  <div><b>SessionService</b><span>Persists turns &amp; <code>state</code> in DB / Vertex AI</span></div>
+                  <div><b>session_resumption</b><span>Reconnects with handle, zero lost context</span></div>
+                  <div><b>context_compression</b><span>Sliding window compacts old audio tokens</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Design rule</b><span>Treat WebSockets as ephemeral pipes. Keep durable conversation memory in SessionService.</span></div>
+        </div>
+        <aside class="notes">ในโลกจริง WebSocket หลุดได้ตลอดเวลาครับ • (คลิก 1) มือถือสลับจาก Wi-Fi เป็น 5G ก็หลุดแล้ว หรือคุยยาวเกิน 10-15 นาที Live API ก็มี limit ต่อ connection แถมไฟล์เสียงกิน context token เร็วกว่าข้อความมาก • (คลิก 2) ADK มีตัวช่วย 3 อย่าง: เก็บประวัติและ state ลง SessionService ที่เป็นฐานข้อมูลหรือ Vertex AI, เปิด session_resumption ใน RunConfig เพื่อต่อสายใหม่โดยไม่ลืมบริบท และเปิด context_window_compression เพื่อบีบอัด audio token เก่า ๆ ให้คุยได้ยาวไม่จำกัด • (คลิก 3) จำไว้ว่า WebSocket เป็นแค่ท่อชั่วคราว ความจำจริงต้องอยู่ใน SessionService ครับ</aside>
+      </section>
+
+      <!-- 19. Browser Audio UX: AEC, AudioWorklet, VAD -->
+      <section data-title="Browser audio UX">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · client-side audio</div>
+            <div class="ls-hdr" style="margin-bottom:20px">
+              <h2>The browser half: AEC, AudioWorklet &amp; VAD</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/googlechrome.svg" alt="Google Chrome"></span>Web Audio API</span>
+              </div>
+            </div>
+            <div class="grid g3" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" data-fragment-index="1" style="--c:var(--h-blue)">
+                <svg class="lv-ico"><use href="#i-speaker"/></svg>
+                <h3 style="color:var(--h-blue)">Echo Cancellation</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Always request <code>echoCancellation: true</code> and <code>noiseSuppression: true</code> in <code>getUserMedia()</code>. Otherwise the bot's own speaker triggers false barge-in.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="--c:var(--h-green)">
+                <svg class="lv-ico"><use href="#i-bolt"/></svg>
+                <h3 style="color:var(--h-green)">AudioWorklet Thread</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Downsample 48 kHz → 16 kHz PCM and manage the 24 kHz playback ring buffer inside an <code>AudioWorkletProcessor</code> — never on the main UI thread.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3" style="--c:var(--h-yellow)">
+                <svg class="lv-ico"><use href="#i-mic"/></svg>
+                <h3 style="color:var(--h-yellow)">Automatic vs Manual VAD</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Default server VAD is great for hands-free calls. For noisy venues or walkie-talkie UX, send explicit <code>activity_start</code> / <code>activity_end</code>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Debugging tip</b><span>If your agent keeps interrupting itself on laptop speakers, check AEC first.</span></div>
+        </div>
+        <aside class="notes">ฝั่งหน้าบ้าน (Browser) ก็สำคัญไม่แพ้หลังบ้านครับ มี 3 เรื่องที่เจอบ่อยตอนทำจริง • (คลิก 1) Echo Cancellation (AEC): ต้องเปิดใน getUserMedia เสมอ ไม่งั้นเสียงบอทที่ออกจากลำโพงจะวนกลับเข้าไมค์ แล้วบอทจะนึกว่าคนพูดแทรกจนหยุดพูดเอง • (คลิก 2) AudioWorklet: งานแปลงคลื่นเสียง 48kHz เป็น 16kHz และเล่นเสียง 24kHz ต้องทำใน AudioWorklet thread แยกจาก UI ไม่งั้นพอหน้าจอขยับเสียงจะกระตุก • (คลิก 3) VAD: ปกติให้ server จับเสียงอัตโนมัติได้เลย แต่ถ้าเอาไปใช้ในงานอีเวนต์ที่เสียงดังมาก อาจเปลี่ยนเป็นโหมดกดปุ่มพูด (manual activity_start/end) แทนได้ครับ • (คลิก 4) เจออาการบอทขัดจังหวะตัวเองเมื่อไหร่ เช็ก AEC เป็นอย่างแรก</aside>
+      </section>
+
+      <!-- 20. Section 04 -->
+      <section class="bg-red" data-title="04 · Production Live Agents">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="ls-div-art" style="--c:var(--h-red)"><img src="../images/adk-live-streaming-slides/sec-04-prod-live.svg" alt="Cloud Run live stream gauge and night market lantern glow"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:68px">Production<br>Live Agents</h1>
+            <p class="sub" style="margin-top:28px">Backpressure, Night Market codelab<br>&amp; Cloud Run</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้ายครับ • มาดูเรื่องวิศวกรรมสำหรับ production เช่น backpressure, ตัวอย่างสถาปัตยกรรมจาก Codelab The Night Market และการ deploy ขึ้น Cloud Run</aside>
+      </section>
+
+      <!-- 21. Backpressure, cancellation & chunk flushing -->
+      <section data-title="Backpressure &amp; chunk timing">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · reliability engineering</div>
+            <h2 style="margin-bottom:20px">Keep audio smooth under real-world load</h2>
+            <div class="grid g2 lv-pat" style="width:1088px; gap:16px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <span class="n">01 · CHUNK SIZING</span>
+                <b>Flush audio every 50 – 150ms</b>
+                <p>Smaller than 20ms adds WebSocket framing overhead. Larger than 300ms adds audible latency and sluggish barge-in.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2">
+                <span class="n">02 · BACKPRESSURE</span>
+                <b>Drop stale video, never delay audio</b>
+                <p>If network send buffers fill up, drop older JPEG frames. Audio is real-time; a 3-second-old camera frame is useless.</p>
+              </div>
+              <div class="pc red fragment" data-fragment-index="3">
+                <span class="n">03 · CANCELLATION</span>
+                <b>Cancel sibling tasks on exit</b>
+                <p>When <code>upstream()</code> hits <code>WebSocketDisconnect</code>, cancel <code>downstream()</code> immediately and call <code>queue.close()</code>.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="4">
+                <span class="n">04 · NON-BLOCKING I/O</span>
+                <b>Keep the event loop free</b>
+                <p>Never run sync HTTP or DB calls inside tools or WS handlers. Use <code>async def</code> tools or <code>asyncio.to_thread()</code>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Latency budget</b><span>Audio jitter is felt instantly — protect the asyncio event loop like a real-time system.</span></div>
+        </div>
+        <aside class="notes">4 กฎเหล็กด้าน performance สำหรับระบบ Live Voice ครับ • (คลิก 1) ขนาดก้อนเสียง 50-150 มิลลิวินาทีคือจุดสมดุล เล็กไปเปลือง header ใหญ่ไปดีเลย์และพูดแทรกช้า • (คลิก 2) Backpressure: ถ้าเน็ตช้า ให้ทิ้งเฟรมภาพ JPEG เก่าได้เลย อย่าปล่อยให้คิวภาพไปขวางคิวเสียง • (คลิก 3) การยกเลิก task: พอ client หลุดจากฝั่ง upstream ต้องสั่ง cancel downstream และปิด queue ทันที อย่าปล่อย task ค้างกิน memory • (คลิก 4) ห้ามเขียนโค้ด blocking ใน event loop เด็ดขาด ใช้ async tool หรือ asyncio.to_thread ไม่งั้นเสียงของทุก user บน worker นั้นจะสะดุดพร้อมกันครับ</aside>
+      </section>
+
+      <!-- 22. Codelab Walkthrough: The Night Market -->
+      <section data-title="Codelab · The Night Market">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">04 · codelab walkthrough</div>
+            <div class="ls-hdr">
+              <h2>The Night Market — Live Voice at Agent Valley</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-green)"><span class="lg-bg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+                <span class="ls-lg-chip" style="--c:var(--h-yellow)"><span class="lg-bg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Live</span>
+                <span class="ls-lg-chip" style="--c:var(--h-red)"><span class="lg-bg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>Cloud Run</span>
+              </div>
+            </div>
+            <div class="ls-art yellow fragment" data-fragment-index="1" style="width:1088px; height:250px; margin-bottom:16px">
+              <img src="../images/adk-live-streaming-slides/night-market-arch.svg" alt="The Night Market codelab architecture: Visitor voice and camera into ADK Live Runner, vendor tools, and Cloud Run real-time audio reply">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px">
+              <div class="pc blue" style="padding:12px 16px; font-size:15px"><b style="color:var(--h-blue)">Expressive personas:</b> Native audio lets each vendor sound lively, playful, and responsive.</div>
+              <div class="pc green" style="padding:12px 16px; font-size:15px"><b style="color:var(--h-green)">Live tool sync:</b> Haggling updates wallet &amp; inventory in session state mid-sentence.</div>
+              <div class="pc yellow" style="padding:12px 16px; font-size:15px"><b style="color:var(--h-yellow)">Interruptible flow:</b> Visitors can cut in anytime to change their order or walk to another stall.</div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Try it yourself</b><span>Full step-by-step Google Codelab — links on the Resources slide.</span></div>
+        </div>
+        <aside class="notes">ตัวอย่างแอปจริงที่อยากชวนทุกคนไปลองทำตามคือ Google Codelab ชื่อ "The Night Market — Live Voice at Agent Valley" ครับ • (คลิก 1) ผู้ใช้เดินเที่ยวตลาดกลางคืน คุยด้วยเสียงและเปิดกล้องผ่าน Browser เชื่อมเข้า ADK Runner.run_live() คุยต่อรองราคากับพ่อค้าแม่ค้า ซึ่งข้างหลังเรียก tool เช็กของ ต่อราคา และตัดเงินในกระเป๋าลง session state บน Cloud Run แบบเรียลไทม์ • (คลิก 2) เราได้เห็นครบทั้งน้ำเสียงที่เป็นธรรมชาติ การเรียก tool กลางวงสนทนา และการพูดแทรกเปลี่ยนใจกลางคัน • (คลิก 3) เดี๋ยวมีลิงก์ให้ลองทำตามในหน้า Resources ครับ</aside>
+      </section>
+
+      <!-- 23. Cloud Run WebSockets & Production Checklist -->
+      <section data-title="Cloud Run &amp; production checklist">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · deploy to production</div>
+            <div class="ls-hdr" style="margin-bottom:20px">
+              <h2>Deploy live voice agents on Cloud Run</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span>Google Cloud</span>
+                <span class="ls-lg-chip" style="--c:var(--h-green)"><span class="lg-bg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>Vertex AI</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:22px; width:1088px; align-items:flex-start">
+              <div style="width:520px; flex:none; display:grid; gap:14px">
+                <div class="pc blue" style="padding:16px 18px; display:flex; align-items:center; gap:14px">
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>
+                  <div>
+                    <h3 style="margin:0 0 4px; font-size:19px; color:var(--h-blue)">Cloud Run WebSockets</h3>
+                    <span style="font-size:14.5px; color:var(--dk-sub)">Native WS support, auto-TLS &amp; up to 60-min request timeout.</span>
+                  </div>
+                </div>
+                <pre style="font-size:13px; margin:0"><code class="language-bash" data-trim>
+gcloud run deploy live-voice-agent \
+  --source . \
+  --region us-central1 \
+  --timeout 3600 \
+  --session-affinity \
+  --min-instances 1 \
+  --concurrency 80
+                </code></pre>
+              </div>
+              <ul class="lv-chk" style="flex:1">
+                <li class="ok fragment"><i>✓</i><span><b>Set <code>--timeout=3600</code></b> (60 min) so long voice calls aren't cut at the 5-min default.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Enable <code>--session-affinity</code></b> to route reconnects back to the warm instance.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Set <code>--min-instances=1</code></b> to avoid cold-start silence on the first hello.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Use external SessionService</b> (DB or Vertex AI) so state survives container restarts.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Enable context compression</b> + <code>session_resumption</code> for calls over 5 minutes.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เวลาเอาขึ้น Cloud Run จริง มี 5 การตั้งค่าที่ต้องไม่ลืมครับ • Cloud Run รองรับ WebSocket และ TLS มาให้ในตัวแล้ว • (คลิก) ตั้ง --timeout 3600 หรือ 60 นาที เพราะค่าเริ่มต้นแค่ 5 นาที เดี๋ยวคุยเพลิน ๆ แล้วสายหลุด • (คลิก) เปิด --session-affinity ให้การ reconnect วิ่งกลับไปที่ instance เดิม • (คลิก) ตั้ง --min-instances 1 เพื่อกัน cold start ตอนผู้ใช้ทักคำแรก • (คลิก) เปลี่ยนจาก InMemorySessionService เป็นฐานข้อมูลหรือ Vertex AI SessionService • (คลิก) และเปิด context compression กับ session_resumption สำหรับสายที่คุยยาวเกิน 5 นาทีครับ</aside>
+      </section>
+
+      <!-- 24. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <div class="ls-hdr" style="margin-bottom:22px">
+              <h2>Listen, Think, Speak</h2>
+              <div class="ls-logos">
+                <span class="ls-lg-chip" style="--c:var(--h-blue)"><span class="lg-bg"><img src="../images/shared/logos/googlechrome.svg" alt="Chrome"></span>Browser</span>
+                <span class="ls-lg-chip" style="--c:var(--h-green)"><span class="lg-bg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+                <span class="ls-lg-chip" style="--c:var(--h-red)"><span class="lg-bg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Gemini Live</span>
+              </div>
+            </div>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <div class="ls-card-hd"><span class="ev-lg sm"><img src="../images/shared/logos/googlechrome.svg" alt="Chrome"></span><h3>1 · Listen</h3></div>
+                <p style="font-size:15.5px; line-height:1.42">Stream <b>16 kHz PCM</b> audio &amp; <b>JPEG</b> frames into <code>LiveRequestQueue.send_realtime()</code> with AEC enabled.</p>
+              </div>
+              <div class="pc green fragment">
+                <div class="ls-card-hd"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3>2 · Think</h3></div>
+                <p style="font-size:15.5px; line-height:1.42"><code>Runner.run_live()</code> connects Gemini Live with normal tools, <code>AsyncGenerator</code> streams &amp; <code>SessionService</code>.</p>
+              </div>
+              <div class="pc red fragment">
+                <div class="ls-card-hd"><span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><h3>3 · Speak</h3></div>
+                <p style="font-size:15.5px; line-height:1.42">Stream <b>24 kHz PCM</b> audio &amp; live captions back, and flush playback instantly on <code>event.interrupted</code>.</p>
+              </div>
+            </div>
+            <div class="fragment" style="width:1088px; margin-top:22px; display:flex; flex-wrap:wrap; gap:8px">
+              <span class="lv-pill" style="--c:var(--h-blue)">StreamingMode.BIDI</span>
+              <span class="lv-pill" style="--c:var(--h-blue)">LiveRequestQueue</span>
+              <span class="lv-pill" style="--c:var(--h-green)">Runner.run_live()</span>
+              <span class="lv-pill" style="--c:var(--h-yellow)">send_realtime(Blob)</span>
+              <span class="lv-pill" style="--c:var(--h-yellow)">AsyncGenerator tools</span>
+              <span class="lv-pill" style="--c:var(--h-red)">event.interrupted</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Run <code>adk web</code> with a Gemini Live model and talk to your existing ADK agent right in the browser.</span></div>
+        </div>
+        <aside class="notes">สรุปสั้น ๆ ด้วย 3 คำเดิมครับ • (คลิก) Listen: ส่งเสียง 16kHz PCM และภาพ JPEG เข้า LiveRequestQueue ผ่าน send_realtime พร้อมเปิด AEC ที่ฝั่ง client • (คลิก) Think: Runner.run_live() จัดการคุยกับ Gemini Live เรียก tool ปกติ, streaming tool และบันทึกความจำลง SessionService ให้ครบ • (คลิก) Speak: สตรีมเสียง 24kHz PCM พร้อมซับไตเติลกลับไป และล้างคิวเสียงทันทีเมื่อเจอ event.interrupted • (คลิก) เริ่มลองวันนี้ได้เลยครับ แค่เปลี่ยนโมเดลใน ADK agent เดิมเป็นรุ่น Live แล้วรัน adk web ก็กดปุ่มไมโครโฟนคุยได้เลย</aside>
+      </section>
+
+      <!-- 25. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:24px">Read more and try the codelabs</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue lv-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK Streaming overview</h3><a class="mono" style="font-size:14px" href="https://adk.dev/streaming/" target="_blank">adk.dev/streaming/</a></div></div>
+              <div class="pc blue lv-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Bidi-streaming Dev Guide</h3><a class="mono" style="font-size:14px" href="https://adk.dev/streaming/dev-guide/part1/" target="_blank">adk.dev/streaming/dev-guide/part1/</a></div></div>
+              <div class="pc green lv-res-row"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><div><h3>Codelab: ADK Gemini Live Toolkit</h3><a class="mono" style="font-size:14px" href="https://codelabs.developers.google.com/" target="_blank">Introduction to ADK Gemini Live API Toolkit</a></div></div>
+              <div class="pc green lv-res-row"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><div><h3>Codelab: The Night Market</h3><a class="mono" style="font-size:14px" href="https://codelabs.developers.google.com/" target="_blank">The Night Market — Live Voice at Agent Valley</a></div></div>
+              <div class="pc yellow lv-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><div><h3>Gemini Live API Docs</h3><a class="mono" style="font-size:14px" href="https://ai.google.dev/gemini-api/docs/live" target="_blank">ai.google.dev/gemini-api/docs/live</a></div></div>
+              <div class="pc red lv-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><div><h3>Cloud Run WebSockets</h3><a class="mono" style="font-size:14px" href="https://cloud.google.com/run/docs/triggering/websockets" target="_blank">cloud.google.com/run/docs/triggering/websockets</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รวมลิงก์ไปศึกษาต่อครับ: หน้า ADK Streaming หลัก, คู่มือ Bidi-streaming Dev Guide ที่ลงลึกทุกส่วน, Google Codelabs สองตัวทั้ง ADK Gemini Live API Toolkit และ The Night Market, เอกสาร Gemini Live API และคู่มือ WebSockets บน Cloud Run • สแกน QR หน้า Agenda เพื่อเปิดลิงก์ทั้งหมดจากสไลด์ได้เลยครับ</aside>
+      </section>
+
+      <!-- 26. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="ls-ty-art"><img src="../images/adk-live-streaming-slides/thank-you-art.svg" alt="Glowing audio waveform and Gemini Live orb"></div>
+        <div class="dots" style="left:946px; top:534px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณมากครับ • เปิดช่วง Q &amp; A ครับ ใครมีคำถามเรื่อง Live Voice, AudioWorklet หรือการ deploy บน Cloud Run ถามได้เลยครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

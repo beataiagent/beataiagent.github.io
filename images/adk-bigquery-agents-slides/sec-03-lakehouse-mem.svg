@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <circle cx="128" cy="116" r="96" fill="url(#amb-y)"/>
+  <circle cx="128" cy="176" r="82" fill="url(#amb-b)"/>
+  <circle cx="128" cy="128" r="100" fill="none" stroke="#ffd427" stroke-width="2" stroke-dasharray="6 6" opacity="0.45"/>
+
+  <!-- Lakehouse base water / platform -->
+  <ellipse cx="128" cy="192" rx="76" ry="13" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <path d="M74 192 Q92 186 110 192 T146 192 T182 192" fill="none" stroke="#57caff" stroke-width="1.6" opacity="0.75"/>
+
+  <!-- 4-Layer Glowing Memory Pyramid -->
+  <!-- Layer 4 (Bottom - Procedural - Pink) -->
+  <polygon points="62,174 194,174 184,152 72,152" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+  <text x="128" y="167" text-anchor="middle" class="m" font-size="10" fill="#ff7daf" font-weight="600">PROCEDURAL · SQL</text>
+
+  <!-- Layer 3 (Semantic - Yellow) -->
+  <polygon points="75,146 181,146 171,124 85,124" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <text x="128" y="139" text-anchor="middle" class="m" font-size="10" fill="#ffd427" font-weight="600">SEMANTIC · VEC</text>
+
+  <!-- Layer 2 (Episodic - Green) -->
+  <polygon points="88,118 168,118 158,96 98,96" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <text x="128" y="111" text-anchor="middle" class="m" font-size="10" fill="#5cdb6d" font-weight="600">EPISODIC</text>
+
+  <!-- Layer 1 (Top - Working - Blue) -->
+  <polygon points="101,90 155,90 128,54" fill="url(#glass)" stroke="#57caff" stroke-width="2.4" filter="url(#glow-s)"/>
+  <circle cx="128" cy="78" r="5" fill="#57caff"/>
+
+  <!-- Apex Spark -->
+  <polygon points="128,32 131,40 139,43 131,46 128,54 125,46 117,43 125,40" fill="#ffd427" filter="url(#glow-s)"/>
+
+  <text x="128" y="226" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">4-TIER LAKEHOUSE</text>
+</svg>

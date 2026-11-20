@@ -1,0 +1,104 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd427" stop-opacity="0.28"/><stop offset="100%" stop-color="#ffd427" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/><stop offset="100%" stop-color="#57caff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/><stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/><stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/></radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="320" height="320" fill="#202124"/>
+  <circle cx="160" cy="148" r="115" fill="url(#amb-y)"/>
+  <circle cx="72" cy="86" r="76" fill="url(#amb-b)"/>
+  <circle cx="248" cy="86" r="76" fill="url(#amb-g)"/>
+  <circle cx="244" cy="212" r="76" fill="url(#amb-r)"/>
+
+  <!-- Orbital rings -->
+  <circle cx="160" cy="148" r="112" fill="none" stroke="#ffd427" stroke-width="1.6" stroke-dasharray="6 6" opacity="0.4"/>
+  <circle cx="160" cy="148" r="74" fill="none" stroke="#57caff" stroke-width="1.4" stroke-dasharray="4 5" opacity="0.35"/>
+
+  <!-- Constellation edges -->
+  <g stroke-width="2.2" opacity="0.85">
+    <line x1="160" y1="148" x2="74" y2="82" stroke="#57caff"/>
+    <line x1="160" y1="148" x2="246" y2="82" stroke="#5cdb6d"/>
+    <line x1="160" y1="148" x2="74" y2="214" stroke="#ffd427"/>
+    <line x1="160" y1="148" x2="246" y2="214" stroke="#ff7daf"/>
+    <line x1="74" y1="82" x2="246" y2="82" stroke="#5f6368" stroke-dasharray="4 4" stroke-width="1.5"/>
+    <line x1="74" y1="214" x2="246" y2="214" stroke="#5f6368" stroke-dasharray="4 4" stroke-width="1.5"/>
+  </g>
+
+  <!-- Sparkles -->
+  <g filter="url(#glow-s)">
+    <path d="M160 22 L163 31 L172 34 L163 37 L160 46 L157 37 L148 34 L157 31 Z" fill="#ffd427"/>
+    <path d="M40 144 L42 150 L48 152 L42 154 L40 160 L38 154 L32 152 L38 150 Z" fill="#57caff"/>
+    <path d="M280 144 L282 150 L288 152 L282 154 L280 160 L278 154 L272 152 L278 150 Z" fill="#5cdb6d"/>
+    <circle cx="116" cy="50" r="3" fill="#ff7daf"/>
+    <circle cx="206" cy="52" r="3" fill="#57caff"/>
+    <circle cx="118" cy="242" r="3" fill="#5cdb6d"/>
+    <circle cx="206" cy="240" r="3" fill="#ffd427"/>
+  </g>
+
+  <!-- 4 Orbiting Agent Nodes -->
+  <!-- Top-left: Blue -->
+  <g transform="translate(74, 82)">
+    <circle r="24" fill="url(#glass)" stroke="#57caff" stroke-width="2.4" filter="url(#glow-s)"/>
+    <rect x="-12" y="-9" width="24" height="14" rx="5" fill="#17181b"/>
+    <circle cx="-5" cy="-2" r="2.2" fill="#57caff"/>
+    <circle cx="5" cy="-2" r="2.2" fill="#57caff"/>
+    <text x="0" y="16" text-anchor="middle" class="m" font-size="8.5" fill="#57caff">LLM</text>
+  </g>
+  <!-- Top-right: Green -->
+  <g transform="translate(246, 82)">
+    <circle r="24" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+    <rect x="-12" y="-9" width="24" height="14" rx="5" fill="#17181b"/>
+    <circle cx="-5" cy="-2" r="2.2" fill="#5cdb6d"/>
+    <circle cx="5" cy="-2" r="2.2" fill="#5cdb6d"/>
+    <text x="0" y="16" text-anchor="middle" class="m" font-size="8.5" fill="#5cdb6d">SEQ</text>
+  </g>
+  <!-- Bottom-left: Yellow -->
+  <g transform="translate(74, 214)">
+    <circle r="24" fill="url(#glass)" stroke="#ffd427" stroke-width="2.4" filter="url(#glow-s)"/>
+    <rect x="-12" y="-9" width="24" height="14" rx="5" fill="#17181b"/>
+    <circle cx="-5" cy="-2" r="2.2" fill="#ffd427"/>
+    <circle cx="5" cy="-2" r="2.2" fill="#ffd427"/>
+    <text x="0" y="16" text-anchor="middle" class="m" font-size="8.5" fill="#ffd427">PAR</text>
+  </g>
+  <!-- Bottom-right: Pink -->
+  <g transform="translate(246, 214)">
+    <circle r="24" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.4" filter="url(#glow-s)"/>
+    <rect x="-12" y="-9" width="24" height="14" rx="5" fill="#17181b"/>
+    <circle cx="-5" cy="-2" r="2.2" fill="#ff7daf"/>
+    <circle cx="5" cy="-2" r="2.2" fill="#ff7daf"/>
+    <text x="0" y="16" text-anchor="middle" class="m" font-size="8.5" fill="#ff7daf">LOOP</text>
+  </g>
+
+  <!-- Central Celebratory Coordinator Robot -->
+  <g transform="translate(160, 150) scale(0.84)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#ffd427" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="6" fill="#ffd427" filter="url(#glow-s)"/>
+    <rect x="-38" y="-44" width="76" height="56" rx="22" fill="#e8eaed" stroke="#ffd427" stroke-width="3.2"/>
+    <rect x="-26" y="-33" width="52" height="34" rx="13" fill="#1b1d22"/>
+    <!-- Happy smiling eyes -->
+    <path d="M-16 -17 Q-11 -23 -6 -17" fill="none" stroke="#ffd427" stroke-width="3" stroke-linecap="round"/>
+    <path d="M6 -17 Q11 -23 16 -17" fill="none" stroke="#ffd427" stroke-width="3" stroke-linecap="round"/>
+    <path d="M-9 -7 Q0 0 9 -7" fill="none" stroke="#5cdb6d" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M-24 16 H24 C28 16 26 42 0 46 C-26 42 -28 16 -24 16 Z" fill="#cfd4dc" stroke="#ffd427" stroke-width="2.4"/>
+    <text x="0" y="34" text-anchor="middle" class="m" font-size="11.5" fill="#202124" font-weight="700">ADK</text>
+  </g>
+
+  <text x="160" y="294" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427" font-weight="600">COMPOSE · ORCHESTRATE · SCALE</text>
+</svg>

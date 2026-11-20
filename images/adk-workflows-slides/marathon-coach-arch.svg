@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/><stop offset="100%" stop-color="#57caff" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/><stop offset="100%" stop-color="#ffd427" stop-opacity="0"/></radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/><stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/></radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+  <circle cx="195" cy="135" r="140" fill="url(#amb-b)"/>
+  <circle cx="575" cy="135" r="140" fill="url(#amb-y)"/>
+  <circle cx="940" cy="135" r="130" fill="url(#amb-g)"/>
+
+  <!-- Outer Shell -->
+  <rect x="10" y="10" width="1068" height="240" rx="18" fill="#17181b" fill-opacity="0.55" stroke="#5f6368" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <rect x="28" y="2" width="330" height="20" rx="10" fill="#202124" stroke="#5f6368" stroke-width="1.2"/>
+  <text x="193" y="16" text-anchor="middle" class="m" font-size="10.5" fill="#e8eaed">MARATHON RACE DAY COACH · TOP-LEVEL PIPELINE</text>
+
+  <!-- STAGE 1: Parallel Fan-out -->
+  <rect x="26" y="34" width="336" height="202" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <text x="42" y="56" class="m" font-size="11.5" fill="#57caff" font-weight="600">1 · PARALLEL FAN-OUT</text>
+  <text x="346" y="56" text-anchor="end" class="m" font-size="10.5" fill="#9aa0a6">Flash × 3</text>
+
+  <rect x="42" y="68" width="304" height="46" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.6"/>
+  <text x="56" y="88" class="t" font-size="14">Weather &amp; Course Agent</text>
+  <text x="56" y="105" class="m" font-size="11" fill="#57caff">Heat, humidity, elevation → state["weather"]</text>
+
+  <rect x="42" y="122" width="304" height="46" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.6"/>
+  <text x="56" y="142" class="t" font-size="14">Pacing &amp; Fitness Agent</text>
+  <text x="56" y="159" class="m" font-size="11" fill="#57caff">Training log &amp; PR splits → state["pacing"]</text>
+
+  <rect x="42" y="176" width="304" height="46" rx="10" fill="#17181b" stroke="#57caff" stroke-width="1.6"/>
+  <text x="56" y="196" class="t" font-size="14">Nutrition &amp; Fuel Agent</text>
+  <text x="56" y="213" class="m" font-size="11" fill="#57caff">Carbs/hr &amp; electrolytes → state["fuel"]</text>
+
+  <!-- Arrow 1 -> 2 -->
+  <path d="M362 135 H396" stroke="#57caff" stroke-width="2.8" marker-end="url(#arr-b)"/>
+
+  <!-- STAGE 2: Synthesizer + Critic Loop -->
+  <rect x="402" y="34" width="376" height="202" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <text x="418" y="56" class="m" font-size="11.5" fill="#ffd427" font-weight="600">2 · SYNTHESIZER + CRITIC LOOP</text>
+  <text x="762" y="56" text-anchor="end" class="m" font-size="10.5" fill="#9aa0a6">max_iter=3</text>
+
+  <!-- Synthesizer -->
+  <rect x="418" y="74" width="154" height="92" rx="12" fill="#17181b" stroke="#ffd427" stroke-width="2"/>
+  <text x="495" y="102" text-anchor="middle" class="t" font-size="14.5">Synthesizer</text>
+  <text x="495" y="122" text-anchor="middle" class="m" font-size="11" fill="#ffd427">Gemini Pro</text>
+  <text x="495" y="142" text-anchor="middle" class="m" font-size="10.5" fill="#bdc1c6">merges all 3 keys</text>
+  <text x="495" y="157" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">→ state["plan"]</text>
+
+  <path d="M572 120 H604" stroke="#ffd427" stroke-width="2.6" marker-end="url(#arr-y)"/>
+
+  <!-- Safety Critic -->
+  <rect x="610" y="74" width="152" height="92" rx="12" fill="#17181b" stroke="#ff7daf" stroke-width="2"/>
+  <text x="686" y="102" text-anchor="middle" class="t" font-size="14.5" fill="#ff7daf">Safety Critic</text>
+  <text x="686" y="122" text-anchor="middle" class="m" font-size="11" fill="#e8eaed">Heat &amp; pace check</text>
+  <text x="686" y="142" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">safe → exit_loop()</text>
+  <text x="686" y="157" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">risky → feedback</text>
+
+  <!-- Retry loop arc -->
+  <path d="M686 166 C686 218 495 218 495 170" fill="none" stroke="#ff7daf" stroke-width="2.4" stroke-dasharray="5 4" marker-end="url(#arr-r)"/>
+  <rect x="526" y="198" width="130" height="20" rx="10" fill="#202124" stroke="#ff7daf" stroke-width="1.3"/>
+  <text x="591" y="212" text-anchor="middle" class="m" font-size="10" fill="#ff7daf">revise pace / carbs</text>
+
+  <!-- Arrow 2 -> 3 -->
+  <path d="M778 135 H812" stroke="#5cdb6d" stroke-width="2.8" marker-end="url(#arr-g)"/>
+
+  <!-- STAGE 3: Pydantic Race Card -->
+  <rect x="818" y="34" width="244" height="202" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.4" filter="url(#glow-s)"/>
+  <text x="834" y="56" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">3 · PYDANTIC OUTPUT</text>
+
+  <rect x="834" y="72" width="212" height="146" rx="12" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="848" y="96" class="m" font-size="12" fill="#5cdb6d" font-weight="600">class RaceCard(BaseModel):</text>
+  <text x="858" y="120" class="m" font-size="11.5" fill="#e8eaed">splits: list[MileSplit]</text>
+  <text x="858" y="142" class="m" font-size="11.5" fill="#e8eaed">hydration: list[AidStop]</text>
+  <text x="858" y="164" class="m" font-size="11.5" fill="#ffd427">heat_alerts: list[str]</text>
+  <rect x="848" y="180" width="184" height="26" rx="8" fill="#202124" stroke="#5cdb6d" stroke-width="1.4"/>
+  <text x="940" y="197" text-anchor="middle" class="m" font-size="11" fill="#5cdb6d">✓ Validated UI-ready JSON</text>
+</svg>

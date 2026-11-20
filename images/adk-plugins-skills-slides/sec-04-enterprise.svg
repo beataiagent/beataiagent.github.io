@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="ring-g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ff7daf"/>
+      <stop offset="35%" stop-color="#ffd427"/>
+      <stop offset="70%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.26"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+  <circle cx="128" cy="116" r="106" fill="url(#amb-r)"/>
+  <circle cx="128" cy="136" r="80" fill="url(#amb-b)"/>
+
+  <!-- Unified Policy Ring -->
+  <circle cx="128" cy="118" r="82" fill="none" stroke="url(#ring-g)" stroke-width="3.6" filter="url(#glow-s)"/>
+  <circle cx="128" cy="118" r="72" fill="none" stroke="#5f6368" stroke-width="1.4" stroke-dasharray="5 5"/>
+
+  <!-- 4 Policy satellites on ring -->
+  <circle cx="128" cy="36" r="7" fill="#ff7daf" filter="url(#glow-s)"/>
+  <circle cx="210" cy="118" r="7" fill="#ffd427" filter="url(#glow-s)"/>
+  <circle cx="128" cy="200" r="7" fill="#5cdb6d" filter="url(#glow-s)"/>
+  <circle cx="46" cy="118" r="7" fill="#57caff" filter="url(#glow-s)"/>
+
+  <!-- Orchestrator top node inside ring -->
+  <rect x="94" y="64" width="68" height="26" rx="10" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="128" y="81" text-anchor="middle" class="m" font-size="10" fill="#57caff" font-weight="600">ORCH</text>
+
+  <!-- Routing links -->
+  <path d="M128 90 V116 M128 104 L88 124 M128 104 L168 124" fill="none" stroke="#bdc1c6" stroke-width="1.8" stroke-linecap="round"/>
+
+  <!-- 3 Fleet specialist nodes with skill pills -->
+  <g transform="translate(84,142)">
+    <rect x="-20" y="-16" width="40" height="32" rx="9" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
+    <text x="0" y="3" text-anchor="middle" class="m" font-size="9.5" fill="#fff">DATA</text>
+    <rect x="-14" y="10" width="28" height="9" rx="4.5" fill="#ffd427"/>
+  </g>
+  <g transform="translate(128,148)">
+    <rect x="-20" y="-16" width="40" height="32" rx="9" fill="url(#glass)" stroke="#ffd427" stroke-width="1.8"/>
+    <text x="0" y="3" text-anchor="middle" class="m" font-size="9.5" fill="#fff">BRAND</text>
+    <rect x="-14" y="10" width="28" height="9" rx="4.5" fill="#ffd427"/>
+  </g>
+  <g transform="translate(172,142)">
+    <rect x="-20" y="-16" width="40" height="32" rx="9" fill="url(#glass)" stroke="#ff7daf" stroke-width="1.8"/>
+    <text x="0" y="3" text-anchor="middle" class="m" font-size="9.5" fill="#fff">OPS</text>
+    <rect x="-14" y="10" width="28" height="9" rx="4.5" fill="#ffd427"/>
+  </g>
+
+  <!-- Bottom pill -->
+  <rect x="48" y="216" width="160" height="24" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="1.6"/>
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="11" fill="#ff7daf" font-weight="600">GOVERNED FLEET</text>
+</svg>

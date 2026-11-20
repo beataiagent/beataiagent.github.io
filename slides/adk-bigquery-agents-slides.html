@@ -1,0 +1,963 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Data Agents with ADK &amp; BigQuery — Query, Analyze, Verify</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- ADK & BigQuery Agents deck extras ---------- */
+    .bq-div-art { position: absolute; left: 57px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .bq-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .bq-ty-art { position: absolute; left: 880px; top: 186px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+    .reveal .slides .bq-ty-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .bq-diag { width: 1088px; border-radius: 18px; overflow: hidden; border: 2px solid var(--dk-line); background: #202124; box-sizing: border-box; box-shadow: 0 10px 28px rgba(0,0,0,.35); }
+    .reveal .slides .bq-diag img { width: 100%; height: auto; display: block; margin: 0; }
+    .bq-head-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; width: 1088px; }
+    .bq-lg-badges { display: flex; align-items: center; gap: 8px; flex: none; }
+    .bq-lg-pill { display: inline-flex; align-items: center; gap: 7px; padding: 5px 11px 5px 7px; border-radius: 999px; background: #17181b; border: 1.5px solid #3c4043; font: 500 12.5px/1 var(--mono); color: var(--dk-text); }
+    .bq-lg-pill .ev-lg { width: 24px; height: 24px; border-radius: 6px; }
+    .reveal .slides .bq-lg-pill .ev-lg img { width: 16px; height: 16px; }
+    .ev-lg.sm { width: 32px; height: 32px; border-radius: 8px; }
+    .reveal .slides .ev-lg.sm img { width: 20px; height: 20px; }
+    .bq-ico { display: block; width: 38px; height: 38px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+
+    /* side cards next to code */
+    .bq-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .bq-side .pc { padding: 13px 16px; font-size: 15px; line-height: 1.38; }
+    .bq-side .pc h3 { font-size: 18px; margin-bottom: 4px; }
+
+    /* checklist */
+    .reveal ul.bq-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .bq-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .bq-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .bq-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .bq-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* failure mode 2x2 cards */
+    .bq-fail .pc { padding: 18px 20px; display: flex; gap: 16px; align-items: flex-start; }
+    .bq-fail .pc .fi { flex: none; width: 42px; height: 42px; border-radius: 12px; border: 1.5px solid var(--c); background: #17181b; display: grid; place-items: center; }
+    .bq-fail .pc .fi svg { width: 22px; height: 22px; fill: none; stroke: var(--c); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .bq-fail .pc h3 { font-size: 20px; margin-bottom: 5px; color: var(--c); }
+    .bq-fail .pc p { font-size: 15.5px; line-height: 1.38; color: var(--dk-sub); }
+    .bq-fail .pc.red { --c: var(--h-red); } .bq-fail .pc.yellow { --c: var(--h-yellow); } .bq-fail .pc.blue { --c: var(--h-blue); } .bq-fail .pc.green { --c: var(--h-green); }
+
+    /* one-shot vs agentic loop diagram */
+    .bq-track { width: 1088px; border-radius: 16px; padding: 14px 18px; border: 2px solid var(--dk-line); background: #17181b; box-sizing: border-box; }
+    .bq-track.bad { border-color: rgba(255,125,175,.55); }
+    .bq-track.good { border-color: rgba(92,219,109,.65); margin-top: 16px; }
+    .bq-track > small { display: block; font: 700 12px/1 var(--mono); letter-spacing: .06em; text-transform: uppercase; margin-bottom: 12px; }
+    .bq-steps { display: flex; align-items: center; gap: 8px; }
+    .bq-step { flex: 1; min-width: 0; padding: 11px 12px; border-radius: 12px; background: var(--dk-card); border: 1.5px solid var(--c, var(--dk-line)); text-align: center; }
+    .bq-step b { display: block; font-size: 16px; color: var(--c, #fff); margin-bottom: 3px; }
+    .bq-step span { display: block; font-size: 13px; line-height: 1.3; color: var(--dk-sub); }
+    .bq-arr { width: 22px; height: 16px; flex: none; fill: none; stroke: var(--dk-sub); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* architecture grid (slide 7) */
+    .bq-arch { width: 1088px; display: grid; grid-template-columns: 240px 28px 340px 28px 1fr; align-items: center; }
+    .bq-box { border-radius: 16px; padding: 16px 18px; background: var(--dk-card); border: 2px solid var(--c, var(--dk-line)); box-sizing: border-box; }
+    .bq-box h3 { font-size: 18px; color: var(--c, #fff); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    .bq-box p, .bq-box li { font-size: 14.5px; line-height: 1.38; color: var(--dk-sub); }
+    .bq-pill { display: inline-block; font: 500 12.5px/1.2 var(--mono); padding: 5px 10px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; }
+
+    /* built-in tool cards (slide 10) */
+    .bq-tools .pc { padding: 15px 18px; }
+    .bq-tools .pc .fn { display: inline-block; font: 500 14px/1.2 var(--mono); color: var(--c); background: #17181b; border: 1.5px solid var(--c); border-radius: 8px; padding: 4px 9px; margin-bottom: 8px; }
+    .bq-tools .pc p { font-size: 15px; line-height: 1.35; color: var(--dk-sub); }
+    .bq-tools .pc.blue { --c: var(--h-blue); } .bq-tools .pc.green { --c: var(--h-green); } .bq-tools .pc.yellow { --c: var(--h-yellow); } .bq-tools .pc.red { --c: var(--h-red); }
+
+    /* 4-tier memory stack (slide 17) */
+    .bq-mem { width: 1088px; display: grid; gap: 10px; }
+    .bq-tier { display: grid; grid-template-columns: 225px 255px 1fr; gap: 14px; align-items: center; padding: 12px 16px; border-radius: 14px; background: var(--dk-card); border: 2px solid var(--dk-line); border-left: 7px solid var(--c); }
+    .bq-tier .tn b { display: block; font-size: 18px; color: var(--c); }
+    .bq-tier .tn small { display: block; font: 400 12.5px/1.2 var(--mono); color: var(--dk-sub); margin-top: 2px; }
+    .bq-tier .ts { font: 500 13.5px/1.3 var(--mono); color: #fff; background: #17181b; border: 1.5px solid #3c4043; border-radius: 10px; padding: 7px 11px; }
+    .bq-tier .td { font-size: 15px; line-height: 1.35; color: var(--dk-sub); }
+
+    /* blending hub diagram (slide 15) */
+    .bq-blend { width: 1088px; display: grid; grid-template-columns: 360px 30px 300px 30px 1fr; align-items: center; }
+    .bq-src { display: grid; gap: 10px; }
+    .bq-src .pc { padding: 12px 15px; display: flex; align-items: center; gap: 12px; }
+    .bq-src .pc b { display: block; font-size: 16.5px; margin-bottom: 2px; }
+    .bq-src .pc span { display: block; font-size: 13.5px; line-height: 1.3; color: var(--dk-sub); }
+
+    /* eval metric cards (slide 21) */
+    .bq-eval .pc { padding: 15px 16px; border-top: 5px solid var(--c); }
+    .bq-eval .pc .n { display: block; font: 700 12.5px/1 var(--mono); color: var(--c); margin-bottom: 6px; }
+    .bq-eval .pc b { display: block; font-size: 18.5px; line-height: 1.2; margin-bottom: 5px; }
+    .bq-eval .pc p { font-size: 14.5px; line-height: 1.35; color: var(--dk-sub); }
+    .bq-eval .pc.blue { --c: var(--h-blue); } .bq-eval .pc.green { --c: var(--h-green); } .bq-eval .pc.yellow { --c: var(--h-yellow); } .bq-eval .pc.red { --c: var(--h-red); }
+
+    /* recap & resources */
+    .bq-hook { flex: none; font: 500 13px/1.2 var(--mono); padding: 7px 12px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; box-sizing: border-box; }
+    .bq-res-row { display: flex; align-items: center; gap: 14px; padding: 16px 18px; }
+    .bq-res-row h3 { margin: 0 0 4px; font-size: 20px; }
+    .bq-logo-strip { display: flex; align-items: center; gap: 14px; }
+    .bq-logo-strip .ev-lg { width: 38px; height: 38px; }
+    .reveal .slides .bq-logo-strip .ev-lg img { width: 24px; height: 24px; }
+    .reveal table.zt-tbl td.hi-g { color: var(--h-green); }
+    .reveal table.zt-tbl td.hi-b { color: var(--h-blue); }
+  </style>
+</head>
+<body data-deck="ADK &amp; BigQuery Agents">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.6 2.6-2.4-.6-.6-2.4Z"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4a3.5 3.5 0 0 0-3.3 4.7A3.5 3.5 0 0 0 5 15a3.5 3.5 0 0 0 4.5 5V4Z"/><path d="M14.5 4a3.5 3.5 0 0 1 3.3 4.7A3.5 3.5 0 0 1 19 15a3.5 3.5 0 0 1-4.5 5V4Z"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2Z"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 19h16"/><path d="M7 15v-4"/><path d="M12 15V7"/><path d="M17 15v-6"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z"/><path d="M12 9v5"/><circle cx="12" cy="17" r=".7"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z"/><path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.5 2.5 2.5 4.5-5"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Data Agents with ADK &amp; BigQuery">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Query</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Analyze</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Verify</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Data Agents with ADK &amp; BigQuery</b><span>Build grounded, evaluated conversational analytics agents over enterprise data</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-blue)"><img src="../images/shared/logos/gcp-bigquery.png" alt="">BigQuery</i><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-red)"><img src="../images/shared/logos/mcp.svg" alt="">MCP</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ/ค่ะ • วันนี้เราจะมาดูวิธีสร้าง Data &amp; Analytics Agents บนข้อมูลองค์กรด้วย Agent Development Kit (ADK) และ BigQuery • 3 คำหลักของวันนี้คือ Query (ดึงข้อมูลอย่างปลอดภัยและคุมค่าใช้จ่ายได้), Analyze (วิเคราะห์ข้ามหลายแหล่งข้อมูลพร้อม memory), และ Verify (ประเมินผลและคุมสิทธิ์ให้พร้อมขึ้น production)</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Why data agents fail</strong><span>Classic Text-to-SQL traps &amp; how ADK fixes them</span></div></li>
+          <li class="c2"><b>02</b><div><strong>BigQueryToolset &amp; MCP</strong><span>Built-in tools, Cloud Run MCP &amp; cost guardrails</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Blending data &amp; memory</strong><span>Multi-source analytics, 4-tier memory &amp; semantics</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Evaluate &amp; secure</strong><span>Vertex AI GenAI Eval, IAM, RLS &amp; checklist</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-bigquery-agents-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">แบ่งเป็น 4 ช่วงครับ: (1) ทำไมระบบ Text-to-SQL แบบเดิมมักพังในงานจริง และ ADK ช่วยแก้ยังไง (2) เจาะลึก BigQueryToolset แบบ first-party เทียบกับ BigQuery MCP บน Cloud Run พร้อมการคุมค่า scan (3) การผสานข้อมูลหลายแหล่ง เช่น PDF + Web + BigQuery และสถาปัตยกรรม Agent Memory 4 ชั้นบน BigQuery (4) การทำ Evaluation ด้วย ADK + Vertex AI และการล็อกสิทธิ์ด้วย IAM, Authorized Views และ RLS • สแกน QR ด้านขวาเพื่อเปิดสไลด์ดูตามได้ครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · Why data agents fail">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="bq-div-art" style="--c:var(--h-blue)"><img src="../images/adk-bigquery-agents-slides/sec-01-sql-fails.svg" alt="Glowing database table with SQL query spark and guardrail shield"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Why data<br>agents fail</h1>
+            <p class="sub" style="margin-top:28px">Classic Text-to-SQL traps &amp;<br>how ADK fixes them</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • ก่อนจะเขียนโค้ด มาดูกันก่อนว่าทำไมเดโม Text-to-SQL ที่ดูดีบนเวที มักไปพังเมื่อเจอข้อมูลจริงในองค์กร</aside>
+      </section>
+
+      <!-- 4. Classic Text-to-SQL failure modes -->
+      <section data-title="Classic Text-to-SQL failure modes">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the problem</div>
+            <h2 style="margin-bottom:20px">Four ways naive Text-to-SQL breaks in production</h2>
+            <div class="grid g2 bq-fail" style="width:1088px; gap:16px">
+              <div class="pc red fragment" data-fragment-index="1">
+                <div class="fi"><svg viewBox="0 0 24 24"><use href="#i-alert"/></svg></div>
+                <div><h3>Hallucinated schemas</h3><p>Invents columns like <code>net_rev_usd</code> or joins the wrong table because the model never inspected live metadata.</p></div>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2">
+                <div class="fi"><svg viewBox="0 0 24 24"><use href="#i-doc"/></svg></div>
+                <div><h3>Missing business definitions</h3><p>"Active customer" or "churn" varies by team. SQL compiles cleanly, yet returns a silently wrong KPI.</p></div>
+              </div>
+              <div class="pc red fragment" data-fragment-index="3">
+                <div class="fi"><svg viewBox="0 0 24 24"><use href="#i-chart"/></svg></div>
+                <div><h3>Runaway TB scans</h3><p>One unpartitioned <code>SELECT *</code> across a multi-terabyte event table burns hundreds of dollars from a single chat turn.</p></div>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="4">
+                <div class="fi"><svg viewBox="0 0 24 24"><use href="#i-lock"/></svg></div>
+                <div><h3>Destructive DML / DDL</h3><p>Unconstrained SQL execution lets a prompt injection or model slip run <code>DELETE</code>, <code>UPDATE</code>, or <code>DROP TABLE</code>.</p></div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Reality check</b><span>Valid SQL syntax does not guarantee a safe, affordable, or accurate business answer.</span></div>
+        </div>
+        <aside class="notes">นี่คือ 4 ปัญหาคลาสสิกที่ทุกทีมเจอเวลาทำ Text-to-SQL • (คลิก 1) มโนชื่อคอลัมน์และตารางเอง เพราะไม่ได้ไปดู schema จริงก่อนเขียน • (คลิก 2) ไม่รู้จักนิยามธุรกิจ คำว่า "ลูกค้าที่ยังใช้งาน" แต่ละแผนกนับไม่เหมือนกัน SQL รันผ่านแต่ตัวเลขผิด • (คลิก 3) เขียน SELECT * ไม่ใส่ partition filter สแกนทีหลายเทราไบต์ ค่า BigQuery พุ่งทันที • (คลิก 4) ถ้าเปิดสิทธิ์เขียนไว้ โดน prompt injection อาจสั่ง DROP หรือ DELETE ตารางจริงได้ • (คลิก 5) จำไว้ว่า SQL ที่รันผ่าน ไม่ได้แปลว่าคำตอบถูกหรือปลอดภัย</aside>
+      </section>
+
+      <!-- 5. One-shot vs Agentic Loop -->
+      <section data-title="One-shot vs agentic loop">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">01 · paradigm shift</div>
+            <div class="bq-head-row" style="margin-bottom:16px">
+              <h2>From one-shot SQL generation to an agentic loop</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>BigQuery</span>
+              </div>
+            </div>
+            <div class="bq-diag fragment" data-fragment-index="1">
+              <img src="../images/adk-bigquery-agents-slides/oneshot-vs-agentic-sql.svg" alt="Fragile one-shot Text-to-SQL compared with the grounded ADK agentic loop">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:16px">
+              <div class="pc blue" style="padding:11px 15px; font-size:14.5px"><b style="color:var(--h-blue)">Schema-first:</b> Live <code>get_table_info</code> prevents hallucinated columns.</div>
+              <div class="pc yellow" style="padding:11px 15px; font-size:14.5px"><b style="color:var(--h-yellow)">Pre-flight gate:</b> <code>dry_run=True</code> catches TB scans before billing.</div>
+              <div class="pc green" style="padding:11px 15px; font-size:14.5px"><b style="color:var(--h-green)">Self-healing:</b> Reads BigQuery error messages and retries cleanly.</div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Core shift</b><span>Treat analytics as a multi-step investigative workflow, not a single LLM completion.</span></div>
+        </div>
+        <aside class="notes">เทียบให้เห็นความต่างครับ • (คลิก 1) แบบเดิมคือ one-shot: รับคำถาม → ให้ LLM เดา SQL จาก schema เก่า ๆ ใน prompt → ยิงตรงเข้า database → พังหรือได้ตัวเลขผิดเงียบ ๆ • ส่วนแบบ Agentic ด้วย ADK: เริ่มจากไปสำรวจ schema จริงก่อน → ผ่านด่านตรวจ read-only กับ dry-run → รันจริง ถ้า BigQuery ฟ้อง error ก็อ่าน error แล้วแก้ SQL เองได้ → สุดท้ายสรุปคำตอบพร้อมแนบที่มา • (คลิก 2-3) การวิเคราะห์ข้อมูลคือกระบวนการสืบค้นหลายขั้นตอน ไม่ใช่การตอบคำถามครั้งเดียวจบ</aside>
+      </section>
+
+      <!-- 6. How ADK fixes this -->
+      <section data-title="How ADK fixes data agents">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · the ADK advantage</div>
+            <h2 style="margin-bottom:22px">Three pillars ADK brings to BigQuery analytics</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <svg class="bq-ico" style="--c:var(--h-blue)"><use href="#i-search"/></svg>
+                <h3>1 · Discovery loop</h3>
+                <p style="font-size:15.5px; line-height:1.42; color:var(--dk-sub)">Agent inspects live datasets, columns, descriptions &amp; partitions before writing a single line of SQL—and retries when errors occur.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2">
+                <svg class="bq-ico" style="--c:var(--h-green)"><use href="#i-shield"/></svg>
+                <h3>2 · Deterministic guards</h3>
+                <p style="font-size:15.5px; line-height:1.42; color:var(--dk-sub)"><code>WriteMode.BLOCKED</code> stops DML/DDL in code, while <code>before_tool_callback</code> enforces dry-run byte caps and row limits.</p>
+              </div>
+              <div class="pc red fragment" data-fragment-index="3">
+                <svg class="bq-ico" style="--c:var(--h-red)"><use href="#i-check"/></svg>
+                <h3>3 · Built-in evaluation</h3>
+                <p style="font-size:15.5px; line-height:1.42; color:var(--dk-sub)">Score tool trajectories, SQL result equivalence, and answer faithfulness with <code>adk eval</code> and Vertex AI GenAI Eval.</p>
+              </div>
+            </div>
+            <div class="pc fragment" data-fragment-index="4" style="width:1088px; margin-top:20px; padding:14px 20px; display:flex; align-items:center; justify-content:space-between; gap:16px">
+              <span style="font-size:16.5px; color:var(--dk-text)"><b>End-to-end Google Cloud stack:</b> reasoning, tools, governance &amp; evaluation work together out of the box.</span>
+              <div class="bq-logo-strip">
+                <span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                <span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                <span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ADK เข้ามาแก้ปัญหาทั้ง 4 ข้อด้วย 3 เสาหลักครับ • (คลิก 1) Discovery loop: agent ไปดูตารางและคอลัมน์จริงก่อนเขียน SQL และแก้ตัวเองได้เมื่อเจอ syntax หรือ schema error • (คลิก 2) Deterministic guardrails: ไม่พึ่งแค่คำสั่งใน prompt แต่ล็อกด้วยโค้ดจริงผ่าน WriteMode.BLOCKED และ before_tool_callback ทำ dry-run • (คลิก 3) Evaluation: วัดผลได้ทั้งลำดับการเรียก tool ความถูกต้องของผลลัพธ์ SQL และความตรงไปตรงมาของคำตอบ • (คลิก 4) ทั้งหมดต่อกันได้ลื่นบน stack ของ Google Cloud ทั้ง ADK, Gemini, BigQuery และ Vertex AI</aside>
+      </section>
+
+      <!-- 7. Anatomy of a Data Agent -->
+      <section data-title="Anatomy of an ADK data agent">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · architecture</div>
+            <h2 style="margin-bottom:20px">Anatomy of a production ADK data agent</h2>
+            <div class="bq-arch">
+              <div class="bq-box fragment" data-fragment-index="1" style="--c:var(--h-blue)">
+                <h3>Caller &amp; Context</h3>
+                <p>User question<br>OAuth / IAM identity<br>Session &amp; state</p>
+              </div>
+              <svg class="bq-arr" viewBox="0 0 22 16" style="justify-self:center"><path d="M2 8h17M13 3l6 5-6 5"/></svg>
+              <div class="bq-box fragment" data-fragment-index="2" style="--c:var(--h-green); background:#17181b">
+                <h3><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK LlmAgent</h3>
+                <p style="margin-bottom:10px; display:flex; align-items:center; gap:7px"><span class="ev-lg sm" style="width:24px; height:24px; border-radius:6px"><img src="../images/shared/logos/gemini.svg" alt="Gemini" style="width:16px; height:16px"></span>Gemini 2.5 Pro / Flash reasoning</p>
+                <div style="display:flex; flex-wrap:wrap; gap:6px">
+                  <span class="bq-pill" style="--c:var(--h-yellow)">before_model: RAG</span>
+                  <span class="bq-pill" style="--c:var(--h-red)">before_tool: dry_run</span>
+                  <span class="bq-pill" style="--c:var(--h-blue)">after_tool: row cap</span>
+                </div>
+              </div>
+              <svg class="bq-arr" viewBox="0 0 22 16" style="justify-self:center"><path d="M2 8h17M13 3l6 5-6 5"/></svg>
+              <div style="display:grid; gap:10px">
+                <div class="bq-box fragment" data-fragment-index="3" style="--c:var(--h-blue); padding:11px 15px">
+                  <h3 style="margin-bottom:3px; font-size:16.5px"><span class="ev-lg sm" style="width:26px; height:26px; border-radius:6px"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery" style="width:18px; height:18px"></span><span class="ev-lg sm" style="width:26px; height:26px; border-radius:6px"><img src="../images/shared/logos/mcp.svg" alt="MCP" style="width:18px; height:18px"></span>BigQueryToolset / MCP</h3>
+                  <p>Schema, GoogleSQL, <code>AI.FORECAST</code>, Insights</p>
+                </div>
+                <div class="bq-box fragment" data-fragment-index="3" style="--c:var(--h-yellow); padding:11px 15px">
+                  <h3 style="margin-bottom:3px; font-size:16.5px"><span class="ev-lg sm" style="width:26px; height:26px; border-radius:6px"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud" style="width:18px; height:18px"></span>External Sources</h3>
+                  <p>PDFs / GCS docs, Google Search, enterprise APIs</p>
+                </div>
+                <div class="bq-box fragment" data-fragment-index="3" style="--c:var(--h-red); padding:11px 15px">
+                  <h3 style="margin-bottom:3px; font-size:16.5px"><span class="ev-lg sm" style="width:26px; height:26px; border-radius:6px"><img src="../images/shared/logos/gcp-iam.png" alt="IAM" style="width:18px; height:18px"></span>Governance &amp; Memory</h3>
+                  <p>IAM + Authorized Views + RLS + BQ Vector Memory</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Separation of concerns</b><span>Reasoning in Gemini · deterministic safety in ADK callbacks · data access control in BigQuery.</span></div>
+        </div>
+        <aside class="notes">ภาพรวมสถาปัตยกรรมของ Data Agent ที่พร้อมขึ้น production ครับ • (คลิก 1) ฝั่งซ้ายคือผู้ใช้ ส่งคำถามพร้อมสิทธิ์ตัวตนและ session state • (คลิก 2) ตรงกลางคือ ADK LlmAgent ที่ใช้ Gemini คิดและวางแผน โดยมี callback ดักอยู่ 3 จุดหลัก: เติมบริบทก่อนเรียกโมเดล, ทำ dry-run ก่อนรัน SQL, และตัดจำนวนแถวหลังได้ผลลัพธ์ • (คลิก 3) ฝั่งขวาเชื่อมต่อกับ BigQueryToolset หรือ MCP, แหล่งข้อมูลภายนอกอย่าง PDF/Web, และชั้นของ Governance กับ Memory • (คลิก 4) หลักการคือแยกหน้าที่ให้ชัด: คิดที่ Gemini, กันพลาดที่ ADK, และคุมสิทธิ์ที่ BigQuery</aside>
+      </section>
+
+      <!-- 8. Section 02 -->
+      <section class="bg-green" data-title="02 · BigQueryToolset &amp; MCP">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="bq-div-art" style="--c:var(--h-green)"><img src="../images/adk-bigquery-agents-slides/sec-02-toolset-mcp.svg" alt="BigQuery analytics lens plugged into ADK and MCP connectors"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">BigQueryToolset<br>&amp; MCP</h1>
+            <p class="sub" style="margin-top:28px">First-party ADK tools,<br>MCP on Cloud Run &amp; cost guards</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • มาดูเครื่องมือจริงที่ใช้เชื่อม ADK กับ BigQuery ทั้งแบบ first-party ใน Python และแบบ MCP server บน Cloud Run รวมถึงวิธีเขียน guardrail คุมงบ</aside>
+      </section>
+
+      <!-- 9. First-party BigQueryToolset -->
+      <section data-title="First-party BigQueryToolset">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · first-party integration</div>
+            <div class="bq-head-row" style="margin-bottom:18px">
+              <h2>Connect BigQuery in 15 lines with <code>BigQueryToolset</code></h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span>Python</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>BigQuery</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:625px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+import google.auth
+from google.adk.agents import LlmAgent
+from google.adk.tools.bigquery import (
+    BigQueryCredentialsConfig, BigQueryToolset,
+)
+from google.adk.tools.bigquery.config import (
+    BigQueryToolConfig, WriteMode,
+)
+
+creds, _ = google.auth.default()
+bq_tools = BigQueryToolset(
+    credentials_config=BigQueryCredentialsConfig(
+        credentials=creds
+    ),
+    bigquery_tool_config=BigQueryToolConfig(
+        write_mode=WriteMode.BLOCKED,
+        compute_project_id="my-analytics-proj",
+    ),
+)
+
+data_agent = LlmAgent(
+    name="bq_analyst",
+    model="gemini-2.5-pro",
+    instruction="Always inspect schemas before querying.",
+    tools=[bq_tools],
+)
+              </code></pre>
+              <div class="bq-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">First-party in ADK</h3>Ships inside <code>google-adk</code>. No custom SQL execution wrappers or schema formatters to maintain.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">WriteMode.BLOCKED</h3>Default read-only mode rejects <code>INSERT</code>, <code>UPDATE</code>, <code>DELETE</code> and DDL. Also supports <code>PROTECTED</code> (temp tables) and <code>ALLOWED</code>.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Flexible credentials</h3>Use ADC, Service Account, or per-user OAuth2 so BigQuery enforces the caller's own IAM.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">นี่คือโค้ดเชื่อมต่อ BigQuery ด้วย BigQueryToolset ที่มากับ google-adk เลยครับ • แค่สร้าง BigQueryCredentialsConfig กับ BigQueryToolConfig แล้วส่งเข้า tools ของ LlmAgent • (คลิก 1) ไม่ต้องเขียน wrapper เรียก BigQuery API หรือจัดรูป schema เอง • (คลิก 2) ไฮไลต์คือ WriteMode.BLOCKED ที่บล็อกคำสั่งแก้ไขหรือลบข้อมูลตั้งแต่ระดับ tool ส่วน PROTECTED อนุญาตเฉพาะ temp table ใน session • (คลิก 3) รองรับทั้ง ADC, Service Account และ OAuth ของผู้ใช้แต่ละคนเพื่อให้ BigQuery ตรวจสิทธิ์รายคนได้</aside>
+      </section>
+
+      <!-- 10. Built-in tools in BigQueryToolset -->
+      <section data-title="Built-in BigQuery tools">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · capabilities</div>
+            <div class="bq-head-row" style="margin-bottom:18px">
+              <h2>What comes out of the box in <code>BigQueryToolset</code></h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>BigQuery</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>TimesFM &amp; AI</span>
+              </div>
+            </div>
+            <div class="grid g3 bq-tools" style="width:1088px; gap:14px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <span class="fn">list_dataset_ids</span>
+                <p>Discover datasets available in the project, paired with <code>get_dataset_info</code> for descriptions &amp; labels.</p>
+              </div>
+              <div class="pc blue fragment" data-fragment-index="1">
+                <span class="fn">get_table_info</span>
+                <p>Inspect column names, types, descriptions, partitioning &amp; clustering (with <code>list_table_ids</code>).</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2">
+                <span class="fn">execute_sql</span>
+                <p>Run validated GoogleSQL queries while enforcing <code>write_mode</code>, project billing &amp; location.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2">
+                <span class="fn">forecast</span>
+                <p>Run BigQuery ML <code>AI.FORECAST</code> (TimesFM) for zero-shot time-series forecasting directly in SQL.</p>
+              </div>
+              <div class="pc red fragment" data-fragment-index="3">
+                <span class="fn">ask_data_insights</span>
+                <p>Delegate natural-language analytics to BigQuery's Conversational Analytics API over configured tables.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="3">
+                <span class="fn">search_catalog</span>
+                <p>Find the right tables across large enterprises using Dataplex Universal Catalog metadata search.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Least tool surface</b><span>Pass <code>tool_filter=["list_table_ids", "get_table_info", "execute_sql"]</code> to expose only what the agent needs.</span></div>
+        </div>
+        <aside class="notes">พอใส่ BigQueryToolset เข้าไป agent จะได้ tool ชุดนี้มาทันทีครับ • (คลิก 1) กลุ่มสำรวจข้อมูล: list_dataset_ids, get_dataset_info, list_table_ids และ get_table_info สำหรับดูคอลัมน์และคำอธิบาย • (คลิก 2) กลุ่มวิเคราะห์: execute_sql รัน GoogleSQL และ forecast ที่เรียก AI.FORECAST (TimesFM) ทำนาย time-series ได้เลยโดยไม่ต้องเทรนโมเดลเอง • (คลิก 3) กลุ่มขั้นสูง: ask_data_insights เรียก Conversational Analytics API และ search_catalog ค้นหาตารางผ่าน Dataplex • (คลิก 4) แนะนำให้ใช้ tool_filter จำกัดเฉพาะ tool ที่จำเป็น จะช่วยให้โมเดลเลือกได้แม่นและลด token</aside>
+      </section>
+
+      <!-- 11. BigQueryToolset vs BigQuery MCP -->
+      <section data-title="BigQueryToolset vs MCP">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · architecture choice</div>
+            <div class="bq-head-row" style="margin-bottom:16px">
+              <h2><code>BigQueryToolset</code> vs BigQuery MCP on Cloud Run</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>MCP</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>Cloud Run</span>
+              </div>
+            </div>
+            <table class="zt-tbl" style="width:1088px">
+              <colgroup><col style="width:200px"><col style="width:444px"><col style="width:444px"></colgroup>
+              <thead><tr><th>Dimension</th><th>ADK BigQueryToolset</th><th>BigQuery MCP on Cloud Run</th></tr></thead>
+              <tbody>
+                <tr><td>Runtime</td><td>In-process inside your ADK Python service</td><td>Remote HTTP MCP server (e.g. MCP Toolbox for Databases)</td></tr>
+                <tr><td>Client reuse</td><td>ADK agents in the same codebase</td><td class="hi-g">Any MCP client: ADK, Gemini CLI, IDEs, partner agents</td></tr>
+                <tr><td>SQL governance</td><td>Dynamic SQL + schema discovery + callbacks</td><td class="hi-b">Pre-approved parameterized SQL (<code>tools.yaml</code>) or ad-hoc</td></tr>
+                <tr><td>Credentials</td><td>Agent holds BQ credentials or user OAuth</td><td class="hi-g">Isolated in Cloud Run SA; agents only call HTTPS + IAM</td></tr>
+                <tr><td>Best for</td><td>Exploratory analytics &amp; fast single-team builds</td><td>Shared enterprise data tools owned by a platform team</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Rule of thumb</b><span>Start in-process with <code>BigQueryToolset</code>; graduate to MCP on Cloud Run when multiple teams share governed queries.</span></div>
+        </div>
+        <aside class="notes">คำถามที่เจอบ่อยมากคือ ควรใช้ BigQueryToolset ตรง ๆ หรือตั้ง BigQuery MCP server บน Cloud Run ดี? • BigQueryToolset รันใน process เดียวกับ ADK เริ่มไว เหมาะกับงานสำรวจข้อมูลแบบ ad-hoc และทีมเดียว • ส่วน BigQuery MCP บน Cloud Run (เช่นใช้ MCP Toolbox for Databases ของ Google) จะแยก server ออกมา ทำให้หลาย client ใช้ร่วมกันได้ ทั้ง ADK, Gemini CLI หรือ IDE และทีม Data Platform สามารถล็อก SQL แบบ parameterized ไว้ใน tools.yaml ได้ด้วย รวมถึงไม่ต้องแจก credential ของ BigQuery ให้ทุกแอป • สรุปง่าย ๆ: เริ่มจาก BigQueryToolset ก่อน แล้วค่อยย้ายไป MCP เมื่อต้องแชร์ tool ข้ามทีม</aside>
+      </section>
+
+      <!-- 12. BigQuery MCP on Cloud Run -->
+      <section data-title="BigQuery MCP on Cloud Run">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · remote MCP pattern</div>
+            <div class="bq-head-row" style="margin-bottom:18px">
+              <h2>Consume governed BigQuery MCP tools from ADK</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>MCP</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>Cloud Run</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span>IAM</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:625px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents import LlmAgent
+from google.adk.tools.mcp_tool import (
+    McpToolset,
+    StreamableHTTPConnectionParams,
+)
+
+bq_mcp = McpToolset(
+    connection_params=StreamableHTTPConnectionParams(
+        url="https://bq-mcp-svc-xxx.run.app/mcp",
+        headers={"Authorization": f"Bearer {id_token}"},
+    ),
+    tool_filter=[
+        "get_quarterly_revenue",
+        "top_customers_by_region",
+    ],
+)
+
+finance_agent = LlmAgent(
+    name="finance_analyst",
+    model="gemini-2.5-flash",
+    tools=[bq_mcp],
+)
+              </code></pre>
+              <div class="bq-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">MCP Toolbox for Databases</h3>Google's open-source server runs on Cloud Run with connection pooling, auth &amp; OpenTelemetry built in.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Zero SQL hallucination</h3>Define vetted parameterized SQL in <code>tools.yaml</code> so finance KPIs always run the exact approved query.</div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">Decoupled security</h3>Cloud Run IAM gates who can invoke the server; BigQuery IAM stays scoped to the server's service account.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">หน้าตาโค้ดฝั่ง ADK เวลาเรียก BigQuery MCP บน Cloud Run ครับ • ใช้ McpToolset กับ StreamableHTTPConnectionParams ชี้ไปที่ URL ของ Cloud Run พร้อมแนบ Identity Token • (คลิก 1) ฝั่ง server ใช้ MCP Toolbox for Databases ที่ Google ทำเป็น open-source มี connection pooling และ OpenTelemetry มาให้ครบ • (คลิก 2) จุดแข็งคือเราเขียน SQL ที่ผ่านการตรวจแล้วเป็น template ใน tools.yaml ให้ agent ส่งแค่พารามิเตอร์ เช่น region กับ quarter ทำให้ไม่มีทางมโนสูตร KPI ผิด • (คลิก 3) แยกสิทธิ์ชัดเจน Agent มีสิทธิ์แค่เรียก Cloud Run ไม่ต้องถือสิทธิ์เข้า BigQuery โดยตรง</aside>
+      </section>
+
+      <!-- 13. Cost Guardrails -->
+      <section data-title="Cost guardrails · dry-run">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:32px 56px">
+            <div class="eyebrow" style="margin-bottom:6px">02 · cost protection</div>
+            <div class="bq-head-row" style="margin-bottom:12px">
+              <h2 style="font-size:38px">Stop runaway TB scans with a dry-run callback</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span>Callback</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>dry_run</span>
+              </div>
+            </div>
+            <div class="bq-diag fragment" data-fragment-index="1" style="margin-bottom:14px">
+              <img src="../images/adk-bigquery-agents-slides/dryrun-cost-guardrail.svg" alt="Policy gate diagram: generated SQL checked via dry_run=True before execution or rewrite" style="max-height:208px; object-fit:contain; margin:0 auto">
+            </div>
+            <div style="display:flex; gap:18px; width:1088px; align-items:flex-start">
+              <pre style="width:655px; flex:none; font-size:12.2px; line-height:1.34"><code class="language-python" data-trim>
+MAX_BYTES = 10 * 1024**3  # 10 GB cap per query
+bq = bigquery.Client()
+
+def dry_run_guard(tool, args, tool_context):
+    if tool.name != "execute_sql":
+        return None
+    cfg = bigquery.QueryJobConfig(dry_run=True, use_query_cache=False)
+    job = bq.query(args["query"], job_config=cfg)
+    if job.total_bytes_processed > MAX_BYTES:
+        gb = job.total_bytes_processed / 1024**3
+        return {"error": f"Blocked: scans {gb:.1f} GB (cap 10 GB). Add partition filter."}
+    return None  # safe to execute
+              </code></pre>
+              <div class="bq-side" style="gap:9px">
+                <div class="pc yellow fragment" data-fragment-index="2" style="padding:10px 14px; font-size:14px"><h3 style="color:var(--h-yellow); font-size:16px">$0 pre-flight check</h3><code>dry_run=True</code> validates syntax &amp; exact bytes scanned for free.</div>
+                <div class="pc green fragment" data-fragment-index="2" style="padding:10px 14px; font-size:14px"><h3 style="color:var(--h-green); font-size:16px">Self-correcting retry</h3>Error dict prompts Gemini to add <code>WHERE event_date &gt;= ...</code>.</div>
+                <div class="pc red fragment" data-fragment-index="3" style="padding:10px 14px; font-size:14px"><h3 style="color:var(--h-red); font-size:16px">Defense in depth</h3>Pair with <code>maximum_bytes_billed</code> &amp; project custom quotas.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เรื่องค่าใช้จ่ายสำคัญมากเวลาเปิดให้ AI เขียน SQL เอง • (คลิก 1) ดูภาพด้านบนครับ: เราใช้ before_tool_callback ดักก่อน execute_sql จะรันจริง ด้วย dry_run=True ซึ่งฟรี 0 บาท • ถ้าไม่เกิน 10 GB ก็ปล่อยรันตามปกติ แต่ถ้าเกิน 10 GB จะบล็อกแล้วคืน error กลับไปให้ Gemini แก้ SQL ใส่ partition filter แล้วลองใหม่ • (คลิก 2-3) โค้ด Python ด้านล่างเขียนแค่ 12 บรรทัด และเพื่อความชัวร์ ควรตั้ง maximum_bytes_billed ใน QueryJobConfig และ Custom Quota ระดับโปรเจกต์ซ้อนไว้อีกชั้นด้วยครับ</aside>
+      </section>
+
+      <!-- 14. Section 03 -->
+      <section class="bg-yellow" data-title="03 · Blending data &amp; memory">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="bq-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-bigquery-agents-slides/sec-03-lakehouse-mem.svg" alt="4-layer glowing memory pyramid over a BigQuery data lakehouse"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Blending data<br>&amp; memory</h1>
+            <p class="sub" style="margin-top:28px">Multi-source analytics,<br>4-tier memory &amp; semantics</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • คำถามธุรกิจจริง ๆ แทบไม่เคยจบในตารางเดียว มาดูวิธีผสานข้อมูลหลายแหล่ง การสร้างความจำระยะยาวบน BigQuery และวิธีสอนนิยามธุรกิจให้ agent</aside>
+      </section>
+
+      <!-- 15. Codelab: Data Analyst Agent -->
+      <section data-title="Codelab · Data Analyst Agent">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">03 · codelab walkthrough</div>
+            <div class="bq-head-row" style="margin-bottom:16px">
+              <h2>Data Analyst Agent: blend PDFs, Search &amp; BigQuery</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>BQ</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="GCS"></span>GCS</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Search</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+              </div>
+            </div>
+            <div class="bq-diag fragment" data-fragment-index="1">
+              <img src="../images/adk-bigquery-agents-slides/data-analyst-blending.svg" alt="Data Analyst Agent multi-source architecture blending BigQuery tables, PDFs, and Google Search into a cited executive brief">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:16px">
+              <div class="pc blue" style="padding:10px 14px; font-size:14.5px"><b style="color:var(--h-blue)">Structured SQL:</b> Exact revenue &amp; trend deltas from <code>BigQueryToolset</code>.</div>
+              <div class="pc yellow" style="padding:10px 14px; font-size:14.5px"><b style="color:var(--h-yellow)">Unstructured Docs:</b> Tariff memos &amp; earnings PDFs indexed in GCS.</div>
+              <div class="pc green" style="padding:10px 14px; font-size:14.5px"><b style="color:var(--h-green)">Live Context:</b> <code>google_search</code> grounds real-time external signals.</div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Why blend sources?</b><span>BigQuery tells you WHAT moved; PDFs and live Search explain WHY it moved.</span></div>
+        </div>
+        <aside class="notes">นี่คือรูปแบบจาก Google Codelab "Data Analyst Agent" ครับ • (คลิก 1) ฝั่งซ้ายมีข้อมูล 3 แบบ: ตารางตัวเลขใน BigQuery, เอกสาร PDF รายงานไตรมาสหรือนโยบายใน GCS, และ Google Search สำหรับข่าวตลาดล่าสุด • ตรงกลางคือ ADK Synthesizer ที่แตกคำถามแล้วเชื่อมตัวเลขกับเหตุการณ์จริง ผลลัพธ์ที่ได้ไม่ใช่แค่ตัวเลขแห้ง ๆ แต่เป็นบทวิเคราะห์พร้อมแหล่งอ้างอิงทุกบรรทัด • (คลิก 2-3) จำง่าย ๆ: BigQuery บอกว่า "อะไรเปลี่ยน" ส่วน PDF กับ Search บอกว่า "ทำไมมันถึงเปลี่ยน"</aside>
+      </section>
+
+      <!-- 16. Multi-Agent Data Workflow -->
+      <section data-title="Multi-agent data workflow">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · orchestration</div>
+            <h2 style="margin-bottom:20px">Split complex analysis into specialist sub-agents</h2>
+            <div class="flow tight" style="width:1088px">
+              <div class="pc blue node fragment" data-fragment-index="1">
+                <span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                <b style="color:var(--h-blue)">1 · Planner</b>
+                <p>Breaks question into SQL tasks &amp; doc lookups</p>
+              </div>
+              <svg class="arr" viewBox="0 0 24 16"><path d="M2 8h19M15 3l6 5-6 5"/></svg>
+              <div class="pc green node fragment" data-fragment-index="2">
+                <span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                <b style="color:var(--h-green)">2 · SQL Agent</b>
+                <p>Owns <code>BigQueryToolset</code> &amp; dry-run guard</p>
+              </div>
+              <svg class="arr" viewBox="0 0 24 16"><path d="M2 8h19M15 3l6 5-6 5"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="2">
+                <span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span>
+                <b style="color:var(--h-yellow)">3 · Research Agent</b>
+                <p>Owns PDF RAG &amp; <code>google_search</code></p>
+              </div>
+              <svg class="arr" viewBox="0 0 24 16"><path d="M2 8h19M15 3l6 5-6 5"/></svg>
+              <div class="pc red node fragment" data-fragment-index="3">
+                <span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <b style="color:var(--h-red)">4 · Synthesizer</b>
+                <p>Reconciles numbers &amp; writes cited brief</p>
+              </div>
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="4" style="width:1088px; gap:16px; margin-top:20px">
+              <div class="pc" style="padding:14px 18px; font-size:15.5px">
+                <h3 style="font-size:18px; color:var(--h-blue); margin-bottom:4px">When to stay single-agent</h3>
+                Fewer than ~8 tools, single domain, low latency priority. Simpler to trace and debug.
+              </div>
+              <div class="pc" style="padding:14px 18px; font-size:15.5px">
+                <h3 style="font-size:18px; color:var(--h-green); margin-bottom:4px">When to split into sub-agents</h3>
+                Mix Gemini Flash (routing/search) with Gemini Pro (SQL), isolate prompts, and run ParallelAgent for speed.
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">พอ tool เริ่มเยอะ การยัดทุกอย่างไว้ใน agent ตัวเดียวจะทำให้ prompt สับสน • (คลิก 1-3) เราแยกเป็นทีม sub-agent ใน ADK ได้: Planner แตกงาน → SQL Agent ดูแลเฉพาะ BigQuery พร้อม dry-run callback และ Research Agent ดูแล PDF/Search รันขนานกันด้วย ParallelAgent → สุดท้าย Synthesizer ตรวจตัวเลขแล้วสรุปรายงาน • (คลิก 4) กฎง่าย ๆ: ถ้า tool ไม่ถึง 8 ตัว ใช้ตัวเดียวก็พอ แต่ถ้าต้องแยกสิทธิ์ แยก prompt หรือผสมโมเดล Flash กับ Pro เพื่อประหยัดต้นทุน การแยก sub-agent จะคุ้มกว่ามากครับ</aside>
+      </section>
+
+      <!-- 17. Multi-Tier Agent Memory in BigQuery Lakehouse -->
+      <section data-title="4-tier memory in BigQuery">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">03 · long-term agent memory</div>
+            <div class="bq-head-row" style="margin-bottom:16px">
+              <h2>4-tier agent memory architecture on BigQuery Lakehouse</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>Session</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>Vector</span>
+              </div>
+            </div>
+            <div class="bq-diag fragment" data-fragment-index="1">
+              <img src="../images/adk-bigquery-agents-slides/lakehouse-4tier-memory.svg" alt="4-tier Agent Memory stack in BigQuery Lakehouse: Working, Episodic, Semantic VECTOR_SEARCH, and Procedural Golden SQL Bank">
+            </div>
+            <div class="grid g4 fragment" data-fragment-index="2" style="width:1088px; gap:12px; margin-top:14px">
+              <div class="pc blue" style="padding:9px 12px; font-size:13.5px"><b style="color:var(--h-blue)">Working:</b> Live turn &amp; <code>temp:</code> state.</div>
+              <div class="pc green" style="padding:9px 12px; font-size:13.5px"><b style="color:var(--h-green)">Episodic:</b> Past runs &amp; user fixes.</div>
+              <div class="pc yellow" style="padding:9px 12px; font-size:13.5px"><b style="color:var(--h-yellow)">Semantic:</b> <code>VECTOR_SEARCH</code> KPIs.</div>
+              <div class="pc red" style="padding:9px 12px; font-size:13.5px"><b style="color:var(--h-red)">Procedural:</b> Golden SQL bank.</div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Why BigQuery Lakehouse?</b><span>Structured tables, vector embeddings, and interaction logs live in one governed, serverless engine.</span></div>
+        </div>
+        <aside class="notes">ถ้าอยากให้ Data Agent เก่งขึ้นเรื่อย ๆ ไม่ต้องอธิบายซ้ำทุกวัน เราออกแบบ Agent Memory เป็น 4 ชั้นบน BigQuery Lakehouse ได้ครับ • (คลิก 1) 1. Working Memory ใน ADK Session State เก็บการคุยรอบปัจจุบัน 2. Episodic Memory บันทึกประวัติการคุยและการแก้ไขของผู้ใช้ลง BigQuery 3. Semantic Memory เก็บนิยาม KPI และเอกสารธุรกิจเป็น vector แล้วค้นด้วย VECTOR_SEARCH 4. Procedural Memory เก็บคลัง Golden SQL และสูตร JOIN ที่ผ่านการตรวจแล้ว • (คลิก 2-3) ข้อดีคือทั้งหมดอยู่ใน BigQuery ที่เดียว ไม่ต้องดูแล vector database แยกอีกตัว</aside>
+      </section>
+
+      <!-- 18. Grounding Business Metrics & Semantic Layer -->
+      <section data-title="Grounding business metrics">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · semantic grounding</div>
+            <div class="bq-head-row" style="margin-bottom:18px">
+              <h2>Eliminate metric drift with a semantic layer</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>BigQuery</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-looker.png" alt="Looker"></span>Looker</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:stretch">
+              <div class="pc" style="width:470px; flex:none; padding:18px 20px; display:flex; flex-direction:column; gap:12px">
+                <h3 style="font-size:19px; color:var(--h-yellow); margin:0">Prompt: "What is Q3 Net Revenue?"</h3>
+                <div style="padding:11px 14px; border-radius:12px; background:#17181b; border:1.5px solid var(--h-red)">
+                  <b style="display:block; font-size:13.5px; color:var(--h-red); font-family:var(--mono); margin-bottom:4px">WITHOUT SEMANTIC LAYER</b>
+                  <span style="font-size:14.5px; color:var(--dk-sub)"><code>SUM(gross_amount)</code> from raw <code>orders</code> — forgets refunds, test accounts &amp; FX conversion.</span>
+                </div>
+                <div style="padding:11px 14px; border-radius:12px; background:#17181b; border:1.5px solid var(--h-green)">
+                  <b style="display:block; font-size:13.5px; color:var(--h-green); font-family:var(--mono); margin-bottom:4px">WITH SEMANTIC VIEW + GLOSSARY</b>
+                  <span style="font-size:14.5px; color:var(--dk-sub)">Queries <code>mart.v_net_revenue_usd</code> where refunds, internal orders &amp; currency rules are pre-verified.</span>
+                </div>
+              </div>
+              <div class="zt-stack" style="flex:1">
+                <div class="pc blue fragment"><b>1 · Rich BigQuery metadata</b> — Write clear table &amp; column <code>DESCRIPTION</code>s and Dataplex tags; <code>get_table_info</code> feeds them directly to Gemini.</div>
+                <div class="pc green fragment"><b>2 · Curated semantic views</b> — Pre-join complex star schemas into clean business views (or Looker / semantic models) so agents don't guess 6-way joins.</div>
+                <div class="pc yellow fragment"><b>3 · Verified few-shot SQL bank</b> — Retrieve top-k golden <code>(question, sql)</code> pairs via <code>VECTOR_SEARCH</code> to anchor complex aggregations.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Highest-ROI lever</b><span>Good column descriptions + 15 golden SQL examples beat a 5-page system prompt every time.</span></div>
+        </div>
+        <aside class="notes">วิธีแก้ปัญหา "SQL ถูกแต่ตัวเลขธุรกิจผิด" ที่ได้ผลที่สุดคือ Semantic Grounding ครับ • ดูตัวอย่างฝั่งซ้าย: ถามว่า "Q3 Net Revenue เท่าไหร่" ถ้าปล่อยให้ไป query ตาราง orders ดิบ โมเดลมักลืมหัก refund ลืมตัด test account และลืมแปลงสกุลเงิน • ถ้ามี Semantic View ที่เตรียมไว้แล้ว โมเดลแค่ดึงจาก v_net_revenue_usd ตัวเลขตรงกับรายงานการเงิน 100% • (คลิก 1) ใส่ description ให้ทุกตารางและคอลัมน์ เพราะ get_table_info ส่งให้ Gemini อ่านตรง ๆ • (คลิก 2) สร้าง view ที่ join ตารางซับซ้อนไว้ให้เรียบร้อย • (คลิก 3) เก็บตัวอย่าง golden SQL ไว้ดึงมาช่วยเป็น few-shot • (คลิก 4) แค่ทำคำอธิบายคอลัมน์ให้ดีและมีตัวอย่าง SQL 15 ข้อ เห็นผลกว่าการเขียน system prompt ยาว ๆ เยอะครับ</aside>
+      </section>
+
+      <!-- 19. Injecting Semantic Memory via Callback -->
+      <section data-title="Injecting semantic memory">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · pattern in practice</div>
+            <div class="bq-head-row" style="margin-bottom:18px">
+              <h2>Retrieve golden SQL in <code>before_model_callback</code></h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span>Python</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Gemini</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:625px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+def inject_golden_sql(callback_context, llm_request):
+    user_q = callback_context.user_content.parts[0].text
+    # Query BigQuery VECTOR_SEARCH over verified Q->SQL
+    hits = search_verified_sql(user_q, top_k=3)
+    if hits:
+        examples = "\n\n".join(
+            f"Q: {h['question']}\nSQL:\n{h['sql']}"
+            for h in hits
+        )
+        llm_request.config.system_instruction += (
+            "\n\nVerified SQL patterns for reference:\n"
+            + examples
+        )
+    return None  # call Gemini with enriched instructions
+              </code></pre>
+              <div class="bq-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Dynamic few-shot RAG</h3>Injects only the 3 closest verified SQL patterns per question—accurate without bloating the prompt.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Continuous flywheel</h3>When analysts approve a new query, embed and append it to the BigQuery golden table—no code redeploy.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Scales to 100s of KPIs</h3>Keep domain definitions in BigQuery tables instead of hardcoding rules inside Python strings.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่างการเอา ADK Callback มาเชื่อมกับ BigQuery Semantic Memory ครับ • ใน before_model_callback เราเอาคำถามของผู้ใช้ไปค้นหาด้วย VECTOR_SEARCH ในตาราง golden SQL ของ BigQuery ดึงมาแค่ 3 ตัวอย่างที่ใกล้เคียงที่สุด แล้วต่อท้ายเข้าไปใน system_instruction ก่อนส่งให้ Gemini • (คลิก 1) ได้ dynamic few-shot ที่แม่นโดยไม่เปลือง context window • (คลิก 2) พอทีม analyst ตรวจคำตอบใหม่แล้วเห็นว่าดี ก็เพิ่มลงตารางได้เลย agent ฉลาดขึ้นทันทีโดยไม่ต้อง deploy โค้ดใหม่ • (คลิก 3) รองรับได้เป็นร้อย KPI โดยไม่ต้องยัดกฎทั้งหมดไว้ในโค้ด Python</aside>
+      </section>
+
+      <!-- 20. Section 04 -->
+      <section class="bg-red" data-title="04 · Evaluate &amp; secure">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="bq-div-art" style="--c:var(--h-red)"><img src="../images/adk-bigquery-agents-slides/sec-04-eval-sec.svg" alt="Evaluation checkmark paired with IAM row-level lock shield"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Evaluate<br>&amp; secure</h1>
+            <p class="sub" style="margin-top:28px">Vertex AI GenAI Eval, IAM,<br>RLS &amp; production checklist</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้ายครับ • ก่อนจะปล่อย Data Agent ให้คนทั้งองค์กรใช้งานจริง เราต้องทำ 2 เรื่องให้ผ่าน: วัดผลความแม่นยำอย่างเป็นระบบ และล็อกความปลอดภัยระดับข้อมูลให้แน่น</aside>
+      </section>
+
+      <!-- 21. Evaluating BigQuery Agents -->
+      <section data-title="Evaluating BigQuery agents">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · quality assurance</div>
+            <div class="bq-head-row" style="margin-bottom:16px">
+              <h2>Evaluate with ADK + Vertex AI GenAI Eval Service</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>adk eval</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>Vertex AI</span>
+              </div>
+            </div>
+            <div class="grid g4 bq-eval" style="width:1088px; gap:14px">
+              <div class="pc blue fragment" data-fragment-index="1">
+                <span class="n">01 · TRAJECTORY</span>
+                <b>Tool sequence</b>
+                <p>Did it call <code>get_table_info</code> before <code>execute_sql</code>? Score via <code>tool_trajectory_avg_score</code>.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="1">
+                <span class="n">02 · CORRECTNESS</span>
+                <b>Result equivalence</b>
+                <p>Execute both generated and golden SQL; compare result sets—not raw SQL text.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2">
+                <span class="n">03 · GROUNDING</span>
+                <b>Answer faithfulness</b>
+                <p>LLM-as-a-judge checks that every number in prose matches actual BigQuery rows.</p>
+              </div>
+              <div class="pc red fragment" data-fragment-index="2">
+                <span class="n">04 · EFFICIENCY</span>
+                <b>Bytes &amp; retries</b>
+                <p>Track bytes scanned per turn, SQL self-heal loops, and p95 end-to-end latency.</p>
+              </div>
+            </div>
+            <div class="cmd fragment" data-fragment-index="3" style="width:1088px; margin-top:16px; box-sizing:border-box">
+              $ adk eval my_bq_agent evals/revenue_golden.evalset.json --config_file_path evals/test_config.json
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>Golden rule</b><span>Compare SQL RESULT SETS, not string equality—two different queries can return the exact right answer.</span></div>
+        </div>
+        <aside class="notes">การทดสอบ Data Agent ต้องวัด 4 มิติด้วย ADK Eval และ Vertex AI GenAI Eval Service ครับ • (คลิก 1) 1. Tool Trajectory: ดูว่า agent ทำตามขั้นตอนไหม เช่น ดู schema ก่อนยิง SQL 2. Result Equivalence: รันทั้ง SQL ที่ agent เขียนกับ golden SQL แล้วเทียบ "ผลลัพธ์" ไม่ใช่เทียบตัวอักษร SQL • (คลิก 2) 3. Answer Faithfulness: ให้ LLM-as-a-judge ตรวจว่าตัวเลขที่เขียนอธิบายตรงกับตารางที่ได้จริงไหม 4. Efficiency: วัด bytes ที่สแกนและจำนวนรอบ retry • (คลิก 3) ทั้งหมดรันอัตโนมัติใน CI/CD ได้ด้วยคำสั่ง adk eval • (คลิก 4) จำไว้เสมอว่าให้เทียบ result set เพราะ SQL เขียนได้หลายแบบที่ให้คำตอบถูกเหมือนกัน</aside>
+      </section>
+
+      <!-- 22. Security: IAM, Authorized Views & RLS -->
+      <section data-title="Security · IAM, Views &amp; RLS">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow" style="margin-bottom:8px">04 · enterprise governance</div>
+            <div class="bq-head-row" style="margin-bottom:14px">
+              <h2 style="font-size:40px">Enforce security in BigQuery, never in prompts</h2>
+              <div class="bq-lg-badges">
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span>IAM</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>RLS</span>
+                <span class="bq-lg-pill"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>Eval</span>
+              </div>
+            </div>
+            <div class="bq-diag fragment" data-fragment-index="1" style="margin-bottom:14px">
+              <img src="../images/adk-bigquery-agents-slides/eval-security-layers.svg" alt="3-layer BigQuery security defense (Least-Privilege IAM, Authorized Views, Row and Column Policies) paired with Vertex AI GenAI Eval Gate" style="max-height:224px; object-fit:contain; margin:0 auto">
+            </div>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:14px">
+              <div class="pc blue fragment" data-fragment-index="2" style="padding:11px 14px">
+                <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span>
+                  <h3 style="margin:0; font-size:17px">1 · Least-Privilege IAM</h3>
+                </div>
+                <p style="font-size:13.5px; line-height:1.34; color:var(--dk-sub)">Grant <code>jobUser</code> + <code>dataViewer</code> only on approved datasets.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:11px 14px">
+                <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                  <h3 style="margin:0; font-size:17px">2 · Authorized Views</h3>
+                </div>
+                <p style="font-size:13.5px; line-height:1.34; color:var(--dk-sub)">Drop PII columns (<code>email</code>, <code>ssn</code>) without raw table access.</p>
+              </div>
+              <div class="pc red fragment" data-fragment-index="2" style="padding:11px 14px">
+                <div style="display:flex; align-items:center; gap:9px; margin-bottom:4px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/googlecloud.svg" alt="RLS"></span>
+                  <h3 style="margin:0; font-size:17px">3 · Row &amp; Column RLS</h3>
+                </div>
+                <p style="font-size:13.5px; line-height:1.34; color:var(--dk-sub)"><code>ROW ACCESS POLICY</code> + per-user OAuth filters rows automatically.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Zero-trust mindset</b><span>Even if a prompt injection succeeds, BigQuery IAM, Authorized Views &amp; RLS still block unauthorized rows.</span></div>
+        </div>
+        <aside class="notes">เรื่องความปลอดภัย ห้ามฝากความหวังไว้กับการเขียนใน prompt ว่า "ห้ามดูข้อมูลแผนกอื่น" เด็ดขาดครับ ต้องล็อกที่ BigQuery โดยตรง 3 ชั้น คู่กับด่าน GenAI Eval • (คลิก 1-2) ชั้นที่ 1 Least-Privilege IAM: ให้แค่ jobUser กับ dataViewer เฉพาะ dataset ที่อนุญาต • ชั้นที่ 2 Authorized Views: เปิดให้ agent อ่านผ่าน view ที่ตัดคอลัมน์ PII ออกแล้ว • ชั้นที่ 3 Row-Level Security และ Data Masking: เมื่อใช้ per-user OAuth BigQuery จะกรองแถวตามสิทธิ์ของคนถามให้อัตโนมัติ • (คลิก 3) ต่อให้โดน prompt injection ระบบฐานข้อมูลก็ยังกันไว้ได้</aside>
+      </section>
+
+      <!-- 23. Production Best Practices Checklist -->
+      <section data-title="Production checklist">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">04 · best practices</div>
+            <h2 style="margin-bottom:20px">Production checklist for ADK + BigQuery agents</h2>
+            <div class="grid g2" style="width:1088px; gap:18px">
+              <ul class="bq-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Default to <code>WriteMode.BLOCKED</code></b> unless writes are explicitly scoped to a sandbox dataset.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Cap query spend</b> with a <code>dry_run=True</code> callback, <code>maximum_bytes_billed</code> &amp; partition filters.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Trim tool output</b> in <code>after_tool_callback</code> (enforce <code>LIMIT</code> / row cap) to avoid context overflow.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Document schemas</b> and use <code>tool_filter</code> so Gemini sees clean metadata and minimal tools.</span></li>
+              </ul>
+              <ul class="bq-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Gate releases with <code>adk eval</code></b> on 20–50 golden questions whenever prompts or views change.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Audit every query</b> — log caller, SQL, bytes scanned &amp; latency to BigQuery / Cloud Trace.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Never use prompts for access control</b> — enforce IAM, Authorized Views &amp; RLS in BigQuery.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Don't point agents at raw staging tables</b> — expose governed semantic views instead.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">เช็กลิสต์ก่อนขึ้น production 8 ข้อครับ • ฝั่งซ้าย: เปิด WriteMode.BLOCKED เป็นค่าเริ่มต้น, คุมงบด้วย dry-run และ maximum_bytes_billed, จำกัดจำนวนแถวใน after_tool_callback กัน context เต็ม, และใส่คำอธิบายตารางพร้อม tool_filter • ฝั่งขวา: รัน adk eval ทุกครั้งที่แก้ prompt หรือ view, เก็บ audit log ทุก query • และ 2 ข้อห้ามสำคัญ: อย่าใช้ prompt คุมสิทธิ์ และอย่าปล่อยให้ agent เข้าไป query ตาราง staging ดิบ ๆ</aside>
+      </section>
+
+      <!-- 24. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:22px">Query, Analyze, Verify</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <div style="display:flex; gap:8px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span>
+                </div>
+                <h3>1 · Query</h3>
+                <p style="font-size:15.5px; line-height:1.42">Use <b>BigQueryToolset</b> (<code>WriteMode.BLOCKED</code>) or <b>MCP on Cloud Run</b> with dry-run byte caps.</p>
+              </div>
+              <div class="pc green fragment">
+                <div style="display:flex; gap:8px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-looker.png" alt="Looker"></span>
+                </div>
+                <h3>2 · Analyze</h3>
+                <p style="font-size:15.5px; line-height:1.42">Blend BigQuery with <b>PDFs &amp; Search</b>; ground metrics with semantic views and <b>4-tier memory</b>.</p>
+              </div>
+              <div class="pc red fragment">
+                <div style="display:flex; gap:8px; margin-bottom:10px">
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span>
+                  <span class="ev-lg sm"><img src="../images/shared/logos/gcp-iam.png" alt="IAM"></span>
+                </div>
+                <h3>3 · Verify</h3>
+                <p style="font-size:15.5px; line-height:1.42">Score result sets with <b>ADK + Vertex AI Eval</b>; enforce <b>IAM, Authorized Views &amp; RLS</b> in BigQuery.</p>
+              </div>
+            </div>
+            <div class="fragment" style="width:1088px; margin-top:22px; display:flex; flex-wrap:wrap; gap:8px">
+              <span class="bq-hook" style="--c:var(--h-blue)">BigQueryToolset</span>
+              <span class="bq-hook" style="--c:var(--h-green)">WriteMode.BLOCKED</span>
+              <span class="bq-hook" style="--c:var(--h-blue)">McpToolset</span>
+              <span class="bq-hook" style="--c:var(--h-yellow)">dry_run=True</span>
+              <span class="bq-hook" style="--c:var(--h-yellow)">VECTOR_SEARCH</span>
+              <span class="bq-hook" style="--c:var(--h-red)">adk eval</span>
+              <span class="bq-hook" style="--c:var(--h-red); border-style:dashed">IAM + RLS</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Point <code>BigQueryToolset(write_mode=WriteMode.BLOCKED)</code> at one documented dataset and add a dry-run callback.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำของวันนี้ครับ • (คลิก 1) Query: เชื่อม BigQuery ด้วย BigQueryToolset แบบ BLOCKED หรือ MCP บน Cloud Run พร้อม dry-run กันบิลบาน • (คลิก 2) Analyze: ผสาน BigQuery กับ PDF และ Search แล้วเสริมความแม่นด้วย Semantic View กับ Memory 4 ชั้น • (คลิก 3) Verify: วัดผลด้วย ADK + Vertex AI Eval และคุมสิทธิ์ใน BigQuery ด้วย IAM, Views และ RLS • (คลิก 4-5) เริ่มทำวันนี้ได้เลย ลองชี้ BigQueryToolset ไปที่ dataset ที่มีคำอธิบายครบสัก 1 ชุด แล้วใส่ dry-run callback ดูครับ</aside>
+      </section>
+
+      <!-- 25. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:22px">Docs &amp; hands-on codelabs</h2>
+            <div class="grid g2" style="width:1088px; gap:14px">
+              <div class="pc blue bq-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>ADK BigQuery Tools Docs</h3><a class="mono" style="font-size:13.5px" href="https://adk.dev/tools/google-cloud/bigquery/" target="_blank">adk.dev/tools/google-cloud/bigquery/</a></div></div>
+              <div class="pc blue bq-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span><div><h3>Codelab: Data Analyst Agent</h3><a class="mono" style="font-size:13.5px" href="https://codelabs.developers.google.com/codelabs/adk-data-analyst-agent" target="_blank">Blend PDFs, Search &amp; BigQuery datasets</a></div></div>
+              <div class="pc green bq-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><div><h3>Build &amp; Evaluate BigQuery Agents</h3><a class="mono" style="font-size:13.5px" href="https://codelabs.developers.google.com/" target="_blank">Codelab: ADK + Vertex AI GenAI Eval</a></div></div>
+              <div class="pc yellow bq-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-bigquery.png" alt="BigQuery"></span><div><h3>Long-Term Agent Memory in BQ</h3><a class="mono" style="font-size:13.5px" href="https://codelabs.developers.google.com/" target="_blank">Codelab: 4-tier Lakehouse memory</a></div></div>
+              <div class="pc green bq-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run"></span><div><h3>BigQuery MCP on Cloud Run</h3><a class="mono" style="font-size:13.5px" href="https://codelabs.developers.google.com/" target="_blank">Codelab: MCP Toolbox + Cloud Run + ADK</a></div></div>
+              <div class="pc red bq-res-row"><span class="ev-lg"><img src="../images/shared/logos/mcp.svg" alt="MCP"></span><div><h3>MCP Toolbox for Databases</h3><a class="mono" style="font-size:13.5px" href="https://googleapis.github.io/genai-toolbox/" target="_blank">googleapis.github.io/genai-toolbox/</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">รวมลิงก์เอกสารและ Codelab สำหรับลองทำตามครับ: เอกสาร ADK BigQuery Tools อย่างเป็นทางการ, Codelab Data Analyst Agent, Build &amp; Evaluate BigQuery Agents, Architecting Long-Term Agent Memory with BigQuery, BigQuery MCP on Cloud Run และ MCP Toolbox for Databases • สแกน QR หน้า Agenda เพื่อเปิดสไลด์นี้กดลิงก์ได้ทันทีครับ</aside>
+      </section>
+
+      <!-- 26. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="bq-ty-art"><img src="../images/adk-bigquery-agents-slides/thank-you-art.svg" alt="Glowing BigQuery data warehouse with Gemini analytics spark"></div>
+        <div class="dots" style="left:970px; top:536px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณทุกคนมากครับ/ค่ะ • เปิดช่วง Q &amp; A สอบถามเรื่อง ADK, BigQuery หรือ MCP ได้เต็มที่เลยครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

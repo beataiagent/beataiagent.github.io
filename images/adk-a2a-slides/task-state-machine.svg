@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 240" width="1088" height="240">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-p" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#c58af9" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#c58af9" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-p" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#c58af9"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <marker id="arr-m" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#9aa0a6"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="240" fill="#202124"/>
+
+  <circle cx="115" cy="112" r="95" fill="url(#amb-b)"/>
+  <circle cx="370" cy="112" r="105" fill="url(#amb-y)"/>
+  <circle cx="628" cy="112" r="105" fill="url(#amb-p)"/>
+  <circle cx="920" cy="60" r="90" fill="url(#amb-g)"/>
+
+  <!-- 1. submitted -->
+  <rect x="24" y="66" width="182" height="86" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <text x="115" y="102" text-anchor="middle" class="m" font-size="16" fill="#57caff" font-weight="600">submitted</text>
+  <text x="115" y="128" text-anchor="middle" class="sub" font-size="12.5">Task queued &amp; ID assigned</text>
+
+  <!-- Arrow submitted -> working -->
+  <line x1="206" y1="109" x2="268" y2="109" stroke="#57caff" stroke-width="3" marker-end="url(#arr-b)"/>
+
+  <!-- 2. working -->
+  <rect x="276" y="60" width="194" height="98" rx="18" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2.6" filter="url(#glow-s)"/>
+  <text x="373" y="98" text-anchor="middle" class="m" font-size="17" fill="#ffd427" font-weight="600">working</text>
+  <text x="373" y="122" text-anchor="middle" class="sub" font-size="12.5">LLM reasoning &amp; MCP tools</text>
+  <text x="373" y="142" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">SSE status-update</text>
+
+  <!-- Bidirectional arrows working <-> input-required -->
+  <path d="M470 92 C496 76 516 76 540 92" fill="none" stroke="#c58af9" stroke-width="2.6" marker-end="url(#arr-p)"/>
+  <path d="M540 126 C516 142 496 142 470 126" fill="none" stroke="#ffd427" stroke-width="2.6" stroke-dasharray="5 3" marker-end="url(#arr-y)"/>
+  <text x="505" y="70" text-anchor="middle" class="m" font-size="10" fill="#c58af9">ask</text>
+  <text x="505" y="156" text-anchor="middle" class="m" font-size="10" fill="#ffd427">reply</text>
+
+  <!-- 3. input-required -->
+  <rect x="548" y="66" width="198" height="86" rx="16" fill="url(#glass)" stroke="#c58af9" stroke-width="2.2"/>
+  <text x="647" y="100" text-anchor="middle" class="m" font-size="15.5" fill="#c58af9" font-weight="600">input-required</text>
+  <text x="647" y="122" text-anchor="middle" class="sub" font-size="12">Paused for user / auth</text>
+  <text x="647" y="140" text-anchor="middle" class="m" font-size="10.5" fill="#bdc1c6">same taskId resumes</text>
+
+  <!-- Branch arrows to terminal states -->
+  <path d="M746 86 C784 52 794 46 832 46" fill="none" stroke="#5cdb6d" stroke-width="2.8" marker-end="url(#arr-g)"/>
+  <path d="M746 109 H832" fill="none" stroke="#ff7daf" stroke-width="2.6" marker-end="url(#arr-r)"/>
+  <path d="M746 132 C784 166 794 172 832 172" fill="none" stroke="#9aa0a6" stroke-width="2.4" stroke-dasharray="5 4" marker-end="url(#arr-m)"/>
+
+  <!-- Terminal 1: completed -->
+  <rect x="840" y="18" width="224" height="54" rx="14" fill="url(#glass-hi)" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+  <circle cx="868" cy="45" r="13" fill="#5cdb6d" fill-opacity="0.18" stroke="#5cdb6d" stroke-width="2"/>
+  <path d="M862 45 L866 49 L874 40" fill="none" stroke="#5cdb6d" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="892" y="42" class="m" font-size="14.5" fill="#5cdb6d" font-weight="600">completed</text>
+  <text x="892" y="59" class="sub" font-size="11.5">Artifacts returned</text>
+
+  <!-- Terminal 2: failed -->
+  <rect x="840" y="82" width="224" height="54" rx="14" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <circle cx="868" cy="109" r="13" fill="#ff7daf" fill-opacity="0.18" stroke="#ff7daf" stroke-width="2"/>
+  <path d="M863 104 L873 114 M873 104 L863 114" fill="none" stroke="#ff7daf" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="892" y="106" class="m" font-size="14.5" fill="#ff7daf" font-weight="600">failed</text>
+  <text x="892" y="123" class="sub" font-size="11.5">Structured error detail</text>
+
+  <!-- Terminal 3: canceled -->
+  <rect x="840" y="146" width="224" height="54" rx="14" fill="url(#glass)" stroke="#9aa0a6" stroke-width="1.8"/>
+  <circle cx="868" cy="173" r="13" fill="#9aa0a6" fill-opacity="0.16" stroke="#9aa0a6" stroke-width="2"/>
+  <line x1="862" y1="173" x2="874" y2="173" stroke="#9aa0a6" stroke-width="2.4" stroke-linecap="round"/>
+  <text x="892" y="170" class="m" font-size="14.5" fill="#e8eaed" font-weight="600">canceled</text>
+  <text x="892" y="187" class="sub" font-size="11.5">Aborted via tasks/cancel</text>
+
+  <!-- Bottom loop annotation pill -->
+  <rect x="110" y="196" width="600" height="30" rx="15" fill="#17181b" stroke="#c58af9" stroke-width="1.4" stroke-dasharray="5 3"/>
+  <text x="410" y="215" text-anchor="middle" class="m" font-size="11.5" fill="#e8eaed">Multi-turn &amp; HITL: <tspan fill="#c58af9">input-required</tspan> / <tspan fill="#ffd427">auth-required</tspan> → follow-up with same <tspan fill="#57caff">taskId</tspan></text>
+</svg>

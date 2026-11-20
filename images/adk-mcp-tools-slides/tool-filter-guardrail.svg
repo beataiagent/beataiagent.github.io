@@ -1,0 +1,121 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 240" width="1088" height="240">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="240" fill="#202124"/>
+
+  <circle cx="185" cy="120" r="130" fill="url(#amb-r)"/>
+  <circle cx="544" cy="120" r="115" fill="url(#amb-y)"/>
+  <circle cx="905" cy="120" r="130" fill="url(#amb-g)"/>
+
+  <!-- LEFT: Raw MCP Server (40 Tools) -->
+  <rect x="14" y="14" width="352" height="212" rx="18" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <text x="32" y="44" class="t" font-size="18" fill="#ffffff">Raw MCP Server</text>
+  <rect x="242" y="25" width="108" height="26" rx="13" fill="#17181b" stroke="#ff7daf" stroke-width="1.5"/>
+  <text x="296" y="42" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf" font-weight="600">40 raw tools</text>
+
+  <!-- Tool chips inside raw server -->
+  <g font-size="11" class="m">
+    <rect x="30" y="62" width="100" height="26" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+    <text x="80" y="79" text-anchor="middle" fill="#5cdb6d">read_file</text>
+
+    <rect x="138" y="62" width="104" height="26" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.3"/>
+    <text x="190" y="79" text-anchor="middle" fill="#ff7daf">delete_repo</text>
+
+    <rect x="250" y="62" width="100" height="26" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.3"/>
+    <text x="300" y="79" text-anchor="middle" fill="#ff7daf">drop_table</text>
+
+    <rect x="30" y="96" width="100" height="26" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+    <text x="80" y="113" text-anchor="middle" fill="#5cdb6d">list_dir</text>
+
+    <rect x="138" y="96" width="104" height="26" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.3"/>
+    <text x="190" y="113" text-anchor="middle" fill="#ff7daf">force_push</text>
+
+    <rect x="250" y="96" width="100" height="26" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+    <text x="300" y="113" text-anchor="middle" fill="#5cdb6d">get_issue</text>
+
+    <rect x="30" y="130" width="100" height="26" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.3"/>
+    <text x="80" y="147" text-anchor="middle" fill="#5cdb6d">search_code</text>
+
+    <rect x="138" y="130" width="104" height="26" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.3"/>
+    <text x="190" y="147" text-anchor="middle" fill="#ff7daf">revoke_key</text>
+
+    <rect x="250" y="130" width="100" height="26" rx="8" fill="#17181b" stroke="#5f6368" stroke-width="1.2" stroke-dasharray="4 3"/>
+    <text x="300" y="147" text-anchor="middle" fill="#9aa0a6">+32 more…</text>
+  </g>
+  <rect x="30" y="172" width="320" height="36" rx="10" fill="#17181b" stroke="#ff7daf" stroke-width="1.3"/>
+  <text x="190" y="195" text-anchor="middle" class="m" font-size="12" fill="#ff7daf">~12,000 schema tokens + destructive risk</text>
+
+  <!-- Arrow 1 -->
+  <path d="M368 120 H412" stroke="#ffd427" stroke-width="3" marker-end="url(#arr-y)"/>
+
+  <!-- CENTER: tool_filter Funnel Gate -->
+  <rect x="422" y="24" width="244" height="192" rx="18" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2.6" filter="url(#glow-s)"/>
+  <text x="544" y="56" text-anchor="middle" class="m" font-size="16" fill="#ffd427" font-weight="700">tool_filter</text>
+  <text x="544" y="76" text-anchor="middle" class="sub" font-size="12.5">allowlist or ReadonlyContext</text>
+
+  <rect x="440" y="92" width="208" height="44" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+  <text x="454" y="111" class="m" font-size="11.5" fill="#5cdb6d">✓ ALLOW</text>
+  <text x="454" y="127" class="m" font-size="10.5" fill="#e8eaed">read_*, list_*, get_*</text>
+
+  <rect x="440" y="148" width="208" height="48" rx="10" fill="#17181b" stroke="#ff7daf" stroke-width="1.5"/>
+  <text x="454" y="167" class="m" font-size="11.5" fill="#ff7daf">✕ BLOCKED (36)</text>
+  <text x="454" y="184" class="m" font-size="10.5" fill="#bdc1c6">delete_*, drop_*, push*</text>
+
+  <!-- Arrow 2 -->
+  <path d="M668 120 H712" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+
+  <!-- RIGHT: Scoped ADK Agent (4 Tools) -->
+  <rect x="722" y="14" width="352" height="212" rx="18" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <text x="740" y="44" class="t" font-size="18" fill="#5cdb6d">ADK LlmAgent</text>
+  <rect x="942" y="25" width="114" height="26" rx="13" fill="#17181b" stroke="#5cdb6d" stroke-width="1.5"/>
+  <text x="999" y="42" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">4 safe tools</text>
+
+  <!-- 4 clean green tools -->
+  <g font-size="12.5" class="m">
+    <rect x="740" y="64" width="150" height="40" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="815" y="89" text-anchor="middle" fill="#5cdb6d">✓ read_file</text>
+
+    <rect x="904" y="64" width="150" height="40" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="979" y="89" text-anchor="middle" fill="#5cdb6d">✓ list_dir</text>
+
+    <rect x="740" y="114" width="150" height="40" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="815" y="139" text-anchor="middle" fill="#5cdb6d">✓ search_code</text>
+
+    <rect x="904" y="114" width="150" height="40" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="979" y="139" text-anchor="middle" fill="#5cdb6d">✓ get_issue</text>
+  </g>
+
+  <rect x="740" y="172" width="314" height="36" rx="10" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="897" y="195" text-anchor="middle" class="m" font-size="12" fill="#5cdb6d" font-weight="600">-90% prompt tokens · Least Privilege</text>
+</svg>

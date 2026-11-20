@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 240" width="1088" height="240">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-y" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ffd427"/></marker>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <marker id="arr-r" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#ff7daf"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="240" fill="#202124"/>
+  <circle cx="210" cy="120" r="130" fill="url(#amb-y)"/>
+  <circle cx="760" cy="120" r="140" fill="url(#amb-b)"/>
+
+  <!-- LEFT: Folder Tree Card -->
+  <rect x="18" y="14" width="420" height="212" rx="18" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <rect x="34" y="28" width="388" height="32" rx="9" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="48" y="49" class="m" font-size="13.5" fill="#57caff" font-weight="600">📁 skills/bigquery-optimization/</text>
+
+  <!-- Tree items with highlight rows -->
+  <g transform="translate(34,72)">
+    <rect width="388" height="32" rx="8" fill="#ffd427" fill-opacity="0.12" stroke="#ffd427" stroke-width="1.3"/>
+    <text x="14" y="21" class="m" font-size="13" fill="#ffd427" font-weight="600">├── SKILL.md</text>
+    <text x="274" y="21" class="m" font-size="11" fill="#ffd427">REQUIRED</text>
+  </g>
+  <g transform="translate(34,110)">
+    <rect width="388" height="32" rx="8" fill="#17181b" stroke="#57caff" stroke-width="1.2"/>
+    <text x="14" y="21" class="m" font-size="13" fill="#57caff">├── references/partitioning.md</text>
+  </g>
+  <g transform="translate(34,148)">
+    <rect width="388" height="32" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.2"/>
+    <text x="14" y="21" class="m" font-size="13" fill="#5cdb6d">├── scripts/check_bytes.py</text>
+  </g>
+  <g transform="translate(34,186)">
+    <rect width="388" height="32" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.2"/>
+    <text x="14" y="21" class="m" font-size="13" fill="#ff7daf">└── assets/report_template.md</text>
+  </g>
+
+  <!-- Connector arrows from tree rows to right cards -->
+  <path d="M438 88 H514" stroke="#ffd427" stroke-width="2.4" marker-end="url(#arr-y)"/>
+  <path d="M438 126 H514" stroke="#57caff" stroke-width="2.4" marker-end="url(#arr-b)"/>
+  <path d="M438 164 H514" stroke="#5cdb6d" stroke-width="2.4" marker-end="url(#arr-g)"/>
+  <path d="M438 202 H514" stroke="#ff7daf" stroke-width="2.4" marker-end="url(#arr-r)"/>
+
+  <!-- RIGHT: 4 Role Breakdown Cards -->
+  <g transform="translate(524,14)">
+    <rect width="546" height="48" rx="12" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+    <text x="18" y="21" class="m" font-size="12" fill="#ffd427" font-weight="600">SKILL.md · Brain &amp; Trigger</text>
+    <text x="18" y="39" class="sub" font-size="12.5">YAML frontmatter (name + description) + step-by-step SOP</text>
+    <rect x="444" y="12" width="88" height="24" rx="12" fill="#ffd427" fill-opacity="0.18"/>
+    <text x="488" y="28" text-anchor="middle" class="m" font-size="10.5" fill="#ffd427">Tier 1 &amp; 2</text>
+  </g>
+
+  <g transform="translate(524,69)">
+    <rect width="546" height="48" rx="12" fill="url(#glass)" stroke="#57caff" stroke-width="1.8"/>
+    <text x="18" y="21" class="m" font-size="12" fill="#57caff" font-weight="600">references/ · Deep Manuals</text>
+    <text x="18" y="39" class="sub" font-size="12.5">SQL patterns, DDL guides, policy tables loaded only on demand</text>
+    <rect x="444" y="12" width="88" height="24" rx="12" fill="#57caff" fill-opacity="0.18"/>
+    <text x="488" y="28" text-anchor="middle" class="m" font-size="10.5" fill="#57caff">Tier 3</text>
+  </g>
+
+  <g transform="translate(524,124)">
+    <rect width="546" height="48" rx="12" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8"/>
+    <text x="18" y="21" class="m" font-size="12" fill="#5cdb6d" font-weight="600">scripts/ · Deterministic Helpers</text>
+    <text x="18" y="39" class="sub" font-size="12.5">Verified Python/shell utilities (e.g. dry-run cost estimators)</text>
+    <rect x="444" y="12" width="88" height="24" rx="12" fill="#5cdb6d" fill-opacity="0.18"/>
+    <text x="488" y="28" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d">Tier 3</text>
+  </g>
+
+  <g transform="translate(524,179)">
+    <rect width="546" height="48" rx="12" fill="url(#glass)" stroke="#ff7daf" stroke-width="1.8"/>
+    <text x="18" y="21" class="m" font-size="12" fill="#ff7daf" font-weight="600">assets/ · Reusable Templates</text>
+    <text x="18" y="39" class="sub" font-size="12.5">Output Markdown templates, JSON schemas &amp; boilerplate files</text>
+    <rect x="444" y="12" width="88" height="24" rx="12" fill="#ff7daf" fill-opacity="0.18"/>
+    <text x="488" y="28" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf">Tier 3</text>
+  </g>
+</svg>

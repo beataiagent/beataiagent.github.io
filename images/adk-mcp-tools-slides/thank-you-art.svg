@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="glass-hi" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#383b42" stop-opacity="0.95"/>
+      <stop offset="100%" stop-color="#1e2025" stop-opacity="0.98"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="320" height="320" fill="#202124"/>
+
+  <circle cx="160" cy="148" r="142" fill="url(#amb-y)"/>
+  <circle cx="110" cy="148" r="88" fill="url(#amb-b)"/>
+  <circle cx="210" cy="148" r="88" fill="url(#amb-g)"/>
+
+  <!-- Orbital rings -->
+  <circle cx="160" cy="148" r="118" fill="none" stroke="#5f6368" stroke-width="2" stroke-dasharray="7 7"/>
+  <circle cx="160" cy="148" r="84" fill="none" stroke="#ffd427" stroke-width="1.6" opacity="0.45"/>
+
+  <!-- Spokes to 4 tool satellites -->
+  <line x1="160" y1="148" x2="160" y2="54" stroke="#57caff" stroke-width="2.2" opacity="0.8"/>
+  <line x1="160" y1="148" x2="254" y2="148" stroke="#5cdb6d" stroke-width="2.2" opacity="0.8"/>
+  <line x1="160" y1="148" x2="66" y2="148" stroke="#ff7daf" stroke-width="2.2" opacity="0.8"/>
+  <line x1="160" y1="148" x2="160" y2="216" stroke="#ffd427" stroke-width="2.2" opacity="0.8"/>
+
+  <!-- 4 Tool Satellite Nodes -->
+  <!-- Top: Function Tools -->
+  <circle cx="160" cy="48" r="22" fill="url(#glass)" stroke="#57caff" stroke-width="2.2" filter="url(#glow-s)"/>
+  <text x="160" y="53" text-anchor="middle" class="m" font-size="11" fill="#57caff" font-weight="700">def()</text>
+
+  <!-- Right: Cloud Run -->
+  <circle cx="260" cy="148" r="22" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+  <text x="260" y="153" text-anchor="middle" class="m" font-size="10.5" fill="#5cdb6d" font-weight="700">RUN</text>
+
+  <!-- Left: OAuth/IAM -->
+  <circle cx="60" cy="148" r="22" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2" filter="url(#glow-s)"/>
+  <text x="60" y="153" text-anchor="middle" class="m" font-size="10.5" fill="#ff7daf" font-weight="700">AUTH</text>
+
+  <!-- Center: Glowing ADK + MCP Hub -->
+  <rect x="104" y="108" width="112" height="80" rx="22" fill="url(#glass-hi)" stroke="#ffd427" stroke-width="2.8" filter="url(#glow-s)"/>
+  <text x="160" y="142" text-anchor="middle" class="t" font-size="22" fill="#ffffff">ADK</text>
+  <line x1="126" y1="152" x2="194" y2="152" stroke="#5cdb6d" stroke-width="1.8"/>
+  <text x="160" y="174" text-anchor="middle" class="m" font-size="16" fill="#5cdb6d" font-weight="700">+ MCP</text>
+
+  <!-- Bottom ribbon -->
+  <rect x="44" y="254" width="232" height="34" rx="17" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="160" y="276" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427" font-weight="600">CONNECT · EXTEND · GROUND</text>
+</svg>

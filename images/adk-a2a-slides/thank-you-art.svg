@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 320" width="320" height="320">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="grad-4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="35%" stop-color="#5cdb6d"/>
+      <stop offset="70%" stop-color="#ffd427"/>
+      <stop offset="100%" stop-color="#ff7daf"/>
+    </linearGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="320" height="320" fill="#202124"/>
+
+  <circle cx="160" cy="148" r="136" fill="url(#amb-y)"/>
+  <circle cx="92" cy="130" r="80" fill="url(#amb-b)"/>
+  <circle cx="228" cy="175" r="80" fill="url(#amb-g)"/>
+
+  <!-- Orbital rings -->
+  <circle cx="160" cy="148" r="118" fill="none" stroke="#5f6368" stroke-width="1.8" stroke-dasharray="6 6"/>
+  <circle cx="160" cy="148" r="82" fill="none" stroke="url(#grad-4)" stroke-width="1.8" opacity="0.5"/>
+
+  <!-- Constellation links -->
+  <line x1="160" y1="148" x2="90" y2="88" stroke="#57caff" stroke-width="2.4" stroke-dasharray="4 4"/>
+  <line x1="160" y1="148" x2="232" y2="92" stroke="#5cdb6d" stroke-width="2.4" stroke-dasharray="4 4"/>
+  <line x1="160" y1="148" x2="96" y2="206" stroke="#ff7daf" stroke-width="2.4" stroke-dasharray="4 4"/>
+  <line x1="160" y1="148" x2="226" y2="202" stroke="#ffd427" stroke-width="2.4" stroke-dasharray="4 4"/>
+
+  <!-- Satellite Mini Agents -->
+  <!-- Top-left Blue -->
+  <g transform="translate(88, 86)">
+    <circle cx="0" cy="0" r="24" fill="url(#glass)" stroke="#57caff" stroke-width="2.2" filter="url(#glow-s)"/>
+    <rect x="-13" y="-10" width="26" height="18" rx="7" fill="#17181b"/>
+    <circle cx="-5" cy="-1" r="2.8" fill="#57caff"/>
+    <circle cx="5" cy="-1" r="2.8" fill="#57caff"/>
+  </g>
+  <!-- Top-right Green -->
+  <g transform="translate(234, 90)">
+    <circle cx="0" cy="0" r="24" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2" filter="url(#glow-s)"/>
+    <rect x="-13" y="-10" width="26" height="18" rx="7" fill="#17181b"/>
+    <circle cx="-5" cy="-1" r="2.8" fill="#5cdb6d"/>
+    <circle cx="5" cy="-1" r="2.8" fill="#5cdb6d"/>
+  </g>
+  <!-- Bottom-left Pink -->
+  <g transform="translate(94, 206)">
+    <circle cx="0" cy="0" r="22" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+    <rect x="-12" y="-9" width="24" height="16" rx="6" fill="#17181b"/>
+    <circle cx="-4.5" cy="-1" r="2.5" fill="#ff7daf"/>
+    <circle cx="4.5" cy="-1" r="2.5" fill="#ff7daf"/>
+  </g>
+  <!-- Bottom-right Yellow -->
+  <g transform="translate(228, 204)">
+    <circle cx="0" cy="0" r="22" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+    <rect x="-12" y="-9" width="24" height="16" rx="6" fill="#17181b"/>
+    <circle cx="-4.5" cy="-1" r="2.5" fill="#ffd427"/>
+    <circle cx="4.5" cy="-1" r="2.5" fill="#ffd427"/>
+  </g>
+
+  <!-- Center Hero Coordinator Robot -->
+  <g transform="translate(160, 148) scale(0.76)">
+    <line x1="0" y1="-44" x2="0" y2="-56" stroke="#ffd427" stroke-width="3.2" stroke-linecap="round"/>
+    <circle cx="0" cy="-60" r="6" fill="#ffd427" filter="url(#glow-s)"/>
+    <rect x="-36" y="-44" width="72" height="54" rx="22" fill="#e8eaed" stroke="#ffd427" stroke-width="3"/>
+    <rect x="-25" y="-33" width="50" height="32" rx="13" fill="#1b1d22"/>
+    <circle cx="-11" cy="-18" r="5" fill="#ffd427" filter="url(#glow-s)"/>
+    <circle cx="11" cy="-18" r="5" fill="#ffd427" filter="url(#glow-s)"/>
+    <path d="M-8 -8 Q0 -2 8 -8" fill="none" stroke="#ffd427" stroke-width="2.8" stroke-linecap="round"/>
+    <path d="M-24 14 H24 C28 14 26 40 0 44 C-26 40 -28 14 -24 14 Z" fill="#cfd4dc" stroke="#ffd427" stroke-width="2.2"/>
+    <circle cx="0" cy="27" r="6" fill="#ffd427"/>
+  </g>
+
+  <!-- Bottom ribbon -->
+  <rect x="46" y="256" width="228" height="34" rx="17" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="160" y="278" text-anchor="middle" class="m" font-size="12.5" fill="#ffd427">A2A + ADK CONSTELLATION</text>
+</svg>

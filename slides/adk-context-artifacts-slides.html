@@ -1,0 +1,871 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Context, Caching &amp; Artifacts in ADK — Compact, Cache, Store</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- Context, Caching & Artifacts deck extras ---------- */
+    .ca-art { border-radius: 18px; overflow: hidden; border: 2px solid var(--dk-line); background: #202124; box-sizing: border-box; box-shadow: 0 10px 28px rgba(0,0,0,.38); }
+    .ca-art.blue { border-color: var(--h-blue); } .ca-art.green { border-color: var(--h-green); }
+    .ca-art.yellow { border-color: var(--h-yellow); } .ca-art.red { border-color: var(--h-red); }
+    .reveal .slides .ca-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .ca-div-art { position: absolute; left: 57px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c, var(--dk-line)); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .reveal .slides .ca-div-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .ca-ty-art { position: absolute; left: 880px; top: 186px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 14px 36px rgba(0,0,0,.45); }
+    .reveal .slides .ca-ty-art img { width: 100%; height: 100%; object-fit: contain; display: block; margin: 0; }
+    .ca-ico { display: block; width: 38px; height: 38px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+
+    /* official product logo badges */
+    .ca-hdr-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 8px; }
+    .ca-hdr-row .eyebrow { margin-bottom: 0; }
+    .ca-lg-row { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .ca-lg-badge { display: inline-flex; align-items: center; gap: 7px; padding: 4px 11px 4px 5px; border-radius: 999px; background: #17181b; border: 1.5px solid var(--c, #5f6368); font: 500 12.5px/1 var(--mono); color: #e8eaed; }
+    .reveal .slides .ca-lg-badge img { width: 20px; height: 20px; object-fit: contain; background: #fff; border-radius: 50%; padding: 2px; box-sizing: border-box; display: block; }
+    .ev-lg.sm { width: 30px; height: 30px; border-radius: 8px; }
+    .reveal .slides .ev-lg.sm img { width: 20px; height: 20px; }
+    .ca-tier-cell { display: inline-flex; align-items: center; gap: 10px; }
+
+    /* side cards next to code */
+    .ca-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .ca-side .pc { padding: 12px 16px; font-size: 15px; line-height: 1.4; }
+    .ca-side .pc h3 { font-size: 18px; margin-bottom: 4px; }
+
+    /* checklist */
+    .reveal ul.ca-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .ca-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .ca-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .ca-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .ca-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* key/value rows */
+    .ca-kv { display: grid; gap: 8px; margin-top: 10px; }
+    .ca-kv > div { display: grid; grid-template-columns: 185px minmax(0, 1fr); gap: 10px; font-size: 15px; line-height: 1.35; padding: 7px 10px; border-radius: 8px; background: #202124; border: 1.5px solid #3c4043; }
+    .ca-kv > div > b { font: 500 13px/1.45 var(--mono); color: var(--c, var(--h-blue)) !important; }
+    .ca-kv > div > span { color: var(--dk-text); }
+
+    /* stacked prompt growth bars */
+    .ca-bars { display: grid; gap: 14px; width: 1088px; }
+    .ca-bar-row { display: grid; grid-template-columns: 110px minmax(0, 1fr) 110px; gap: 14px; align-items: center; }
+    .ca-bar-row > .lbl { font: 500 15px/1.2 var(--mono); color: #fff; }
+    .ca-bar-row > .tok { font: 500 14px/1.2 var(--mono); color: var(--dk-sub); text-align: right; }
+    .ca-track { height: 42px; background: #17181b; border: 1.5px solid #3c4043; border-radius: 10px; padding: 4px; display: flex; gap: 4px; box-sizing: border-box; overflow: hidden; }
+    .ca-seg { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: center; font: 500 12.5px/1 var(--mono); color: #202124; white-space: nowrap; overflow: hidden; padding: 0 8px; box-sizing: border-box; }
+    .ca-seg.sys { background: var(--h-green); }
+    .ca-seg.hist { background: var(--h-blue); }
+    .ca-seg.tool { background: var(--h-yellow); }
+    .ca-seg.bin { background: var(--h-red); }
+    .ca-seg.cur { background: #e8eaed; }
+
+    /* compaction timeline */
+    .ca-tl { width: 1088px; display: grid; gap: 12px; }
+    .ca-tl-box { background: #17181b; border: 1.5px solid #3c4043; border-radius: 14px; padding: 14px 18px; }
+    .ca-tl-hdr { font: 700 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .06em; color: var(--dk-sub); margin-bottom: 10px; display: flex; justify-content: space-between; }
+    .ca-turns { display: flex; gap: 8px; align-items: stretch; }
+    .ca-t { flex: 1; padding: 10px 8px; border-radius: 10px; background: var(--dk-card); border: 1.5px solid var(--dk-line); text-align: center; font: 500 14px/1.25 var(--mono); color: var(--dk-text); }
+    .ca-t small { display: block; font: 400 11.5px/1.2 var(--sans); color: var(--dk-sub); margin-top: 4px; }
+    .ca-t.old { border-color: rgba(87,202,255,.5); color: var(--h-blue); }
+    .ca-t.ovl { border-color: var(--h-yellow); color: var(--h-yellow); border-style: dashed; }
+    .ca-t.rec { border-color: var(--h-green); color: var(--h-green); }
+    .ca-t.sum { flex: 2.2; background: rgba(92,219,109,.12); border: 2px solid var(--h-green); color: var(--h-green); }
+    .ca-mid-arr { display: flex; align-items: center; justify-content: center; gap: 12px; font: 500 13.5px/1 var(--mono); color: var(--h-yellow); }
+
+    /* async lanes */
+    .ca-lane { display: grid; grid-template-columns: 150px minmax(0, 1fr); gap: 14px; align-items: center; padding: 12px 16px; border-radius: 14px; background: #17181b; border: 1.5px solid #3c4043; }
+    .ca-lane-lbl { font: 700 13px/1.3 var(--mono); text-transform: uppercase; letter-spacing: .05em; }
+    .ca-steps { display: flex; align-items: center; gap: 8px; }
+    .ca-step { flex: 1; padding: 10px 12px; border-radius: 10px; background: var(--dk-card); border: 1.5px solid var(--c, var(--dk-line)); font-size: 14.5px; line-height: 1.3; text-align: center; }
+    .ca-step b { display: block; color: var(--c, #fff); font-size: 15px; margin-bottom: 2px; }
+    .ca-ar { width: 20px; height: 14px; flex: none; fill: none; stroke: var(--dk-sub); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* cache prefix diagram */
+    .ca-prefix { display: grid; grid-template-columns: 1.35fr 36px 1fr; gap: 10px; align-items: stretch; width: 1088px; }
+    .ca-pbox { border-radius: 16px; padding: 14px 16px; border: 2px dashed var(--c); background: #17181b; display: flex; flex-direction: column; gap: 10px; }
+    .ca-pbox > .hdr { display: flex; justify-content: space-between; align-items: center; font: 700 13px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--c); }
+    .ca-pblocks { display: flex; gap: 8px; }
+    .ca-pblocks > div { flex: 1; padding: 12px 10px; border-radius: 10px; background: var(--dk-card); border: 1.5px solid var(--c); text-align: center; font-size: 14px; line-height: 1.3; }
+    .ca-pblocks > div b { display: block; color: #fff; font-size: 15px; margin-bottom: 3px; }
+    .ca-plus { display: grid; place-items: center; font: 700 32px/1 var(--mono); color: var(--dk-sub); }
+
+    /* cost comparison bars */
+    .ca-metric { display: grid; gap: 10px; margin-top: 12px; }
+    .ca-mbar { height: 28px; border-radius: 8px; background: #17181b; border: 1.5px solid #3c4043; overflow: hidden; padding: 3px; box-sizing: border-box; }
+    .ca-mbar > i { display: block; height: 100%; border-radius: 5px; background: var(--c); }
+
+    /* pill badges */
+    .ca-pill { display: inline-block; font: 500 13px/1.2 var(--mono); padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--c); color: var(--c); background: #17181b; }
+
+    /* resources */
+    .ca-res-row { display: flex; align-items: center; gap: 14px; }
+    .ca-res-row h3 { margin: 0 0 4px; font-size: 20px; }
+    .reveal table.zt-tbl td.ok { color: var(--h-green); }
+    .reveal table.zt-tbl td.warn { color: var(--h-yellow); }
+    .reveal table.zt-tbl td.hi { color: var(--h-blue); }
+  </style>
+</head>
+<body data-deck="Context, Caching & Artifacts">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+    <symbol id="i-compress" viewBox="0 0 24 24"><path d="M4 14h6v6M20 10h-6V4M14 10l7-7M3 21l7-7"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z"/></symbol>
+    <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8Z"/><path d="M14 2v6h6M8 13h8M8 17h5"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+    <symbol id="i-dollar" viewBox="0 0 24 24"><path d="M12 2v20M17 6.5c0-1.9-2.2-3.5-5-3.5s-5 1.6-5 3.5 2.2 3 5 3.5 5 1.6 5 3.5-2.2 3.5-5 3.5-5-1.6-5-3.5"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4a3.5 3.5 0 0 0-3.3 4.7A3.5 3.5 0 0 0 5 15a3.5 3.5 0 0 0 4.5 5V4Z"/><path d="M14.5 4a3.5 3.5 0 0 1 3.3 4.7A3.5 3.5 0 0 1 19 15a3.5 3.5 0 0 1-4.5 5V4Z"/></symbol>
+    <symbol id="i-cloud" viewBox="0 0 24 24"><path d="M18 10h-1.3A7 7 0 1 0 9 20h9a5 5 0 0 0 0-10Z"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 3l2.2 6.8L21 12l-6.8 2.2L12 21l-2.2-6.8L3 12l6.8-2.2Z"/></symbol>
+    <symbol id="i-sliders" viewBox="0 0 24 24"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="Context, Caching &amp; Artifacts">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Compact</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Cache</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Store</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>Context, Caching &amp; Artifacts</b><span>Keep long-running ADK agents fast, affordable and multimodal</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="">Gemini</i><i style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-storage.png" alt="">Cloud Storage</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ • วันนี้คุยเรื่อง Context, Caching และ Artifacts ใน ADK • 3 คำสำคัญสำหรับ agent ที่รันยาว ๆ ใน production: Compact ย่อประวัติการคุยเก่า ๆ, Cache เก็บส่วนที่ไม่เปลี่ยนไว้ใช้ซ้ำ, และ Store แยกไฟล์ PDF รูปภาพ เสียง ออกมาเก็บเป็น Artifact • ทั้งหมดมีฟีเจอร์รองรับใน ADK พร้อมใช้งานเลยครับ</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>The context window problem</strong><span>Why long sessions slow down and get expensive</span></div></li>
+          <li class="c2"><b>02</b><div><strong>Context compaction</strong><span>Summarize older turns while keeping recent ones sharp</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Context caching</strong><span>Reuse static instructions, tools and docs across turns</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Artifacts management</strong><span>Store versioned files outside session state</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-context-artifacts-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">4 ช่วงวันนี้ครับ: (1) ปัญหาของ context window เมื่อ session ยาวขึ้นและ 4 ชั้นข้อมูลใน ADK (2) Context compaction วิธีสรุปเทิร์นเก่าโดยไม่เสียความต่อเนื่อง (3) Context caching ลดค่าใช้จ่ายและความหน่วงด้วยการ cache ส่วนที่คงที่ (4) Artifacts management การจัดการไฟล์ binary แบบมีเวอร์ชันบน Cloud Storage • สแกน QR ด้านขวาเปิดสไลด์ตามได้เลยครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · The context window problem">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="ca-div-art" style="--c:var(--h-blue)"><img src="../images/adk-context-artifacts-slides/sec-01-problem.svg" alt="Overflowing glowing token gauge with warning spark"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:70px">The context<br>window problem</h1>
+            <p class="sub" style="margin-top:28px">Why long sessions slow down<br>and get expensive</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • มาดูกันก่อนว่าทำไม agent ที่ทดสอบ 3-4 เทิร์นแล้วดูดีมาก พอเอาขึ้น production คุยกัน 30-50 เทิร์น ถึงเริ่มช้า แพง และตอบเพี้ยน</aside>
+      </section>
+
+      <!-- 4. Why long sessions break -->
+      <section data-title="Why long sessions break">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · four failure modes</div>
+            <h2 style="margin-bottom:20px">Every turn replays the entire history</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc red fragment" data-fragment-index="1" style="padding:18px 20px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px">
+                  <svg class="ca-ico" style="--c:var(--h-red); margin:0; width:30px; height:30px"><use href="#i-dollar"/></svg>
+                  <h3 style="color:var(--h-red); margin:0">Quadratic token cost</h3>
+                </div>
+                <p style="font-size:16px; color:var(--dk-sub)">Turn N resends turns 1…N−1. A 50-turn chat sends ~1,275× a single turn of input tokens.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2" style="padding:18px 20px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px">
+                  <svg class="ca-ico" style="--c:var(--h-yellow); margin:0; width:30px; height:30px"><use href="#i-clock"/></svg>
+                  <h3 style="color:var(--h-yellow); margin:0">Rising latency (TTFT)</h3>
+                </div>
+                <p style="font-size:16px; color:var(--dk-sub)">Bigger prompts mean longer prefill time before the model streams its very first token.</p>
+              </div>
+              <div class="pc blue fragment" data-fragment-index="3" style="padding:18px 20px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px">
+                  <svg class="ca-ico" style="--c:var(--h-blue); margin:0; width:30px; height:30px"><use href="#i-brain"/></svg>
+                  <h3 style="color:var(--h-blue); margin:0">Context rot</h3>
+                </div>
+                <p style="font-size:16px; color:var(--dk-sub)">Old tangents and raw JSON tool dumps dilute attention, causing missed instructions and drift.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="4" style="padding:18px 20px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:6px">
+                  <svg class="ca-ico" style="--c:var(--h-green); margin:0; width:30px; height:30px"><use href="#i-file"/></svg>
+                  <h3 style="color:var(--h-green); margin:0">Binary bloat</h3>
+                </div>
+                <p style="font-size:16px; color:var(--dk-sub)">Dropping PDFs, images or CSVs into <code>session.state</code> explodes database rows and prompts.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Reality</b><span>A 1M-token context window is a safety net, not a dumping ground.</span></div>
+        </div>
+        <aside class="notes">LLM เป็น stateless ทุกครั้งที่เรียกเราต้องส่งประวัติทั้งหมดกลับไปใหม่ ทำให้เกิด 4 ปัญหา • (คลิก 1) ค่าใช้จ่ายโตแบบกำลังสอง เทิร์นที่ 50 ส่งประวัติซ้ำรวมกว่า 1,275 เท่าของหนึ่งเทิร์น • (คลิก 2) Latency สูงขึ้น โดยเฉพาะ Time To First Token • (คลิก 3) Context rot ข้อมูลเก่าและผล JSON จาก tool รกไปหมดจนโมเดลหลุดประเด็น • (คลิก 4) ไฟล์ binary อย่าง PDF รูปภาพ ถ้าเอาไปยัดใน session state หรือ prompt ตรง ๆ ระบบจะบวมทันที • (คลิก 5) ถึง Gemini จะมี context window 1 ล้าน token แต่มันคือเบาะรองรับ ไม่ใช่ถังขยะครับ</aside>
+      </section>
+
+      <!-- 5. Visual: prompt growth -->
+      <section data-title="What fills your prompt">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">01 · anatomy of bloat</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">ADK</span>
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Gemini</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:14px">What actually fills your prompt by Turn 25</h2>
+            <div class="ca-art red fragment" data-fragment-index="1" style="width:1088px; height:260px">
+              <img src="../images/adk-context-artifacts-slides/context-bloat-turns.svg" alt="Prompt token growth across Turn 1, Turn 10, and Turn 25 showing quadratic cost, rising TTFT, and context rot">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:14px">
+              <div class="pc green" style="padding:12px 16px"><b style="color:var(--h-green)">Cache</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Freeze the green prefix so Gemini never re-reads it at full price.</p></div>
+              <div class="pc blue" style="padding:12px 16px"><b style="color:var(--h-blue)">Compact</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Fold old turns &amp; stale tool dumps into a tight summary event.</p></div>
+              <div class="pc red" style="padding:12px 16px"><b style="color:var(--h-red)">Store</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Move PDFs, images &amp; CSVs into versioned Artifacts loaded on demand.</p></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Three levers</b><span>Cache what repeats · Compact what ages · Offload what is binary.</span></div>
+        </div>
+        <aside class="notes">ลองดูภาพจริงว่าอะไรกินพื้นที่ใน prompt • (คลิก 1) เทิร์นที่ 1 มีแค่ system instruction, tool schema กับคำถามแรก ประมาณ 6K token • เทิร์นที่ 10 ประวัติเก่ากับผล JSON จาก tool เริ่มขยายเป็น 34K • พอถึงเทิร์นที่ 25 ยิ่งมีไฟล์ PDF หรือ CSV แนบมาด้วย พุ่งไป 140K token ทั้งที่คำถามปัจจุบันอยู่นิดเดียวทางขวา • (คลิก 2) นี่คือเหตุผลที่เราต้องใช้ 3 กลไกคู่กัน: Cache สีเขียว, Compact สีฟ้ากับเหลือง, และ Store สีแดงไว้ใน Artifacts • (คลิก 3) จำง่าย ๆ: Cache ของซ้ำ, Compact ของเก่า, Offload ไฟล์ใหญ่</aside>
+      </section>
+
+      <!-- 6. The 4 data tiers in ADK -->
+      <section data-title="Four data tiers in ADK">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">01 · data architecture</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud">Google Cloud</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:16px">Four data tiers in an ADK agent</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <colgroup><col style="width:230px"><col style="width:240px"><col style="width:350px"><col></colgroup>
+              <thead><tr><th>Tier</th><th>Scope &amp; Lifetime</th><th>Best for</th><th>Sent to LLM?</th></tr></thead>
+              <tbody>
+                <tr><td><span class="ca-tier-cell" style="color:var(--h-blue)"><span class="ev-lg sm"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Context Window</span></td><td>Single model call (working memory)</td><td>Active instructions, recent turns, current tool results</td><td class="warn">Every LLM call</td></tr>
+                <tr><td><span class="ca-tier-cell" style="color:var(--h-green)"><span class="ev-lg sm"><img src="../images/shared/logos/adk.png" alt="ADK"></span>Session State</span></td><td>Key/value dict (<code>temp:</code>, session, <code>user:</code>, <code>app:</code>)</td><td>Flags, user prefs, IDs, small structured JSON</td><td class="hi">When templated / read</td></tr>
+                <tr><td><span class="ca-tier-cell" style="color:var(--h-red)"><span class="ev-lg sm"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage"></span>Artifacts</span></td><td>Versioned binary blobs (Memory or GCS)</td><td>PDFs, images, audio, charts, large CSVs</td><td class="ok">On demand only</td></tr>
+                <tr><td><span class="ca-tier-cell" style="color:var(--h-yellow)"><span class="ev-lg sm"><img src="../images/shared/logos/gcp-memorystore.png" alt="Memorystore"></span>Memory Service</span></td><td>Cross-session searchable store</td><td>Long-term user facts, past session recall</td><td class="ok">Via search tool</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Rule of thumb</b><span>Store data in the cheapest tier that still lets the agent retrieve it when needed.</span></div>
+        </div>
+        <aside class="notes">ก่อนจะ optimize ต้องรู้จัก 4 ชั้นข้อมูลใน ADK ก่อนครับ • ชั้นที่ 1 Context Window คือหน่วยความจำทำงานที่ส่งให้ Gemini ทุกรอบ แพงที่สุดและจำกัดที่สุด • ชั้นที่ 2 Session State เป็น key/value ขนาดเล็ก เก็บ flag, ID, หรือค่าตั้งค่าของผู้ใช้ มี scope ตั้งแต่ temp:, session, user: จนถึง app: • ชั้นที่ 3 Artifacts สำหรับไฟล์ binary และไฟล์ใหญ่ มีเลขเวอร์ชันอัตโนมัติ ไม่ถูกส่งเข้า prompt จนกว่าจะเรียกโหลด • ชั้นที่ 4 Memory Service สำหรับความจำระยะยาวข้าม session ที่ค้นหาแบบ semantic ได้ • (คลิก) กฎทองคือ เก็บข้อมูลไว้ในชั้นที่ถูกที่สุดเท่าที่ agent ยังหยิบใช้ได้ครับ</aside>
+      </section>
+
+      <!-- 7. Context engineering mindset -->
+      <section data-title="Context engineering mindset">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">01 · context engineering</div>
+            <h2 style="margin-bottom:24px">Treat context as a compiled view, not a raw log</h2>
+            <div class="flow tight" style="width:1088px">
+              <div class="pc blue node fragment" data-fragment-index="1">
+                <span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage"></span>
+                <b style="color:var(--h-blue)">Raw Sources</b>
+                <p>Session events, state keys, versioned artifacts</p>
+              </div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M22 4l10 8-10 8"/></svg>
+              <div class="pc green node fragment" data-fragment-index="2">
+                <span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                <b style="color:var(--h-green)">ADK Pipeline</b>
+                <p>Compact old turns · Cache prefix · Load artifacts</p>
+              </div>
+              <svg class="arr" viewBox="0 0 36 24"><path d="M2 12h30M22 4l10 8-10 8"/></svg>
+              <div class="pc yellow node fragment" data-fragment-index="3">
+                <span class="ev-lg" style="margin:0 auto 10px"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <b style="color:var(--h-yellow)">Focused Request</b>
+                <p>Clean, high-signal <code>LlmRequest</code> to Gemini</p>
+              </div>
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="4" style="width:1088px; gap:16px; margin-top:24px">
+              <div class="pc" style="padding:14px 18px"><b>Session = source of truth</b><p style="font-size:15px; color:var(--dk-sub); margin-top:4px">Keep full event history for audit, debugging and replay.</p></div>
+              <div class="pc" style="padding:14px 18px"><b>Context = working view</b><p style="font-size:15px; color:var(--dk-sub); margin-top:4px">Compile only what the model needs for this exact turn.</p></div>
+              <div class="pc" style="padding:14px 18px"><b>Declarative in ADK</b><p style="font-size:15px; color:var(--dk-sub); margin-top:4px">Configure on <code>App</code> and <code>Runner</code> without tangling agent code.</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แนวคิดสำคัญของ Context Engineering คือแยก "ที่เก็บข้อมูลดิบ" ออกจาก "มุมมองที่ส่งให้โมเดล" • (คลิก 1) ฝั่งซ้ายคือข้อมูลทั้งหมดใน Session, State และ Artifacts • (คลิก 2) ตรงกลางคือ ADK Pipeline ที่คอยย่อประวัติเก่า cache prefix และโหลดไฟล์เฉพาะตอนจำเป็น • (คลิก 3) ฝั่งขวาคือ LlmRequest ที่สะอาดและมีสัญญาณชัดเจนส่งให้ Gemini • (คลิก 4) ข้อดีคือ Session ยังเก็บ log ครบไว้ตรวจสอบย้อนหลังได้ และเราตั้งค่าทั้งหมดที่ระดับ App กับ Runner โดยไม่ต้องไปรื้อโค้ดของ agent เลยครับ</aside>
+      </section>
+
+      <!-- 8. Section 02 -->
+      <section class="bg-green" data-title="02 · Context compaction">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="ca-div-art" style="--c:var(--h-green)"><img src="../images/adk-context-artifacts-slides/sec-02-compaction.svg" alt="Multiple chat turn blocks compressed into one glowing summary crystal"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Context<br>compaction</h1>
+            <p class="sub" style="margin-top:28px">Summarize older turns while<br>keeping recent ones sharp</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • มาดูเรื่อง Context Compaction กันครับ กลไกที่ช่วยย่อบทสนทนาเก่า ๆ ให้เล็กลงอัตโนมัติ โดยที่เทิร์นล่าสุดยังครบถ้วนเหมือนเดิม</aside>
+      </section>
+
+      <!-- 9. How compaction works visually -->
+      <section data-title="How compaction works">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">02 · sliding-window summary</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">ADK</span>
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Gemini Flash</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:14px">Compress old turns, keep recent turns verbatim</h2>
+            <div class="ca-art green fragment" data-fragment-index="1" style="width:1088px; height:260px">
+              <img src="../images/adk-context-artifacts-slides/compaction-before-after.svg" alt="Before and after timeline: 20-turn raw history compacted by EventsCompactionConfig into a Summary Event plus verbatim overlap window">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:14px">
+              <div class="pc blue" style="padding:12px 16px"><b style="color:var(--h-blue)">Summary Event</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Folds Turns 1–18 into one dense summary of facts &amp; decisions.</p></div>
+              <div class="pc yellow" style="padding:12px 16px"><b style="color:var(--h-yellow)">Overlap Window</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Keeps boundary turn verbatim so follow-ups never lose context.</p></div>
+              <div class="pc green" style="padding:12px 16px"><b style="color:var(--h-green)">82% Fewer Tokens</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Sharp recent history sent to Gemini at a fraction of the cost.</p></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Non-destructive</b><span>Compaction appends a summary event — original raw events remain in the session log.</span></div>
+        </div>
+        <aside class="notes">ภาพนี้แสดงการทำงานของ compaction ชัดเจนครับ • (คลิก 1) ก่อน compact เรามี 20 เทิร์นเต็ม ๆ ส่งเข้าโมเดลราว 68K token • ADK เรียก LlmEventSummarizer มาสรุปเทิร์นเก่า โดยมี overlap 1 เทิร์น • หลัง compact โมเดลจะเห็นแค่ summary event ก้อนเดียวบวกกับเทิร์นล่าสุดแบบคำต่อคำ ลดลงเหลือแค่ 12K token • (คลิก 2) สรุปประเด็นสำคัญไว้ครบ เทิร์นขอบไม่ขาดตอน • (คลิก 3) ที่สำคัญคือมันไม่ได้ลบข้อมูลเดิมครับ แค่เพิ่ม compaction event ต่อท้าย ประวัติจริงยังอยู่ครบใน SessionService</aside>
+      </section>
+
+      <!-- 10. Turn-based vs Token-based -->
+      <section data-title="Turn-based vs Token-based">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · compaction triggers</div>
+            <h2 style="margin-bottom:20px">Two ways to trigger compaction</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" data-fragment-index="1" style="--c:var(--h-blue); padding:20px 22px">
+                <h3 style="color:var(--h-blue)">Turn-based (Sliding Window)</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Triggers every N completed user invocations.</p>
+                <div class="ca-kv">
+                  <div><b>compaction_interval</b><span>Compact after every N turns</span></div>
+                  <div><b>overlap_size</b><span>Repeat K boundary turns for continuity</span></div>
+                  <div><b>Best for</b><span>Steady multi-turn chats &amp; support bots</span></div>
+                </div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="--c:var(--h-green); padding:20px 22px">
+                <h3 style="color:var(--h-green)">Token-based Threshold</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Triggers when prompt tokens cross a budget.</p>
+                <div class="ca-kv" style="--c:var(--h-green)">
+                  <div><b>token_threshold</b><span>Trigger when total tokens exceed limit</span></div>
+                  <div><b>event_retention_size</b><span>Keep the last M raw events verbatim</span></div>
+                  <div><b>Best for</b><span>Heavy tool outputs (search, SQL, code)</span></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Pick by variance</b><span>Predictable turn sizes → turn-based. Spiky tool payloads → token-based.</span></div>
+        </div>
+        <aside class="notes">ADK รองรับการ trigger compaction 2 แบบครับ • (คลิก 1) แบบแรก Turn-based หรือ Sliding Window กำหนด compaction_interval เช่นทุก 5 เทิร์น และ overlap_size เช่นซ้อนกัน 1 เทิร์น เหมาะกับแชทที่ขนาดข้อความสม่ำเสมอ • (คลิก 2) แบบที่สอง Token-based กำหนด token_threshold พอโทเค็นเกินงบเมื่อไหร่ค่อยสรุป โดยเก็บ event ล่าสุดไว้ตาม event_retention_size เหมาะกับ agent ที่เรียก tool แล้วบางรอบคืนข้อมูลใหญ่มาก เช่น SQL หรือ web search • (คลิก 3) ถ้าขนาดเทิร์นสม่ำเสมอเริ่มที่ turn-based ถ้า tool output แกว่งแรงให้ใช้ token-based ครับ</aside>
+      </section>
+
+      <!-- 11. Configuring EventsCompactionConfig -->
+      <section data-title="Configure EventsCompactionConfig">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">02 · configuration</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/python.svg" alt="Python">Python</span>
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">ADK</span>
+                <span class="ca-lg-badge" style="--c:var(--h-yellow)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Gemini 2.5 Flash</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:18px">Enable compaction on your App</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:628px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.apps.app import App, EventsCompactionConfig
+from google.adk.apps.llm_event_summarizer import (
+    LlmEventSummarizer,
+)
+from google.adk.models import Gemini
+
+app = App(
+    name="support_app",
+    root_agent=root_agent,
+    events_compaction_config=EventsCompactionConfig(
+        compaction_interval=5,   # compact every 5 turns
+        overlap_size=1,          # keep 1-turn overlap
+        summarizer=LlmEventSummarizer(
+            llm=Gemini(model="gemini-2.5-flash"),
+        ),
+    ),
+)
+              </code></pre>
+              <div class="ca-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Configured on App</h3>Wrap <code>root_agent</code> in <code>App(...)</code> and pass <code>app=app</code> to <code>Runner</code>.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Use a fast summarizer</h3>Pair a Pro main agent with <code>gemini-2.5-flash</code> for cheap, fast summaries.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Custom prompt</h3>Pass <code>prompt_template</code> to preserve IDs, prices or key decisions.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">วิธีเปิดใช้งานสั้นมากครับ • แค่ห่อ root_agent ด้วย App แล้วส่ง EventsCompactionConfig เข้าไป กำหนด compaction_interval กับ overlap_size • (คลิก) จากนั้นส่ง app=app เข้า Runner แทนการส่ง agent ตรง ๆ • (คลิก) ทริคประหยัดงบ: แม้ agent หลักจะใช้รุ่นใหญ่ แต่ตัว summarizer ใช้ gemini-2.5-flash ก็พอ ทั้งเร็วและถูก • (คลิก) ถ้างานของคุณห้ามลืมเลข order ID หรือราคา สามารถส่ง prompt_template ให้ LlmEventSummarizer เพื่อกำชับว่าต้องเก็บข้อมูลอะไรไว้ในสรุปบ้าง</aside>
+      </section>
+
+      <!-- 12. Non-blocking background summarization -->
+      <section data-title="Background compaction">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · runtime behavior</div>
+            <h2 style="margin-bottom:22px">Compaction runs off the critical path</h2>
+            <div style="width:1088px; display:grid; gap:14px">
+              <div class="ca-lane fragment" data-fragment-index="1">
+                <span class="ca-lane-lbl" style="color:var(--h-green)">User Turn 5</span>
+                <div class="ca-steps">
+                  <div class="ca-step" style="--c:var(--h-blue)"><b>User Prompt</b>Enters Runner</div>
+                  <svg class="ca-ar" viewBox="0 0 20 14"><path d="M2 7h15M12 2l5 5-5 5"/></svg>
+                  <div class="ca-step" style="--c:var(--h-green)"><b>Agent &amp; Tools</b>Reasons &amp; acts</div>
+                  <svg class="ca-ar" viewBox="0 0 20 14"><path d="M2 7h15M12 2l5 5-5 5"/></svg>
+                  <div class="ca-step" style="--c:var(--h-green)"><b>Final Reply</b>Streamed immediately</div>
+                </div>
+              </div>
+              <div class="ca-lane fragment" data-fragment-index="2">
+                <span class="ca-lane-lbl" style="color:var(--h-yellow)">Post-Turn Hook</span>
+                <div class="ca-steps">
+                  <div class="ca-step" style="--c:var(--h-yellow)"><b>Check Interval</b>5 turns reached</div>
+                  <svg class="ca-ar" viewBox="0 0 20 14"><path d="M2 7h15M12 2l5 5-5 5"/></svg>
+                  <div class="ca-step" style="--c:var(--h-yellow)"><b>Summarize 1–5</b>Flash runs in bg</div>
+                  <svg class="ca-ar" viewBox="0 0 20 14"><path d="M2 7h15M12 2l5 5-5 5"/></svg>
+                  <div class="ca-step" style="--c:var(--h-blue)"><b>Persist Event</b>Ready for Turn 6</div>
+                </div>
+              </div>
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="3" style="width:1088px; gap:18px; margin-top:20px">
+              <div class="pc green" style="padding:16px 20px"><b style="color:var(--h-green)">No user-facing stall</b><p style="font-size:15.5px; color:var(--dk-sub); margin-top:4px">Summarization happens after the turn finishes, so Turn 5 latency stays flat.</p></div>
+              <div class="pc blue" style="padding:16px 20px"><b style="color:var(--h-blue)">Automatic projection</b><p style="font-size:15.5px; color:var(--dk-sub); margin-top:4px">On Turn 6, ADK skips the raw range covered by the summary and feeds the compact event.</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">หลายคนกังวลว่าถ้าเรียกโมเดลมาสรุปอีกที ผู้ใช้จะต้องรอนานขึ้นไหม • (คลิก 1) คำตอบคือไม่ครับ เทิร์นที่ 5 ทำงานและส่งคำตอบให้ผู้ใช้ทันที • (คลิก 2) หลังจากเทิร์นจบ ADK ค่อยเช็กว่าถึงรอบหรือยัง แล้วเรียก Flash สรุปเทิร์น 1–5 เก็บเป็น event ใหม่ลง SessionService • (คลิก 3) พอเทิร์นที่ 6 เข้ามา ADK จะอ่านสรุปนั้นแทนเทิร์นเก่าโดยอัตโนมัติ ผู้ใช้จึงไม่รู้สึกสะดุดเลยครับ</aside>
+      </section>
+
+      <!-- 13. Tuning compaction_interval & overlap_size -->
+      <section data-title="Tuning compaction">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">02 · tuning guide</div>
+            <h2 style="margin-bottom:16px">Tune interval and overlap to fit your workload</h2>
+            <table class="zt-tbl" style="width:1088px">
+              <colgroup><col style="width:230px"><col style="width:150px"><col style="width:140px"><col></colgroup>
+              <thead><tr><th>Workload</th><th>Interval</th><th>Overlap</th><th>Why</th></tr></thead>
+              <tbody>
+                <tr><td>Customer support</td><td class="hi">5–8 turns</td><td class="ok">1 turn</td><td>Steady Q&amp;A; 1-turn overlap keeps pronoun references intact.</td></tr>
+                <tr><td>Research / analysis</td><td class="hi">4–6 turns</td><td class="ok">2 turns</td><td>Multi-step reasoning needs more recent detail before folding.</td></tr>
+                <tr><td>Heavy tool agent</td><td class="warn">Token limit</td><td class="ok">Last 4–6 ev</td><td>Large JSON results can fill the window in just 2 turns.</td></tr>
+              </tbody>
+            </table>
+            <div class="grid g2 fragment" style="width:1088px; gap:18px; margin-top:20px">
+              <div class="pc red" style="padding:14px 18px"><b style="color:var(--h-red)">Avoid interval = 1 or 2</b><p style="font-size:15px; color:var(--dk-sub); margin-top:4px">Over-summarizing burns extra Flash calls and causes "telephone game" drift.</p></div>
+              <div class="pc yellow" style="padding:14px 18px"><b style="color:var(--h-yellow)">Avoid overlap = 0</b><p style="font-size:15px; color:var(--dk-sub); margin-top:4px">Hard cuts break follow-ups like "now do the same for the second item".</p></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แนวทางปรับจูนค่า interval และ overlap ครับ • งานซัพพอร์ตทั่วไปเริ่มที่ interval 5–8 เทิร์น overlap 1 เทิร์นกำลังดี • งานวิจัยหรือวิเคราะห์ที่ใช้บริบทต่อเนื่องใช้ overlap 2 เทิร์น • งานที่ tool คืน JSON ใหญ่ ๆ แนะนำใช้ token threshold แทน • (คลิก) ข้อควรระวัง 2 อย่าง: อย่าตั้ง interval เล็กเกินไปเพราะจะสรุปทับสรุปจนข้อมูลเพี้ยน และอย่าตั้ง overlap เป็น 0 เพราะถ้าผู้ใช้ถามต่อยอดจากเทิร์นก่อนหน้าพอดี โมเดลจะงงครับ</aside>
+      </section>
+
+      <!-- 14. Section 03 -->
+      <section class="bg-yellow" data-title="03 · Context caching">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="ca-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-context-artifacts-slides/sec-03-caching.svg" alt="Lightning bolt hitting a cached green prompt prefix block"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Context<br>caching</h1>
+            <p class="sub" style="margin-top:28px">Reuse static instructions, tools<br>and docs across turns</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • Compaction ช่วยจัดการประวัติเก่า ส่วน Context Caching ช่วยจัดการส่วนที่ "ไม่เคยเปลี่ยน" แต่ต้องส่งซ้ำทุกเทิร์นครับ</aside>
+      </section>
+
+      <!-- 15. What gets cached -->
+      <section data-title="What gets cached">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">03 · cacheable prefix</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Gemini</span>
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI">Vertex AI</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:14px">Freeze the static prefix, stream only what changes</h2>
+            <div class="ca-art green fragment" data-fragment-index="1" style="width:1088px; height:250px">
+              <img src="../images/adk-context-artifacts-slides/prefix-cache-anatomy.svg" alt="Prompt anatomy: Stable Cached Prefix (System Instruction, Tool Schemas, Static Docs) plus Dynamic Suffix (Recent Turns and Live Query)">
+            </div>
+            <div class="grid g3 fragment" data-fragment-index="2" style="width:1088px; gap:14px; margin-top:14px">
+              <div class="pc green" style="padding:12px 16px"><b style="color:var(--h-green)">Tool declarations add up</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">20–40 MCP or OpenAPI tools easily exceed 4K–10K tokens on every call.</p></div>
+              <div class="pc yellow" style="padding:12px 16px"><b style="color:var(--h-yellow)">Static reference docs</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Attach a 30-page handbook once and query it cheaply across turns.</p></div>
+              <div class="pc blue" style="padding:12px 16px"><b style="color:var(--h-blue)">Managed by ADK</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">ADK fingerprints the prefix and manages Gemini cache lifecycle for you.</p></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Under the hood</b><span>Uses Gemini explicit context caching on Gemini API and Vertex AI.</span></div>
+        </div>
+        <aside class="notes">ใน 1 request ที่ส่งไป Gemini แบ่งเป็น 2 ท่อน • (คลิก 1) ท่อนหน้าสีเขียวคือ Static Prefix: system instruction, tool schema ทั้งหมด และเอกสารอ้างอิงที่คงที่ ส่วนท่อนหลังสีฟ้าคือ Dynamic Suffix: ประวัติการคุยกับคำถามล่าสุด • (คลิก 2) หลายคนไม่รู้ว่าแค่ tool declarations จาก MCP หรือ OpenAPI 20–40 ตัวก็กินไป 5K–10K token แล้ว ทุกเทิร์นส่งซ้ำหมด ADK จะช่วย fingerprint ท่อนหน้าแล้วจัดการสร้าง/ต่ออายุ cache ให้เอง • (คลิก 3) เบื้องหลังใช้ Gemini explicit context caching ใช้ได้ทั้ง Gemini API และ Vertex AI ครับ</aside>
+      </section>
+
+      <!-- 16. Configuring ContextCacheConfig -->
+      <section data-title="Configure ContextCacheConfig">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">03 · configuration</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/python.svg" alt="Python">Python</span>
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">ADK</span>
+                <span class="ca-lg-badge" style="--c:var(--h-yellow)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Gemini</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:18px">Enable caching with ContextCacheConfig</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:628px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.apps.app import App
+from google.adk.agents.context_cache_config import (
+    ContextCacheConfig,
+)
+
+app = App(
+    name="docs_assistant",
+    root_agent=root_agent,
+    context_cache_config=ContextCacheConfig(
+        min_tokens=2048,      # skip tiny prompts
+        ttl_seconds=600,      # 10-minute cache lifetime
+        cache_intervals=10,   # max turns before refresh
+    ),
+)
+              </code></pre>
+              <div class="ca-side">
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">min_tokens</h3>Only creates a cache once the prefix is large enough to beat cache storage overhead.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">ttl_seconds</h3>How long Gemini keeps the cached prefix alive. Match your typical session length.</div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">cache_intervals</h3>Caps how many invocations reuse one cache before ADK refreshes it.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Combine them</b><span>Pass both <code>events_compaction_config</code> and <code>context_cache_config</code> on the same <code>App</code>.</span></div>
+        </div>
+        <aside class="notes">วิธีเปิดใช้ Context Caching ก็อยู่บน App เหมือนกันครับ • ส่ง ContextCacheConfig เข้าไปกำหนด 3 ค่าหลัก • (คลิก) min_tokens: ตั้งขั้นต่ำไว้เช่น 2048 เพื่อไม่ให้สร้าง cache กับ prompt สั้น ๆ ที่ไม่คุ้มค่าเก็บ • (คลิก) ttl_seconds: อายุของ cache เช่น 600 วินาที หรือ 10 นาที ให้สอดคล้องกับความยาว session จริง • (คลิก) cache_intervals: จำนวนรอบสูงสุดที่จะใช้ cache เดิมก่อนรีเฟรช • (คลิก) และแน่นอนว่าใส่ทั้ง events_compaction_config กับ context_cache_config พร้อมกันบน App เดียวได้เลย</aside>
+      </section>
+
+      <!-- 17. Cost & latency impact -->
+      <section data-title="Cost &amp; latency impact">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">03 · why it matters</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Gemini</span>
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI">Vertex AI</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:14px">Impact on a 10-turn session with a 20K prefix</h2>
+            <div class="ca-art yellow fragment" data-fragment-index="1" style="width:1088px; height:240px">
+              <img src="../images/adk-context-artifacts-slides/cache-cost-latency.svg" alt="10-turn cost and TTFT comparison chart: Uncached vs ContextCacheConfig">
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="2" style="width:1088px; gap:18px; margin-top:14px">
+              <div class="pc red" style="padding:12px 18px"><b style="color:var(--h-red)">Uncached: 200K billed @ 100%</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Every single turn re-sends and re-prefills the entire 20K static prefix.</p></div>
+              <div class="pc green" style="padding:12px 18px"><b style="color:var(--h-green)">Cached: 1 write + 9 discounted hits</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Up to 75–90% lower input cost and dramatically faster TTFT on Turns 2–10.</p></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Sweet spot</b><span>Multi-turn agents with rich instructions, many tools, or shared reference docs.</span></div>
+        </div>
+        <aside class="notes">ลองเทียบตัวเลขให้เห็นภาพครับ สมมติเรามี static prefix 20K token คุยกัน 10 เทิร์น • (คลิก 1) ฝั่งซ้ายไม่ cache เราจ่ายค่า input เต็มราคา 200K token และรอโมเดล prefill ใหม่ทุกรอบ ส่วนฝั่งขวาเปิด ContextCacheConfig เทิร์นแรกสร้าง cache เทิร์นที่ 2–10 อ่านจาก cache • (คลิก 2) Gemini คิดราคา cached token ถูกกว่ามาก ลดค่า input ลงได้ถึง 75–90% แถมข้ามขั้นตอน prefill ของ prefix ทำให้ตอบเร็วขึ้นด้วย • (คลิก 3) ยิ่ง agent มี instruction ยาว มี tool เยอะ หรือแนบเอกสารอ้างอิง ยิ่งคุ้มมากครับ</aside>
+      </section>
+
+      <!-- 18. Cache hit best practices -->
+      <section data-title="Cache hit best practices">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">03 · prefix stability</div>
+            <h2 style="margin-bottom:20px">Keep the prefix byte-identical to get cache hits</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <ul class="ca-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Use <code>static_instruction</code></b> on <code>LlmAgent</code> for unchanging persona, rules and policies.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Put dynamic state at the end</b> — keep <code>{user:name}</code> or live context in the dynamic section.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Verify cache hits</b> by logging <code>usage_metadata.cached_content_token_count</code> in <code>after_model</code>.</span></li>
+              </ul>
+              <ul class="ca-chk">
+                <li class="warn fragment"><i>!</i><span><b>Never inject timestamps or UUIDs</b> into the system instruction — one changed byte busts the cache.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Keep tool order deterministic.</b> Shuffling tool lists between turns invalidates the prefix.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Don't set huge TTLs blindly.</b> Cache storage is billed per hour; size TTL to real session idle time.</span></li>
+              </ul>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Golden rule</b><span>Static first, dynamic last. Measure <code>cached_content_token_count</code> in production.</span></div>
+        </div>
+        <aside class="notes">ข้อควรระวังเพื่อให้ได้ cache hit จริง ๆ • ฝั่งซ้ายสิ่งที่ควรทำ: ใช้ static_instruction สำหรับคำสั่งที่ไม่เปลี่ยน, ย้ายตัวแปร dynamic อย่างชื่อผู้ใช้หรือสถานะปัจจุบันไปไว้ท้าย prompt, และเช็ก cached_content_token_count ใน after_model callback เพื่อยืนยันว่า cache ทำงานจริง • ฝั่งขวาสิ่งที่ห้ามทำ: ห้ามใส่เวลาปัจจุบันหรือ UUID ไว้ใน system instruction เพราะเปลี่ยนแค่ตัวอักษรเดียว cache พังทั้งก้อน, อย่าสลับลำดับ tool ไปมา และอย่าตั้ง TTL นานเกินความจำเป็นเพราะมีค่าเก็บ cache รายชั่วโมงครับ</aside>
+      </section>
+
+      <!-- 19. Section 04 -->
+      <section class="bg-red" data-title="04 · Artifacts management">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="ca-div-art" style="--c:var(--h-red)"><img src="../images/adk-context-artifacts-slides/sec-04-artifacts.svg" alt="Versioned PDF, Image, and Audio cards stored in a Cloud Storage vault"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Artifacts<br>management</h1>
+            <p class="sub" style="margin-top:28px">Store versioned files<br>outside session state</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้ายครับ • เมื่อ agent ของเราต้องรับหรือสร้างไฟล์อย่าง PDF, รูปภาพ, เสียง หรือ CSV เราจะจัดการมันยังไงไม่ให้ session state และ context ระเบิด — คำตอบคือ ADK Artifacts ครับ</aside>
+      </section>
+
+      <!-- 20. Why binary never belongs in session.state -->
+      <section data-title="Never put binaries in state">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:34px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">04 · state vs artifacts</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage">Cloud Storage</span>
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">ADK</span>
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Gemini</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:12px">Binary files never belong in <code style="font-size:.82em">session.state</code></h2>
+            <div class="ca-art red fragment" data-fragment-index="1" style="width:1088px; height:250px">
+              <img src="../images/adk-context-artifacts-slides/artifacts-vs-state.svg" alt="Architecture diagram: lightweight JSON pointers in session.state vs versioned types.Part binary blobs in GcsArtifactService loaded on demand via LoadArtifactsTool">
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="2" style="width:1088px; gap:18px; margin-top:14px">
+              <div class="pc red" style="padding:12px 18px"><b style="color:var(--h-red)">✗ Putting files in session.state</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Base64 inflates size +33%, bloats DB rows, and lacks versioning or MIME metadata.</p></div>
+              <div class="pc green" style="padding:12px 18px"><b style="color:var(--h-green)">✓ Storing files as ADK Artifacts</b><p style="font-size:14.5px; color:var(--dk-sub); margin-top:3px">Native <code>types.Part</code> binary + MIME type, auto-versioned (<code>v0, v1…</code>), zero prompt bloat.</p></div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Mental model</b><span>Session state holds lightweight pointers (<code>filename</code>, <code>version</code>). Artifacts hold the bytes.</span></div>
+        </div>
+        <aside class="notes">ทำไมห้ามเก็บไฟล์ใน session.state • (คลิก 1) ดูสถาปัตยกรรมนี้ครับ: session.state เก็บแค่ JSON pointer เล็ก ๆ ส่วนเนื้อไฟล์จริงส่งเข้า GcsArtifactService เป็น types.Part ที่มีเวอร์ชัน และโหลดเข้า Gemini ผ่าน LoadArtifactsTool เฉพาะตอนเรียกใช้ • (คลิก 2) ถ้าเอา PDF หรือรูปภาพมาทำ Base64 ใน state ขนาดจะบวมขึ้น 33% ฐานข้อมูลโตเร็วมาก และไม่มีระบบเวอร์ชัน • (คลิก 3) ให้จำง่าย ๆ: เก็บชื่อไฟล์กับเวอร์ชันใน state แต่เก็บเนื้อไฟล์ไว้ใน Artifacts ครับ</aside>
+      </section>
+
+      <!-- 21. ArtifactService backends -->
+      <section data-title="ArtifactService backends">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">04 · storage backends</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud">Google Cloud</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:18px">Swap storage backends without touching agent code</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:18px 20px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px">
+                  <span class="ev-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span>
+                  <h3 style="color:var(--h-blue); margin:0">InMemoryArtifactService</h3>
+                </div>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Stores versioned blobs in Python RAM. Zero setup, instant reads, cleared on restart. Ideal for local dev &amp; unit tests.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:18px 20px">
+                <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px">
+                  <span class="ev-lg"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage"></span>
+                  <h3 style="color:var(--h-green); margin:0">GcsArtifactService</h3>
+                </div>
+                <p style="font-size:15.5px; color:var(--dk-sub)">Persists objects in a Google Cloud Storage bucket. Survives restarts, scales across Cloud Run &amp; Agent Engine replicas.</p>
+              </div>
+            </div>
+            <pre class="fragment" data-fragment-index="3" style="width:1088px; margin-top:18px; font-size:14px"><code class="language-python" data-trim>
+from google.adk.artifacts import GcsArtifactService
+from google.adk.runners import Runner
+
+runner = Runner(
+    app=app,
+    session_service=session_service,
+    artifact_service=GcsArtifactService(bucket_name="my-agent-artifacts"),
+)
+            </code></pre>
+          </div>
+        </div>
+        <aside class="notes">ADK แยกส่วน storage ออกเป็น interface ชื่อ ArtifactService • (คลิก 1) ตอนพัฒนาในเครื่องใช้ InMemoryArtifactService เก็บใน RAM ไม่ต้องตั้งค่าอะไรเลย • (คลิก 2) พอขึ้น production เปลี่ยนแค่บรรทัดเดียวเป็น GcsArtifactService เก็บลง Google Cloud Storage bucket ทนต่อการ restart และแชร์ข้าม instance บน Cloud Run หรือ Agent Engine ได้ทันที • (คลิก 3) โค้ดใน tool และ callback ไม่ต้องแก้แม้แต่บรรทัดเดียวครับ</aside>
+      </section>
+
+      <!-- 22. Saving & loading versioned types.Part blobs -->
+      <section data-title="Save &amp; load artifacts">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">04 · read &amp; write</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/python.svg" alt="Python">Python</span>
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">ADK</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:18px">Save and load versioned <code style="font-size:.82em">types.Part</code> blobs</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:640px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.genai import types
+from google.adk.tools import ToolContext
+
+async def save_chart(png_bytes: bytes, tool_context: ToolContext):
+    part = types.Part.from_bytes(
+        data=png_bytes, mime_type="image/png"
+    )
+    version = await tool_context.save_artifact(
+        filename="sales_chart.png", artifact=part
+    )
+    return {"file": "sales_chart.png", "version": version}
+
+async def read_chart(tool_context: ToolContext):
+    part = await tool_context.load_artifact("sales_chart.png")
+    return {"bytes": len(part.inline_data.data)}
+              </code></pre>
+              <div class="ca-side">
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Async methods</h3>Always <code>await</code> <code>save_artifact()</code>, <code>load_artifact()</code> and <code>list_artifacts()</code>.</div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Auto-versioned</h3>Every save returns the new version (<code>0, 1, 2…</code>). Pass <code>version=0</code> to pin an older copy.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Tools &amp; callbacks</h3>Available on both <code>ToolContext</code> and <code>CallbackContext</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวอย่างการบันทึกและโหลด artifact ใน tool ครับ • เราสร้าง types.Part.from_bytes พร้อมระบุ mime_type แล้ว await tool_context.save_artifact จะได้เลขเวอร์ชันกลับมา • ตอนโหลดก็ await load_artifact ด้วยชื่อไฟล์ ถ้าไม่ระบุ version จะได้เวอร์ชันล่าสุด • (คลิก) ย้ำว่าทุกเมธอดเป็น async ต้องใส่ await เสมอ • (คลิก) ถ้าอยากย้อนดูไฟล์เวอร์ชันเก่าส่ง version=0 เข้าไปได้ • (คลิก) ใช้ได้ทั้งใน ToolContext และ CallbackContext เช่น ดักไฟล์ที่ผู้ใช้อัปโหลดใน before_model แล้วเซฟเป็น artifact เก็บไว้</aside>
+      </section>
+
+      <!-- 23. Scopes, LoadArtifactsTool & Best practices -->
+      <section data-title="Scopes, LoadArtifactsTool &amp; best practices">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="ca-hdr-row">
+              <div class="eyebrow">04 · scoping &amp; on-demand loading</div>
+              <div class="ca-lg-row">
+                <span class="ca-lg-badge" style="--c:var(--h-red)"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage">GCS</span>
+                <span class="ca-lg-badge" style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="ADK">LoadArtifactsTool</span>
+                <span class="ca-lg-badge" style="--c:var(--h-blue)"><img src="../images/shared/logos/gemini.svg" alt="Gemini">Gemini</span>
+              </div>
+            </div>
+            <h2 style="margin-bottom:16px">Scope by filename, load on demand with <code style="font-size:.82em">LoadArtifactsTool</code></h2>
+            <div class="grid g2" style="width:1088px; gap:18px; margin-bottom:16px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:16px 20px">
+                <h3 style="color:var(--h-blue)">Session vs User scope</h3>
+                <div class="ca-kv" style="margin-top:8px">
+                  <div><b>"report.pdf"</b><span>Session-scoped — isolated to this session</span></div>
+                  <div><b>"user:guide.pdf"</b><span>User-scoped — shared across all user sessions</span></div>
+                </div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:16px 20px">
+                <h3 style="color:var(--h-green)">LoadArtifactsTool</h3>
+                <p style="font-size:15px; color:var(--dk-sub); margin-top:4px">Add <code>tools=[load_artifacts]</code> to your <code>LlmAgent</code>. ADK lists available filenames in the prompt and injects file bytes <b>only when Gemini calls the tool</b>.</p>
+              </div>
+            </div>
+            <div class="grid g2 fragment" data-fragment-index="3" style="width:1088px; gap:14px">
+              <ul class="ca-chk">
+                <li class="ok"><i>✓</i><span><b>Set accurate MIME types</b> so Gemini reads PDFs, images &amp; audio natively.</span></li>
+                <li class="ok"><i>✓</i><span><b>Add GCS lifecycle rules</b> to auto-expire old temp artifacts and control storage cost.</span></li>
+              </ul>
+              <ul class="ca-chk">
+                <li class="ok"><i>✓</i><span><b>Return metadata from tools</b> (<code>filename</code>, <code>version</code>), not raw bytes.</span></li>
+                <li class="warn"><i>!</i><span><b>Don't preload every file</b> on every turn — let <code>LoadArtifactsTool</code> fetch on demand.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">อีกสองฟีเจอร์สำคัญของ Artifacts ครับ • (คลิก 1) การกำหนดขอบเขตทำผ่านชื่อไฟล์: ถ้าไม่มี prefix เช่น "report.pdf" จะอยู่เฉพาะ session นี้ แต่ถ้าขึ้นต้นด้วย "user:" เช่น "user:guide.pdf" จะแชร์ข้ามทุก session ของผู้ใช้คนนั้นได้ • (คลิก 2) LoadArtifactsTool เป็น built-in tool ที่ช่วยบอกโมเดลว่ามีไฟล์อะไรบ้าง และจะโหลดเนื้อไฟล์เข้า context เฉพาะตอนที่ Gemini ตัดสินใจเรียกใช้จริง ๆ เท่านั้น • (คลิก 3) แนวทางปฏิบัติที่ดี: ระบุ MIME type ให้ถูกต้อง, ตั้ง lifecycle rule บน GCS bucket เพื่อลบไฟล์เก่า, ให้ tool คืนแค่ชื่อไฟล์กับเวอร์ชัน และอย่าโหลดทุกไฟล์เข้า prompt ทุกรอบครับ</aside>
+      </section>
+
+      <!-- 24. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:44px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:24px">Compact, Cache, Store</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/adk.png" alt="ADK"></span>
+                <h3>1 · Compact</h3>
+                <p style="font-size:16px; line-height:1.42">Use <b>EventsCompactionConfig</b> to summarize old turns asynchronously while keeping recent turns verbatim.</p>
+              </div>
+              <div class="pc green fragment">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>
+                <h3>2 · Cache</h3>
+                <p style="font-size:16px; line-height:1.42">Use <b>ContextCacheConfig</b> with a stable prefix to slash input token cost and prefill latency.</p>
+              </div>
+              <div class="pc red fragment">
+                <span class="ev-lg" style="margin-bottom:10px"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage"></span>
+                <h3>3 · Store</h3>
+                <p style="font-size:16px; line-height:1.42">Offload binary files to <b>GcsArtifactService</b> and let <b>LoadArtifactsTool</b> fetch them on demand.</p>
+              </div>
+            </div>
+            <div class="fragment" style="width:1088px; margin-top:24px; display:flex; flex-wrap:wrap; gap:8px">
+              <span class="ca-pill" style="--c:var(--h-blue)">EventsCompactionConfig</span>
+              <span class="ca-pill" style="--c:var(--h-blue)">LlmEventSummarizer</span>
+              <span class="ca-pill" style="--c:var(--h-green)">ContextCacheConfig</span>
+              <span class="ca-pill" style="--c:var(--h-yellow)">static_instruction</span>
+              <span class="ca-pill" style="--c:var(--h-red)">GcsArtifactService</span>
+              <span class="ca-pill" style="--c:var(--h-red)">LoadArtifactsTool</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Wrap your <code>root_agent</code> in <code>App(...)</code> and turn on <code>ContextCacheConfig</code> + <code>EventsCompactionConfig</code>.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำสำคัญของวันนี้ครับ • (คลิก) Compact: ใช้ EventsCompactionConfig ย่อประวัติเก่าในพื้นหลังโดยไม่บล็อกผู้ใช้ • (คลิก) Cache: ใช้ ContextCacheConfig กับ prefix ที่คงที่เพื่อลดต้นทุนและ latency • (คลิก) Store: ย้ายไฟล์ binary ออกไปเก็บใน GcsArtifactService และให้ LoadArtifactsTool โหลดเฉพาะตอนจำเป็น • (คลิก) นี่คือ 6 API หลักที่เจอกันวันนี้ • (คลิก) เริ่มวันนี้ได้เลย แค่ห่อ root_agent ด้วย App แล้วเปิดทั้ง caching และ compaction พร้อมกันครับ</aside>
+      </section>
+
+      <!-- 25. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:48px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:24px">Read more and try it</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue ca-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Context overview</h3><a class="mono" style="font-size:14px" href="https://adk.dev/context/" target="_blank">adk.dev/context/</a></div></div>
+              <div class="pc green ca-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Context compaction</h3><a class="mono" style="font-size:14px" href="https://adk.dev/context/compaction/" target="_blank">adk.dev/context/compaction/</a></div></div>
+              <div class="pc yellow ca-res-row"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><div><h3>Context caching</h3><a class="mono" style="font-size:14px" href="https://adk.dev/context/caching/" target="_blank">adk.dev/context/caching/</a></div></div>
+              <div class="pc red ca-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-storage.png" alt="Cloud Storage"></span><div><h3>Artifacts management</h3><a class="mono" style="font-size:14px" href="https://adk.dev/artifacts/" target="_blank">adk.dev/artifacts/</a></div></div>
+              <div class="pc blue ca-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Sessions &amp; state</h3><a class="mono" style="font-size:14px" href="https://adk.dev/sessions/" target="_blank">adk.dev/sessions/</a></div></div>
+              <div class="pc green ca-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><div><h3>Deploy on Google Cloud</h3><a class="mono" style="font-size:14px" href="https://adk.dev/deploy/" target="_blank">adk.dev/deploy/</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลิงก์เอกสารอย่างเป็นทางการสำหรับอ่านต่อครับ: Context overview, Compaction, Caching, Artifacts, Sessions และ Deploy • สามารถสแกน QR หน้า Agenda เพื่อเปิดสไลด์และคลิกลิงก์ทั้งหมดได้เลยครับ</aside>
+      </section>
+
+      <!-- 26. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="ca-ty-art"><img src="../images/adk-context-artifacts-slides/thank-you-art.svg" alt="Glowing compaction prism, cached prefix, and artifact vault composition"></div>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณมากครับ • มีคำถามเรื่อง context compaction, caching หรือ artifacts ใน ADK ถามได้เลยครับ</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

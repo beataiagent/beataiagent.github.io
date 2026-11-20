@@ -1,0 +1,925 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADK 2.0 &amp; Multi-Agent Workflows — Compose, Orchestrate, Scale</title>
+  <!-- favicon: official GDG mark (same as gdg.community.dev / DevFest Bangkok 2026 event page) -->
+  <link rel="icon" type="image/svg+xml" href="../images/shared/logos/b-favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="../images/shared/logos/b-favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="../images/shared/logos/b-favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="../images/shared/logos/b-favicon-180.png">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reset.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/white.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css" />
+  <!-- DevFest 2026 template type: Google Sans (headlines/body) + Roboto Mono Light (subheads) -->
+  <link href="../fonts/fonts.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/devfest-base.css" />
+  <link rel="stylesheet" href="css/devfest-dark.css" />
+  <style>
+    /* ---------- ADK Workflows deck extras ---------- */
+    .wf-div-art { position: absolute; left: 56px; top: 244px; width: 256px; height: 256px; border-radius: 28px; overflow: hidden; border: 2.5px solid var(--c); background: #202124; box-sizing: border-box; box-shadow: 0 12px 32px rgba(0,0,0,.45); }
+    .wf-div-art img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .wf-ty-art { position: absolute; left: 880px; top: 186px; width: 320px; height: 320px; border-radius: 36px; overflow: hidden; border: 2.5px solid var(--h-yellow); background: #202124; box-sizing: border-box; box-shadow: 0 16px 40px rgba(0,0,0,.5); }
+    .wf-ty-art img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .wf-art-img { display: block; width: 1088px; height: auto; border-radius: 16px; border: 1.5px solid #3c4043; background: #202124; box-sizing: border-box; }
+    .wf-lg { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 6px; background: #fff; vertical-align: -5px; margin-right: 7px; flex: none; }
+    .reveal .slides .wf-lg img { width: 16px; height: 16px; object-fit: contain; display: block; }
+    .wf-hd { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+    .wf-hd h3 { margin: 0 !important; }
+    .wf-ico { display: block; width: 38px; height: 38px; fill: none; stroke: var(--c, #fff); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; margin-bottom: 10px; }
+
+    /* pill badges */
+    .wf-pill { display: inline-block; flex: none; font: 500 13px/1.2 var(--mono); padding: 6px 12px; border-radius: 999px; border: 1.5px solid var(--c, var(--dk-line)); color: var(--c, var(--dk-text)); background: #17181b; box-sizing: border-box; }
+
+    /* side cards next to code */
+    .wf-side { flex: 1; min-width: 0; display: grid; gap: 12px; align-content: start; }
+    .wf-side .pc { padding: 12px 16px; font-size: 14.5px; line-height: 1.4; }
+    .wf-side .pc h3 { font-size: 17.5px; margin-bottom: 4px; }
+
+    /* checklist */
+    .reveal ul.wf-chk { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; width: 100%; }
+    .wf-chk li { display: flex; align-items: flex-start; gap: 12px; font-size: 15.5px; line-height: 1.35; padding: 9px 12px; border-radius: 10px; background: #202124; border: 1.5px solid #3c4043; }
+    .wf-chk li > i { flex: none; width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font: 700 14px/1 var(--mono); font-style: normal; margin-top: 1px; }
+    .wf-chk li.ok > i { background: rgba(92,219,109,.18); color: var(--h-green); border: 1.5px solid var(--h-green); }
+    .wf-chk li.warn > i { background: rgba(255,125,175,.18); color: var(--h-red); border: 1.5px solid var(--h-red); }
+
+    /* compact pipeline strip */
+    .wf-strip { width: 1088px; display: flex; align-items: center; gap: 10px; padding: 10px 16px; border-radius: 14px; background: #17181b; border: 1.5px solid #3c4043; box-sizing: border-box; margin-bottom: 14px; }
+    .wf-strip .st-node { flex: 1; text-align: center; padding: 8px 10px; border-radius: 10px; border: 1.5px solid var(--c, var(--dk-line)); background: var(--dk-card); font: 500 14.5px/1.2 var(--sans); color: #fff; }
+    .wf-strip .st-node small { display: block; font: 400 12px/1.25 var(--mono); color: var(--c, var(--dk-sub)); margin-top: 2px; }
+    .wf-strip .st-ar { width: 22px; height: 14px; flex: none; fill: none; stroke: var(--dk-sub); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* spectrum bar */
+    .wf-spec { width: 1088px; margin-top: 16px; padding: 14px 18px; border-radius: 14px; background: #17181b; border: 1.5px solid #3c4043; box-sizing: border-box; }
+    .wf-spec-track { height: 10px; border-radius: 999px; background: linear-gradient(90deg, var(--h-blue), var(--h-green), var(--h-yellow)); position: relative; margin: 8px 0 10px; }
+    .wf-spec-pin { position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 22px; height: 22px; border-radius: 50%; background: #fff; border: 4px solid var(--h-green); box-shadow: 0 0 0 4px rgba(92,219,109,.25); }
+    .wf-spec-lbls { display: flex; justify-content: space-between; font: 500 13.5px/1.2 var(--mono); color: var(--dk-sub); }
+    .wf-spec-lbls b { color: var(--h-green); }
+
+    /* visual builder mockup */
+    .wf-vb { width: 650px; flex: none; border-radius: 16px; border: 2px solid var(--dk-line); background: #17181b; overflow: hidden; box-sizing: border-box; }
+    .wf-vb-bar { display: flex; align-items: center; justify-content: space-between; padding: 9px 14px; background: #202124; border-bottom: 1.5px solid #3c4043; font: 500 12.5px/1 var(--mono); color: var(--dk-sub); }
+    .wf-vb-dots { display: flex; gap: 6px; }
+    .wf-vb-dots i { width: 10px; height: 10px; border-radius: 50%; display: block; }
+    .wf-vb-body { display: grid; grid-template-columns: 1fr 205px; height: 356px; }
+    .wf-vb-canvas { position: relative; background-image: radial-gradient(#3c4043 1px, transparent 1px); background-size: 18px 18px; padding: 14px; }
+    .wf-vb-panel { background: #202124; border-left: 1.5px solid #3c4043; padding: 12px; display: flex; flex-direction: column; gap: 8px; font-size: 12.5px; line-height: 1.35; }
+    .wf-vb-panel h4 { margin: 0; font: 600 12px/1 var(--mono); text-transform: uppercase; letter-spacing: .05em; color: var(--h-green); }
+    .wf-vb-msg { padding: 8px 10px; border-radius: 10px; background: #2a2b2f; border: 1px solid #3c4043; color: var(--dk-text); }
+    .wf-vb-msg.ai { border-color: var(--h-blue); background: rgba(87,202,255,.08); }
+
+    /* hierarchy diagram */
+    .wf-hier { width: 1088px; display: grid; gap: 10px; }
+    .wf-tier { display: grid; gap: 14px; align-items: stretch; }
+    .wf-tier.t1 { grid-template-columns: 420px; justify-content: center; }
+    .wf-tier.t2 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+    .wf-tier.t3 { grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 10px; }
+    .wf-hnode { padding: 10px 14px; border-radius: 12px; background: var(--dk-card); border: 2px solid var(--c, var(--dk-line)); text-align: center; }
+    .wf-hnode b { display: block; font: 600 15px/1.2 var(--sans); color: #fff; }
+    .wf-hnode small { display: block; font: 400 12px/1.25 var(--mono); color: var(--c, var(--dk-sub)); margin-top: 3px; }
+    .wf-hconn { display: block; width: 1088px; height: 22px; }
+
+    /* codelab architecture diagram */
+    .wf-arch { width: 1088px; display: grid; grid-template-columns: 330px 26px 390px 26px 1fr; align-items: center; gap: 0; }
+    .wf-stage { border-radius: 16px; border: 2px solid var(--c); background: #17181b; padding: 14px; box-sizing: border-box; }
+    .wf-stage-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .wf-stage-h b { font: 600 14px/1 var(--mono); color: var(--c); text-transform: uppercase; letter-spacing: .04em; }
+    .wf-stage-h span { font: 400 11.5px/1 var(--mono); color: var(--dk-sub); }
+    .wf-subbox { padding: 9px 12px; border-radius: 10px; background: var(--dk-card); border: 1.5px solid #3c4043; font-size: 13.5px; line-height: 1.3; }
+    .wf-subbox b { display: block; color: #fff; font-size: 14.5px; margin-bottom: 2px; }
+    .wf-subbox code { font-size: 11.5px; }
+
+    /* resources & table tweaks */
+    .wf-res-row { display: flex; align-items: center; gap: 14px; }
+    .wf-res-row h3 { margin: 0 0 4px; font-size: 20px; }
+    .wf-recap-pills .wf-pill { font-size: 13px; padding: 6px 11px; }
+    .reveal table.zt-tbl td.hi-b { color: var(--h-blue); }
+    .reveal table.zt-tbl td.hi-g { color: var(--h-green); }
+  </style>
+</head>
+<body data-deck="ADK Workflows">
+  <!-- line-icon sprite -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-star" viewBox="0 0 100 100"><path d="M50 6V94M6 50H94M19 19L81 81M81 19L19 81"/></symbol>
+    <symbol id="ch-r" viewBox="0 0 30 50"><path d="M5 5 L25 25 L5 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="ch-l" viewBox="0 0 30 50"><path d="M25 5 L5 25 L25 45" fill="none" stroke="currentColor" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-brain" viewBox="0 0 24 24"><path d="M9.5 4a3.5 3.5 0 0 0-3.3 4.7A3.5 3.5 0 0 0 5 15a3.5 3.5 0 0 0 4.5 5V4Z"/><path d="M14.5 4a3.5 3.5 0 0 1 3.3 4.7A3.5 3.5 0 0 1 19 15a3.5 3.5 0 0 1-4.5 5V4Z"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="M12 3 2 8l10 5 10-5-10-5Z"/><path d="m2 13 10 5 10-5"/><path d="m2 18 10 5 10-5"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6l-8-3Z"/><path d="m9 12 2 2 4-4"/></symbol>
+    <symbol id="i-graph" viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="6" r="2.5"/><circle cx="19" cy="18" r="2.5"/><circle cx="12" cy="12" r="2.5"/><path d="M7.5 12H9.5M14 10.6 16.9 7.6M14 13.4 16.9 16.4"/></symbol>
+    <symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6" cy="6" r="2.5"/><circle cx="6" cy="18" r="2.5"/><circle cx="18" cy="12" r="2.5"/><path d="M6 8.5v7M8.5 6h2.5a3 3 0 0 1 3 3v.5a2.5 2.5 0 0 0 2.5 2.5"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/><path d="M9 3v4M15 3v4M9 17v4M15 17v4M3 9h4M3 15h4M17 9h4M17 15h4"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><polygon points="15.5 8.5 13.5 13.5 8.5 15.5 10.5 10.5 15.5 8.5"/></symbol>
+    <symbol id="i-repeat" viewBox="0 0 24 24"><path d="M17 2l4 4-4 4"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><path d="M7 22l-4-4 4-4"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></symbol>
+    <symbol id="i-alert" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 3 14h8l-1 8 10-12h-8l1-8Z"/></symbol>
+    <symbol id="i-scale" viewBox="0 0 24 24"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></symbol>
+  </svg>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Cover -->
+      <section class="s-cover-dk hx-cover" data-corner="off" data-title="ADK 2.0 &amp; Multi-Agent Workflows">
+        <div class="chev-rows">
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><span class="w b">Compose</span><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cb"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cb"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-r"/></svg><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><span class="w g">Orchestrate</span><svg class="ch cg"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg><svg class="ch"><use href="#ch-r"/></svg></div>
+          <div class="cr"><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch cp"><use href="#ch-l"/></svg><span class="w p">Scale</span><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg><svg class="ch"><use href="#ch-l"/></svg></div>
+        </div>
+        <div class="hx-title"><b>ADK 2.0 &amp; Multi-Agent Workflows</b><span>Orchestrate LLM, Sequential, Parallel, Loop and Graph-based multi-agent systems</span></div>
+        <div class="hx-chips"><i style="--c:var(--h-green)"><img src="../images/shared/logos/adk.png" alt="">ADK</i><i style="--c:var(--h-blue)"><img src="../images/shared/logos/workflows.svg" alt="">Workflows</i><i style="--c:var(--h-red)"><img src="../images/shared/logos/gemini.svg" alt="">Gemini</i></div>
+        <div class="hx-orbit"><i style="left:40px; top:52px; background:var(--h-yellow)"></i><i style="right:6px; top:150px; background:var(--h-blue)"></i><i style="left:30px; bottom:62px; background:var(--h-green)"></i><i style="right:70px; bottom:30px; background:var(--h-red)"></i></div>
+        <div class="hx-ring"><div><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"></div></div>
+        <div class="hx-who"><b>Punsiri Boonyakiat</b><span>Google Developer Expert, Cloud AI</span></div>
+        <div class="top-gdg"><img src="../images/shared/logos/gdg-mark.svg" alt=""><span>Google Developer Group<small>Bangkok · DevFest 2026</small></span></div>
+        <img class="top-bwg" src="../images/shared/logos/build-with-gemini-light.png" alt="Build with Gemini">
+        <aside class="notes">สวัสดีครับ • วันนี้เรามาคุยเรื่อง ADK 2.0 และ Multi-Agent Workflows กันครับ • 3 คำหลักของวันนี้คือ Compose ประกอบ agent ตัวเล็ก ๆ ให้ทำงานร่วมกัน, Orchestrate คุมทิศทางด้วย Workflow และ Graph Runtime และ Scale ขยายระบบให้พร้อมขึ้น production อย่างมั่นใจ</aside>
+      </section>
+
+      <!-- 2. Agenda -->
+      <section class="s-agenda-dk" data-title="Agenda">
+        <h2 class="agd-title">Agenda</h2>
+        <svg class="agd-arrow" viewBox="0 0 300 300" aria-hidden="true"><defs><linearGradient id="agg" gradientUnits="userSpaceOnUse" x1="80" y1="30" x2="180" y2="270"><stop offset="0" stop-color="#d14d6a"/><stop offset=".55" stop-color="#8a3fb4"/><stop offset="1" stop-color="#5a35e0"/></linearGradient></defs><path d="M0 150 H274 M164 42 C164 106 206 150 274 150 M164 258 C164 194 206 150 274 150" fill="none" stroke="url(#agg)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <ol class="agd-list">
+          <li class="c1"><b>01</b><div><strong>Agent building blocks</strong><span>LlmAgent, Sequential, Parallel, Loop &amp; Custom</span></div></li>
+          <li class="c2"><b>02</b><div><strong>ADK 2.0 Graph Runtime</strong><span>Nodes, edges, conditional routing &amp; Visual Builder</span></div></li>
+          <li class="c3"><b>03</b><div><strong>Multi-agent patterns</strong><span>Delegation, AgentTool, Critic loops &amp; state</span></div></li>
+          <li class="c4"><b>04</b><div><strong>Production patterns</strong><span>Real-world architecture, Pydantic &amp; best practices</span></div></li>
+        </ol>
+        <div class="agd-qr">
+          <img src="../images/adk-workflows-slides/qr-slides.svg" alt="QR code: open these slides">
+          <b>Scan to get the slides</b>
+        </div>
+        <aside class="notes">แบ่งเป็น 4 ช่วงครับ: (1) พื้นฐาน building blocks ของ agent ใน ADK (2) ADK 2.0 Graph Runtime ที่ปลดล็อกการทำ branching, loop และ Visual Builder (3) Multi-agent patterns ที่ใช้จริงในงาน และ (4) การออกแบบสำหรับ production พร้อมตัวอย่าง Codelab และ Pydantic structured outputs • สแกน QR ด้านขวาเปิดสไลด์ตามได้เลยครับ</aside>
+      </section>
+
+      <!-- 3. Section 01 -->
+      <section class="bg-blue" data-title="01 · Agent building blocks">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">01</div>
+        <div class="wf-div-art" style="--c:var(--h-blue)"><img src="../images/adk-workflows-slides/sec-01-blocks.svg" alt="Agent building blocks"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-blue)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Agent<br>building blocks</h1>
+            <p class="sub" style="margin-top:28px">Why one mega-agent fails, and<br>the 3 core agent types in ADK</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 1 • มาดูกันก่อนว่าทำไมการยัดทุกอย่างใส่ agent ตัวเดียวถึงพัง แล้ว ADK ให้ building blocks อะไรมาช่วยแยกหน้าที่กันบ้าง</aside>
+      </section>
+
+      <!-- 4. Why one mega-agent fails -->
+      <section data-title="Why one mega-agent fails">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:32px 56px">
+            <div class="eyebrow">01 · the problem</div>
+            <h2 style="margin-bottom:14px">Why one mega-agent breaks down at scale</h2>
+            <div class="grid g3" style="width:1088px; gap:14px">
+              <div class="pc blue fragment" data-fragment-index="1" style="--c:var(--h-blue); padding:12px 16px">
+                <h3 style="color:var(--h-blue); font-size:19px; margin-bottom:4px">Context &amp; tool bloat</h3>
+                <p style="font-size:14.5px; color:var(--dk-sub)">20+ tools &amp; a 4-page prompt confuse the model — it picks wrong tools or skips rules.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2" style="--c:var(--h-yellow); padding:12px 16px">
+                <h3 style="color:var(--h-yellow); font-size:19px; margin-bottom:4px">Unpredictable order</h3>
+                <p style="font-size:14.5px; color:var(--dk-sub)">LLMs are probabilistic. Asking one prompt to "always verify first" still skips steps.</p>
+              </div>
+              <div class="pc red fragment" data-fragment-index="3" style="--c:var(--h-red); padding:12px 16px">
+                <h3 style="color:var(--h-red); font-size:19px; margin-bottom:4px">Slow &amp; expensive</h3>
+                <p style="font-size:14.5px; color:var(--dk-sub)">One heavy model runs every step serially instead of fast, parallel specialists.</p>
+              </div>
+            </div>
+            <img class="wf-art-img fragment" data-fragment-index="4" src="../images/adk-workflows-slides/mega-agent-vs-team.svg" alt="Overloaded mega-agent vs specialized multi-agent team" style="height:242px; margin-top:14px">
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Rule of thumb</b><span>Give each agent one clear job and a small toolset, then compose them with deterministic workflows.</span></div>
+        </div>
+        <aside class="notes">หลายคนเริ่มต้นด้วยการสร้าง agent ตัวเดียว ใส่ prompt ยาว ๆ กับ tool 20 ตัว พอระบบโตขึ้นจะเจอ 3 ปัญหา • (คลิก 1) Context bloat โมเดลสับสนเลือก tool ผิด • (คลิก 2) ลำดับการทำงานไม่แน่นอน โมเดลอาจข้ามขั้นสำคัญ • (คลิก 3) ช้าและแพงเพราะใช้โมเดลใหญ่รันทีละขั้น • (คลิก 4) ทางออกคือแยกเป็นทีม specialist ตัวเล็ก ๆ • (คลิก 5) กฎง่าย ๆ: หนึ่ง agent หนึ่งหน้าที่ ชัดเจน แล้วค่อยเอามาประกอบกัน</aside>
+      </section>
+
+      <!-- 5. The 3 agent types -->
+      <section data-title="The 3 agent types">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:32px 56px">
+            <div class="eyebrow">01 · core primitives</div>
+            <h2 style="margin-bottom:14px">Three agent types cover every workflow</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:16px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:12px 16px">
+                <div class="wf-hd"><span class="ev-lg" style="width:34px; height:34px"><img src="../images/shared/logos/gemini.svg" alt="Gemini" style="width:22px; height:22px"></span><h3 style="font-size:19px">1 · LlmAgent</h3></div>
+                <p style="font-size:14px; color:var(--dk-sub); margin-bottom:8px">Powered by Gemini. Dynamic reasoning, tool calling, and LLM-driven delegation.</p>
+                <div class="chips"><span class="chip" style="font-size:12px; padding:3px 9px">Non-deterministic</span><span class="chip" style="font-size:12px; padding:3px 9px">tools=[]</span></div>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:12px 16px">
+                <div class="wf-hd"><span class="ev-lg" style="width:34px; height:34px"><img src="../images/shared/logos/workflows.svg" alt="Workflows" style="width:22px; height:22px"></span><h3 style="font-size:19px">2 · Workflow Agents</h3></div>
+                <p style="font-size:14px; color:var(--dk-sub); margin-bottom:8px">No LLM for control flow. Fixed, predictable orchestration over child agents.</p>
+                <div class="chips"><span class="chip" style="font-size:12px; padding:3px 9px">Sequential</span><span class="chip" style="font-size:12px; padding:3px 9px">Parallel</span><span class="chip" style="font-size:12px; padding:3px 9px">Loop</span></div>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="3" style="padding:12px 16px">
+                <div class="wf-hd"><span class="ev-lg" style="width:34px; height:34px"><img src="../images/shared/logos/python.svg" alt="Python" style="width:22px; height:22px"></span><h3 style="font-size:19px">3 · Custom BaseAgent</h3></div>
+                <p style="font-size:14px; color:var(--dk-sub); margin-bottom:8px">Subclass <code>BaseAgent</code> and override <code>_run_async_impl</code> for arbitrary Python logic.</p>
+                <div class="chips"><span class="chip" style="font-size:12px; padding:3px 9px">Pure Python</span><span class="chip" style="font-size:12px; padding:3px 9px">Yield events</span></div>
+              </div>
+            </div>
+            <img class="wf-art-img fragment" data-fragment-index="4" src="../images/adk-workflows-slides/workflow-trio.svg" alt="Sequential, Parallel, and Loop workflow agents" style="height:226px; margin-top:14px">
+          </div>
+          <div class="ask fragment" data-fragment-index="5"><b>Mental model</b><span>Put deterministic workflow rails around non-deterministic LlmAgent reasoning.</span></div>
+        </div>
+        <aside class="notes">ใน ADK มี agent พื้นฐานอยู่ 3 กลุ่ม • (คลิก 1) LlmAgent ใช้ Gemini คิด วิเคราะห์ เรียก tool และส่งต่องานแบบยืดหยุ่น • (คลิก 2) Workflow Agents ได้แก่ Sequential, Parallel, Loop ไม่ใช้ LLM ในการคุมลำดับ ทำให้ผลลัพธ์คาดเดาได้ 100% • (คลิก 3) Custom BaseAgent เขียน Python เองได้เลยผ่าน _run_async_impl สำหรับเงื่อนไขเฉพาะทาง • (คลิก 4) ภาพด้านล่างเปรียบเทียบ 3 Workflow Agents ให้เห็นชัด ๆ • (คลิก 5) แนวคิดสำคัญคือใช้ Workflow เป็นรางรถไฟที่แน่นอน ครอบการทำงานของ LlmAgent ไว้ครับ</aside>
+      </section>
+
+      <!-- 6. SequentialAgent + output_key -->
+      <section data-title="SequentialAgent · pipeline">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">01 · workflow · sequential</div>
+            <h2 style="margin-bottom:14px"><span class="wf-lg" style="width:30px; height:30px; vertical-align:-5px"><img src="../images/shared/logos/workflows.svg" alt="Workflows" style="width:20px; height:20px"></span>SequentialAgent: run in order, pass data via state</h2>
+            <div class="wf-strip">
+              <div class="st-node" style="--c:var(--h-blue)">researcher<small>output_key="notes"</small></div>
+              <svg class="st-ar" viewBox="0 0 22 14"><path d="M2 7h17M13 2l6 5-6 5"/></svg>
+              <div class="st-node" style="--c:var(--h-green)">writer<small>reads {notes} → "draft"</small></div>
+              <svg class="st-ar" viewBox="0 0 22 14"><path d="M2 7h17M13 2l6 5-6 5"/></svg>
+              <div class="st-node" style="--c:var(--h-yellow)">editor<small>reads {draft} → final</small></div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents import LlmAgent, SequentialAgent
+
+researcher = LlmAgent(
+    name="researcher", model="gemini-2.5-flash",
+    instruction="Gather 5 key facts on the topic.",
+    output_key="notes",
+)
+writer = LlmAgent(
+    name="writer", model="gemini-2.5-pro",
+    instruction="Write a short blog post from:\n{notes}",
+    output_key="draft",
+)
+blog_pipeline = SequentialAgent(
+    name="blog_pipeline",
+    sub_agents=[researcher, writer, editor],
+)
+              </code></pre>
+              <div class="wf-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Guaranteed order</h3>Sub-agents execute strictly left-to-right. Zero chance of skipping a step.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)"><code>output_key</code></h3>ADK saves the agent's final response straight into <code>session.state["notes"]</code>.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)"><code>{template_var}</code></h3>Downstream agents read state automatically inside their <code>instruction</code> string.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ตัวแรกคือ SequentialAgent รัน sub-agents เรียงตามลำดับแน่นอน • ตัวอย่างนี้คือ pipeline เขียนบทความ: researcher หาข้อมูลแล้วบันทึกด้วย output_key="notes" • (คลิก) ลำดับการทำงานเป๊ะ ไม่มีข้ามขั้น • (คลิก) output_key ทำให้ ADK เก็บผลลัพธ์ลง session.state ให้อัตโนมัติ • (คลิก) agent ตัวถัดไปอย่าง writer แค่ใส่ {notes} ใน instruction ก็ดึงข้อมูลมาใช้ต่อได้เลย</aside>
+      </section>
+
+      <!-- 7. ParallelAgent fan-out + fan-in -->
+      <section data-title="ParallelAgent · fan-out &amp; fan-in">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">01 · workflow · parallel</div>
+            <h2 style="margin-bottom:14px"><span class="wf-lg" style="width:30px; height:30px; vertical-align:-5px"><img src="../images/shared/logos/workflows.svg" alt="Workflows" style="width:20px; height:20px"></span>ParallelAgent: fan-out concurrently, then fan-in</h2>
+            <!-- compact fan-out / fan-in visual -->
+            <div style="width:1088px; margin-bottom:14px; padding:10px 16px; border-radius:14px; background:#17181b; border:1.5px solid #3c4043; box-sizing:border-box; display:grid; grid-template-columns:170px 44px 1fr 44px 230px; align-items:center">
+              <div class="wf-hnode" style="--c:var(--h-blue); padding:8px"><b>User Query</b><small>Trip to Tokyo</small></div>
+              <svg viewBox="0 0 44 84" style="width:44px; height:84px; fill:none; stroke:#80868b; stroke-width:2"><path d="M0 42 H18 M18 14 V70 M18 14 H42 M18 42 H42 M18 70 H42"/></svg>
+              <div style="display:grid; gap:6px">
+                <div style="display:flex; justify-content:space-between; padding:4px 10px; border-radius:8px; background:var(--dk-card); border:1.5px solid var(--h-green); font:500 13px/1.2 var(--mono)"><span>weather_agent</span><span style="color:var(--h-green)">→ state["weather"]</span></div>
+                <div style="display:flex; justify-content:space-between; padding:4px 10px; border-radius:8px; background:var(--dk-card); border:1.5px solid var(--h-green); font:500 13px/1.2 var(--mono)"><span>flights_agent</span><span style="color:var(--h-green)">→ state["flights"]</span></div>
+                <div style="display:flex; justify-content:space-between; padding:4px 10px; border-radius:8px; background:var(--dk-card); border:1.5px solid var(--h-green); font:500 13px/1.2 var(--mono)"><span>hotels_agent</span><span style="color:var(--h-green)">→ state["hotels"]</span></div>
+              </div>
+              <svg viewBox="0 0 44 84" style="width:44px; height:84px; fill:none; stroke:#80868b; stroke-width:2"><path d="M0 14 H26 M0 42 H26 M0 70 H26 M26 14 V70 M26 42 H44"/></svg>
+              <div class="wf-hnode" style="--c:var(--h-yellow); padding:8px"><b>synthesizer</b><small>reads all 3 keys</small></div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents import ParallelAgent, SequentialAgent
+
+gather_info = ParallelAgent(
+    name="gather_info",
+    sub_agents=[weather_agent, flights_agent, hotels_agent],
+)
+
+trip_planner = SequentialAgent(
+    name="trip_planner",
+    sub_agents=[gather_info, synthesizer],  # fan-out → fan-in
+)
+              </code></pre>
+              <div class="wf-side">
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Cut latency</h3>Independent branches run concurrently; total time equals the slowest branch.</div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">Use distinct keys</h3>Each branch must write to its own <code>output_key</code> to avoid overwriting siblings.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Pair with Sequential</h3>Wrap <code>ParallelAgent</code> + synthesizer inside a <code>SequentialAgent</code> for clean fan-in.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ParallelAgent ใช้รันหลายงานพร้อมกัน เช่น หาอากาศ เที่ยวบิน และโรงแรมพร้อมกัน แล้วค่อยเอาไปรวม • (คลิก) ลดเวลาตอบสนองลงเยอะ เพราะรอแค่ branch ที่ช้าที่สุด • (คลิก) ข้อควรระวังสำคัญ: แต่ละ branch ต้องเขียนลง output_key คนละชื่อ เพื่อไม่ให้ทับข้อมูลกัน • (คลิก) แพตเทิร์นยอดฮิตคือเอา ParallelAgent มาต่อกับ synthesizer ภายใน SequentialAgent เป็น fan-out แล้ว fan-in ครับ</aside>
+      </section>
+
+      <!-- 8. LoopAgent + escalate / max_iterations -->
+      <section data-title="LoopAgent · iterative refinement">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">01 · workflow · loop</div>
+            <h2 style="margin-bottom:16px"><span class="wf-lg" style="width:30px; height:30px; vertical-align:-5px"><img src="../images/shared/logos/workflows.svg" alt="Workflows" style="width:20px; height:20px"></span>LoopAgent: iterate until quality passes</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.agents import LoopAgent
+from google.adk.tools.tool_context import ToolContext
+
+def exit_loop(tool_context: ToolContext) -> dict:
+    """Call when the draft meets all criteria."""
+    tool_context.actions.escalate = True
+    return {"status": "approved"}
+
+refine_loop = LoopAgent(
+    name="refine_loop",
+    sub_agents=[draft_writer, quality_critic],
+    max_iterations=4,
+)
+              </code></pre>
+              <div class="wf-side">
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Early exit</h3>Any tool or agent setting <code>actions.escalate = True</code> breaks out of the loop cleanly.</div>
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Shared memory</h3>Each turn reads the previous <code>{draft}</code> and <code>{feedback}</code> from state.</div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">Hard ceiling</h3><code>max_iterations</code> stops runaway retries and caps your token budget.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Safety net</b><span>Always set <code>max_iterations</code> on every LoopAgent — never rely solely on an LLM to decide when to stop.</span></div>
+        </div>
+        <aside class="notes">LoopAgent ใช้สำหรับงานที่ต้องทำซ้ำจนกว่าจะได้คุณภาพที่ต้องการ เช่น เขียนแล้วให้ critic ตรวจ • (คลิก) วิธีออกจากลูปก่อนครบคือเรียก tool ที่ตั้งค่า tool_context.actions.escalate = True • (คลิก) ทุกรอบที่วนจะเห็น draft และ feedback จากรอบก่อนผ่าน state • (คลิก) (คลิก) สำคัญมาก: ต้องกำหนด max_iterations ไว้เสมอ กันลูปไม่รู้จบและคุมค่า token ครับ</aside>
+      </section>
+
+      <!-- 9. Section 02 -->
+      <section class="bg-green" data-title="02 · ADK 2.0 Graph Runtime">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">02</div>
+        <div class="wf-div-art" style="--c:var(--h-green)"><img src="../images/adk-workflows-slides/sec-02-graph.svg" alt="ADK 2.0 Graph Runtime"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-green)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">ADK 2.0<br>Graph Runtime</h1>
+            <p class="sub" style="margin-top:28px">Nodes, edges, conditional routing<br>and the Visual Builder</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 2 • เข้าสู่ไฮไลต์ของ ADK 2.0 คือ Graph Workflow Runtime ที่ยกระดับการทำ orchestration จากต้นไม้ธรรมดาไปเป็นกราฟเต็มรูปแบบ</aside>
+      </section>
+
+      <!-- 10. Evolution from tree hierarchy to Graph Workflow Runtime -->
+      <section data-title="Tree to Graph evolution">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · evolution</div>
+            <h2 style="margin-bottom:18px">From tree hierarchy to Graph Workflow Runtime</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:18px 22px">
+                <h3 style="color:var(--h-blue); margin-bottom:6px"><span class="wf-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span>ADK 1.x · Tree Hierarchy</h3>
+                <p style="font-size:15px; color:var(--dk-sub); margin-bottom:12px">Nested <code>Sequential</code>, <code>Parallel</code>, and <code>Loop</code> trees.</p>
+                <svg viewBox="0 0 460 150" style="width:100%; height:145px; background:#17181b; border-radius:12px; border:1.5px solid #3c4043">
+                  <path d="M230 42 V64 M110 64 H350 M110 64 V88 M230 64 V88 M350 64 V88" fill="none" stroke="#80868b" stroke-width="2"/>
+                  <rect x="165" y="14" width="130" height="30" rx="8" fill="#2a2b2f" stroke="#57caff" stroke-width="2"/>
+                  <text x="230" y="34" text-anchor="middle" fill="#fff" font-size="13" font-family="Roboto Mono">Root Workflow</text>
+                  <rect x="45" y="88" width="130" height="36" rx="8" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.5"/>
+                  <text x="110" y="111" text-anchor="middle" fill="#e8eaed" font-size="13" font-family="Roboto Mono">Step A</text>
+                  <rect x="190" y="88" width="80" height="36" rx="8" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.5"/>
+                  <text x="230" y="111" text-anchor="middle" fill="#e8eaed" font-size="13" font-family="Roboto Mono">Step B</text>
+                  <rect x="285" y="88" width="130" height="36" rx="8" fill="#2a2b2f" stroke="#5f6368" stroke-width="1.5"/>
+                  <text x="350" y="111" text-anchor="middle" fill="#e8eaed" font-size="13" font-family="Roboto Mono">Step C</text>
+                </svg>
+                <p style="font-size:14.5px; color:var(--dk-sub); margin-top:10px">Simple to start, but arbitrary jumps, multi-way branches, or back-edges require custom <code>BaseAgent</code> code.</p>
+              </div>
+              <div class="pc green fragment" data-fragment-index="2" style="padding:18px 22px">
+                <h3 style="color:var(--h-green); margin-bottom:6px"><span class="wf-lg"><img src="../images/shared/logos/workflows.svg" alt="Workflows"></span>ADK 2.0 · Graph Workflow Runtime</h3>
+                <p style="font-size:15px; color:var(--dk-sub); margin-bottom:12px">First-class <b>Nodes</b>, <b>Edges</b>, conditions, and cycles.</p>
+                <svg viewBox="0 0 460 150" style="width:100%; height:145px; background:#17181b; border-radius:12px; border:1.5px solid #3c4043">
+                  <path d="M98 75 H142 M222 65 L278 38 M222 85 L278 112 M368 38 L402 68 M368 112 L402 82" fill="none" stroke="#5cdb6d" stroke-width="2"/>
+                  <path d="M323 128 C323 144, 182 144, 182 95" fill="none" stroke="#ffd427" stroke-width="2" stroke-dasharray="5 4"/>
+                  <polygon points="182,91 177,99 187,99" fill="#ffd427"/>
+                  <rect x="18" y="58" width="80" height="34" rx="8" fill="#2a2b2f" stroke="#57caff" stroke-width="2"/>
+                  <text x="58" y="80" text-anchor="middle" fill="#fff" font-size="12.5" font-family="Roboto Mono">Intake</text>
+                  <rect x="142" y="58" width="80" height="34" rx="8" fill="#2a2b2f" stroke="#5cdb6d" stroke-width="2"/>
+                  <text x="182" y="80" text-anchor="middle" fill="#fff" font-size="12.5" font-family="Roboto Mono">Router</text>
+                  <rect x="278" y="20" width="90" height="34" rx="8" fill="#2a2b2f" stroke="#5cdb6d" stroke-width="2"/>
+                  <text x="323" y="42" text-anchor="middle" fill="#fff" font-size="12.5" font-family="Roboto Mono">Fast Path</text>
+                  <rect x="278" y="94" width="90" height="34" rx="8" fill="#2a2b2f" stroke="#ffd427" stroke-width="2"/>
+                  <text x="323" y="116" text-anchor="middle" fill="#fff" font-size="12.5" font-family="Roboto Mono">Review</text>
+                  <rect x="402" y="58" width="44" height="34" rx="8" fill="#2a2b2f" stroke="#ff7daf" stroke-width="2"/>
+                  <text x="424" y="80" text-anchor="middle" fill="#fff" font-size="12" font-family="Roboto Mono">END</text>
+                </svg>
+                <p style="font-size:14.5px; color:var(--dk-sub); margin-top:10px">Declarative routing, parallel joins, retry loops, and pause/resume — still 100% compatible with <code>LlmAgent</code>.</p>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="3"><b>Why it matters</b><span>Real business processes have branches, retries and approvals — graphs model them directly without boilerplate.</span></div>
+        </div>
+        <aside class="notes">ใน ADK 1.x เราประกอบ agent เป็นโครงสร้างต้นไม้ (Tree) คือเอา Sequential, Parallel, Loop มาซ้อนกัน • (คลิก 1) พอมีเงื่อนไขแตกแขนงหลายทาง หรืออยากวนกลับไปขั้นก่อนหน้า ต้องเขียน Custom BaseAgent เองเยอะ • (คลิก 2) ADK 2.0 เพิ่ม Graph Workflow Runtime ที่มองทุกอย่างเป็น Nodes และ Edges รองรับ conditional routing, loop กลับ และ pause/resume ได้เลย • (คลิก 3) เพราะงานจริงในองค์กรแทบทั้งหมดเป็นกราฟ ไม่ใช่เส้นตรงครับ</aside>
+      </section>
+
+      <!-- 11. Nodes, Edges & Conditional Routing -->
+      <section data-title="Nodes, edges &amp; routing">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · graph primitives</div>
+            <h2 style="margin-bottom:16px"><span class="wf-lg" style="width:30px; height:30px; vertical-align:-5px"><img src="../images/shared/logos/adk.png" alt="ADK" style="width:20px; height:20px"></span>Nodes, edges &amp; conditional routing</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from google.adk.workflows import Workflow, END
+
+def route_ticket(state: dict) -> str:
+    return "billing" if state.get("intent") == "billing" else "tech"
+
+def quality_gate(state: dict) -> str:
+    return END if state.get("score", 0) >= 8 else "draft"
+
+support_graph = Workflow(
+    name="support_graph",
+    nodes=[triage, billing, tech, draft, review],
+    edges=[
+        ("triage", route_ticket),     # conditional edge
+        ("billing", "draft"),
+        ("tech", "draft"),
+        ("draft", "review"),
+        ("review", quality_gate),     # loop back or END
+    ],
+)
+              </code></pre>
+              <div class="wf-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Nodes</h3>Any <code>LlmAgent</code>, workflow agent, tool, or plain Python function can be a graph node.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Static edges</h3>Wire <code>("billing", "draft")</code> to guarantee deterministic handoffs between stages.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Conditional edges</h3>A lightweight Python router inspects <code>state</code> and returns the next node name or <code>END</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">โครงสร้างของ Graph ใน ADK 2.0 อ่านง่ายมากครับ มีแค่ 3 ส่วน • (คลิก) Nodes คือหน่วยทำงาน จะเป็น LlmAgent, Workflow หรือฟังก์ชัน Python ก็ได้ • (คลิก) Static edges เชื่อมโหนดแบบตายตัว เช่น billing ไป draft • (คลิก) Conditional edges ใช้ฟังก์ชัน Python ธรรมดาเช็กค่าใน state แล้วคืนชื่อโหนดถัดไปหรือ END ทำให้การตัดสินใจเส้นทางแม่นยำและ test ง่ายครับ</aside>
+      </section>
+
+      <!-- 12. Visual diagram of a branching & looping graph -->
+      <section data-title="Branching &amp; looping graph">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:36px 56px">
+            <div class="eyebrow">02 · graph in action</div>
+            <h2 style="margin-bottom:14px">Branching, parallel fan-out &amp; quality loop in one graph</h2>
+            <img class="wf-art-img" src="../images/adk-workflows-slides/graph-runtime-flow.svg" alt="ADK 2.0 Graph Workflow diagram with conditional branch, parallel fan-out, merge, and bounded retry loop" style="height:280px">
+            <div style="display:flex; gap:12px; margin-top:16px; align-items:center">
+              <span class="wf-pill" style="--c:var(--h-blue)">Conditional branch</span>
+              <span class="wf-pill" style="--c:var(--h-green)">Parallel fan-out</span>
+              <span class="wf-pill" style="--c:var(--h-yellow)">Synthesis node</span>
+              <span class="wf-pill" style="--c:var(--h-red); border-style:dashed">Bounded retry cycle</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Observable by design</b><span>Every node transition emits a structured event — easy to trace, pause for human approval, and resume.</span></div>
+        </div>
+        <aside class="notes">ภาพนี้แสดงให้เห็นพลังของกราฟเดียวที่รวมทุกอย่างเข้าด้วยกัน • เริ่มจาก Intake แยกคำถาม: ถ้า simple ส่งเข้า Quick Answer จบทันที ประหยัดทั้งเวลาและต้นทุน • ถ้า complex แตกออกเป็น Parallel ค้นทั้ง Docs และ Web พร้อมกัน แล้วมารวมที่ Draft Reply • จากนั้นส่งเข้า Quality Gate ถ้าคะแนนต่ำกว่า 8 วนกลับไปแก้ใหม่ไม่เกิน 3 รอบ ถ้าผ่านก็ส่งออก END • (คลิก) ทุกการเปลี่ยนโหนดมี event ชัดเจน ทำให้ trace, pause รอคนอนุมัติ และ resume ได้ง่ายครับ</aside>
+      </section>
+
+      <!-- 13. Dynamic vs Collaborative workflows -->
+      <section data-title="Dynamic vs Collaborative">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · orchestration spectrum</div>
+            <h2 style="margin-bottom:18px">Structured workflows vs Collaborative agent teams</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <div class="pc blue fragment" data-fragment-index="1" style="padding:18px 22px">
+                <h3 style="color:var(--h-blue)"><span class="wf-lg"><img src="../images/shared/logos/workflows.svg" alt="Workflows"></span>Structured / Graph Workflows</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:12px">Explicit paths defined by code, graphs, or Sequential / Parallel / Loop agents.</p>
+                <div class="chips"><span class="chip">Predictable</span><span class="chip">Auditable</span><span class="chip">Low variance</span></div>
+                <p style="font-size:14.5px; color:var(--dk-text); margin-top:12px"><b>Best for:</b> SOPs, compliance checks, data pipelines, support triage, document review.</p>
+              </div>
+              <div class="pc yellow fragment" data-fragment-index="2" style="padding:18px 22px">
+                <h3 style="color:var(--h-yellow)"><span class="wf-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Collaborative / Autonomous Teams</h3>
+                <p style="font-size:15.5px; color:var(--dk-sub); margin-bottom:12px">LLM coordinators and peer agents dynamically decide who acts next via handoffs.</p>
+                <div class="chips"><span class="chip">Flexible</span><span class="chip">Creative</span><span class="chip">Open-ended</span></div>
+                <p style="font-size:14.5px; color:var(--dk-text); margin-top:12px"><b>Best for:</b> Deep research, exploratory coding, ambiguous multi-turn user requests.</p>
+              </div>
+            </div>
+            <div class="wf-spec fragment" data-fragment-index="3">
+              <div class="wf-spec-lbls"><span>Deterministic Code / Graph</span><b>★ Sweet Spot: Hybrid (Graph rails + LLM nodes)</b><span>Fully Autonomous Swarm</span></div>
+              <div class="wf-spec-track"><div class="wf-spec-pin"></div></div>
+              <p style="font-size:14px; color:var(--dk-sub); text-align:center">Keep routing &amp; guardrails deterministic; let Gemini reason freely inside each specialized node.</p>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="4"><b>ADK 2.0 advantage</b><span>You don't have to pick one paradigm — embed autonomous LlmAgents inside a Graph Workflow.</span></div>
+        </div>
+        <aside class="notes">คำถามที่เจอบ่อยคือ ควรใช้ Workflow แบบกำหนดเส้นทางชัดเจน หรือปล่อยให้ agent คุยกันเองแบบอิสระดี? • (คลิก 1) Structured Workflow เหมาะกับงานที่มี SOP ชัดเจน ต้องการความแน่นอนสูงและตรวจสอบได้ • (คลิก 2) Collaborative Team เหมาะกับงานปลายเปิด เช่น deep research หรือแก้โจทย์ที่ไม่ตายตัว • (คลิก 3) จุดที่ลงตัวที่สุดใน production คือแบบ Hybrid: ใช้กราฟคุมเส้นทางหลักและ guardrail แล้วให้ LLM คิดอย่างอิสระภายในแต่ละโหนด • (คลิก 4) ข้อดีของ ADK 2.0 คือผสมสองแบบนี้ได้ในระบบเดียวกันครับ</aside>
+      </section>
+
+      <!-- 14. Visual Builder in adk web -->
+      <section data-title="Visual Builder in adk web">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">02 · developer experience</div>
+            <h2 style="margin-bottom:16px"><span class="wf-lg" style="width:30px; height:30px; vertical-align:-5px"><img src="../images/shared/logos/adk.png" alt="ADK" style="width:20px; height:20px"></span>Visual Builder in <code style="font-size:.82em">adk web</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <!-- Clean Visual Builder UI Mockup -->
+              <div class="wf-vb">
+                <div class="wf-vb-bar">
+                  <div class="wf-vb-dots"><i style="background:#ff7daf"></i><i style="background:#ffd427"></i><i style="background:#5cdb6d"></i></div>
+                  <span>adk web · localhost:8000 · Visual Builder</span>
+                  <span style="color:var(--h-green)">● Live</span>
+                </div>
+                <div class="wf-vb-body">
+                  <div class="wf-vb-canvas">
+                    <svg viewBox="0 0 410 326" style="width:100%; height:100%">
+                      <path d="M90 52 V90 M90 144 V178 M160 117 H235 M305 144 V178 M160 205 H235 M305 232 V264" fill="none" stroke="#5cdb6d" stroke-width="2"/>
+                      <path d="M235 218 C198 250, 128 250, 90 232" fill="none" stroke="#ff7daf" stroke-width="2" stroke-dasharray="4 3"/>
+                      <rect x="35" y="14" width="110" height="38" rx="10" fill="#2a2b2f" stroke="#57caff" stroke-width="2"/>
+                      <text x="90" y="38" text-anchor="middle" fill="#fff" font-size="12.5" font-family="Roboto Mono">Intake</text>
+                      <rect x="20" y="90" width="140" height="54" rx="10" fill="#2a2b2f" stroke="#5cdb6d" stroke-width="2"/>
+                      <text x="90" y="114" text-anchor="middle" fill="#fff" font-size="13" font-family="Google Sans">Researcher</text>
+                      <text x="90" y="133" text-anchor="middle" fill="#5cdb6d" font-size="10.5" font-family="Roboto Mono">gemini-2.5-flash</text>
+                      <rect x="235" y="90" width="140" height="54" rx="10" fill="#2a2b2f" stroke="#ffd427" stroke-width="2"/>
+                      <text x="305" y="114" text-anchor="middle" fill="#fff" font-size="13" font-family="Google Sans">Fact Checker</text>
+                      <text x="305" y="133" text-anchor="middle" fill="#ffd427" font-size="10.5" font-family="Roboto Mono">+ search_web</text>
+                      <rect x="20" y="178" width="140" height="54" rx="10" fill="#2a2b2f" stroke="#57caff" stroke-width="2"/>
+                      <text x="90" y="202" text-anchor="middle" fill="#fff" font-size="13" font-family="Google Sans">Draft Writer</text>
+                      <text x="90" y="221" text-anchor="middle" fill="#57caff" font-size="10.5" font-family="Roboto Mono">gemini-2.5-pro</text>
+                      <rect x="235" y="178" width="140" height="54" rx="10" fill="#2a2b2f" stroke="#ff7daf" stroke-width="2"/>
+                      <text x="305" y="202" text-anchor="middle" fill="#fff" font-size="13" font-family="Google Sans">Critic Gate</text>
+                      <text x="305" y="221" text-anchor="middle" fill="#ff7daf" font-size="10.5" font-family="Roboto Mono">max_iter=3</text>
+                      <rect x="250" y="264" width="110" height="38" rx="10" fill="#2a2b2f" stroke="#5cdb6d" stroke-width="2"/>
+                      <text x="305" y="288" text-anchor="middle" fill="#5cdb6d" font-size="12.5" font-family="Roboto Mono">Publish</text>
+                    </svg>
+                  </div>
+                  <div class="wf-vb-panel">
+                    <h4>AI Assistant</h4>
+                    <div class="wf-vb-msg">"Add a Fact Checker with web search before Critic Gate."</div>
+                    <div class="wf-vb-msg ai">Added <b>Fact Checker</b> node, wired edges, and updated agent config.</div>
+                    <h4 style="margin-top:auto; color:var(--h-yellow)">State Inspector</h4>
+                    <div class="wf-vb-msg" style="font-family:var(--mono); font-size:11px">notes: "5 facts..."<br>score: 9 · passed: true</div>
+                  </div>
+                </div>
+              </div>
+              <div class="wf-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Visual node editor</h3>Inspect and edit agents, tools, callbacks, and workflow edges on an interactive canvas.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">AI Builder Assistant</h3>Describe new nodes or routing changes in plain English — the assistant edits the workflow for you.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Live trace &amp; state diff</h3>Test prompts immediately and step through every event, tool call, and <code>state_delta</code>.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ADK มาพร้อม Visual Builder ในคำสั่ง adk web ครับ • (คลิก) มี canvas แบบ drag-and-drop ให้เห็นโครงสร้าง agent, tool และ edge ทั้งหมดในหน้าเดียว • (คลิก) มี AI Assistant ในตัว พิมพ์บอกได้เลยว่าอยากเพิ่มโหนด Fact Checker ก่อน Critic ระบบจะสร้างและเชื่อมเส้นให้ • (คลิก) ทดลองรันแล้วดู event trace กับ state diff ของแต่ละขั้นได้ทันทีครับ</aside>
+      </section>
+
+      <!-- 15. Section 03 -->
+      <section class="bg-yellow" data-title="03 · Multi-agent patterns">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">03</div>
+        <div class="wf-div-art" style="--c:var(--h-yellow)"><img src="../images/adk-workflows-slides/sec-03-patterns.svg" alt="Multi-agent patterns"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Multi-agent<br>patterns</h1>
+            <p class="sub" style="margin-top:28px">Coordinator, AgentTool, Critic loops,<br>hierarchies and shared state</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงที่ 3 • มาดู 5 แพตเทิร์นหลักของการออกแบบระบบ Multi-Agent ใน ADK ที่เอาไปใช้จริงได้ทันทีครับ</aside>
+      </section>
+
+      <!-- 16. Coordinator / Dispatcher -->
+      <section data-title="Coordinator / Dispatcher">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">03 · pattern 01 · delegation</div>
+            <h2 style="margin-bottom:14px"><span class="wf-lg" style="width:30px; height:30px; vertical-align:-5px"><img src="../images/shared/logos/gemini.svg" alt="Gemini" style="width:20px; height:20px"></span>Coordinator / Dispatcher: LLM-driven routing</h2>
+            <div class="wf-strip">
+              <div class="st-node" style="--c:var(--h-yellow); flex:1.1">Coordinator<small>transfer_to_agent(...)</small></div>
+              <svg class="st-ar" viewBox="0 0 22 14"><path d="M2 7h17M13 2l6 5-6 5"/></svg>
+              <div class="st-node" style="--c:var(--h-blue)">billing_agent<small>Invoices &amp; refunds</small></div>
+              <div class="st-node" style="--c:var(--h-green)">tech_agent<small>Bugs &amp; setup</small></div>
+              <div class="st-node" style="--c:var(--h-red)">returns_agent<small>Shipping &amp; RMA</small></div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+billing_agent = LlmAgent(
+    name="billing_agent", model="gemini-2.5-flash",
+    description="Handles invoices, charges, and refunds.",
+    instruction="Resolve customer billing questions.",
+)
+
+coordinator = LlmAgent(
+    name="support_desk", model="gemini-2.5-flash",
+    instruction="Route each request to the right specialist.",
+    sub_agents=[billing_agent, tech_agent, returns_agent],
+)
+              </code></pre>
+              <div class="wf-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Auto-flow handoff</h3>ADK injects <code>transfer_to_agent</code> automatically when <code>sub_agents</code> are registered.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)"><code>description</code> is the router</h3>Write crisp, non-overlapping descriptions — the coordinator reads them to pick who runs.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Specialist owns the turn</h3>Once transferred, the sub-agent replies directly to the user and holds follow-up context.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แพตเทิร์นแรก: Coordinator หรือ Dispatcher • เราให้ coordinator มี sub_agents เป็นผู้เชี่ยวชาญแต่ละด้าน เช่น billing, tech, returns • (คลิก) ADK จะสร้างกลไก transfer_to_agent ให้อัตโนมัติ • (คลิก) สิ่งสำคัญที่สุดคือฟิลด์ description ของลูกแต่ละตัว ต้องเขียนให้ชัดและไม่ซ้อนทับกัน เพราะ coordinator ใช้ข้อความนี้ตัดสินใจ • (คลิก) เมื่อโอนงานไปแล้ว ลูกจะตอบผู้ใช้โดยตรงเลยครับ</aside>
+      </section>
+
+      <!-- 17. sub_agents vs AgentTool -->
+      <section data-title="sub_agents vs AgentTool">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:30px 56px">
+            <div class="eyebrow">03 · pattern 02 · control transfer vs tool call</div>
+            <h2 style="margin-bottom:12px"><code style="font-size:.82em">sub_agents</code> vs <code style="font-size:.82em">AgentTool</code>: when to use which?</h2>
+            <img class="wf-art-img" src="../images/adk-workflows-slides/subagent-vs-agenttool.svg" alt="sub_agents handoff vs AgentTool call and return" style="height:220px; margin-bottom:12px">
+            <table class="zt-tbl" style="width:1088px; font-size:14px">
+              <colgroup><col style="width:190px"><col style="width:449px"><col style="width:449px"></colgroup>
+              <thead><tr><th style="padding:6px 10px">Dimension</th><th style="padding:6px 10px"><span class="wf-lg" style="width:20px; height:20px; vertical-align:-4px"><img src="../images/shared/logos/adk.png" alt="ADK" style="width:14px; height:14px"></span><code>sub_agents=[...]</code> (Transfer)</th><th style="padding:6px 10px"><span class="wf-lg" style="width:20px; height:20px; vertical-align:-4px"><img src="../images/shared/logos/workflows.svg" alt="Workflows" style="width:14px; height:14px"></span><code>tools=[AgentTool(...)]</code> (Call)</th></tr></thead>
+              <tbody>
+                <tr class="fragment"><td style="padding:6px 10px">Control flow</td><td class="hi-b" style="padding:6px 10px">Transfers conversation control to child</td><td class="hi-g" style="padding:6px 10px">Calls child like a function; parent keeps control</td></tr>
+                <tr class="fragment"><td style="padding:6px 10px">Context shared</td><td style="padding:6px 10px">Full session history visible to child</td><td style="padding:6px 10px">Only explicit prompt / args passed in</td></tr>
+                <tr class="fragment"><td style="padding:6px 10px">Who replies</td><td style="padding:6px 10px">Specialist responds directly to user</td><td style="padding:6px 10px">Child returns result; parent synthesizes reply</td></tr>
+                <tr class="fragment"><td style="padding:6px 10px">Best for</td><td style="padding:6px 10px">Department handoffs, support triage</td><td style="padding:6px 10px">Summarizer, SQL writer, search specialist</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="ask fragment"><b>Decision rule</b><span>Use <code>sub_agents</code> when the specialist should talk to the user; use <code>AgentTool</code> when the parent must stay in charge.</span></div>
+        </div>
+        <aside class="notes">นี่คือจุดที่คนใช้ ADK สับสนบ่อยที่สุด: ควรใส่เป็น sub_agents หรือห่อด้วย AgentTool ดี? • (คลิก) sub_agents คือการโอนสายให้ลูกคุยต่อ ส่วน AgentTool คือเรียกใช้ลูกเหมือนฟังก์ชันแล้วแม่คุมเกมต่อ • (คลิก) sub_agents เห็นประวัติแชททั้งหมด ส่วน AgentTool เห็นเฉพาะ input ที่แม่ส่งให้ • (คลิก) sub_agents ตอบผู้ใช้ตรง ๆ ส่วน AgentTool คืนผลให้แม่สรุป • (คลิก) สรุปง่าย ๆ: ถ้าอยากให้ผู้เชี่ยวชาญคุยกับผู้ใช้เองใช้ sub_agents ถ้าอยากให้แม่เป็นหน้าด่านคนเดียวใช้ AgentTool ครับ</aside>
+      </section>
+
+      <!-- 18. Generator-Critic refinement loop -->
+      <section data-title="Generator–Critic pattern">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">03 · pattern 03 · self-correction</div>
+            <h2 style="margin-bottom:14px">Generator–Critic refinement loop</h2>
+            <div class="wf-strip">
+              <div class="st-node" style="--c:var(--h-blue)">Generator<small>writes {draft}</small></div>
+              <svg class="st-ar" viewBox="0 0 22 14"><path d="M2 7h17M13 2l6 5-6 5"/></svg>
+              <div class="st-node" style="--c:var(--h-yellow)">Critic<small>scores rubric → {feedback}</small></div>
+              <svg class="st-ar" viewBox="0 0 22 14"><path d="M2 7h17M13 2l6 5-6 5"/></svg>
+              <div class="st-node" style="--c:var(--h-green)">PASS → escalate<small>FAIL → loop back</small></div>
+            </div>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+generator = LlmAgent(
+    name="generator", model="gemini-2.5-flash",
+    instruction="Draft SQL. Fix issues in: {feedback?}",
+    output_key="draft",
+)
+critic = LlmAgent(
+    name="critic", model="gemini-2.5-pro",
+    instruction="Check {draft} for safety &amp; accuracy. "
+                "Call approve() if valid, else explain fixes.",
+    tools=[approve],   # sets actions.escalate = True
+    output_key="feedback",
+)
+review_loop = LoopAgent(
+    name="sql_refiner", sub_agents=[generator, critic],
+    max_iterations=3,
+)
+              </code></pre>
+              <div class="wf-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Split personas</h3>Models catch far more bugs when critiquing someone else's draft in a fresh role.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)"><span class="wf-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Mix model tiers</h3>Draft fast with Flash, verify strictly with Pro — high quality at lower cost.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Optional <code>{feedback?}</code></h3>The <code>?</code> prevents a <code>KeyError</code> on iteration 1 before any feedback exists.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แพตเทิร์นที่ 3 คือ Generator–Critic • แทนที่จะให้ agent ตัวเดียวเขียนแล้วตรวจเอง เราแยกเป็นสองตัวใน LoopAgent • (คลิก) การแยกบทบาททำให้ Critic จับจุดผิดพลาดได้แม่นกว่ามาก • (คลิก) เลือกโมเดลคนละรุ่นได้ เช่น ใช้ Flash ร่างเร็ว ๆ แล้วใช้ Pro เป็นตัวตรวจ • (คลิก) สังเกต {feedback?} ที่มีเครื่องหมายคำถาม ช่วยกัน KeyError ในรอบแรกที่ยังไม่มี feedback ใน state ครับ</aside>
+      </section>
+
+      <!-- 19. Hierarchical task decomposition -->
+      <section data-title="Hierarchical decomposition">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:38px 56px">
+            <div class="eyebrow">03 · pattern 04 · hierarchy</div>
+            <h2 style="margin-bottom:16px">Hierarchical task decomposition</h2>
+            <div class="wf-hier">
+              <div class="wf-tier t1">
+                <div class="wf-hnode" style="--c:var(--h-blue)"><b>Executive Planner (Root LlmAgent)</b><small>Breaks user goal into milestones &amp; delegates to team leads</small></div>
+              </div>
+              <svg class="wf-hconn" viewBox="0 0 1088 22"><path d="M544 0 V11 M181 11 H907 M181 11 V22 M544 11 V22 M907 11 V22" fill="none" stroke="#80868b" stroke-width="2"/></svg>
+              <div class="wf-tier t2">
+                <div class="wf-hnode" style="--c:var(--h-green)"><b>Research Lead</b><small>ParallelAgent</small></div>
+                <div class="wf-hnode" style="--c:var(--h-yellow)"><b>Content Lead</b><small>LoopAgent</small></div>
+                <div class="wf-hnode" style="--c:var(--h-red)"><b>Release Lead</b><small>SequentialAgent</small></div>
+              </div>
+              <svg class="wf-hconn" viewBox="0 0 1088 22"><path d="M181 0 V11 M90 11 H272 M90 11 V22 M272 11 V22 M544 0 V11 M453 11 H635 M453 11 V22 M635 11 V22 M907 0 V11 M816 11 H998 M816 11 V22 M998 11 V22" fill="none" stroke="#80868b" stroke-width="2"/></svg>
+              <div class="wf-tier t3">
+                <div class="wf-hnode" style="--c:var(--h-green); padding:8px"><b>WebSearch</b><small>tool</small></div>
+                <div class="wf-hnode" style="--c:var(--h-green); padding:8px"><b>DocsRAG</b><small>tool</small></div>
+                <div class="wf-hnode" style="--c:var(--h-yellow); padding:8px"><b>Writer</b><small>Pro</small></div>
+                <div class="wf-hnode" style="--c:var(--h-yellow); padding:8px"><b>Critic</b><small>Flash</small></div>
+                <div class="wf-hnode" style="--c:var(--h-red); padding:8px"><b>Formatter</b><small>schema</small></div>
+                <div class="wf-hnode" style="--c:var(--h-red); padding:8px"><b>Publisher</b><small>API</small></div>
+              </div>
+            </div>
+            <div class="grid g3 fragment" style="width:1088px; gap:16px; margin-top:18px">
+              <div class="pc blue" style="padding:12px 16px; font-size:14.5px"><b>Composable</b> — Every workflow agent is itself an agent, so sub-teams nest cleanly.</div>
+              <div class="pc green" style="padding:12px 16px; font-size:14.5px"><b>Small blast radius</b> — Each leaf specialist only sees the 1–3 tools it needs.</div>
+              <div class="pc yellow" style="padding:12px 16px; font-size:14.5px"><b>Testable units</b> — Eval and debug each sub-team independently before wiring the root.</div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">แพตเทิร์นที่ 4 คือ Hierarchical task decomposition • สำหรับงานใหญ่เราแบ่งเป็น 3 ชั้น: ชั้นบนเป็น Planner แตกโจทย์, ชั้นกลางเป็น Team Lead ที่ใช้ Parallel/Loop/Sequential ตามลักษณะงาน และชั้นล่างเป็น Specialist ตัวเล็ก ๆ ที่มีแค่ 1-3 tools • (คลิก) ข้อดีคือประกอบซ้อนกันได้เรื่อย ๆ แยกทดสอบแต่ละทีมย่อยได้ง่าย และจำกัดสิทธิ์ของแต่ละ agent ได้ชัดเจนครับ</aside>
+      </section>
+
+      <!-- 20. Shared State contract -->
+      <section data-title="Shared State contract">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">03 · pattern 05 · data flow</div>
+            <h2 style="margin-bottom:16px">Shared State: the contract between agents</h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+# 1. Producer writes via output_key
+profiler = LlmAgent(
+    name="profiler", model="gemini-2.5-flash",
+    output_key="runner_profile",
+)
+
+# 2. Tool writes scoped keys directly
+def save_pace(pace: str, tool_context: ToolContext):
+    tool_context.state["temp:target_pace"] = pace
+    tool_context.state["user:preferred_units"] = "km"
+    return {"saved": True}
+
+# 3. Consumer reads with {key} or optional {key?}
+coach = LlmAgent(
+    name="coach", model="gemini-2.5-pro",
+    instruction="Build plan for {runner_profile} "
+                "using units: {user:preferred_units?}",
+)
+              </code></pre>
+              <div class="wf-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)">Automatic handoff</h3><code>output_key</code> stores the final text or JSON into <code>session.state</code> with zero glue code.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)">Safe templates</h3>Use <code>{key}</code> for required inputs and <code>{key?}</code> for optional keys that may be unset.</div>
+                <div class="pc yellow fragment"><h3 style="color:var(--h-yellow)">Scope prefixes</h3><code>temp:</code> turn only · <code>user:</code> across sessions · <code>app:</code> global · none = current session.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Design tip</b><span>Treat state keys like an API contract — name them clearly and keep each key's schema small and flat.</span></div>
+        </div>
+        <aside class="notes">แพตเทิร์นที่ 5 คือการส่งข้อมูลระหว่าง agent ผ่าน Shared State • (คลิก) agent ต้นทางเขียนด้วย output_key หรือ tool เขียนผ่าน tool_context.state • (คลิก) agent ปลายทางอ่านด้วย {key} หรือ {key?} ถ้าเป็นค่า optional • (คลิก) เลือก prefix ให้เหมาะ: temp: เฉพาะรอบนี้, user: จำข้าม session ของผู้ใช้คนเดิม, app: ใช้ร่วมกันทั้งแอป • (คลิก) มองชื่อ key เหล่านี้เหมือน API contract ระหว่าง agent จะช่วยลด bug ได้เยอะครับ</aside>
+      </section>
+
+      <!-- 21. Section 04 -->
+      <section class="bg-red" data-title="04 · Production patterns">
+        <div class="numbox" style="left:40px; top:40px; width:290px; height:112px">04</div>
+        <div class="wf-div-art" style="--c:var(--h-red)"><img src="../images/adk-workflows-slides/sec-04-prod.svg" alt="Production patterns"></div>
+        <div class="dots" style="left:94px; top:520px; --dc: var(--g-red)"><i></i><i></i><i></i></div>
+        <div class="nc" style="left:356px; top:40px; width:884px; height:640px" data-br="340x112">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 64px 90px">
+            <h1 style="font-size:72px">Production<br>patterns</h1>
+            <p class="sub" style="margin-top:28px">Real-world architecture, Pydantic<br>schemas and best practices</p>
+          </div>
+        </div>
+        <aside class="notes">ช่วงสุดท้าย • นำทุกอย่างมาประกอบเป็นสถาปัตยกรรมจริงแบบใน Google Codelab พร้อมเทคนิค Pydantic structured outputs และ checklist ก่อนขึ้น production ครับ</aside>
+      </section>
+
+      <!-- 22. Real-world Codelab walkthrough -->
+      <section data-title="Real-world Codelab architecture">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:34px 56px">
+            <div class="eyebrow">04 · codelab walkthrough</div>
+            <h2 style="margin-bottom:14px">Case study: Marathon Race Day Coach (multi-agent)</h2>
+            <img class="wf-art-img" src="../images/adk-workflows-slides/marathon-coach-arch.svg" alt="Marathon Race Day Coach multi-agent architecture" style="height:260px">
+            <div class="grid g3 fragment" data-fragment-index="1" style="width:1088px; gap:16px; margin-top:16px">
+              <div class="pc blue" style="padding:12px 16px; font-size:14.5px"><span class="wf-lg"><img src="../images/shared/logos/workflows.svg" alt="Workflows"></span><b>3× faster intake</b> — Weather, pacing &amp; fuel run concurrently in Stage 1.</div>
+              <div class="pc yellow" style="padding:12px 16px; font-size:14.5px"><span class="wf-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><b>Safe by construction</b> — Critic rejects aggressive pacing in high humidity.</div>
+              <div class="pc green" style="padding:12px 16px; font-size:14.5px"><span class="wf-lg"><img src="../images/shared/logos/python.svg" alt="Python"></span><b>UI-ready JSON</b> — Validated Pydantic card ready for web/mobile apps.</div>
+            </div>
+          </div>
+          <div class="ask fragment" data-fragment-index="2"><b>Outer shell</b><span>All 3 stages sit inside one top-level <code>SequentialAgent</code> or ADK 2.0 <code>Workflow</code> graph.</span></div>
+        </div>
+        <aside class="notes">มาดูตัวอย่างจริงแบบใน Google Codelab อย่าง Marathon Race Day Coach (หรือ Course Creator ที่ใช้โครงสร้างเดียวกัน) • ขั้นที่ 1 ใช้ ParallelAgent ดึงสภาพอากาศ เส้นทางวิ่ง โภชนาการ และวิเคราะห์ความฟิตพร้อมกัน • ขั้นที่ 2 ใช้ LoopAgent ให้ Synthesizer วางแผน pace กับโภชนาการ แล้วให้ Safety Critic ตรวจว่าปลอดภัยไหม ถ้าผ่านค่อย exit_loop • ขั้นที่ 3 แปลงแผนเป็น Pydantic JSON ส่งขึ้น UI • (คลิก 1) (คลิก 2) ทั้งหมดห่อด้วย SequentialAgent หรือ ADK 2.0 Graph ตัวเดียวครับ</aside>
+      </section>
+
+      <!-- 23. Structured Outputs with Pydantic -->
+      <section data-title="Structured outputs · Pydantic">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">04 · type-safe handoffs</div>
+            <h2 style="margin-bottom:16px"><span class="wf-lg" style="width:30px; height:30px; vertical-align:-5px"><img src="../images/shared/logos/python.svg" alt="Python" style="width:20px; height:20px"></span>Structured outputs with Pydantic <code style="font-size:.82em">output_schema</code></h2>
+            <div style="display:flex; gap:24px; width:1088px; align-items:flex-start">
+              <pre style="width:620px; flex:none; font-size:13.5px"><code class="language-python" data-trim>
+from pydantic import BaseModel, Field
+from google.adk.agents import LlmAgent
+
+class ReviewVerdict(BaseModel):
+    score: int = Field(ge=1, le=10)
+    passed: bool
+    feedback: list[str]
+
+judge_agent = LlmAgent(
+    name="judge_agent",
+    model="gemini-2.5-flash",
+    instruction="Evaluate {plan} against safety rules.",
+    output_schema=ReviewVerdict,
+    output_key="verdict",
+)
+              </code></pre>
+              <div class="wf-side">
+                <div class="pc blue fragment"><h3 style="color:var(--h-blue)"><span class="wf-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span>Guaranteed JSON</h3>Gemini enforces the Pydantic schema — no brittle regex or markdown stripping.</div>
+                <div class="pc green fragment"><h3 style="color:var(--h-green)"><span class="wf-lg"><img src="../images/shared/logos/workflows.svg" alt="Workflows"></span>Clean routing</h3>Graph edges check <code>state["verdict"]["passed"]</code> deterministically in Python.</div>
+                <div class="pc red fragment"><h3 style="color:var(--h-red)">Important caveat</h3>Using <code>output_schema</code> disables tools on that agent — split tool calls into an earlier node.</div>
+              </div>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Best practice</b><span>Pair <code>output_schema</code> with <code>output_key</code> at stage boundaries so every downstream node gets typed data.</span></div>
+        </div>
+        <aside class="notes">เวลาส่งข้อมูลข้ามโหนดหรือเอาไปตัดสินใจใน conditional edge การ parse ข้อความธรรมดาจะพังง่ายมาก • ทางแก้คือใช้ Pydantic output_schema คู่กับ output_key • (คลิก) Gemini จะบังคับคืน JSON ตาม schema เป๊ะ • (คลิก) ฟังก์ชัน routing อ่านค่า verdict["passed"] ได้ตรง ๆ • (คลิก) ข้อควรระวัง: agent ที่ตั้ง output_schema จะเรียก tool ไม่ได้ในรอบเดียวกัน ให้แยก agent เรียก tool ไว้ขั้นก่อนหน้า แล้วค่อยส่งมา format ขั้นนี้ครับ</aside>
+      </section>
+
+      <!-- 24. Best practices & common pitfalls -->
+      <section data-title="Best practices &amp; pitfalls">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">04 · production checklist</div>
+            <h2 style="margin-bottom:18px">Best practices &amp; common pitfalls</h2>
+            <div class="grid g2" style="width:1088px; gap:20px">
+              <ul class="wf-chk">
+                <li class="ok fragment"><i>✓</i><span><b>Start simple.</b> Prove one <code>LlmAgent</code> before splitting into a multi-agent graph.</span></li>
+                <li class="ok fragment"><i>✓</i><span><span class="wf-lg" style="width:20px; height:20px; vertical-align:-4px"><img src="../images/shared/logos/gemini.svg" alt="Gemini" style="width:14px; height:14px"></span><b>Right-size models.</b> Use Gemini Flash for routing &amp; extraction, Pro for deep synthesis.</span></li>
+                <li class="ok fragment"><i>✓</i><span><b>Always cap loops.</b> Set <code>max_iterations</code> on every <code>LoopAgent</code> and cycle edge.</span></li>
+                <li class="ok fragment"><i>✓</i><span><span class="wf-lg" style="width:20px; height:20px; vertical-align:-4px"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud" style="width:14px; height:14px"></span><b>Trace every run.</b> Inspect event timelines and state diffs in <code>adk web</code> or Cloud Trace.</span></li>
+              </ul>
+              <ul class="wf-chk">
+                <li class="warn fragment"><i>!</i><span><b>State key collisions.</b> Parallel branches sharing an <code>output_key</code> overwrite each other.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Overlapping descriptions.</b> Vague <code>description</code> fields cause misrouting in coordinators.</span></li>
+                <li class="warn fragment"><i>!</i><span><b>Missing <code>{key?}</code> syntax.</b> Unset state variables raise a <code>KeyError</code> on first turn.</span></li>
+                <li class="warn fragment"><i>!</i><span><b><code>output_schema</code> + <code>tools</code>.</b> Don't mix them on one agent — split into two steps.</span></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">สรุป checklist ก่อนนำขึ้น production ครับ • ฝั่งซ้ายสิ่งที่ควรทำ: เริ่มให้เล็กก่อนอย่าเพิ่งแยกเยอะเกินจำเป็น, เลือกโมเดลให้เหมาะกับงาน (Flash สำหรับงานเร็ว/routing, Pro สำหรับงานคิดซับซ้อน), ใส่ max_iterations เสมอ และเปิด trace ดู state diff ทุกครั้ง • ฝั่งขวา 4 กับดักที่เจอบ่อย: parallel เขียนทับ key เดียวกัน, description กำกวมจน route ผิด, ลืมใส่ ? ใน optional state key และใส่ output_schema ปนกับ tools ในตัวเดียวกันครับ</aside>
+      </section>
+
+      <!-- 25. Recap -->
+      <section data-title="Recap">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:40px 56px">
+            <div class="eyebrow">Recap</div>
+            <h2 style="margin-bottom:22px">Compose, Orchestrate, Scale</h2>
+            <div class="grid g3 h2-comp" style="width:1088px; gap:18px">
+              <div class="pc blue fragment">
+                <div class="wf-hd"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><h3>1 · Compose</h3></div>
+                <p style="font-size:15.5px; line-height:1.42">Combine <b>LlmAgent</b> reasoning with deterministic <b>Sequential</b>, <b>Parallel</b>, <b>Loop</b> and custom <b>BaseAgent</b> blocks.</p>
+              </div>
+              <div class="pc green fragment">
+                <div class="wf-hd"><span class="ev-lg"><img src="../images/shared/logos/workflows.svg" alt="Workflows"></span><h3>2 · Orchestrate</h3></div>
+                <p style="font-size:15.5px; line-height:1.42">Model branches &amp; cycles in <b>ADK 2.0 Graph Runtime</b>, choose <b>sub_agents</b> vs <b>AgentTool</b>, and iterate in <b>adk web</b>.</p>
+              </div>
+              <div class="pc red fragment">
+                <div class="wf-hd"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><h3>3 · Scale</h3></div>
+                <p style="font-size:15.5px; line-height:1.42">Enforce <b>shared state contracts</b>, Pydantic <b>output_schema</b>, bounded loops, and deploy to <b>Cloud Run</b> or <b>Vertex AI</b>.</p>
+              </div>
+            </div>
+            <div class="fragment wf-recap-pills" style="width:1088px; margin-top:22px; display:flex; flex-wrap:wrap; gap:8px; align-items:center">
+              <span class="wf-pill" style="--c:var(--h-blue)">LlmAgent</span>
+              <span class="wf-pill" style="--c:var(--h-green)">SequentialAgent</span>
+              <span class="wf-pill" style="--c:var(--h-green)">ParallelAgent</span>
+              <span class="wf-pill" style="--c:var(--h-green)">LoopAgent</span>
+              <span class="wf-pill" style="--c:var(--h-yellow)">Graph Runtime</span>
+              <span class="wf-pill" style="--c:var(--h-yellow)">AgentTool</span>
+              <span class="wf-pill" style="--c:var(--h-blue)">output_key</span>
+              <span class="wf-pill" style="--c:var(--h-red)">output_schema</span>
+              <span class="wf-pill" style="--c:var(--h-green)"><span class="wf-lg" style="width:18px; height:18px; vertical-align:-4px; margin-right:5px"><img src="../images/shared/logos/gcp-run.png" alt="Cloud Run" style="width:13px; height:13px"></span>Cloud Run</span>
+            </div>
+          </div>
+          <div class="ask fragment"><b>Start today</b><span>Run <code>adk web</code>, split one overloaded prompt into a 2-step <code>SequentialAgent</code>, and inspect the state flow.</span></div>
+        </div>
+        <aside class="notes">สรุป 3 คำของวันนี้ครับ • (คลิก) Compose: แยกหน้าที่แล้วประกอบ LlmAgent เข้ากับ Sequential, Parallel, Loop • (คลิก) Orchestrate: ใช้ ADK 2.0 Graph Runtime คุมเส้นทางที่ซับซ้อน เลือกใช้ sub_agents กับ AgentTool ให้ถูกงาน และลองปรับใน adk web • (คลิก) Scale: วาง state contract ให้ชัด ใช้ Pydantic output_schema และจำกัดจำนวนรอบลูปเสมอ • (คลิก) เริ่มวันนี้ได้เลย ลองแยก prompt ใหญ่ ๆ ของคุณออกเป็น SequentialAgent 2 ขั้นแล้วเปิดดูใน adk web ครับ</aside>
+      </section>
+
+      <!-- 26. Resources -->
+      <section data-title="Resources">
+        <div class="nc" style="left:40px; top:40px; width:1200px; height:640px" data-br="340x112">
+          <div class="in" style="padding:46px 56px">
+            <div class="eyebrow">Resources</div>
+            <h2 style="margin-bottom:24px">Read more and build it yourself</h2>
+            <div class="grid g2" style="width:1088px; gap:16px">
+              <div class="pc blue wf-res-row"><span class="ev-lg"><img src="../images/shared/logos/adk.png" alt="ADK"></span><div><h3>Agents overview</h3><a class="mono" style="font-size:14px" href="https://adk.dev/agents/" target="_blank">adk.dev/agents/</a></div></div>
+              <div class="pc green wf-res-row"><span class="ev-lg"><img src="../images/shared/logos/workflows.svg" alt="Workflows"></span><div><h3>Workflow agents</h3><a class="mono" style="font-size:14px" href="https://adk.dev/agents/workflow-agents/" target="_blank">adk.dev/agents/workflow-agents/</a></div></div>
+              <div class="pc yellow wf-res-row"><span class="ev-lg"><img src="../images/shared/logos/gcp-vertex-ai.png" alt="Vertex AI"></span><div><h3>Multi-agent systems</h3><a class="mono" style="font-size:14px" href="https://adk.dev/agents/multi-agents/" target="_blank">adk.dev/agents/multi-agents/</a></div></div>
+              <div class="pc red wf-res-row"><span class="ev-lg"><img src="../images/shared/logos/googlecloud.svg" alt="Google Cloud"></span><div><h3>ADK 2.0 Orchestration Codelab</h3><a class="mono" style="font-size:14px" href="https://codelabs.developers.google.com/" target="_blank">codelabs.developers.google.com</a></div></div>
+              <div class="pc green wf-res-row"><span class="ev-lg"><img src="../images/shared/logos/gemini.svg" alt="Gemini"></span><div><h3>Multi-Agent Systems Codelab</h3><a class="mono" style="font-size:14px" href="https://codelabs.developers.google.com/" target="_blank">Build Multi-Agent Systems with ADK</a></div></div>
+              <div class="pc blue wf-res-row"><span class="ev-lg"><img src="../images/shared/logos/github.svg" alt="GitHub"></span><div><h3>ADK Python SDK &amp; samples</h3><a class="mono" style="font-size:14px" href="https://github.com/google/adk-python" target="_blank">github.com/google/adk-python</a></div></div>
+            </div>
+          </div>
+        </div>
+        <aside class="notes">ลิงก์สำหรับอ่านต่อและลงมือทำครับ มีทั้งเอกสาร ADK Agents, Workflow Agents, Multi-Agent Systems, Google Codelabs สำหรับ ADK 2.0 Orchestration และ Multi-Agent Systems รวมถึง repo ตัวอย่างโค้ดบน GitHub • สแกน QR หน้า Agenda เพื่อเปิดสไลด์นี้ได้เลยครับ</aside>
+      </section>
+
+      <!-- 27. Thank you -->
+      <section class="bg-yellow" data-title="Thank you">
+        <div class="nc" style="left:60px; top:40px; width:760px; height:640px" data-scallop="7">
+          <div class="in" style="display:flex; flex-direction:column; justify-content:center; padding:0 70px">
+            <h1 style="font-size:96px">Thank you</h1>
+            <p class="sub" style="font-size:30px; margin-top:18px">Q &amp; A</p>
+            <div class="ty-who"><img src="../images/shared/profile.jpeg" alt="Punsiri Boonyakiat"><p class="sub">Punsiri Boonyakiat<br>Google Developer Expert in Cloud AI</p></div>
+          </div>
+        </div>
+        <div class="badge" style="right:44px; top:28px; --bk: var(--g-yellow)"><span class="bk">{</span><span class="bw"><b>DevFest</b><i>Bangkok</i></span><span class="bk">}</span></div>
+        <div class="wf-ty-art"><img src="../images/adk-workflows-slides/thank-you-art.svg" alt="Multi-agent constellation"></div>
+        <div class="dots" style="left:946px; top:500px; --dc: var(--g-yellow)"><i></i><i></i><i></i></div>
+        <aside class="notes">ขอบคุณทุกคนมากครับ • เปิดช่วง Q &amp; A ถามได้เลยครับ ทั้งเรื่อง ADK 2.0, Graph Workflow หรือการออกแบบ Multi-Agent ในงานจริง</aside>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/highlight/highlight.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/plugin/notes/notes.min.js"></script>
+  <script src="js/deck.js"></script>
+</body>
+</html>

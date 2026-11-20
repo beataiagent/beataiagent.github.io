@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 260" width="1088" height="260">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="260" fill="#202124"/>
+
+  <circle cx="160" cy="70" r="120" fill="url(#amb-g)"/>
+  <circle cx="720" cy="185" r="145" fill="url(#amb-r)"/>
+
+  <!-- Left panel: Prompt Growth Bars -->
+  <rect x="16" y="14" width="764" height="232" rx="18" fill="url(#glass)" stroke="#5f6368" stroke-width="1.6"/>
+  <text x="36" y="40" class="m" font-size="11.5" fill="#57caff">PROMPT PAYLOAD GROWTH PER TURN</text>
+  <text x="760" y="40" text-anchor="end" class="m" font-size="11.5" fill="#9aa0a6">TOKENS / TTFT</text>
+
+  <!-- Row 1: Turn 1 -->
+  <text x="36" y="84" class="m" font-size="14" fill="#ffffff" font-weight="600">Turn 1</text>
+  <rect x="116" y="60" width="528" height="36" rx="9" fill="#17181b" stroke="#3c4043" stroke-width="1.4"/>
+  <rect x="120" y="64" width="96" height="28" rx="6" fill="#5cdb6d"/>
+  <text x="168" y="82" text-anchor="middle" class="m" font-size="11" fill="#202124" font-weight="600">Sys + Tools</text>
+  <rect x="220" y="64" width="44" height="28" rx="6" fill="#e8eaed"/>
+  <text x="242" y="82" text-anchor="middle" class="m" font-size="11" fill="#202124" font-weight="600">Now</text>
+  <text x="760" y="77" text-anchor="end" class="m" font-size="13.5" fill="#5cdb6d" font-weight="600">~6K tok</text>
+  <text x="760" y="93" text-anchor="end" class="m" font-size="11" fill="#9aa0a6">TTFT 0.4s</text>
+
+  <!-- Row 2: Turn 10 -->
+  <text x="36" y="138" class="m" font-size="14" fill="#ffffff" font-weight="600">Turn 10</text>
+  <rect x="116" y="114" width="528" height="36" rx="9" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <rect x="120" y="118" width="96" height="28" rx="6" fill="#5cdb6d"/>
+  <text x="168" y="136" text-anchor="middle" class="m" font-size="11" fill="#202124" font-weight="600">Sys + Tools</text>
+  <rect x="220" y="118" width="112" height="28" rx="6" fill="#57caff"/>
+  <text x="276" y="136" text-anchor="middle" class="m" font-size="11" fill="#202124" font-weight="600">Turns 1–9</text>
+  <rect x="336" y="118" width="94" height="28" rx="6" fill="#ffd427"/>
+  <text x="383" y="136" text-anchor="middle" class="m" font-size="11" fill="#202124" font-weight="600">Tool JSON</text>
+  <rect x="434" y="118" width="40" height="28" rx="6" fill="#e8eaed"/>
+  <text x="454" y="136" text-anchor="middle" class="m" font-size="11" fill="#202124" font-weight="600">Now</text>
+  <text x="760" y="131" text-anchor="end" class="m" font-size="13.5" fill="#ffd427" font-weight="600">~34K tok</text>
+  <text x="760" y="147" text-anchor="end" class="m" font-size="11" fill="#9aa0a6">TTFT 1.5s</text>
+
+  <!-- Row 3: Turn 25 -->
+  <text x="36" y="192" class="m" font-size="14" fill="#ff7daf" font-weight="600">Turn 25</text>
+  <rect x="116" y="168" width="528" height="36" rx="9" fill="#17181b" stroke="#ff7daf" stroke-width="2" filter="url(#glow-s)"/>
+  <rect x="120" y="172" width="94" height="28" rx="6" fill="#5cdb6d"/>
+  <text x="167" y="190" text-anchor="middle" class="m" font-size="10.5" fill="#202124" font-weight="600">Sys+Tools</text>
+  <rect x="218" y="172" width="136" height="28" rx="6" fill="#57caff"/>
+  <text x="286" y="190" text-anchor="middle" class="m" font-size="10.5" fill="#202124" font-weight="600">Old Turns 1–24</text>
+  <rect x="358" y="172" width="118" height="28" rx="6" fill="#ffd427"/>
+  <text x="417" y="190" text-anchor="middle" class="m" font-size="10.5" fill="#202124" font-weight="600">Stale Tool JSON</text>
+  <rect x="480" y="172" width="122" height="28" rx="6" fill="#ff7daf"/>
+  <text x="541" y="190" text-anchor="middle" class="m" font-size="10.5" fill="#202124" font-weight="600">Inline PDF / CSV</text>
+  <rect x="606" y="172" width="34" height="28" rx="6" fill="#e8eaed"/>
+  <text x="623" y="190" text-anchor="middle" class="m" font-size="10" fill="#202124" font-weight="600">Now</text>
+  <text x="760" y="185" text-anchor="end" class="m" font-size="14" fill="#ff7daf" font-weight="600">~140K tok</text>
+  <text x="760" y="201" text-anchor="end" class="m" font-size="11" fill="#ff7daf">TTFT 4.8s</text>
+
+  <!-- Bottom Legend -->
+  <g transform="translate(36, 224)">
+    <rect x="0" y="-9" width="10" height="10" rx="3" fill="#5cdb6d"/><text x="15" y="0" class="m" font-size="11" fill="#bdc1c6">Cacheable prefix</text>
+    <rect x="148" y="-9" width="10" height="10" rx="3" fill="#57caff"/><text x="163" y="0" class="m" font-size="11" fill="#bdc1c6">Aging turns</text>
+    <rect x="262" y="-9" width="10" height="10" rx="3" fill="#ffd427"/><text x="277" y="0" class="m" font-size="11" fill="#bdc1c6">Stale tool dumps</text>
+    <rect x="412" y="-9" width="10" height="10" rx="3" fill="#ff7daf"/><text x="427" y="0" class="m" font-size="11" fill="#bdc1c6">Binary bloat</text>
+    <rect x="536" y="-9" width="10" height="10" rx="3" fill="#e8eaed"/><text x="551" y="0" class="m" font-size="11" fill="#bdc1c6">Current query</text>
+  </g>
+
+  <!-- Right panel: 3 Warning Impact Cards -->
+  <rect x="800" y="14" width="272" height="70" rx="14" fill="url(#glass)" stroke="#ff7daf" stroke-width="2"/>
+  <text x="820" y="42" class="t" font-size="16" fill="#ff7daf">Quadratic Cost · O(N²)</text>
+  <text x="820" y="64" class="sub" font-size="13">Replaying 1…N−1 every turn</text>
+
+  <rect x="800" y="95" width="272" height="70" rx="14" fill="url(#glass)" stroke="#ffd427" stroke-width="2"/>
+  <text x="820" y="123" class="t" font-size="16" fill="#ffd427">Rising TTFT · 12× slower</text>
+  <text x="820" y="145" class="sub" font-size="13">Longer prefill before 1st token</text>
+
+  <rect x="800" y="176" width="272" height="70" rx="14" fill="url(#glass)" stroke="#57caff" stroke-width="2"/>
+  <text x="820" y="204" class="t" font-size="16" fill="#57caff">Context Rot · Drift</text>
+  <text x="820" y="226" class="sub" font-size="13">Signal buried in stale JSON</text>
+</svg>

@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1088 270" width="1088" height="270">
+  <defs>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-y" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffd427" stop-opacity="0.2"/>
+      <stop offset="100%" stop-color="#ffd427" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-r" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ff7daf" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#ff7daf" stop-opacity="0"/>
+    </radialGradient>
+    <marker id="arr-b" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#57caff"/></marker>
+    <marker id="arr-g" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto"><path d="M0 1 L9 5 L0 9 Z" fill="#5cdb6d"/></marker>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+      .sub { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="1088" height="270" fill="#202124"/>
+
+  <circle cx="132" cy="108" r="110" fill="url(#amb-b)"/>
+  <circle cx="408" cy="108" r="105" fill="url(#amb-y)"/>
+  <circle cx="684" cy="108" r="110" fill="url(#amb-g)"/>
+  <circle cx="956" cy="108" r="110" fill="url(#amb-r)"/>
+
+  <!-- Top Upstream Ribbon -->
+  <rect x="20" y="14" width="1048" height="28" rx="14" fill="#17181b" stroke="#57caff" stroke-width="1.4"/>
+  <text x="544" y="32" text-anchor="middle" class="m" font-size="12" fill="#57caff">UPSTREAM  →  16 kHz PCM Audio + 1 fps JPEG + Text  →  queue.send_realtime(Blob)</text>
+
+  <!-- Node 1: Browser AudioWorklet -->
+  <rect x="20" y="56" width="224" height="148" rx="16" fill="url(#glass)" stroke="#57caff" stroke-width="2.2"/>
+  <circle cx="52" cy="88" r="16" fill="#57caff" fill-opacity="0.16" stroke="#57caff" stroke-width="1.8"/>
+  <rect x="48" y="80" width="8" height="12" rx="4" fill="#57caff"/>
+  <path d="M44 90 A8 8 0 0 0 60 90" fill="none" stroke="#57caff" stroke-width="1.8"/>
+  <text x="78" y="86" class="t" font-size="17" fill="#57caff">Browser</text>
+  <text x="78" y="104" class="m" font-size="11.5" fill="#e8eaed">AudioWorklet</text>
+  <rect x="34" y="120" width="196" height="30" rx="8" fill="#17181b" stroke="#3c4043" stroke-width="1.2"/>
+  <text x="132" y="139" text-anchor="middle" class="m" font-size="11.5" fill="#57caff">Mic 16kHz · Spkr 24kHz</text>
+  <text x="132" y="172" text-anchor="middle" class="sub" font-size="12.5">AEC + Ring Buffer</text>
+  <text x="132" y="191" text-anchor="middle" class="m" font-size="11" fill="#9aa0a6">WebSocket Client</text>
+
+  <!-- Arrows 1 <-> 2 -->
+  <path d="M248 106 H290" stroke="#57caff" stroke-width="3" marker-end="url(#arr-b)"/>
+  <path d="M294 152 H252" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+
+  <!-- Node 2: FastAPI WebSocket -->
+  <rect x="296" y="56" width="224" height="148" rx="16" fill="url(#glass)" stroke="#ffd427" stroke-width="2.2"/>
+  <circle cx="328" cy="88" r="16" fill="#ffd427" fill-opacity="0.16" stroke="#ffd427" stroke-width="1.8"/>
+  <path d="M324 80 L334 88 L327 88 L331 97 L321 88 L328 88 Z" fill="#ffd427"/>
+  <text x="354" y="86" class="t" font-size="17" fill="#ffd427">FastAPI WS</text>
+  <text x="354" y="104" class="m" font-size="11.5" fill="#e8eaed">@app.websocket()</text>
+  <rect x="310" y="120" width="196" height="30" rx="8" fill="#17181b" stroke="#3c4043" stroke-width="1.2"/>
+  <text x="408" y="139" text-anchor="middle" class="m" font-size="11.5" fill="#ffd427">asyncio.gather()</text>
+  <text x="408" y="172" text-anchor="middle" class="sub" font-size="12.5">upstream() + downstream()</text>
+  <text x="408" y="191" text-anchor="middle" class="m" font-size="11" fill="#9aa0a6">Zero AI logic · pure pipe</text>
+
+  <!-- Arrows 2 <-> 3 -->
+  <path d="M524 106 H566" stroke="#57caff" stroke-width="3" marker-end="url(#arr-b)"/>
+  <path d="M570 152 H528" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+
+  <!-- Node 3: ADK Live Runtime -->
+  <rect x="572" y="56" width="224" height="148" rx="16" fill="url(#glass)" stroke="#5cdb6d" stroke-width="2.2"/>
+  <circle cx="604" cy="88" r="16" fill="#5cdb6d" fill-opacity="0.16" stroke="#5cdb6d" stroke-width="1.8"/>
+  <circle cx="604" cy="88" r="6" fill="#5cdb6d" filter="url(#glow-s)"/>
+  <text x="630" y="86" class="t" font-size="17" fill="#5cdb6d">ADK Runtime</text>
+  <text x="630" y="104" class="m" font-size="11.5" fill="#e8eaed">StreamingMode.BIDI</text>
+  <rect x="586" y="120" width="196" height="30" rx="8" fill="#17181b" stroke="#5cdb6d" stroke-width="1.2"/>
+  <text x="684" y="139" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d">LiveRequestQueue</text>
+  <text x="684" y="172" text-anchor="middle" class="m" font-size="12" fill="#ffffff">Runner.run_live()</text>
+  <text x="684" y="191" text-anchor="middle" class="sub" font-size="11.5">Tools · State · Sessions</text>
+
+  <!-- Arrows 3 <-> 4 -->
+  <path d="M800 106 H842" stroke="#57caff" stroke-width="3" marker-end="url(#arr-b)"/>
+  <path d="M846 152 H804" stroke="#5cdb6d" stroke-width="3" marker-end="url(#arr-g)"/>
+
+  <!-- Node 4: Gemini Live API -->
+  <rect x="848" y="56" width="220" height="148" rx="16" fill="url(#glass)" stroke="#ff7daf" stroke-width="2.2"/>
+  <circle cx="880" cy="88" r="16" fill="#ff7daf" fill-opacity="0.16" stroke="#ff7daf" stroke-width="1.8"/>
+  <polygon points="880,77 883,85 891,88 883,91 880,99 877,91 869,88 877,85" fill="#ff7daf" filter="url(#glow-s)"/>
+  <text x="906" y="86" class="t" font-size="17" fill="#ff7daf">Gemini Live</text>
+  <text x="906" y="104" class="m" font-size="11.5" fill="#e8eaed">Native Audio API</text>
+  <rect x="862" y="120" width="192" height="30" rx="8" fill="#17181b" stroke="#ff7daf" stroke-width="1.2"/>
+  <text x="958" y="139" text-anchor="middle" class="m" font-size="11.5" fill="#ff7daf">Server VAD + S2S</text>
+  <text x="958" y="172" text-anchor="middle" class="sub" font-size="12.5">Audio In → Audio Out</text>
+  <text x="958" y="191" text-anchor="middle" class="m" font-size="11" fill="#9aa0a6">Native Tool Calls</text>
+
+  <!-- Bottom Downstream Ribbon -->
+  <rect x="20" y="222" width="1048" height="30" rx="15" fill="#17181b" stroke="#5cdb6d" stroke-width="1.6"/>
+  <text x="544" y="241" text-anchor="middle" class="m" font-size="12" fill="#5cdb6d">←  DOWNSTREAM  ·  async for event in runner.run_live()  →  24 kHz PCM + Captions + event.interrupted</text>
+</svg>

@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256">
+  <defs>
+    <filter id="glow-b" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="8" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="glow-s" x="-25%" y="-25%" width="150%" height="150%">
+      <feGaussianBlur stdDeviation="3.5" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <linearGradient id="glass" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#303238" stop-opacity="0.96"/>
+      <stop offset="100%" stop-color="#1d1e22" stop-opacity="0.99"/>
+    </linearGradient>
+    <linearGradient id="grad-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#57caff"/>
+      <stop offset="100%" stop-color="#5cdb6d"/>
+    </linearGradient>
+    <radialGradient id="amb-b" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#57caff" stop-opacity="0.28"/>
+      <stop offset="100%" stop-color="#57caff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="amb-g" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#5cdb6d" stop-opacity="0.22"/>
+      <stop offset="100%" stop-color="#5cdb6d" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .t { font-family: "Google Sans", "Product Sans", system-ui, sans-serif; fill: #ffffff; font-weight: 600; }
+      .m { font-family: "Roboto Mono", ui-monospace, monospace; fill: #bdc1c6; }
+    </style>
+  </defs>
+  <rect width="256" height="256" fill="#202124"/>
+
+  <circle cx="110" cy="126" r="102" fill="url(#amb-b)"/>
+  <circle cx="164" cy="136" r="82" fill="url(#amb-g)"/>
+
+  <!-- Speaker sonar rings -->
+  <circle cx="128" cy="126" r="94" fill="none" stroke="#57caff" stroke-width="1.6" stroke-dasharray="6 6" opacity="0.45"/>
+  <circle cx="128" cy="126" r="72" fill="none" stroke="#57caff" stroke-width="1.8" opacity="0.32"/>
+  <circle cx="128" cy="126" r="52" fill="none" stroke="#5cdb6d" stroke-width="1.8" opacity="0.42"/>
+
+  <!-- Top latency pill -->
+  <rect x="74" y="22" width="108" height="26" rx="13" fill="url(#glass)" stroke="#5cdb6d" stroke-width="1.8" filter="url(#glow-s)"/>
+  <text x="128" y="39" text-anchor="middle" class="m" font-size="11.5" fill="#5cdb6d" font-weight="600">~350ms LIVE</text>
+
+  <!-- Glowing soundwave equalizer bars behind mic -->
+  <g stroke-linecap="round" filter="url(#glow-s)">
+    <line x1="38" y1="114" x2="38" y2="138" stroke="#57caff" stroke-width="4.5" opacity="0.55"/>
+    <line x1="52" y1="100" x2="52" y2="152" stroke="#57caff" stroke-width="4.5" opacity="0.75"/>
+    <line x1="66" y1="88" x2="66" y2="164" stroke="#57caff" stroke-width="4.5" opacity="0.9"/>
+    <line x1="80" y1="104" x2="80" y2="148" stroke="#57caff" stroke-width="4.5"/>
+    <line x1="176" y1="104" x2="176" y2="148" stroke="#5cdb6d" stroke-width="4.5"/>
+    <line x1="190" y1="86" x2="190" y2="166" stroke="#5cdb6d" stroke-width="4.5" opacity="0.9"/>
+    <line x1="204" y1="98" x2="204" y2="154" stroke="#5cdb6d" stroke-width="4.5" opacity="0.75"/>
+    <line x1="218" y1="114" x2="218" y2="138" stroke="#5cdb6d" stroke-width="4.5" opacity="0.55"/>
+  </g>
+
+  <!-- Center glass disc with microphone -->
+  <circle cx="128" cy="126" r="40" fill="url(#glass)" stroke="url(#grad-bg)" stroke-width="2.8" filter="url(#glow-s)"/>
+  <rect x="118" y="99" width="20" height="32" rx="10" fill="#57caff" fill-opacity="0.22" stroke="#57caff" stroke-width="2.6"/>
+  <path d="M108 122 A20 20 0 0 0 148 122" fill="none" stroke="#5cdb6d" stroke-width="2.6" stroke-linecap="round"/>
+  <line x1="128" y1="142" x2="128" y2="153" stroke="#5cdb6d" stroke-width="2.6" stroke-linecap="round"/>
+  <line x1="118" y1="153" x2="138" y2="153" stroke="#5cdb6d" stroke-width="2.6" stroke-linecap="round"/>
+
+  <!-- Bottom label -->
+  <text x="128" y="232" text-anchor="middle" class="m" font-size="11.5" fill="#57caff">SPEECH-TO-SPEECH</text>
+</svg>
